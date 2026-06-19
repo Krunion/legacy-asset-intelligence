@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { generatePDF, type CalculatorResult } from "@/lib/pdfGenerator";
 
 // ─── Industry Data ────────────────────────────────────────────────────────────
 const INDUSTRY_DATA: Record<string, { multiplier: number; avgAssetValue: number }> = {
@@ -450,9 +451,34 @@ export default function ROICalculator() {
             <button
               onClick={() => {
                 if (state.email) {
+                  // Generate PDF
+                  const result: CalculatorResult = {
+                    email: state.email,
+                    industry: state.industry,
+                    assetCount: state.assetCount,
+                    locations: state.locations,
+                    departments: state.departments,
+                    maturityLevel: MATURITY_LEVELS.find(m => m.id === state.maturityLevel)?.label || "Unknown",
+                    portfolioValue,
+                    recoveryLow: capitalRecoveryLow,
+                    recoveryHigh: capitalRecoveryHigh,
+                    recoveryMid: capitalRecoveryMid,
+                    recoveryBreakdown: {
+                      ghostAssets: Math.round(capitalRecoveryMid * 0.35),
+                      unrecordedAssets: Math.round(capitalRecoveryMid * 0.20),
+                      redeployableAssets: Math.round(capitalRecoveryMid * 0.18),
+                      avoidedPurchases: Math.round(capitalRecoveryMid * 0.18),
+                      deferredReplacement: Math.round(capitalRecoveryMid * 0.09),
+                    },
+                    roiScenario: {
+                      recovery: capitalRecoveryMid,
+                      engagementCost: Math.round(capitalRecoveryMid / 15),
+                      netBenefit: Math.round(capitalRecoveryMid - capitalRecoveryMid / 15),
+                      roiMultiple: Math.round((capitalRecoveryMid - capitalRecoveryMid / 15) / (capitalRecoveryMid / 15) * 10) / 10,
+                    },
+                  };
+                  generatePDF(result);
                   setState({ ...state, showResults: true });
-                  // In production, this would trigger PDF generation and email
-                  alert(`Assessment report would be sent to ${state.email}`);
                 }
               }}
               style={{
@@ -479,12 +505,17 @@ export default function ROICalculator() {
       {/* CTA */}
       <div style={{ padding: "1.5rem", background: colors.slate, borderRadius: 8, color: "white", textAlign: "center" }}>
         <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, marginBottom: "0.5rem" }}>
-          Ready to Recover Your Capital?
+          Have Questions About Your Assessment?
         </h4>
         <p style={{ fontSize: "0.9rem", marginBottom: "1rem", opacity: 0.9 }}>
-          Schedule a 15-minute discovery call to discuss your specific situation and get a custom proposal.
+          Send us an email and our team will respond within 24 business hours to discuss your specific situation.
         </p>
         <button
+          onClick={() => {
+            const subject = `ROI Calculator Assessment - ${state.industry}`;
+            const body = `I completed your ROI calculator and would like to discuss my results. My estimated recoverable capital is $${(capitalRecoveryMid / 1000).toFixed(0)}K.`;
+            window.location.href = `mailto:hello@legacyassetintelligence.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+          }}
           style={{
             padding: "0.8rem 2rem",
             background: colors.amber,
@@ -500,7 +531,7 @@ export default function ROICalculator() {
           onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
           onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
         >
-          Schedule Discovery Call
+          Send Email to LAI
         </button>
       </div>
 

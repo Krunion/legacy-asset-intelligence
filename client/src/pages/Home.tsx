@@ -12,6 +12,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
 import ROICalculator from "@/components/ROICalculator";
+import CaseStudies from "@/components/CaseStudies";
 
 // ─── Asset URLs ───────────────────────────────────────────────────────────────
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
@@ -96,6 +97,7 @@ const NAV_SECTIONS = [
   { id: "startup-costs", label: "Startup Investment" },
   { id: "strategy", label: "Go-to-Market Strategy" },
   { id: "risk", label: "Risk & Mitigation" },
+  { id: "case-studies", label: "Case Studies" },
   { id: "calculator", label: "ROI Calculator" },
 ];
 
@@ -1055,6 +1057,14 @@ export default function Home() {
                 ))}
               </div>
             </div>
+
+          {/* SECTION 8: CASE STUDIES */}
+          <Section id="case-studies">
+            <SectionHeader label="08 · CLIENT RESULTS" title="Real-World Recovery Examples" subtitle="See how organizations across industries have recovered significant capital through LAI's methodology." />
+            <div style={{ marginBottom: "2rem" }}>
+              <CaseStudies />
+            </div>
+          </Section>
 
           {/* SECTION 9: ROI CALCULATOR */}
           <Section id="calculator">
