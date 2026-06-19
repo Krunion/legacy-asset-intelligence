@@ -8,6 +8,7 @@ import { useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { generatePDF, type CalculatorResult } from "@/lib/pdfGenerator";
 import { trpc } from "@/lib/trpc";
+import { useEffect } from "react";
 
 // ─── Industry Data ────────────────────────────────────────────────────────────
 const INDUSTRY_DATA: Record<string, { multiplier: number; avgAssetValue: number }> = {
@@ -69,7 +70,20 @@ export default function ROICalculator() {
     showResults: false,
   });
 
-  const submitLeadMutation = trpc.leads.submitLead.useMutation();
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  
+  const submitLeadMutation = trpc.leads.submitLead.useMutation({
+    onSuccess: () => {
+      setSubmitSuccess(true);
+      setSubmitError(null);
+      setTimeout(() => setSubmitSuccess(false), 3000);
+    },
+    onError: (error) => {
+      setSubmitError(error.message || "Failed to submit lead. Please try again.");
+      setSubmitSuccess(false);
+    },
+  });
 
   const colors = {
     slate: "#1E3A5F",
@@ -454,15 +468,16 @@ export default function ROICalculator() {
             <button
               onClick={async () => {
                 if (state.email) {
-                  // Submit lead to HubSpot
-                  await submitLeadMutation.mutateAsync({
-                    email: state.email,
-                    company: state.industry,
-                    message: `Assets: ${state.assetCount}, Locations: ${state.locations}, Departments: ${state.departments}, Estimated Recovery: $${Math.round(capitalRecoveryMid).toLocaleString()}`,
-                  });
-                  
-                  // Generate PDF
-                  const result: CalculatorResult = {
+                  try {
+                    // Submit lead to HubSpot
+                    await submitLeadMutation.mutateAsync({
+                      email: state.email,
+                      company: state.industry,
+                      message: `Assets: ${state.assetCount}, Locations: ${state.locations}, Departments: ${state.departments}, Estimated Recovery: $${Math.round(capitalRecoveryMid).toLocaleString()}`,
+                    });
+                    
+                    // Generate PDF
+                    const result: CalculatorResult = {
                     email: state.email,
                     industry: state.industry,
                     assetCount: state.assetCount,
@@ -487,8 +502,12 @@ export default function ROICalculator() {
                       roiMultiple: Math.round((capitalRecoveryMid - capitalRecoveryMid / 15) / (capitalRecoveryMid / 15) * 10) / 10,
                     },
                   };
-                  generatePDF(result);
-                  setState({ ...state, showResults: true });
+                    generatePDF(result);
+                    setState({ ...state, showResults: true });
+                  } catch (err) {
+                    // Error is already handled in mutation onError
+                    console.error("Lead submission failed:", err);
+                  }
                 }
               }}
               style={{
@@ -511,6 +530,16 @@ export default function ROICalculator() {
               {submitLeadMutation.isPending ? "Submitting..." : "Download PDF"}
             </button>
           </div>
+          {submitError && (
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", background: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: 6, color: "#DC2626", fontSize: "0.9rem", fontFamily: "'Source Sans 3', sans-serif" }}>
+              {submitError}
+            </div>
+          )}
+          {submitSuccess && (
+            <div style={{ marginTop: "0.75rem", padding: "0.75rem", background: "#DCFCE7", border: "1px solid #86EFAC", borderRadius: 6, color: "#16A34A", fontSize: "0.9rem", fontFamily: "'Source Sans 3', sans-serif" }}>
+              ✓ Lead submitted successfully!
+            </div>
+          )}
         </div>
       )}
 

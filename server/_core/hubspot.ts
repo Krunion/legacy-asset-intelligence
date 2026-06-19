@@ -25,10 +25,13 @@ export async function submitLeadToHubSpot(contact: HubSpotContact): Promise<{
   }
 
   if (!contact.email) {
+    console.warn("[HubSpot] Email is required for lead submission");
     return { success: false, error: "Email is required" };
   }
 
   try {
+    console.log(`[HubSpot] Submitting lead for ${contact.email}`);
+    
     // Build properties object for HubSpot
     const properties: Record<string, string> = {
       email: contact.email,
@@ -53,8 +56,11 @@ export async function submitLeadToHubSpot(contact: HubSpotContact): Promise<{
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      console.error("[HubSpot] API error:", errorData);
+      const errorData = await response.json().catch(() => ({}));
+      console.error(`[HubSpot] API error for ${contact.email}:`, {
+        status: response.status,
+        error: errorData,
+      });
       return {
         success: false,
         error: `HubSpot API error: ${response.status}`,
@@ -62,12 +68,15 @@ export async function submitLeadToHubSpot(contact: HubSpotContact): Promise<{
     }
 
     const data = await response.json();
+    console.log(`[HubSpot] Lead submitted successfully for ${contact.email}`, {
+      contactId: data.id,
+    });
     return {
       success: true,
       contactId: data.id,
     };
   } catch (error) {
-    console.error("[HubSpot] Failed to submit lead:", error);
+    console.error(`[HubSpot] Failed to submit lead for ${contact.email}:`, error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",
@@ -80,6 +89,7 @@ export async function submitLeadToHubSpot(contact: HubSpotContact): Promise<{
  */
 export async function validateHubSpotApiKey(apiKey: string): Promise<boolean> {
   try {
+    console.log("[HubSpot] Validating API key");
     const response = await fetch("https://api.hubapi.com/crm/v3/objects/contacts?limit=1", {
       method: "GET",
       headers: {
@@ -87,6 +97,11 @@ export async function validateHubSpotApiKey(apiKey: string): Promise<boolean> {
       },
     });
 
+    if (response.ok) {
+      console.log("[HubSpot] API key validation successful");
+    } else {
+      console.warn(`[HubSpot] API key validation failed with status ${response.status}`);
+    }
     return response.ok;
   } catch (error) {
     console.error("[HubSpot] Validation failed:", error);
