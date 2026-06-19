@@ -7,6 +7,7 @@
 import { useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { generatePDF, type CalculatorResult } from "@/lib/pdfGenerator";
+import { trpc } from "@/lib/trpc";
 
 // ─── Industry Data ────────────────────────────────────────────────────────────
 const INDUSTRY_DATA: Record<string, { multiplier: number; avgAssetValue: number }> = {
@@ -67,6 +68,8 @@ export default function ROICalculator() {
     email: "",
     showResults: false,
   });
+
+  const submitLeadMutation = trpc.leads.submitLead.useMutation();
 
   const colors = {
     slate: "#1E3A5F",
@@ -449,8 +452,15 @@ export default function ROICalculator() {
               }}
             />
             <button
-              onClick={() => {
+              onClick={async () => {
                 if (state.email) {
+                  // Submit lead to HubSpot
+                  await submitLeadMutation.mutateAsync({
+                    email: state.email,
+                    company: state.industry,
+                    message: `Assets: ${state.assetCount}, Locations: ${state.locations}, Departments: ${state.departments}, Estimated Recovery: $${Math.round(capitalRecoveryMid).toLocaleString()}`,
+                  });
+                  
                   // Generate PDF
                   const result: CalculatorResult = {
                     email: state.email,
@@ -483,20 +493,22 @@ export default function ROICalculator() {
               }}
               style={{
                 padding: "0.8rem 1.5rem",
-                background: colors.teal,
+                background: submitLeadMutation.isPending ? "#999" : colors.teal,
                 color: "white",
                 border: "none",
                 borderRadius: 6,
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontWeight: 600,
                 fontSize: "0.95rem",
-                cursor: "pointer",
+                cursor: submitLeadMutation.isPending ? "not-allowed" : "pointer",
                 transition: "all 0.2s",
+                opacity: submitLeadMutation.isPending ? 0.7 : 1,
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#0F766E")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = colors.teal)}
+              onMouseEnter={(e) => !submitLeadMutation.isPending && (e.currentTarget.style.background = "#0F766E")}
+              onMouseLeave={(e) => !submitLeadMutation.isPending && (e.currentTarget.style.background = colors.teal)}
+              disabled={submitLeadMutation.isPending}
             >
-              Download PDF
+              {submitLeadMutation.isPending ? "Submitting..." : "Download PDF"}
             </button>
           </div>
         </div>
