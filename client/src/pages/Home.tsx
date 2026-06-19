@@ -11,6 +11,7 @@ import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from "recharts";
+import ROICalculator from "@/components/ROICalculator";
 
 // ─── Asset URLs ───────────────────────────────────────────────────────────────
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
@@ -95,6 +96,7 @@ const NAV_SECTIONS = [
   { id: "startup-costs", label: "Startup Investment" },
   { id: "strategy", label: "Go-to-Market Strategy" },
   { id: "risk", label: "Risk & Mitigation" },
+  { id: "calculator", label: "ROI Calculator" },
 ];
 
 // ─── Animated Counter ─────────────────────────────────────────────────────────
@@ -1053,6 +1055,14 @@ export default function Home() {
                 ))}
               </div>
             </div>
+
+          {/* SECTION 9: ROI CALCULATOR */}
+          <Section id="calculator">
+            <SectionHeader label="09 · INTERACTIVE TOOL" title="Estimate Your Recoverable Capital" subtitle="Use our ROI calculator to see how much capital your organization could recover." />
+            <div style={{ marginBottom: "2rem" }}>
+              <ROICalculator />
+            </div>
+          </Section>
 
             {/* Footer CTA */}
             <div style={{ marginTop: "2.5rem", background: `linear-gradient(135deg, ${C.slate} 0%, ${C.slateLight} 100%)`, borderRadius: 12, padding: "2rem", textAlign: "center", color: "white" }}>
