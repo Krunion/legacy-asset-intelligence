@@ -17,6 +17,10 @@ const navLinks: NavLink[] = [
   { label: "Industries", path: "/industries" },
   { label: "Solutions", path: "/solutions" },
   { label: "Case Studies", path: "/case-studies" },
+  { label: "Team", path: "/team" },
+  { label: "Blog", path: "/blog" },
+  { label: "Resources", path: "/resources" },
+  { label: "FAQ", path: "/faq" },
 ];
 
 export default function SiteNav() {
@@ -31,7 +35,7 @@ export default function SiteNav() {
         >
           LAI
         </button>
-        <div style={{ display: "flex", gap: "2rem" }}>
+        <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
           {navLinks.map((link) => (
             <button
               key={link.path}
@@ -42,6 +46,7 @@ export default function SiteNav() {
                 cursor: "pointer",
                 color: location === link.path ? C.teal : C.muted,
                 fontWeight: location === link.path ? 600 : 400,
+                fontSize: "0.9rem",
               }}
             >
               {link.label}

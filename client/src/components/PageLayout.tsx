@@ -1,5 +1,6 @@
 import SiteNav from "./SiteNav";
 import { Button } from "@/components/ui/button";
+import { useLocation } from "wouter";
 
 const C = {
   slate: "#1E3A5F",
@@ -28,6 +29,12 @@ export default function PageLayout({
   ctaDescription = "Let's discuss how we can help your organization.",
   ctaButtonText = "Schedule Consultation",
 }: PageLayoutProps) {
+  const [, navigate] = useLocation();
+  
+  const handleCTA = () => {
+    // Scroll to FAQ page or show contact form
+    navigate("/faq");
+  };
   return (
     <div style={{ minHeight: "100vh", background: C.bg }}>
       {/* Navigation */}
@@ -59,7 +66,10 @@ export default function PageLayout({
           <p style={{ fontSize: "1rem", opacity: 0.9, marginBottom: "2rem" }}>
             {ctaDescription}
           </p>
-          <Button style={{ background: C.amber, color: C.slate, padding: "0.8rem 2rem", fontSize: "1rem" }}>
+          <Button 
+            onClick={handleCTA}
+            style={{ background: C.amber, color: C.slate, padding: "0.8rem 2rem", fontSize: "1rem", cursor: "pointer" }}
+          >
             {ctaButtonText}
           </Button>
         </div>

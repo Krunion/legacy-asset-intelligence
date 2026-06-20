@@ -9,6 +9,10 @@ import Services from "./pages/Services";
 import Industries from "./pages/Industries";
 import CaseStudies from "./pages/CaseStudiesPage";
 import Solutions from "./pages/Solutions";
+import Team from "./pages/Team";
+import Blog from "./pages/Blog";
+import Resources from "./pages/Resources";
+import FAQ from "./pages/FAQ";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -19,6 +23,10 @@ function Router() {
       <Route path={"/industries"} component={Industries} />
       <Route path={"/case-studies"} component={CaseStudies} />
       <Route path={"/solutions"} component={Solutions} />
+      <Route path={"/team"} component={Team} />
+      <Route path={"/blog"} component={Blog} />
+      <Route path={"/resources"} component={Resources} />
+      <Route path={"/faq"} component={FAQ} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
