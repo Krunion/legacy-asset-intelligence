@@ -32,7 +32,7 @@ export default function SiteNav() {
   const [navOpen, setNavOpen] = useState(true);
 
   return (
-    <nav style={{ background: "#D9D9D9", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
+    <nav style={{ background: "#6B6B6B", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
       {/* Top row: Logo + Name + Toggle */}
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "1rem 2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         {/* Logo */}
@@ -49,9 +49,9 @@ export default function SiteNav() {
         <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
           <button 
             onClick={() => navigate("/")} 
-            style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal }}
+            style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700 }}
           >
-            <span style={{ fontSize: "1.8rem", fontWeight: 700, color: C.charcoal, fontFamily: "'Playfair Display', serif", letterSpacing: "0.5px", whiteSpace: "nowrap" }}>Legacy Asset Intelligence</span>
+            <span style={{ fontSize: "1.8rem", fontWeight: 700, color: C.gold, fontFamily: "'Playfair Display', serif", letterSpacing: "0.5px", whiteSpace: "nowrap", textShadow: "0 2px 4px rgba(212, 175, 55, 0.4), 0 0 8px rgba(232, 197, 71, 0.3)", filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.2))" }}>Legacy Asset Intelligence</span>
           </button>
         </div>
 
@@ -81,24 +81,26 @@ export default function SiteNav() {
       {navOpen && (
         <div style={{ borderTop: `1px solid ${C.border}`, padding: "0.75rem 2rem", display: "flex", gap: "2rem", justifyContent: "center", flexWrap: "wrap", maxWidth: 1400, margin: "0 auto" }}>
           {navLinks.map((link) => (
-            <button
-              key={link.path}
-              onClick={() => navigate(link.path)}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                color: location === link.path ? C.gold : C.gold,
-                fontWeight: location === link.path ? 600 : 500,
-                fontSize: "0.9rem",
-                transition: "all 0.2s",
-                opacity: location === link.path ? 1 : 0.7,
-                borderBottom: location === link.path ? `2px solid ${C.gold}` : "2px solid transparent",
-                paddingBottom: "0.25rem",
-              }}
-            >
-              {link.label}
-            </button>
+              <button
+                key={link.path}
+                onClick={() => navigate(link.path)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: location === link.path ? C.gold : C.gold,
+                  fontWeight: location === link.path ? 600 : 500,
+                  fontSize: "0.9rem",
+                  transition: "all 0.2s",
+                  opacity: location === link.path ? 1 : 0.8,
+                  borderBottom: location === link.path ? `2px solid ${C.gold}` : "2px solid transparent",
+                  paddingBottom: "0.25rem",
+                  textShadow: "0 1px 3px rgba(212, 175, 55, 0.3), 0 0 6px rgba(232, 197, 71, 0.2)",
+                  filter: "drop-shadow(0 0.5px 1px rgba(0,0,0,0.15))",
+                }}
+              >
+                {link.label}
+              </button>
           ))}
         </div>
       )}
