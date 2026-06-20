@@ -595,7 +595,7 @@ export default function CaseStudies() {
       <div style={{ marginBottom: "2rem" }}>
         <p
           style={{
-            color: "#475569",
+            color: "#FFFFFF",
             fontSize: "0.95rem",
             lineHeight: 1.7,
           }}
@@ -631,7 +631,7 @@ export default function CaseStudies() {
             fontFamily: "'Playfair Display', serif",
             fontSize: "1.1rem",
             fontWeight: 700,
-            color: "#1E293B",
+            color: "#FFFFFF",
             marginBottom: "0.75rem",
           }}
         >
@@ -639,7 +639,7 @@ export default function CaseStudies() {
         </h4>
         <p
           style={{
-            color: "#475569",
+            color: "#FFFFFF",
             fontSize: "0.9rem",
             lineHeight: 1.7,
             margin: 0,

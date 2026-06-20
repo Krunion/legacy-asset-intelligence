@@ -653,11 +653,11 @@ export default function Home() {
                   Software-only approach. Limited consulting services or governance design capabilities.
                 </p>
               </div>
-              <div style={{ background: "#1B4D3E", borderRadius: 12, border: `2px solid ${C.teal}`, padding: "1.5rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem" }}>
+              <div style={{ background: "#FFFFFF", borderRadius: 12, border: `2px solid ${C.teal}`, padding: "1.5rem" }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#0F1419", marginBottom: "1rem" }}>
                   LAI (Us)
                 </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", fontSize: "0.85rem", lineHeight: 1.6 }}>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#475569", fontSize: "0.85rem", lineHeight: 1.6 }}>
                   Balanced across all dimensions: consulting breadth, ghost asset specialization, technology enablement, and governance frameworks.
                 </p>
               </div>
