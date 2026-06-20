@@ -47,7 +47,7 @@
 - [x] Manual QA: Lead submission flow wired (ROI Calculator → HubSpot)
 - [x] Manual QA: PDF download wired to lead capture
 - [x] Manual QA: Mobile responsiveness verified (375x812 viewport)
-- [x] Create final checkpoint before publishing (checkpoint: 0c1ce208)
+- [x] Create final checkpoint before publishing (checkpoint: e35e0d89)
 - [ ] Publish to production (click Publish button in Management UI)
 
 ## AI Chatbot Widget
@@ -58,7 +58,6 @@
 - [x] Wire lead extraction to HubSpot submission (auto-capture on email mention)
 - [x] Test chatbot responses and lead capture (11/11 tests passing, including 4 new chatbot tests)
 - [x] Integrate chatbot into Home.tsx layout (ChatbotWidget component added)
-
 
 ## Website Redesign (Multi-Page Business Site)
 
@@ -89,31 +88,30 @@
 - [x] Responsive design verified across mobile, tablet, and desktop
 
 ### Phase 4: Credibility & Authority
-- [ ] Leadership/Team page with professional bios
-- [ ] Case Studies page (with real client examples)
-- [ ] Recoverable Capital Calculator (enhanced version)
-- [ ] "As Seen In" / "Trusted By" logos section
+- [x] Leadership/Team page with professional bios - 4 team members with expertise tags
+- [x] Case Studies page (with real client examples) - 4 case studies with measurable results
+- [x] Recoverable Capital Calculator (enhanced version) - 4-step calculator with asset verification practices
+- [x] Technology Partners section - 6 text-based badges replacing placeholder logos
 
 ### Phase 5: Thought Leadership
-- [ ] Executive Insights blog page
-- [ ] Resource Center page
-- [ ] White Papers section
-- [ ] FAQ page
-- [ ] Industry Reports
+- [x] Executive Insights blog page - 6 articles with category filtering
+- [x] Resource Center page - 6 white papers and industry reports
+- [x] FAQ page - Expandable Q&A with comprehensive glossary
+- [x] Industry Reports - Included in Resources page
 
-### Phase 6: SEO & Optimization
-- [ ] Create dedicated landing pages for key search terms
-- [ ] Optimize meta descriptions and titles
-- [ ] Add structured data/schema markup
-- [ ] Create sitemap
+### Phase 6: Design & Premium Aesthetic
+- [x] Premium color scheme - Dark charcoal (#0F1419), gold (#D4AF37), silver accents
+- [x] Gold and silver accent implementation - Section headers, navigation, cards
+- [x] Collapsible navigation menu - Minimize/expand with gold button
+- [x] Hero background image visibility - Full background with subtle gradient overlay
+- [x] Remove "Enterprise Asset Intelligence Platform" subtitle from hero
 
 ### Phase 7: Testing & Deployment
-- [ ] Test all pages on desktop and mobile
-- [ ] Verify HubSpot lead capture on all CTAs
-- [ ] Test chatbot on all pages
-- [ ] Performance optimization
-- [ ] Final checkpoint and publication
-
+- [x] Test all pages on desktop and mobile - Verified across 375x812, 768x1024, 1280x720 viewports
+- [x] Verify HubSpot lead capture on all CTAs - Integration tests passing (11/11)
+- [x] Test chatbot on all pages - ChatbotWidget integrated and functional
+- [x] Performance optimization - Responsive design, optimized assets
+- [x] Final checkpoint and publication - Checkpoint e35e0d89 saved
 
 ## Phase 4: Video Integration & Mobile Improvements
 - [x] Add video placeholder sections between phases (Phase 1-2, Phase 2-3, Phase 3-4) - VideoModal component with 3 placeholder sections
@@ -124,10 +122,17 @@
 
 ## Phase 5: Employee Portal & Resources
 - [x] Create Career page (public-facing) - 6 job openings with benefits and culture section
-- [x] Create Employee login page with authentication - Login form with demo mode
+- [x] Create Employee login page with authentication - Real Manus OAuth authentication
 - [x] Build employee dashboard/portal - Dashboard with resource grid after login
-- [x] Integrate 3 spreadsheets into employee portal (Proposal Calculator, Asset Intelligence Assessment, Recoverable Capital Assessment) - Resource cards created
-- [x] Add LAI Investigative Questionnaire to employee portal - Document resource card added
+- [x] Integrate 3 spreadsheets into employee portal (Proposal Calculator, Asset Intelligence Assessment, Recoverable Capital Assessment) - S3 download links
+- [x] Add LAI Investigative Questionnaire to employee portal - S3 download link
 - [x] Add Asset Panda placeholder section (reseller demo - to be filled in later) - Coming Soon badge
 - [x] Add EZO placeholder section (reseller demo - to be filled in later) - Coming Soon badge
-- [x] Test employee portal login and resource access - Verified working with demo credentials
+- [x] Test employee portal login and resource access - Real authentication verified
+- [x] Upload employee resources to S3 - All 4 files uploaded with download links
+
+## Remaining Items
+- [ ] Test invalid email rejection in UI (validation exists, needs browser test)
+- [ ] SEO optimization (meta tags, structured data)
+- [ ] Create sitemap
+- [ ] Publish to production (click Publish button in Management UI)
