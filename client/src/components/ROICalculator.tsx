@@ -96,13 +96,13 @@ export default function ROICalculator() {
   });
 
   const colors = {
-    slate: "#1E3A5F",
+    slate: "#0F1419",
     teal: "#0D9488",
     amber: "#F59E0B",
     bg: "#F8FAFC",
     border: "#E2E8F0",
-    text: "#1E293B",
-    muted: "#64748B",
+    text: "#FFFFFF",
+    muted: "#E8E9EB",
   };
 
   // ─── Calculations ─────────────────────────────────────────────────────────
@@ -138,7 +138,7 @@ export default function ROICalculator() {
   // ─── Step 1: Company Profile ───────────────────────────────────────────────
   const renderStep1 = () => (
     <div style={{ maxWidth: 600 }}>
-      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.slate, marginBottom: "1.5rem" }}>
+      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.text, marginBottom: "1.5rem" }}>
         Step 1: Company Profile
       </h3>
       
@@ -254,7 +254,7 @@ export default function ROICalculator() {
   // ─── Step 2: Recovery Assumptions ──────────────────────────────────────────
   const renderStep2 = () => (
     <div style={{ maxWidth: 600 }}>
-      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.slate, marginBottom: "1.5rem" }}>
+      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.text, marginBottom: "1.5rem" }}>
         Step 2: Recovery Assumptions
       </h3>
 
@@ -363,7 +363,7 @@ export default function ROICalculator() {
   // ─── Step 3: Asset Verification Practices ──────────────────────────────────
   const renderStep3 = () => (
     <div style={{ maxWidth: 600 }}>
-      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.slate, marginBottom: "1.5rem" }}>
+      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.text, marginBottom: "1.5rem" }}>
         Step 3: Asset Verification Practices
       </h3>
 
@@ -444,7 +444,7 @@ export default function ROICalculator() {
   // ─── Step 4: Results ───────────────────────────────────────────────────────
   const renderStep4 = () => (
     <div style={{ maxWidth: 900 }}>
-      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.slate, marginBottom: "0.5rem" }}>
+      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.text, marginBottom: "0.5rem" }}>
         Your Recoverable Capital Estimate
       </h3>
       <p style={{ color: colors.muted, marginBottom: "2rem", fontSize: "0.9rem" }}>
@@ -454,7 +454,7 @@ export default function ROICalculator() {
       {/* Key Metrics */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
         <div style={{ padding: "1.5rem", background: "white", border: `1px solid ${colors.border}`, borderRadius: 8, textAlign: "center" }}>
-          <div style={{ fontSize: "0.8rem", color: colors.muted, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          <div style={{ fontSize: "0.8rem", color: colors.slate, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Portfolio Value
           </div>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "1.8rem", fontWeight: 700, color: colors.slate }}>
@@ -462,7 +462,7 @@ export default function ROICalculator() {
           </div>
         </div>
         <div style={{ padding: "1.5rem", background: "white", border: `1px solid ${colors.border}`, borderRadius: 8, textAlign: "center" }}>
-          <div style={{ fontSize: "0.8rem", color: colors.muted, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          <div style={{ fontSize: "0.8rem", color: colors.slate, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Recovery Range
           </div>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "1.2rem", fontWeight: 700, color: colors.teal }}>
@@ -470,7 +470,7 @@ export default function ROICalculator() {
           </div>
         </div>
         <div style={{ padding: "1.5rem", background: "rgba(245,158,11,0.08)", border: `2px solid ${colors.amber}`, borderRadius: 8, textAlign: "center" }}>
-          <div style={{ fontSize: "0.8rem", color: colors.muted, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          <div style={{ fontSize: "0.8rem", color: colors.slate, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
             Mid-Point Estimate
           </div>
           <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "1.8rem", fontWeight: 700, color: colors.amber }}>
@@ -495,11 +495,11 @@ export default function ROICalculator() {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-          <div style={{ fontSize: "0.8rem", color: colors.muted, marginTop: "1rem" }}>
+          <div style={{ fontSize: "0.8rem", color: colors.slate, marginTop: "1rem" }}>
             {recoveryBreakdown.map((cat, i) => (
               <div key={i} style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.3rem" }}>
                 <span style={{ color: cat.color, fontWeight: 600 }}>● {cat.name}</span>
-                <span>${(cat.value / 1000).toFixed(0)}K</span>
+                <span style={{ color: colors.slate }}>${(cat.value / 1000).toFixed(0)}K</span>
               </div>
             ))}
           </div>
@@ -522,10 +522,10 @@ export default function ROICalculator() {
               <Bar dataKey="roiMultiple" fill={colors.teal} radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
-          <div style={{ fontSize: "0.8rem", color: colors.muted, marginTop: "1rem" }}>
+          <div style={{ fontSize: "0.8rem", color: colors.slate, marginTop: "1rem" }}>
             {roiScenarioData.map((scenario, i) => (
               <div key={i} style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.3rem" }}>
-                <span>{scenario.scenario}</span>
+                <span style={{ color: colors.slate }}>{scenario.scenario}</span>
                 <span style={{ fontWeight: 600, color: colors.teal }}>{scenario.roiMultiple}x ROI</span>
               </div>
             ))}
@@ -539,7 +539,7 @@ export default function ROICalculator() {
           <h4 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", fontWeight: 700, color: colors.slate, marginBottom: "0.5rem" }}>
             Get Your Detailed Assessment Report
           </h4>
-          <p style={{ color: colors.muted, marginBottom: "1rem", fontSize: "0.9rem" }}>
+          <p style={{ color: colors.slate, marginBottom: "1rem", fontSize: "0.9rem" }}>
             Enter your email to download a PDF with your full assessment, recovery scenarios, and next steps.
           </p>
           <div style={{ display: "flex", gap: "0.75rem" }}>

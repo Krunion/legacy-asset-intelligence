@@ -8,14 +8,14 @@ import React, { useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const colors = {
-  slate: "#1E3A5F",
+  slate: "#0F1419",
   teal: "#0D9488",
   amber: "#F59E0B",
-  slateLight: "#2D5282",
+  slateLight: "#1B4D3E",
   tealLight: "#14B8A6",
   bg: "#F8FAFC",
-  text: "#1E293B",
-  muted: "#64748B",
+  text: "#FFFFFF",
+  muted: "#E8E9EB",
   border: "#E2E8F0",
 };
 
@@ -441,17 +441,17 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                   },
                 ].map((item, i) => (
                   <div key={i}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginBottom: "0.3rem",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      <span style={{ color: colors.text, fontWeight: 600 }}>
-                        {item.label}
-                      </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: "0.3rem",
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    <span style={{ color: colors.slate, fontWeight: 600 }}>
+                      {item.label}
+                    </span>
                       <span style={{ color: item.color, fontWeight: 700 }}>
                         ${(item.value / 1000).toFixed(0)}K
                       </span>
@@ -504,7 +504,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
               style={{
                 margin: 0,
                 paddingLeft: "1.5rem",
-                color: colors.text,
+                color: colors.slate,
                 fontSize: "0.9rem",
                 lineHeight: 1.7,
               }}
@@ -529,7 +529,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
             <p
               style={{
                 fontStyle: "italic",
-                color: colors.text,
+                color: colors.slate,
                 margin: "0 0 0.75rem 0",
                 fontSize: "0.95rem",
                 lineHeight: 1.7,
@@ -595,7 +595,7 @@ export default function CaseStudies() {
       <div style={{ marginBottom: "2rem" }}>
         <p
           style={{
-            color: colors.muted,
+            color: colors.slate,
             fontSize: "0.95rem",
             lineHeight: 1.7,
           }}
@@ -639,7 +639,7 @@ export default function CaseStudies() {
         </h4>
         <p
           style={{
-            color: colors.text,
+            color: colors.slate,
             fontSize: "0.9rem",
             lineHeight: 1.7,
             margin: 0,

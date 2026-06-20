@@ -7,6 +7,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import {
   AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
@@ -38,9 +39,9 @@ const C = {
   amber: "#D4AF37",
   amberPale: "#FEF3C7",
   bg: "#FAFBFC",
-  text: "#0F1419",
-  textLight: "#2C3E50",
-  muted: "#6B7280",
+  text: "#FFFFFF",
+  textLight: "#E8E9EB",
+  muted: "#B0B5BD",
   border: "#E5E7EB",
   cardBg: "#FFFFFF",
 };
@@ -160,11 +161,11 @@ function SectionHeader({ label, title, subtitle }: {
       <p style={{ color: C.gold, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
         {label}
       </p>
-      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.slate, lineHeight: 1.2 }}>
+      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "#FFFFFF", lineHeight: 1.2 }}>
         {title}
       </h2>
       {subtitle && (
-        <p style={{ color: C.muted, marginTop: "0.5rem", fontSize: "1rem", fontFamily: "'Source Sans 3', sans-serif" }}>
+        <p style={{ color: "#B0B5BD", marginTop: "0.5rem", fontSize: "1rem", fontFamily: "'Source Sans 3', sans-serif" }}>
           {subtitle}
         </p>
       )}
@@ -207,6 +208,7 @@ function CustomTooltip({ active, payload, label, prefix = "", suffix = "" }: any
 }
 
 export default function Home() {
+  const [, navigate] = useLocation();
   const [activeSection, setActiveSection] = useState("executive-summary");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -233,7 +235,7 @@ export default function Home() {
   };
 
   return (
-    <div style={{ background: C.bg, minHeight: "100vh" }}>
+    <div style={{ background: `linear-gradient(135deg, rgba(15,20,25,0.85) 0%, rgba(27,77,62,0.85) 100%), url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed", minHeight: "100vh" }}>
 
       {/* ── TOP NAV BAR ── */}
       <header style={{ background: C.charcoal, position: "sticky", top: 0, zIndex: 50, boxShadow: "0 2px 12px rgba(15,20,25,0.4)" }}>
@@ -249,7 +251,7 @@ export default function Home() {
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <button style={{ background: C.teal, color: "white", padding: "0.5rem 1rem", borderRadius: 20, fontSize: "0.75rem", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, border: "none", cursor: "pointer" }}>
+            <button onClick={() => navigate("/faq")} style={{ background: C.teal, color: "white", padding: "0.5rem 1rem", borderRadius: 20, fontSize: "0.75rem", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, border: "none", cursor: "pointer" }}>
               Contact Us
             </button>
             {/* Mobile nav toggle */}
@@ -341,7 +343,7 @@ export default function Home() {
             </div>
 
             {/* Executive Summary Text */}
-            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, lineHeight: 1.8, fontSize: "0.97rem" }}>
+            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", lineHeight: 1.8, fontSize: "0.97rem" }}>
               <p style={{ marginBottom: "1rem" }}>
                 <strong>Legacy Asset Intelligence</strong> is a specialized consulting firm built to solve one of the most overlooked financial problems in enterprise operations: <strong>ghost assets</strong>. These are items that appear on a company's Fixed Asset Register (FAR) but are physically missing, fully depreciated, or otherwise non-existent in reality. Industry research consistently shows that <strong>15% to 30%</strong> of a typical organization's fixed assets are ghosts, silently consuming up to <strong>25% of IT and operational budgets</strong> through unnecessary maintenance contracts, inflated insurance premiums, and overpaid property taxes.
               </p>
@@ -360,10 +362,10 @@ export default function Home() {
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem" }}>
               <div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem" }}>
                   Industry Impact
                 </h3>
-                <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, lineHeight: 1.8, fontSize: "0.95rem" }}>
+                <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", lineHeight: 1.8, fontSize: "0.95rem" }}>
                   <p style={{ marginBottom: "1rem" }}>
                     Ghost assets represent a pervasive, yet largely unaddressed, financial drain across enterprise organizations. The phenomenon is driven by:
                   </p>
@@ -391,8 +393,8 @@ export default function Home() {
             </div>
 
             {/* Ghost Asset Impact */}
-            <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "2rem", marginBottom: "2rem" }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1.5rem" }}>
+            <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: 12, border: `1px solid ${C.border}`, padding: "2rem", marginBottom: "2rem" }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#0F1419", marginBottom: "1.5rem" }}>
                 Financial Impact of Ghost Assets
               </h3>
               <ResponsiveContainer width="100%" height={300}>
@@ -407,8 +409,8 @@ export default function Home() {
             </div>
 
             {/* Market Growth */}
-            <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "2rem" }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1.5rem" }}>
+            <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: 12, border: `1px solid ${C.border}`, padding: "2rem" }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#0F1419", marginBottom: "1.5rem" }}>
                 Fixed Asset Management Market Growth
               </h3>
               <ResponsiveContainer width="100%" height={300}>
@@ -433,7 +435,7 @@ export default function Home() {
           <Section id="services">
             <SectionHeader label="03 · Services & Methodology" title="The LAI Four-Phase Framework" subtitle="A systematic, technology-backed approach to permanent ghost asset elimination and ongoing governance." />
 
-            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, lineHeight: 1.8, fontSize: "0.97rem", marginBottom: "2rem" }}>
+            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", lineHeight: 1.8, fontSize: "0.97rem", marginBottom: "2rem" }}>
               <p>
                 Legacy Asset Intelligence employs a proprietary four-phase methodology that distinguishes us from competitors who offer only point-in-time audits. Our approach begins with discovery and executive assessment, moves through physical asset accountability, implements technology platforms, and concludes with optional recurring governance services. Each phase builds on the previous, creating a compounding value proposition for clients who engage us for long-term asset management excellence.
               </p>
@@ -446,8 +448,8 @@ export default function Home() {
                   phase: "Phase 01",
                   icon: "🔍",
                   title: "Discovery & Executive Assessments",
-                  color: C.slate,
-                  lightColor: "#EEF2F7",
+                  color: C.charcoal,
+                  lightColor: "rgba(15,20,25,0.1)",
                   description: "Executive assessment, asset accountability maturity review, opportunity modeling, risk findings, and a practical roadmap for next-step engagement.",
                   items: [
                     "Executive stakeholder interviews",
@@ -463,8 +465,8 @@ export default function Home() {
                   phase: "Phase 02",
                   icon: "🏷️",
                   title: "Physical Asset Accountability",
-                  color: C.teal,
-                  lightColor: "#F0FDFA",
+                  color: C.emerald,
+                  lightColor: "rgba(27,77,62,0.1)",
                   description: "Discovery, physical verification, reconciliation, exception analysis, and capital recovery opportunity reporting.",
                   items: [
                     "Wall-to-wall physical inventory of all facilities",
@@ -480,8 +482,8 @@ export default function Home() {
                   phase: "Phase 03",
                   icon: "💻",
                   title: "Technology Platform Integration",
-                  color: C.amber,
-                  lightColor: "#FFFBEB",
+                  color: C.gold,
+                  lightColor: "rgba(212,175,55,0.1)",
                   description: "Governance design, technology enablement planning, training, implementation support, accountability structures, and operating controls.",
                   items: [
                     "Asset management platform selection",
@@ -497,8 +499,8 @@ export default function Home() {
                   phase: "Phase 04",
                   icon: "📊",
                   title: "Recurring Governance & Audits",
-                  color: "#10B981",
-                  lightColor: "#ECFDF5",
+                  color: C.emerald,
+                  lightColor: "rgba(27,77,62,0.1)",
                   description: "Recurring audits, executive reporting, scorecards, maturity updates, and ongoing accountability assurance.",
                   items: [
                     "Quarterly rolling audit program",
@@ -525,12 +527,12 @@ export default function Home() {
                     </h3>
                   </div>
                   <div style={{ padding: "1.25rem 1.5rem", flex: 1, display: "flex", flexDirection: "column" }}>
-                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.82rem", color: C.text, lineHeight: 1.5, marginBottom: "1rem" }}>
+                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.82rem", color: "#0F1419", lineHeight: 1.5, marginBottom: "1rem" }}>
                       {service.description}
                     </p>
                     <ul style={{ listStyle: "none", padding: 0, margin: 0, marginBottom: "1rem", flex: 1 }}>
                       {service.items.map(item => (
-                        <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", marginBottom: "0.5rem", fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.text, lineHeight: 1.4 }}>
+                        <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", marginBottom: "0.5rem", fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: "#0F1419", lineHeight: 1.4 }}>
                           <span style={{ color: service.color, fontWeight: 700, marginTop: "0.1rem", flexShrink: 0 }}>✓</span>
                           {item}
                         </li>
@@ -540,7 +542,7 @@ export default function Home() {
                       <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 700, color: service.color, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.2rem" }}>
                         Deliverable
                       </p>
-                      <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.text, margin: 0 }}>
+                      <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: "#0F1419", margin: 0 }}>
                         {service.deliverable}
                       </p>
                     </div>
@@ -551,7 +553,7 @@ export default function Home() {
 
             {/* Video Placeholder - Between Phase 1-2 */}
             <div style={{ padding: "2rem", background: "rgba(13, 148, 136, 0.08)", borderRadius: 12, border: `2px dashed ${C.teal}`, marginBottom: "2rem", textAlign: "center" }}>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.slate, marginBottom: "1rem" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#FFFFFF", marginBottom: "1rem" }}>
                 Learn more about the transition from Phase 1 to Phase 2
               </p>
               <VideoModal
@@ -563,7 +565,7 @@ export default function Home() {
 
             {/* Video Placeholder - Between Phase 2-3 */}
             <div style={{ padding: "2rem", background: "rgba(245, 158, 11, 0.08)", borderRadius: 12, border: `2px dashed ${C.amber}`, marginBottom: "2rem", textAlign: "center" }}>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.slate, marginBottom: "1rem" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#FFFFFF", marginBottom: "1rem" }}>
                 See how physical asset accountability leads to technology integration
               </p>
               <VideoModal
@@ -575,7 +577,7 @@ export default function Home() {
 
             {/* Video Placeholder - Between Phase 3-4 */}
             <div style={{ padding: "2rem", background: "rgba(16, 185, 129, 0.08)", borderRadius: 12, border: `2px dashed #10B981`, marginBottom: "2rem", textAlign: "center" }}>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.slate, marginBottom: "1rem" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#FFFFFF", marginBottom: "1rem" }}>
                 Implement technology platforms for ongoing governance
               </p>
               <VideoModal
@@ -591,10 +593,10 @@ export default function Home() {
                 <img src={AUDIT_IMG} alt="Asset audit in progress" style={{ width: "100%", borderRadius: 12, objectFit: "cover", height: 280 }} />
               </div>
               <div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem" }}>
                   Why Four Phases Matter
                 </h3>
-                <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, lineHeight: 1.8, fontSize: "0.95rem" }}>
+                <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", lineHeight: 1.8, fontSize: "0.95rem" }}>
                   <p style={{ marginBottom: "1rem" }}>
                     Most consulting firms stop after Phase 2—they deliver a report and walk away. Legacy Asset Intelligence goes further. We design governance systems and implement technology platforms that prevent ghost assets from re-accumulating. The optional Phase 4 engagement ensures your organization maintains accountability indefinitely.
                   </p>
@@ -628,34 +630,34 @@ export default function Home() {
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}>
               <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#0F1419", marginBottom: "1rem" }}>
                   Kroll
                 </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, fontSize: "0.85rem", lineHeight: 1.6 }}>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#0F1419", fontSize: "0.85rem", lineHeight: 1.6 }}>
                   Broad service offerings but lower specialization in ghost asset recovery. Limited technology platform integration.
                 </p>
               </div>
               <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#0F1419", marginBottom: "1rem" }}>
                   Verasset
                 </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, fontSize: "0.85rem", lineHeight: 1.6 }}>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#0F1419", fontSize: "0.85rem", lineHeight: 1.6 }}>
                   Highly specialized but lacks breadth and governance framework. Point-in-time audit focus.
                 </p>
               </div>
               <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#0F1419", marginBottom: "1rem" }}>
                   TagMyAssets
                 </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, fontSize: "0.85rem", lineHeight: 1.6 }}>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#0F1419", fontSize: "0.85rem", lineHeight: 1.6 }}>
                   Software-only approach. Limited consulting services or governance design capabilities.
                 </p>
               </div>
-              <div style={{ background: C.tealPale, borderRadius: 12, border: `2px solid ${C.teal}`, padding: "1.5rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+              <div style={{ background: "#1B4D3E", borderRadius: 12, border: `2px solid ${C.teal}`, padding: "1.5rem" }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem" }}>
                   LAI (Us)
                 </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, fontSize: "0.85rem", lineHeight: 1.6 }}>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", fontSize: "0.85rem", lineHeight: 1.6 }}>
                   Balanced across all dimensions: consulting breadth, ghost asset specialization, technology enablement, and governance frameworks.
                 </p>
               </div>
