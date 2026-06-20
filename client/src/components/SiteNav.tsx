@@ -32,7 +32,7 @@ export default function SiteNav() {
   const [navOpen, setNavOpen] = useState(true);
 
   return (
-    <nav style={{ background: "#F5F5F5", borderBottom: `1px solid ${C.border}`, padding: "1rem 2rem", position: "sticky", top: 0, zIndex: 100 }}>
+    <nav style={{ background: "#D9D9D9", borderBottom: `1px solid ${C.border}`, padding: "1rem 2rem", position: "sticky", top: 0, zIndex: 100 }}>
       <div style={{ maxWidth: 1400, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <button 
           onClick={() => navigate("/")} 
