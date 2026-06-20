@@ -295,11 +295,14 @@ export default function Home() {
                 display: "block", width: "100%", textAlign: "left",
                 padding: "0.65rem 1.25rem",
                 background: activeSection === s.id ? "rgba(13,148,136,0.2)" : "transparent",
+                borderTop: "none",
+                borderRight: "none",
+                borderBottom: "none",
                 borderLeft: activeSection === s.id ? `3px solid ${C.teal}` : "3px solid transparent",
                 color: activeSection === s.id ? "white" : "rgba(255,255,255,0.65)",
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontSize: "0.82rem", fontWeight: activeSection === s.id ? 600 : 400,
-                cursor: "pointer", border: "none", transition: "all 0.2s",
+                cursor: "pointer", transition: "all 0.2s",
               }}
             >
               {s.label}

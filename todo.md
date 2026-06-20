@@ -37,6 +37,9 @@
 - [x] Prevent PDF generation if lead submission fails (try/catch wrapper)
 - [x] Add logging for successful HubSpot submissions (console.log with contactId)
 
+## Bug Fixes
+- [x] Fixed React style warning: border/borderLeft conflict (replaced with separate border properties)
+
 ## Deployment
 - [x] Error handling and UX complete
 - [x] Integration tests passing (11/11 tests pass)
@@ -44,7 +47,7 @@
 - [x] Manual QA: Lead submission flow wired (ROI Calculator → HubSpot)
 - [x] Manual QA: PDF download wired to lead capture
 - [x] Manual QA: Mobile responsiveness verified (375x812 viewport)
-- [x] Create final checkpoint before publishing (checkpoint: 4a9cc7e4)
+- [x] Create final checkpoint before publishing (checkpoint: 0c1ce208)
 - [ ] Publish to production (click Publish button in Management UI)
 
 ## AI Chatbot Widget
