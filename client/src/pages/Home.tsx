@@ -239,19 +239,19 @@ export default function Home() {
 
       {/* ── TOP NAV BAR ── */}
       <header style={{ background: C.charcoal, position: "sticky", top: 0, zIndex: 50, boxShadow: "0 2px 12px rgba(15,20,25,0.4)" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <div style={{ background: "white", borderRadius: "0.375rem", padding: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }} className="header-container">
+            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", minWidth: 0 }}>
+            <div style={{ background: "white", borderRadius: "0.375rem", padding: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <img src={LOGO_IMG} alt="LAI Logo" style={{ height: 40, width: 40, objectFit: "contain" }} />
             </div>
-            <div>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: "white", fontSize: "1.05rem", lineHeight: 1.1 }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: "white", fontSize: "clamp(0.8rem, 2vw, 1.05rem)", lineHeight: 1.1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                 Legacy Asset Intelligence
               </div>
             </div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <button onClick={() => navigate("/faq")} style={{ background: C.teal, color: "white", padding: "0.5rem 1rem", borderRadius: 20, fontSize: "0.75rem", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, border: "none", cursor: "pointer" }}>
+            <button onClick={() => navigate("/faq")} style={{ background: C.teal, color: "white", padding: "0.4rem 0.8rem", borderRadius: 20, fontSize: "clamp(0.65rem, 1.5vw, 0.75rem)", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>
               Contact Us
             </button>
             {/* Mobile nav toggle */}
@@ -319,16 +319,16 @@ export default function Home() {
         </aside>
 
         {/* ── MAIN CONTENT ── */}
-        <main style={{ flex: 1, padding: "2rem", minWidth: 0 }}>
+        <main style={{ flex: 1, padding: "2rem", minWidth: 0 }} className="main-content">
 
           {/* SECTION 1: HERO */}
           <Section id="executive-summary">
             <div style={{ marginBottom: "3rem" }}>
-              <div style={{ background: `linear-gradient(135deg, rgba(15,20,25,0.5) 0%, rgba(27,77,62,0.5) 100%), url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed", borderRadius: 12, padding: "6rem 4rem", color: "white", textAlign: "center", minHeight: 500, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "3.5rem", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
+              <div style={{ background: `linear-gradient(135deg, rgba(15,20,25,0.5) 0%, rgba(27,77,62,0.5) 100%), url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed", borderRadius: 12, padding: "clamp(2rem, 5vw, 6rem) clamp(1.5rem, 4vw, 4rem)", color: "white", textAlign: "center", minHeight: "clamp(300px, 50vh, 500px)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.75rem, 6vw, 3.5rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
                   Recover Millions in Hidden Capital.
                 </h1>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1.2rem", maxWidth: 700, lineHeight: 1.6, opacity: 0.95 }}>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "clamp(0.95rem, 2.5vw, 1.2rem)", maxWidth: 700, lineHeight: 1.6, opacity: 0.95 }}>
                   Legacy Asset Intelligence helps healthcare systems, manufacturers, utilities, and government organizations recover lost capital, establish complete asset accountability, and implement governance programs that protect investments for years to come.
                 </p>
               </div>

@@ -336,3 +336,69 @@
       font-size: 0.7rem !important;
     }
   }
+
+
+  /* Header responsive scaling */
+  .header-container {
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .header-container {
+      padding: 0 1.5rem;
+    }
+  }
+
+  /* Main layout responsive */
+  @media (max-width: 1024px) {
+    main {
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 1rem !important;
+    }
+  }
+
+  /* Improved mobile scaling for content */
+  @media (max-width: 768px) {
+    [style*="maxWidth: 1280"] {
+      padding: 0 1rem !important;
+    }
+
+    [style*="display: flex"][style*="gap"] {
+      gap: 0.5rem !important;
+    }
+
+    /* Responsive text scaling */
+    [style*="fontSize: \"2rem\""] {
+      font-size: 1.5rem !important;
+    }
+
+    [style*="fontSize: \"1.5rem\""] {
+      font-size: 1.25rem !important;
+    }
+
+    [style*="fontSize: \"1.3rem\""] {
+      font-size: 1.1rem !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    [style*="maxWidth: 1280"] {
+      padding: 0 0.75rem !important;
+    }
+
+    /* Stack layouts on small screens */
+    [style*="display: flex"][style*="gap: 2rem"] {
+      flex-direction: column !important;
+      gap: 1rem !important;
+    }
+
+    /* Responsive padding for sections */
+    [style*="padding: \"2rem\""] {
+      padding: 1rem !important;
+    }
+
+    [style*="padding: \"1.5rem\""] {
+      padding: 1rem !important;
+    }
+  }
