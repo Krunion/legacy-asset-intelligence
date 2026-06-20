@@ -32,9 +32,6 @@ export default function PageLayout({
   };
   return (
     <div style={{ minHeight: "100vh", background: C.bgLight }}>
-      {/* Navigation */}
-      <SiteNav />
-
       {/* Hero Section */}
       <section style={{ background: C.charcoal, color: C.text, padding: "4rem 2rem", textAlign: "center" }}>
         <div style={{ maxWidth: 800, margin: "0 auto" }}>
@@ -67,7 +64,7 @@ export default function PageLayout({
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(255, 255, 255, 0.95)",
+          background: "rgba(255, 255, 255, 0.70)",
           zIndex: 1
         }} />
         {/* Content wrapper */}
@@ -96,7 +93,7 @@ export default function PageLayout({
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(15, 20, 25, 0.75)",
+          background: "rgba(15, 20, 25, 0.60)",
           zIndex: 1
         }} />
         {/* Content wrapper */}
