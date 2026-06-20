@@ -64,7 +64,7 @@ export default function PageLayout({
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(255, 255, 255, 0.70)",
+          background: "rgba(255, 255, 255, 0.40)",
           zIndex: 1
         }} />
         {/* Content wrapper */}
@@ -93,7 +93,7 @@ export default function PageLayout({
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(15, 20, 25, 0.60)",
+          background: "rgba(15, 20, 25, 0.35)",
           zIndex: 1
         }} />
         {/* Content wrapper */}
