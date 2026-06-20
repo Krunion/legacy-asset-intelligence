@@ -3,6 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { submitLeadToHubSpot } from "./_core/hubspot";
+import { chatbotRouter } from "./routers/chatbot";
 import { z } from "zod";
 
 export const appRouter = router({
@@ -43,6 +44,8 @@ export const appRouter = router({
         return result;
       }),
   }),
+
+  chatbot: chatbotRouter,
 });
 
 export type AppRouter = typeof appRouter;

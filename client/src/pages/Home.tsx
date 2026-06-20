@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import ROICalculator from "@/components/ROICalculator";
 import CaseStudies from "@/components/CaseStudies";
+import { ChatbotWidget } from "@/components/ChatbotWidget";
 
 // ─── Asset URLs ───────────────────────────────────────────────────────────────
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
@@ -1100,6 +1101,9 @@ export default function Home() {
 
         </main>
       </div>
+
+      {/* Chatbot Widget */}
+      <ChatbotWidget />
     </div>
   );
 }

@@ -12,24 +12,24 @@
 ## Homepage & Layout
 - [x] Resolve Home.tsx conflict (template vs existing business plan) - content preserved
 - [x] Homepage design rendering correctly (screenshot verified)
-- [ ] Test responsive layout on mobile
+- [ ] Test responsive layout on mobile (screenshot captured, needs manual verification)
 
 ## Case Studies & ROI Calculator
-- [ ] Verify CaseStudies component integration
-- [ ] Test ROI Calculator calculations
-- [ ] Verify PDF generation with lead data
+- [ ] Verify CaseStudies component integration (needs manual verification)
+- [ ] Test ROI Calculator calculations (needs calculation verification)
+- [ ] Verify PDF generation with lead data (needs manual download test)
 
 ## Database & Backend
-- [ ] Run `pnpm db:push` to sync schema (optional - no schema changes needed)
-- [ ] Create leads table to store submissions (optional - HubSpot is source of truth)
+- [x] Run `pnpm db:push` (not needed - no schema changes)
+- [x] Create leads table (not needed - HubSpot is source of truth)
 - [x] Add logging for HubSpot submissions (implemented in hubspot.ts)
 
 ## Testing & QA
 - [x] Add integration test for full lead submission flow (tRPC caller test - all 4 tests passing)
-- [ ] Test invalid email rejection in UI (manual test needed)
+- [ ] Test invalid email rejection in UI (validation exists, needs browser test)
 - [x] Add error handling and user feedback for failed submissions (implemented)
 - [x] Verify HubSpot contact creation in CRM (integration tests confirm)
-- [ ] Test PDF download flow (manual verification needed)
+- [ ] Test PDF download flow (wired, needs manual verification)
 
 ## Error Handling & UX
 - [x] Add error notification when HubSpot submission fails (inline error message)
@@ -40,6 +40,15 @@
 ## Deployment
 - [x] Error handling and UX complete
 - [x] Integration tests passing (7/7 tests pass)
-- [ ] Manual QA testing (test PDF download, mobile responsiveness)
-- [ ] Create final checkpoint before publishing
-- [ ] Publish to production
+- [ ] Manual QA testing (screenshots captured, needs detailed verification)
+- [x] Create final checkpoint before publishing (checkpoint: da74fd1c)
+- [ ] Publish to production (click Publish button in Management UI)
+
+## AI Chatbot Widget
+- [x] Design chatbot architecture (system prompt, conversation flow)
+- [x] Create tRPC procedure for chat messages with LLM integration (proper router wrapper)
+- [x] Build chatbot UI component (floating widget, message history, input)
+- [x] Implement lead extraction from conversations (regex email/company extraction)
+- [x] Wire lead extraction to HubSpot submission (auto-capture on email mention)
+- [x] Test chatbot responses and lead capture (11/11 tests passing, including 4 new chatbot tests)
+- [x] Integrate chatbot into Home.tsx layout (ChatbotWidget component added)
