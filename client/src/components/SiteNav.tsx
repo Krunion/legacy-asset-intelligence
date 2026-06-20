@@ -40,19 +40,11 @@ export default function SiteNav() {
           onClick={() => navigate("/")} 
           style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal, display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}
         >
-          <div style={{ background: "white", borderRadius: "0.375rem", padding: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-5QXNLUsEDRp3nBVBAMiXK4.webp" alt="LAI Logo" style={{ height: 40, width: 40, objectFit: "contain" }} />
-          </div>
+          <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-gold-UWeFEAzaDzPqPsceT8VDqG.webp" alt="LAI Logo" style={{ height: 60, width: "auto", objectFit: "contain" }} />
         </button>
 
-        {/* Centered Name */}
-        <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <button 
-            onClick={() => navigate("/")} 
-            style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700 }}
-          >
-            <span style={{ fontSize: "1.8rem", fontWeight: 700, color: C.gold, fontFamily: "'Playfair Display', serif", letterSpacing: "0.5px", whiteSpace: "nowrap" }}>Legacy Asset Intelligence</span>
-          </button>
+        {/* Centered Name - Hidden since logo includes text */}
+        <div style={{ flex: 1 }}>
         </div>
 
         {/* Toggle Button */}
