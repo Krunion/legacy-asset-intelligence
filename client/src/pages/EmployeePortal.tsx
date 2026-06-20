@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { getLoginUrl } from "@/const";
+import { useLocation } from "wouter";
 
 const C = {
   slate: "#1E3A5F",
@@ -11,87 +13,23 @@ const C = {
 };
 
 export default function EmployeePortal() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [employeeName, setEmployeeName] = useState("");
+  const { user, loading, isAuthenticated, logout } = useAuth();
+  const [, navigate] = useLocation();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+  // If still loading auth state, show loading screen
+  if (loading) {
+    return (
+      <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>⏳</div>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.muted }}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
-    // Simple validation - in production, this would call an API
-    if (!email || !password) {
-      setError("Please enter both email and password");
-      return;
-    }
-
-    if (!email.includes("@")) {
-      setError("Please enter a valid email address");
-      return;
-    }
-
-    // Mock login - in production, authenticate with backend
-    setIsLoggedIn(true);
-    setEmployeeName(email.split("@")[0]);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setEmail("");
-    setPassword("");
-    setEmployeeName("");
-  };
-
-  const resources = [
-    {
-      title: "Proposal Calculator",
-      description: "Interactive tool for calculating client recovery opportunities and ROI",
-      icon: "📊",
-      type: "Tool",
-      link: "#",
-    },
-    {
-      title: "Asset Intelligence Assessment",
-      description: "Comprehensive workbook for evaluating client asset management maturity",
-      icon: "📋",
-      type: "Spreadsheet",
-      link: "#",
-    },
-    {
-      title: "Recoverable Capital Assessment",
-      description: "Detailed framework for modeling capital recovery scenarios",
-      icon: "💰",
-      type: "Spreadsheet",
-      link: "#",
-    },
-    {
-      title: "Investigative Questionnaire",
-      description: "Client discovery document for initial engagement assessment",
-      icon: "📝",
-      type: "Document",
-      link: "#",
-    },
-    {
-      title: "Asset Panda Demo",
-      description: "Access to Asset Panda platform demo for client demonstrations",
-      icon: "🐼",
-      type: "Platform (Coming Soon)",
-      link: "#",
-      comingSoon: true,
-    },
-    {
-      title: "EZO Integration",
-      description: "EZO asset management platform integration and documentation",
-      icon: "🔧",
-      type: "Platform (Coming Soon)",
-      link: "#",
-      comingSoon: true,
-    },
-  ];
-
-  if (!isLoggedIn) {
+  // If not authenticated, show login prompt
+  if (!isAuthenticated) {
     return (
       <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
         <div style={{ width: "100%", maxWidth: 400, background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "2rem", boxShadow: "0 4px 16px rgba(30,58,95,0.1)" }}>
@@ -104,59 +42,12 @@ export default function EmployeePortal() {
             </p>
           </div>
 
-          <form onSubmit={handleLogin} style={{ marginBottom: "1.5rem" }}>
-            <div style={{ marginBottom: "1rem" }}>
-              <label style={{ display: "block", fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@legacyassetintelligence.com"
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 6,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.text, lineHeight: 1.6, marginBottom: "1.5rem", textAlign: "center" }}>
+            Sign in with your LAI account to access the employee portal and download resources.
+          </p>
 
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label style={{ display: "block", fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 6,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
-              />
-            </div>
-
-            {error && (
-              <div style={{ padding: "0.75rem", background: "#FEE2E2", border: "1px solid #FECACA", borderRadius: 6, marginBottom: "1rem" }}>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: "#DC2626", margin: 0 }}>
-                  {error}
-                </p>
-              </div>
-            )}
-
+          <a href={getLoginUrl()} style={{ textDecoration: "none" }}>
             <button
-              type="submit"
               style={{
                 width: "100%",
                 padding: "0.75rem",
@@ -170,19 +61,81 @@ export default function EmployeePortal() {
                 fontSize: "0.9rem",
               }}
             >
-              Sign In
+              Sign In with Manus
             </button>
-          </form>
+          </a>
 
-          <div style={{ padding: "1rem", background: "rgba(13, 148, 136, 0.08)", borderRadius: 6, textAlign: "center" }}>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.muted, margin: 0 }}>
-              Demo: Use any email and password to access the portal
-            </p>
-          </div>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.muted, textAlign: "center", marginTop: "1rem", margin: 0 }}>
+            You must be an LAI employee to access this portal.
+          </p>
         </div>
       </div>
     );
   }
+
+  // Resources with S3 storage paths
+  const resources = [
+    {
+      title: "Proposal Calculator",
+      description: "Interactive tool for calculating client recovery opportunities and ROI",
+      icon: "📊",
+      type: "Spreadsheet",
+      fileSize: "37 KB",
+      fileType: "Excel",
+      link: "/manus-storage/2_LAI_Proposal_Calculator_d59ad2ae.xlsx",
+    },
+    {
+      title: "Asset Intelligence Assessment",
+      description: "Comprehensive workbook for evaluating client asset management maturity",
+      icon: "📋",
+      type: "Spreadsheet",
+      fileSize: "297 KB",
+      fileType: "Excel",
+      link: "/manus-storage/1_Asset_Intelligence_Opportunity_Assessment_Actual_2a67d78c.xlsx",
+    },
+    {
+      title: "Recoverable Capital Assessment",
+      description: "Detailed framework for modeling capital recovery scenarios",
+      icon: "💰",
+      type: "Spreadsheet",
+      fileSize: "33 KB",
+      fileType: "Excel",
+      link: "/manus-storage/3_Recoverable_Capital_Assessment_Workbook_Actual_746c287c.xlsx",
+    },
+    {
+      title: "Investigative Questionnaire",
+      description: "Client discovery document for initial engagement assessment",
+      icon: "📝",
+      type: "Document",
+      fileSize: "21 KB",
+      fileType: "Word",
+      link: "/manus-storage/LAIInvestigativeQuestionnaire_76a02885.docx",
+    },
+    {
+      title: "Asset Panda Demo",
+      description: "Access to Asset Panda platform demo for client demonstrations",
+      icon: "🐼",
+      type: "Platform",
+      comingSoon: true,
+    },
+    {
+      title: "EZO Integration",
+      description: "EZO asset management platform integration and documentation",
+      icon: "🔧",
+      type: "Platform",
+      comingSoon: true,
+    },
+  ];
+
+  const handleDownload = (link: string, fileName: string) => {
+    // Create a temporary link and trigger download
+    const a = document.createElement("a");
+    a.href = link;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   return (
     <div style={{ minHeight: "100vh", background: C.bg, padding: "2rem" }}>
@@ -191,14 +144,14 @@ export default function EmployeePortal() {
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", padding: "1.5rem", background: "white", borderRadius: 12, border: `1px solid ${C.border}` }}>
           <div>
             <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", fontWeight: 700, color: C.slate, margin: 0, marginBottom: "0.25rem" }}>
-              Welcome, {employeeName}!
+              Welcome, {user?.name || "Employee"}!
             </h1>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.muted, margin: 0 }}>
               Access your resources and tools
             </p>
           </div>
           <button
-            onClick={handleLogout}
+            onClick={logout}
             style={{
               padding: "0.6rem 1.2rem",
               background: "transparent",
@@ -263,6 +216,13 @@ export default function EmployeePortal() {
                 {resource.description}
               </p>
 
+              {!resource.comingSoon && (
+                <div style={{ fontSize: "0.8rem", color: C.muted, marginBottom: "1rem", display: "flex", gap: "1rem" }}>
+                  <span>📦 {resource.fileSize}</span>
+                  <span>📄 {resource.fileType}</span>
+                </div>
+              )}
+
               {resource.comingSoon ? (
                 <div style={{ padding: "0.75rem", background: "rgba(13, 148, 136, 0.08)", borderRadius: 6, textAlign: "center" }}>
                   <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.teal, fontWeight: 600, margin: 0 }}>
@@ -271,6 +231,7 @@ export default function EmployeePortal() {
                 </div>
               ) : (
                 <button
+                  onClick={() => handleDownload(resource.link || "", resource.title)}
                   style={{
                     width: "100%",
                     padding: "0.6rem",
@@ -284,7 +245,7 @@ export default function EmployeePortal() {
                     fontSize: "0.85rem",
                   }}
                 >
-                  Access Resource
+                  ⬇️ Download
                 </button>
               )}
             </div>
@@ -297,7 +258,7 @@ export default function EmployeePortal() {
             Portal Information
           </h2>
           <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.text, lineHeight: 1.8, marginBottom: "1rem" }}>
-            This employee portal provides access to all essential LAI resources and tools. You can download spreadsheets, access interactive calculators, and connect to partner platforms.
+            This employee portal provides secure access to all essential LAI resources and tools. You can download spreadsheets, access interactive calculators, and connect to partner platforms.
           </p>
           <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.text, lineHeight: 1.8, margin: 0 }}>
             For questions or technical support, please contact the LAI support team at support@legacyassetintelligence.com.

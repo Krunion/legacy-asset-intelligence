@@ -1,7 +1,7 @@
 /**
  * Legacy Asset Intelligence — Business Plan
  * Design: Corporate Clarity
- * Colors: Deep Slate Blue (#1E3A5F), Emerald Teal (#0D9488), Warm Amber (#F59E0B)
+ * Colors: Deep Charcoal (#0F1419), Deep Emerald (#1B4D3E), Gold (#D4AF37)
  * Fonts: Playfair Display (headings), Source Sans 3 (body), JetBrains Mono (numbers)
  * Layout: Sticky left-rail nav + main content with full-width data sections
  */
@@ -21,19 +21,28 @@ const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTr
 const AUDIT_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-audit-eD6BPKVD5ibTfjcC5zXw6B.webp";
 const LOGO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-5QXNLUsEDRp3nBVBAMiXK4.webp";
 
-// ─── Brand Colors ─────────────────────────────────────────────────────────────
+// ─── Brand Colors - Premium Enterprise with Gold & Silver Accents ─────────────────────────────────────────
 const C = {
-  slate: "#1E3A5F",
+  charcoal: "#0F1419",
+  navy: "#1A2332",
+  emerald: "#1B4D3E",
+  gold: "#D4AF37",
+  goldLight: "#E8C547",
+  platinum: "#E8E9EB",
+  platinumDark: "#D1D5DB",
+  slate: "#2C3E50",
+  slateLight: "#3D5A73",
   teal: "#0D9488",
-  amber: "#F59E0B",
-  slateLight: "#2D5282",
   tealLight: "#14B8A6",
   tealPale: "#CCFBF1",
+  amber: "#D4AF37",
   amberPale: "#FEF3C7",
-  bg: "#F8FAFC",
-  text: "#1E293B",
-  muted: "#64748B",
-  border: "#E2E8F0",
+  bg: "#FAFBFC",
+  text: "#0F1419",
+  textLight: "#2C3E50",
+  muted: "#6B7280",
+  border: "#E5E7EB",
+  cardBg: "#FFFFFF",
 };
 
 // ─── Chart Data ───────────────────────────────────────────────────────────────
@@ -148,7 +157,7 @@ function SectionHeader({ label, title, subtitle }: {
 }) {
   return (
     <div className="section-header mb-8">
-      <p style={{ color: C.teal, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
+      <p style={{ color: C.gold, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
         {label}
       </p>
       <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.slate, lineHeight: 1.2 }}>
@@ -227,7 +236,7 @@ export default function Home() {
     <div style={{ background: C.bg, minHeight: "100vh" }}>
 
       {/* ── TOP NAV BAR ── */}
-      <header style={{ background: C.slate, position: "sticky", top: 0, zIndex: 50, boxShadow: "0 2px 12px rgba(30,58,95,0.3)" }}>
+      <header style={{ background: C.charcoal, position: "sticky", top: 0, zIndex: 50, boxShadow: "0 2px 12px rgba(15,20,25,0.4)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
             <div style={{ background: "white", borderRadius: "0.375rem", padding: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -269,11 +278,11 @@ export default function Home() {
         {/* ── LEFT SIDEBAR NAV (Desktop) / Mobile Nav (Mobile) ── */}
         <aside style={{
           width: 240, flexShrink: 0, position: "sticky", top: 64, height: "calc(100vh - 64px)",
-          background: C.slate, overflowY: "auto", padding: "1.5rem 0",
+          background: C.charcoal, overflowY: "auto", padding: "1.5rem 0",
           display: "block"
         }} className={`sidebar-nav ${mobileNavOpen ? 'mobile-open' : ''}`}>
           <div style={{ padding: "0 1rem 1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", marginBottom: "0.5rem" }}>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600 }}>
+            <p style={{ color: C.gold, fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600 }}>
               Contents
             </p>
           </div>
@@ -284,12 +293,12 @@ export default function Home() {
               style={{
                 display: "block", width: "100%", textAlign: "left",
                 padding: "0.65rem 1.25rem",
-                background: activeSection === s.id ? "rgba(13,148,136,0.2)" : "transparent",
+                background: activeSection === s.id ? "rgba(212,175,55,0.15)" : "transparent",
                 borderTop: "none",
                 borderRight: "none",
                 borderBottom: "none",
-                borderLeft: activeSection === s.id ? `3px solid ${C.teal}` : "3px solid transparent",
-                color: activeSection === s.id ? "white" : "rgba(255,255,255,0.65)",
+                borderLeft: activeSection === s.id ? `3px solid ${C.gold}` : "3px solid transparent",
+                color: activeSection === s.id ? C.gold : "rgba(255,255,255,0.65)",
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontSize: "0.82rem", fontWeight: activeSection === s.id ? 600 : 400,
                 cursor: "pointer", transition: "all 0.2s",
@@ -298,7 +307,7 @@ export default function Home() {
               {s.label}
             </button>
           ))}
-          <div style={{ margin: "1.5rem 1rem 0", padding: "1rem", background: "rgba(13,148,136,0.15)", borderRadius: 8, border: "1px solid rgba(13,148,136,0.3)" }}>
+          <div style={{ margin: "1.5rem 1rem 0", padding: "1rem", background: "rgba(212,175,55,0.1)", borderRadius: 8, border: `1px solid ${C.gold}` }}>
             <p style={{ color: C.tealLight, fontSize: "0.7rem", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, marginBottom: "0.3rem" }}>
               MARKET SIZE
             </p>
@@ -313,10 +322,7 @@ export default function Home() {
           {/* SECTION 1: HERO */}
           <Section id="executive-summary">
             <div style={{ marginBottom: "3rem" }}>
-              <div style={{ background: `linear-gradient(135deg, ${C.slate}dd 0%, ${C.teal}dd 100%), url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "center", borderRadius: 12, padding: "4rem", color: "white", textAlign: "center", minHeight: 300, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "1rem", opacity: 0.9 }}>
-                  ENTERPRISE ASSET INTELLIGENCE PLATFORM
-                </p>
+              <div style={{ background: `linear-gradient(135deg, rgba(15,20,25,0.5) 0%, rgba(27,77,62,0.5) 100%), url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed", borderRadius: 12, padding: "6rem 4rem", color: "white", textAlign: "center", minHeight: 500, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                 <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "3.5rem", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
                   Recover Millions in Hidden Capital.
                 </h1>

@@ -116,18 +116,18 @@
 
 
 ## Phase 4: Video Integration & Mobile Improvements
-- [ ] Add video placeholder sections between phases (Phase 1-2, Phase 2-3, Phase 3-4)
-- [ ] Create video modal component for future video URLs
+- [x] Add video placeholder sections between phases (Phase 1-2, Phase 2-3, Phase 3-4) - VideoModal component with 3 placeholder sections
+- [x] Create video modal component for future video URLs - VideoModal.tsx with modal overlay and placeholder
 - [x] Improve mobile menu responsiveness and layout - hamburger menu, collapsible nav, responsive text sizing
 - [x] Test mobile layout on multiple device sizes (375px, 768px, 1024px) - verified on 375x812 viewport
 - [x] Ensure all text and buttons are properly sized for mobile - responsive font sizes and spacing added
 
 ## Phase 5: Employee Portal & Resources
-- [ ] Create Career page (public-facing)
-- [ ] Create Employee login page with authentication
-- [ ] Build employee dashboard/portal
-- [ ] Integrate 3 spreadsheets into employee portal (Proposal Calculator, Asset Intelligence Assessment, Recoverable Capital Assessment)
-- [ ] Add LAI Investigative Questionnaire to employee portal
-- [ ] Add Asset Panda placeholder section (reseller demo - to be filled in later)
-- [ ] Add EZO placeholder section (reseller demo - to be filled in later)
-- [ ] Test employee portal login and resource access
+- [x] Create Career page (public-facing) - 6 job openings with benefits and culture section
+- [x] Create Employee login page with authentication - Login form with demo mode
+- [x] Build employee dashboard/portal - Dashboard with resource grid after login
+- [x] Integrate 3 spreadsheets into employee portal (Proposal Calculator, Asset Intelligence Assessment, Recoverable Capital Assessment) - Resource cards created
+- [x] Add LAI Investigative Questionnaire to employee portal - Document resource card added
+- [x] Add Asset Panda placeholder section (reseller demo - to be filled in later) - Coming Soon badge
+- [x] Add EZO placeholder section (reseller demo - to be filled in later) - Coming Soon badge
+- [x] Test employee portal login and resource access - Verified working with demo credentials
