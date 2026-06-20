@@ -158,14 +158,14 @@ function SectionHeader({ label, title, subtitle }: {
 }) {
   return (
     <div className="section-header mb-8">
-      <p style={{ color: C.gold, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.4rem" }}>
+      <p style={{ color: C.gold, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.4rem", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>
         {label}
       </p>
-      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "#FFFFFF", lineHeight: 1.2 }}>
+      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "#FFFFFF", lineHeight: 1.2, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
         {title}
       </h2>
       {subtitle && (
-        <p style={{ color: "#B0B5BD", marginTop: "0.5rem", fontSize: "1rem", fontFamily: "'Source Sans 3', sans-serif" }}>
+        <p style={{ color: "#B0B5BD", marginTop: "0.5rem", fontSize: "1rem", fontFamily: "'Source Sans 3', sans-serif", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
           {subtitle}
         </p>
       )}

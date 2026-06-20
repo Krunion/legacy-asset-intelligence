@@ -48,7 +48,7 @@ export default function PageLayout({
       <section style={{
         maxWidth: 1200,
         margin: "4rem auto",
-        padding: "0 2rem",
+        padding: "2rem",
         backgroundImage: `url(${HERO_IMG})`,
         backgroundSize: "cover",
         backgroundPosition: "left center",
@@ -57,14 +57,14 @@ export default function PageLayout({
         borderRadius: "8px",
         overflow: "hidden"
       }}>
-        {/* Overlay for readability */}
+        {/* Minimal overlay for background visibility */}
         <div style={{
           position: "absolute",
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(255, 255, 255, 0.40)",
+          background: "rgba(255, 255, 255, 0.15)",
           zIndex: 1
         }} />
         {/* Content wrapper */}
@@ -86,23 +86,23 @@ export default function PageLayout({
         position: "relative",
         overflow: "hidden"
       }}>
-        {/* Overlay for readability */}
+        {/* Minimal overlay for background visibility */}
         <div style={{
           position: "absolute",
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          background: "rgba(15, 20, 25, 0.35)",
+          background: "rgba(15, 20, 25, 0.20)",
           zIndex: 1
         }} />
         {/* Content wrapper */}
         <div style={{ position: "relative", zIndex: 2 }}>
           <div style={{ maxWidth: 600, margin: "0 auto" }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, marginBottom: "1rem" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, marginBottom: "1rem", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
               {ctaTitle}
             </h2>
-            <p style={{ fontSize: "1rem", opacity: 0.9, marginBottom: "2rem" }}>
+            <p style={{ fontSize: "1rem", opacity: 0.95, marginBottom: "2rem", textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
               {ctaDescription}
             </p>
             <Button 
