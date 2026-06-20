@@ -4,7 +4,7 @@ import { useState } from "react";
 const C = {
   charcoal: "#0F1419",
   emerald: "#1B4D3E",
-  gold: "#D4AF37",
+  gold: "#D4C5B0",
   border: "#E5E7EB",
   muted: "#6B7280",
 };
@@ -56,7 +56,7 @@ export default function SiteNav() {
             border: "none",
             cursor: "pointer",
             fontSize: "1.5rem",
-            color: C.gold,
+            color: "#D4C5B0",
             padding: "0.5rem",
             display: "flex",
             alignItems: "center",
@@ -81,12 +81,12 @@ export default function SiteNav() {
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: location === link.path ? C.gold : C.gold,
+                  color: location === link.path ? "#D4C5B0" : "#D4C5B0",
                   fontWeight: location === link.path ? 600 : 500,
                   fontSize: "0.9rem",
                   transition: "all 0.2s",
                   opacity: location === link.path ? 1 : 0.8,
-                  borderBottom: location === link.path ? `2px solid ${C.gold}` : "2px solid transparent",
+                  borderBottom: location === link.path ? `2px solid #D4C5B0` : "2px solid transparent",
                   paddingBottom: "0.25rem",
 
                 }}
