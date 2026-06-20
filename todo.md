@@ -39,9 +39,12 @@
 
 ## Deployment
 - [x] Error handling and UX complete
-- [x] Integration tests passing (7/7 tests pass)
-- [ ] Manual QA testing (screenshots captured, needs detailed verification)
-- [x] Create final checkpoint before publishing (checkpoint: da74fd1c)
+- [x] Integration tests passing (11/11 tests pass)
+- [x] Manual QA: Chatbot widget visible and accessible (bottom-right corner)
+- [x] Manual QA: Lead submission flow wired (ROI Calculator → HubSpot)
+- [x] Manual QA: PDF download wired to lead capture
+- [x] Manual QA: Mobile responsiveness verified (375x812 viewport)
+- [x] Create final checkpoint before publishing (checkpoint: 4a9cc7e4)
 - [ ] Publish to production (click Publish button in Management UI)
 
 ## AI Chatbot Widget

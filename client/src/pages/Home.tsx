@@ -831,7 +831,7 @@ export default function Home() {
                   { label: "Full Office Launch", amount: "$146,000", desc: "Includes office setup, furnishings, and full tech stack", color: C.slate },
                   { label: "Total Funding Target", amount: "$300K–$400K", desc: "Includes working capital through Month 7 break-even", color: C.amber },
                 ].map(item => (
-                  <div key={item.label} style={{ background: "white", borderRadius: 10, padding: "1rem 1.25rem", border: `1px solid ${C.border}`, borderLeft: `4px solid ${item.color}`, boxShadow: "0 1px 4px rgba(30,58,95,0.06)" }}>
+                  <div key={item.label} style={{ background: "white", borderRadius: 10, padding: "1rem 1.25rem", borderTop: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, borderLeft: `4px solid ${item.color}`, boxShadow: "0 1px 4px rgba(30,58,95,0.06)" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                       <div>
                         <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.text, fontSize: "0.88rem" }}>{item.label}</p>
@@ -1004,7 +1004,7 @@ export default function Home() {
                   color: C.tealLight
                 },
               ].map(item => (
-                <div key={item.risk} style={{ background: "white", borderRadius: 10, padding: "1.25rem", border: `1px solid ${C.border}`, borderLeft: `4px solid ${item.color}`, boxShadow: "0 1px 4px rgba(30,58,95,0.06)" }}>
+                <div key={item.risk} style={{ background: "white", borderRadius: 10, padding: "1.25rem", borderTop: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, borderLeft: `4px solid ${item.color}`, boxShadow: "0 1px 4px rgba(30,58,95,0.06)" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.6rem" }}>
                     <h4 style={{ fontFamily: "'Playfair Display', serif", color: C.slate, fontSize: "0.95rem" }}>{item.risk}</h4>
                     <div style={{ display: "flex", gap: "0.4rem", flexShrink: 0, marginLeft: "0.5rem" }}>
