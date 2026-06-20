@@ -40,11 +40,12 @@ export default function SiteNav() {
           onClick={() => navigate("/")} 
           style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal, display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}
         >
-          <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-square-AjcktaShtj2GvhdA5vH5t7.webp" alt="LAI Logo" style={{ height: 70, width: 70, objectFit: "contain" }} />
+          <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-clean-RbWvv6oneh2K5ZyL4j8SvU.webp" alt="LAI Logo" style={{ height: 70, width: 70, objectFit: "contain" }} />
         </button>
 
-        {/* Centered Name - Hidden since logo includes text */}
-        <div style={{ flex: 1 }}>
+        {/* Centered Name */}
+        <div style={{ flex: 1, textAlign: "center" }}>
+          <h1 style={{ fontSize: "1.8rem", fontWeight: 700, color: C.gold, margin: 0, fontFamily: "'Playfair Display', serif", letterSpacing: "0.05em" }}>Legacy Asset Intelligence</h1>
         </div>
 
         {/* Toggle Button */}
