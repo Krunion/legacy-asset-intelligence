@@ -389,13 +389,28 @@ export default function Home() {
           </Section>
 
           {/* ── TRUSTED BY SECTION ── */}
-          <Section id="trusted-by" className="py-12 bg-gray-50">
+          <Section id="trusted-by" className="py-12">
             <div className="max-w-6xl mx-auto px-4">
-              <h2 className="text-center text-2xl font-bold text-gray-800 mb-8 font-playfair">
-                Trusted By Industry Leaders
+              <h2 className="text-center text-2xl font-bold mb-8 font-playfair" style={{ color: C.slate }}>
+                Technology Partners & Ecosystem
               </h2>
-              <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-                <img src="/manus-storage/lai-logo_8d298200.png" alt="Legacy Asset Intelligence Logo" className="h-12" />
+              <p style={{ textAlign: "center", color: C.muted, marginBottom: "2rem", fontSize: "0.95rem", maxWidth: "600px", margin: "0 auto 2rem" }}>
+                We integrate with leading enterprise platforms to deliver comprehensive asset intelligence solutions
+              </p>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem" }}>
+                {[
+                  { name: "Enterprise Asset Management", description: "SAP, Oracle, Infor integration" },
+                  { name: "Cloud Infrastructure", description: "AWS, Azure, Google Cloud" },
+                  { name: "Data Analytics", description: "Tableau, Power BI, Looker" },
+                  { name: "Compliance & Audit", description: "SOX, GASB, IFRS standards" },
+                  { name: "IoT & Tracking", description: "RFID, GPS, Bluetooth technology" },
+                  { name: "Cybersecurity", description: "Enterprise-grade data protection" }
+                ].map((partner, i) => (
+                  <div key={i} style={{ padding: "1.5rem", background: "white", border: `1px solid ${C.border}`, borderRadius: 8, textAlign: "center", boxShadow: "0 2px 8px rgba(30,58,95,0.05)" }}>
+                    <p style={{ fontWeight: 600, color: C.slate, marginBottom: "0.5rem", fontSize: "0.95rem" }}>{partner.name}</p>
+                    <p style={{ color: C.muted, fontSize: "0.85rem" }}>{partner.description}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </Section>

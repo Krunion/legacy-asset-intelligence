@@ -1,7 +1,7 @@
 /**
  * ROI Calculator Component for Legacy Asset Intelligence
- * Interactive 3-step wizard to estimate recoverable capital
- * Features: Industry-specific asset values, maturity-based recovery rates, email capture, PDF download
+ * Interactive 4-step wizard to estimate recoverable capital
+ * Features: Industry-specific asset values, maturity-based recovery rates, asset verification practices, email capture, PDF download
  */
 
 import { useState } from "react";
@@ -32,6 +32,14 @@ const MATURITY_LEVELS = [
   { id: 5, label: "Level 5: Best-in-Class", description: "Strong controls, technology-enabled visibility", lowRate: 0.0, highRate: 0.02 },
 ];
 
+// ─── Asset Verification Practices ─────────────────────────────────────────────
+const VERIFICATION_PRACTICES = [
+  { id: "no-verification", label: "No Formal Verification", desc: "Assets not systematically verified or reconciled", riskModifier: 1.15 },
+  { id: "periodic-manual", label: "Periodic Manual Counts", desc: "Physical counts conducted annually or less frequently", riskModifier: 1.0 },
+  { id: "continuous-system", label: "Continuous System Tracking", desc: "Real-time asset tracking with regular reconciliation", riskModifier: 0.85 },
+  { id: "iot-enabled", label: "IoT/RFID Enabled Tracking", desc: "Automated asset tracking with IoT/RFID technology", riskModifier: 0.7 },
+];
+
 // ─── Recovery Categories ──────────────────────────────────────────────────────
 const RECOVERY_CATEGORIES = [
   { name: "Ghost Assets", color: "#1E3A5F", share: 0.35 },
@@ -49,6 +57,7 @@ interface CalculatorState {
   industry: string;
   lastVerification: string;
   maturityLevel: number;
+  assetVerificationPractice: string;
   customRecoveryRate: boolean;
   recoveryRate: number;
   email: string;
@@ -64,6 +73,7 @@ export default function ROICalculator() {
     industry: "manufacturing",
     lastVerification: "3-5 years",
     maturityLevel: 2,
+    assetVerificationPractice: "periodic-manual",
     customRecoveryRate: false,
     recoveryRate: 0.15,
     email: "",
@@ -98,10 +108,11 @@ export default function ROICalculator() {
   // ─── Calculations ─────────────────────────────────────────────────────────
   const industryData = INDUSTRY_DATA[state.industry] || INDUSTRY_DATA.other;
   const maturityData = MATURITY_LEVELS.find(m => m.id === state.maturityLevel) || MATURITY_LEVELS[1];
+  const verificationData = VERIFICATION_PRACTICES.find(v => v.id === state.assetVerificationPractice) || VERIFICATION_PRACTICES[1];
   
   const portfolioValue = state.assetCount * industryData.avgAssetValue;
-  const recoveryRateLow = maturityData.lowRate;
-  const recoveryRateHigh = maturityData.highRate;
+  const recoveryRateLow = maturityData.lowRate * verificationData.riskModifier;
+  const recoveryRateHigh = maturityData.highRate * verificationData.riskModifier;
   const recoveryRateUsed = state.customRecoveryRate ? state.recoveryRate : (recoveryRateLow + recoveryRateHigh) / 2;
   
   const capitalRecoveryLow = portfolioValue * recoveryRateLow;
@@ -343,14 +354,95 @@ export default function ROICalculator() {
           onMouseEnter={(e) => (e.currentTarget.style.background = "#0F766E")}
           onMouseLeave={(e) => (e.currentTarget.style.background = colors.teal)}
         >
+          Next: Verification Practices →
+        </button>
+      </div>
+    </div>
+  );
+
+  // ─── Step 3: Asset Verification Practices ──────────────────────────────────
+  const renderStep3 = () => (
+    <div style={{ maxWidth: 600 }}>
+      <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.slate, marginBottom: "1.5rem" }}>
+        Step 3: Asset Verification Practices
+      </h3>
+
+      <div style={{ marginBottom: "1.5rem" }}>
+        <label style={{ display: "block", fontWeight: 600, color: colors.slate, marginBottom: "1rem", fontSize: "0.9rem" }}>
+          Current Asset Verification Approach
+        </label>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          {VERIFICATION_PRACTICES.map(option => (
+            <button
+              key={option.id}
+              onClick={() => setState({ ...state, assetVerificationPractice: option.id, customRecoveryRate: false })}
+              style={{
+                padding: "1rem",
+                border: state.assetVerificationPractice === option.id ? `2px solid ${colors.teal}` : `1px solid ${colors.border}`,
+                borderRadius: 6,
+                background: state.assetVerificationPractice === option.id ? "rgba(13,148,136,0.08)" : "white",
+                textAlign: "left",
+                cursor: "pointer",
+                transition: "all 0.2s",
+              }}
+            >
+              <div style={{ fontWeight: 600, color: colors.slate, marginBottom: "0.25rem" }}>{option.label}</div>
+              <div style={{ fontSize: "0.85rem", color: colors.muted }}>{option.desc}</div>
+              <div style={{ fontSize: "0.8rem", color: colors.amber, fontWeight: 600, marginTop: "0.3rem" }}>
+                → Risk Modifier: {(option.riskModifier * 100).toFixed(0)}%
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: "flex", gap: "1rem" }}>
+        <button
+          onClick={() => setState({ ...state, step: 2 })}
+          style={{
+            flex: 1,
+            padding: "0.8rem",
+            background: "white",
+            color: colors.teal,
+            border: `1px solid ${colors.teal}`,
+            borderRadius: 6,
+            fontFamily: "'Source Sans 3', sans-serif",
+            fontWeight: 600,
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(13,148,136,0.08)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "white")}
+        >
+          ← Back
+        </button>
+        <button
+          onClick={() => setState({ ...state, step: 4 })}
+          style={{
+            flex: 1,
+            padding: "0.8rem",
+            background: colors.teal,
+            color: "white",
+            border: "none",
+            borderRadius: 6,
+            fontFamily: "'Source Sans 3', sans-serif",
+            fontWeight: 600,
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "#0F766E")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = colors.teal)}
+        >
           View Results →
         </button>
       </div>
     </div>
   );
 
-  // ─── Step 3: Results ───────────────────────────────────────────────────────
-  const renderStep3 = () => (
+  // ─── Step 4: Results ───────────────────────────────────────────────────────
+  const renderStep4 = () => (
     <div style={{ maxWidth: 900 }}>
       <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: colors.slate, marginBottom: "0.5rem" }}>
         Your Recoverable Capital Estimate
@@ -473,7 +565,7 @@ export default function ROICalculator() {
                     await submitLeadMutation.mutateAsync({
                       email: state.email,
                       company: state.industry,
-                      message: `Assets: ${state.assetCount}, Locations: ${state.locations}, Departments: ${state.departments}, Estimated Recovery: $${Math.round(capitalRecoveryMid).toLocaleString()}`,
+                      message: `Assets: ${state.assetCount}, Locations: ${state.locations}, Departments: ${state.departments}, Verification: ${state.assetVerificationPractice}, Estimated Recovery: $${Math.round(capitalRecoveryMid).toLocaleString()}`,
                     });
                     
                     // Generate PDF
@@ -484,6 +576,7 @@ export default function ROICalculator() {
                     locations: state.locations,
                     departments: state.departments,
                     maturityLevel: MATURITY_LEVELS.find(m => m.id === state.maturityLevel)?.label || "Unknown",
+                    assetVerificationPractice: state.assetVerificationPractice,
                     portfolioValue,
                     recoveryLow: capitalRecoveryLow,
                     recoveryHigh: capitalRecoveryHigh,
@@ -577,7 +670,7 @@ export default function ROICalculator() {
       </div>
 
       <button
-        onClick={() => setState({ ...state, step: 2 })}
+        onClick={() => setState({ ...state, step: 3 })}
         style={{
           marginTop: "1.5rem",
           width: "100%",
@@ -605,6 +698,7 @@ export default function ROICalculator() {
       {state.step === 1 && renderStep1()}
       {state.step === 2 && renderStep2()}
       {state.step === 3 && renderStep3()}
+      {state.step === 4 && renderStep4()}
     </div>
   );
 }

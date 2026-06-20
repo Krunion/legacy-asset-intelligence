@@ -10,6 +10,7 @@ export interface CalculatorResult {
   locations: number;
   departments: number;
   maturityLevel: string;
+  assetVerificationPractice: string;
   portfolioValue: number;
   recoveryLow: number;
   recoveryHigh: number;
