@@ -240,16 +240,7 @@ export default function Home() {
       {/* ── TOP NAV BAR ── */}
       <header style={{ background: C.charcoal, position: "sticky", top: 0, zIndex: 50, boxShadow: "0 2px 12px rgba(15,20,25,0.4)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }} className="header-container">
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", minWidth: 0 }}>
-            <div style={{ background: "white", borderRadius: "0.375rem", padding: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <img src={LOGO_IMG} alt="LAI Logo" style={{ height: 40, width: 40, objectFit: "contain" }} />
-            </div>
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: "white", fontSize: "clamp(0.8rem, 2vw, 1.05rem)", lineHeight: 1.1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                Legacy Asset Intelligence
-              </div>
-            </div>
-          </div>
+            <div></div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <button onClick={() => navigate("/faq")} style={{ background: C.teal, color: "white", padding: "0.4rem 0.8rem", borderRadius: 20, fontSize: "clamp(0.65rem, 1.5vw, 0.75rem)", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>
               Contact Us

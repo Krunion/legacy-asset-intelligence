@@ -38,18 +38,9 @@ export default function SiteNav() {
           onClick={() => navigate("/")} 
           style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal, display: "flex", alignItems: "center", gap: "0.5rem" }}
         >
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ flexShrink: 0 }}>
-            <defs>
-              <linearGradient id="laiGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#D4AF37" />
-                <stop offset="100%" stopColor="#B8860B" />
-              </linearGradient>
-            </defs>
-            <rect x="2" y="2" width="32" height="32" rx="6" fill="url(#laiGradient)" opacity="0.95" />
-            <circle cx="6" cy="6" r="1.2" fill="white" opacity="0.4" />
-            <circle cx="30" cy="30" r="1.2" fill="white" opacity="0.4" />
-            <text x="18" y="25" fontFamily="'Playfair Display', serif" fontSize="16" fontWeight="700" fill="white" textAnchor="middle" letterSpacing="1">LAI</text>
-          </svg>
+          <div style={{ background: "white", borderRadius: "0.375rem", padding: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-5QXNLUsEDRp3nBVBAMiXK4.webp" alt="LAI Logo" style={{ height: 36, width: 36, objectFit: "contain" }} />
+          </div>
           <span style={{ fontSize: "1.2rem", fontWeight: 700, color: C.charcoal, fontFamily: "'Playfair Display', serif", letterSpacing: "0.5px" }}>Legacy Asset Intelligence</span>
         </button>
         <button
