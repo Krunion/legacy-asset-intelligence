@@ -2,15 +2,10 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
+import { COLORS } from "@shared/colors";
 
-const C = {
-  slate: "#1E3A5F",
-  teal: "#0D9488",
-  border: "#E2E8F0",
-  text: "#1E293B",
-  muted: "#64748B",
-  bg: "#F8FAFC",
-};
+const C = COLORS;
+const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
 
 export default function EmployeePortal() {
   const { user, loading, isAuthenticated, logout } = useAuth();
@@ -19,10 +14,10 @@ export default function EmployeePortal() {
   // If still loading auth state, show loading screen
   if (loading) {
     return (
-      <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ minHeight: "100vh", background: `url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "left center", backgroundAttachment: "fixed", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>⏳</div>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.muted }}>Loading...</p>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#E8E9EB", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>Loading...</p>
         </div>
       </div>
     );
@@ -31,18 +26,18 @@ export default function EmployeePortal() {
   // If not authenticated, show login prompt
   if (!isAuthenticated) {
     return (
-      <div style={{ minHeight: "100vh", background: C.bg, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-        <div style={{ width: "100%", maxWidth: 400, background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "2rem", boxShadow: "0 4px 16px rgba(30,58,95,0.1)" }}>
+      <div style={{ minHeight: "100vh", background: `url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "left center", backgroundAttachment: "fixed", display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
+        <div style={{ width: "100%", maxWidth: 400, background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)", padding: "2rem", boxShadow: "0 4px 16px rgba(0,0,0,0.3)" }}>
           <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", fontWeight: 700, color: C.slate, marginBottom: "0.5rem" }}>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
               Employee Portal
             </h1>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.muted, margin: 0 }}>
+            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
               Access LAI resources and tools
             </p>
           </div>
 
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.text, lineHeight: 1.6, marginBottom: "1.5rem", textAlign: "center" }}>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.6, marginBottom: "1.5rem", textAlign: "center", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
             Sign in with your LAI account to access the employee portal and download resources.
           </p>
 
@@ -51,8 +46,8 @@ export default function EmployeePortal() {
               style={{
                 width: "100%",
                 padding: "0.75rem",
-                background: C.teal,
-                color: "white",
+                background: C.gold,
+                color: C.charcoal,
                 border: "none",
                 borderRadius: 6,
                 fontFamily: "'Source Sans 3', sans-serif",
@@ -65,7 +60,7 @@ export default function EmployeePortal() {
             </button>
           </a>
 
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.muted, textAlign: "center", marginTop: "1rem", margin: 0 }}>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: "#E8E9EB", textAlign: "center", marginTop: "1rem", margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
             You must be an LAI employee to access this portal.
           </p>
         </div>
@@ -138,34 +133,34 @@ export default function EmployeePortal() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: C.bg, padding: "2rem" }}>
+    <div style={{ minHeight: "100vh", background: `url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "left center", backgroundAttachment: "fixed", padding: "2rem" }}>
       <div style={{ maxWidth: 1280, margin: "0 auto" }}>
         {/* Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", padding: "1.5rem", background: "white", borderRadius: 12, border: `1px solid ${C.border}` }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem", padding: "1.5rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
           <div>
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", fontWeight: 700, color: C.slate, margin: 0, marginBottom: "0.25rem" }}>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", fontWeight: 700, color: "#FFFFFF", margin: 0, marginBottom: "0.25rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
               Welcome, {user?.name || "Employee"}!
             </h1>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.muted, margin: 0 }}>
+            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
               Access your resources and tools
             </p>
           </div>
           <button
             onClick={logout}
-            style={{
-              padding: "0.6rem 1.2rem",
-              background: "transparent",
-              color: C.teal,
-              border: `1px solid ${C.teal}`,
-              borderRadius: 6,
-              fontFamily: "'Source Sans 3', sans-serif",
-              fontWeight: 600,
-              cursor: "pointer",
-              fontSize: "0.85rem",
-            }}
-          >
-            Sign Out
-          </button>
+              style={{
+                padding: "0.6rem",
+                background: C.gold,
+                color: C.charcoal,
+                border: "none",
+                borderRadius: 6,
+                fontFamily: "'Source Sans 3', sans-serif",
+                fontWeight: 600,
+                cursor: "pointer",
+                fontSize: "0.85rem",
+              }}
+            >
+              ⬇️ Download
+            </button>
         </div>
 
         {/* Resources Grid */}
@@ -196,8 +191,8 @@ export default function EmployeePortal() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "1rem" }}>
                 <div style={{ fontSize: "2.5rem" }}>{resource.icon}</div>
                 <span style={{
-                  background: resource.comingSoon ? "#E5E7EB" : C.teal,
-                  color: resource.comingSoon ? C.muted : "white",
+                  background: resource.comingSoon ? "#E5E7EB" : C.gold,
+                  color: resource.comingSoon ? "#64748B" : C.charcoal,
                   padding: "0.3rem 0.6rem",
                   borderRadius: 4,
                   fontSize: "0.65rem",
@@ -208,16 +203,16 @@ export default function EmployeePortal() {
                 </span>
               </div>
 
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: C.slate, marginBottom: "0.5rem" }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
                 {resource.title}
               </h3>
 
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.muted, marginBottom: "1rem", lineHeight: 1.5 }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", marginBottom: "1rem", lineHeight: 1.5, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
                 {resource.description}
               </p>
 
               {!resource.comingSoon && (
-                <div style={{ fontSize: "0.8rem", color: C.muted, marginBottom: "1rem", display: "flex", gap: "1rem" }}>
+                <div style={{ fontSize: "0.8rem", color: "#E8E9EB", marginBottom: "1rem", display: "flex", gap: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
                   <span>📦 {resource.fileSize}</span>
                   <span>📄 {resource.fileType}</span>
                 </div>
@@ -253,14 +248,14 @@ export default function EmployeePortal() {
         </div>
 
         {/* Info Section */}
-        <div style={{ marginTop: "2rem", padding: "1.5rem", background: "white", borderRadius: 12, border: `1px solid ${C.border}` }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+        <div style={{ marginTop: "2rem", padding: "1.5rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
             Portal Information
           </h2>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.text, lineHeight: 1.8, marginBottom: "1rem" }}>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, marginBottom: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
             This employee portal provides secure access to all essential LAI resources and tools. You can download spreadsheets, access interactive calculators, and connect to partner platforms.
           </p>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.text, lineHeight: 1.8, margin: 0 }}>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
             For questions or technical support, please contact the LAI support team at support@legacyassetintelligence.com.
           </p>
         </div>

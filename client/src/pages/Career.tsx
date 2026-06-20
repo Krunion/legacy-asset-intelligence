@@ -99,10 +99,10 @@ export default function Career() {
     >
       {/* Why Join LAI */}
       <div style={{ marginBottom: "4rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.charcoal, marginBottom: "1.5rem", textAlign: "center" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1.5rem", textAlign: "center", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
           Why Join Legacy Asset Intelligence?
         </h2>
-        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1rem", color: C.textDark, lineHeight: 1.8, marginBottom: "2rem", textAlign: "center", maxWidth: "800px", margin: "0 auto 2rem" }}>
+        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1rem", color: "#E8E9EB", lineHeight: 1.8, marginBottom: "2rem", textAlign: "center", maxWidth: "800px", margin: "0 auto 2rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
           At LAI, we're solving one of the most overlooked financial problems in enterprise operations. Our team members work on high-impact projects that directly affect client bottom lines. We value expertise, innovation, and a commitment to excellence.
         </p>
 
@@ -124,7 +124,7 @@ export default function Career() {
 
       {/* Open Positions */}
       <div style={{ marginBottom: "4rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.charcoal, marginBottom: "2rem", textAlign: "center" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "2rem", textAlign: "center", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
           Open Positions
         </h2>
 
@@ -174,14 +174,14 @@ export default function Career() {
       </div>
 
       {/* Culture Section */}
-      <div style={{ padding: "2rem", background: "rgba(212, 175, 55, 0.08)", borderRadius: 12, border: `1px solid ${C.border}` }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.charcoal, marginBottom: "1rem" }}>
+      <div style={{ padding: "2rem", background: "rgba(212, 175, 55, 0.15)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
           Our Culture
         </h2>
-        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.textDark, lineHeight: 1.8, marginBottom: "1rem" }}>
+        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, marginBottom: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
           We believe in building a team of experts who are passionate about solving complex problems. Our culture emphasizes continuous learning, collaboration, and delivering exceptional results for our clients. We're committed to diversity, inclusion, and creating an environment where every team member can thrive.
         </p>
-        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.textDark, lineHeight: 1.8, margin: 0 }}>
+        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
           Whether you're a seasoned consultant, a technical expert, or someone looking to grow your career in enterprise asset management, we'd love to hear from you.
         </p>
       </div>
