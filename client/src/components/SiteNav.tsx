@@ -40,7 +40,7 @@ export default function SiteNav() {
           onClick={() => navigate("/")} 
           style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal, display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}
         >
-          <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-clean-RbWvv6oneh2K5ZyL4j8SvU.webp" alt="LAI Logo" style={{ height: 70, width: 70, objectFit: "contain" }} />
+          <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-final-5tQyhL2nU4tvpPFwoZQgsm.webp" alt="LAI Logo" style={{ height: 70, width: 70, objectFit: "contain" }} />
         </button>
 
         {/* Centered Name */}
