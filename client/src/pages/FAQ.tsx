@@ -97,7 +97,7 @@ export default function FAQ() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", marginBottom: "3rem" }}>
         {/* FAQs Column */}
         <div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.charcoal, marginBottom: "1.5rem" }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1.5rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
             General Questions
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -126,7 +126,7 @@ export default function FAQ() {
 
         {/* Glossary Column */}
         <div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.charcoal, marginBottom: "1.5rem" }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1.5rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
             Glossary of Terms
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -154,11 +154,11 @@ export default function FAQ() {
         </div>
       </div>
 
-      <div style={{ background: "rgba(13,148,136,0.08)", padding: "2rem", borderRadius: 8, marginTop: "3rem", textAlign: "center" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+      <div style={{ background: "rgba(212,175,55,0.15)", padding: "2rem", borderRadius: 8, marginTop: "3rem", textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
           Need More Information?
         </h2>
-        <p style={{ color: C.text, fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "1.5rem" }}>
+        <p style={{ color: "#E8E9EB", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "1.5rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
           Our team is available to discuss your specific challenges and answer detailed questions about how Legacy Asset Intelligence can help your organization.
         </p>
         <button style={{ background: C.teal, color: "white", border: "none", padding: "0.75rem 1.5rem", borderRadius: 4, fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}>

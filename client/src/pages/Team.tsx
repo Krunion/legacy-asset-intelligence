@@ -65,11 +65,11 @@ export default function Team() {
         ))}
       </div>
 
-      <div style={{ background: "rgba(212,175,55,0.08)", padding: "2rem", borderRadius: 8, marginTop: "3rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.charcoal, marginBottom: "1rem" }}>
+      <div style={{ background: "rgba(212,175,55,0.15)", padding: "2rem", borderRadius: 8, marginTop: "3rem", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
           Our Commitment
         </h2>
-        <p style={{ color: C.textDark, fontSize: "0.95rem", lineHeight: 1.8 }}>
+        <p style={{ color: "#E8E9EB", fontSize: "0.95rem", lineHeight: 1.8, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
           Every member of the Legacy Asset Intelligence team is committed to delivering exceptional results. We combine deep industry expertise with cutting-edge technology to help organizations discover and recover millions in hidden capital. Our success is measured by your success—when you recover capital and establish sustainable asset governance, we've done our job.
         </p>
       </div>
