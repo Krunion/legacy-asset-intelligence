@@ -21,6 +21,8 @@ const navLinks: NavLink[] = [
   { label: "Blog", path: "/blog" },
   { label: "Resources", path: "/resources" },
   { label: "FAQ", path: "/faq" },
+  { label: "Career", path: "/career" },
+  { label: "Employee Portal", path: "/employee-portal" },
 ];
 
 export default function SiteNav() {

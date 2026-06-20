@@ -113,3 +113,21 @@
 - [ ] Test chatbot on all pages
 - [ ] Performance optimization
 - [ ] Final checkpoint and publication
+
+
+## Phase 4: Video Integration & Mobile Improvements
+- [ ] Add video placeholder sections between phases (Phase 1-2, Phase 2-3, Phase 3-4)
+- [ ] Create video modal component for future video URLs
+- [x] Improve mobile menu responsiveness and layout - hamburger menu, collapsible nav, responsive text sizing
+- [x] Test mobile layout on multiple device sizes (375px, 768px, 1024px) - verified on 375x812 viewport
+- [x] Ensure all text and buttons are properly sized for mobile - responsive font sizes and spacing added
+
+## Phase 5: Employee Portal & Resources
+- [ ] Create Career page (public-facing)
+- [ ] Create Employee login page with authentication
+- [ ] Build employee dashboard/portal
+- [ ] Integrate 3 spreadsheets into employee portal (Proposal Calculator, Asset Intelligence Assessment, Recoverable Capital Assessment)
+- [ ] Add LAI Investigative Questionnaire to employee portal
+- [ ] Add Asset Panda placeholder section (reseller demo - to be filled in later)
+- [ ] Add EZO placeholder section (reseller demo - to be filled in later)
+- [ ] Test employee portal login and resource access

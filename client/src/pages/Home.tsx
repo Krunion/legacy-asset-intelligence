@@ -14,6 +14,7 @@ import {
 import ROICalculator from "@/components/ROICalculator";
 import CaseStudies from "@/components/CaseStudies";
 import { ChatbotWidget } from "@/components/ChatbotWidget";
+import VideoModal from "@/components/VideoModal";
 
 // ─── Asset URLs ───────────────────────────────────────────────────────────────
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
@@ -245,11 +246,19 @@ export default function Home() {
             {/* Mobile nav toggle */}
             <button
               onClick={() => setMobileNavOpen(!mobileNavOpen)}
-              style={{ display: "none", background: "transparent", border: "none", color: "white", padding: "0.5rem" }}
+              style={{ 
+                display: "none", 
+                background: "transparent", 
+                border: "none", 
+                color: "white", 
+                padding: "0.5rem",
+                fontSize: "1.5rem",
+                cursor: "pointer"
+              }}
               className="mobile-nav-toggle"
               aria-label="Toggle navigation"
             >
-              ☰
+              {mobileNavOpen ? '✕' : '☰'}
             </button>
           </div>
         </div>
@@ -257,11 +266,12 @@ export default function Home() {
 
       <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", gap: 0 }}>
 
-        {/* ── LEFT SIDEBAR NAV ── */}
+        {/* ── LEFT SIDEBAR NAV (Desktop) / Mobile Nav (Mobile) ── */}
         <aside style={{
           width: 240, flexShrink: 0, position: "sticky", top: 64, height: "calc(100vh - 64px)",
-          background: C.slate, overflowY: "auto", padding: "1.5rem 0"
-        }}>
+          background: C.slate, overflowY: "auto", padding: "1.5rem 0",
+          display: "block"
+        }} className={`sidebar-nav ${mobileNavOpen ? 'mobile-open' : ''}`}>
           <div style={{ padding: "0 1rem 1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", marginBottom: "0.5rem" }}>
             <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600 }}>
               Contents
@@ -298,7 +308,7 @@ export default function Home() {
         </aside>
 
         {/* ── MAIN CONTENT ── */}
-        <main style={{ flex: 1, padding: "2rem" }}>
+        <main style={{ flex: 1, padding: "2rem", minWidth: 0 }}>
 
           {/* SECTION 1: HERO */}
           <Section id="executive-summary">
@@ -531,6 +541,42 @@ export default function Home() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Video Placeholder - Between Phase 1-2 */}
+            <div style={{ padding: "2rem", background: "rgba(13, 148, 136, 0.08)", borderRadius: 12, border: `2px dashed ${C.teal}`, marginBottom: "2rem", textAlign: "center" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.slate, marginBottom: "1rem" }}>
+                Learn more about the transition from Phase 1 to Phase 2
+              </p>
+              <VideoModal
+                phaseNumber={1}
+                phaseName="Discovery & Executive Assessments"
+                description="Understand how we conduct executive assessments and opportunity modeling to create your recovery roadmap."
+              />
+            </div>
+
+            {/* Video Placeholder - Between Phase 2-3 */}
+            <div style={{ padding: "2rem", background: "rgba(245, 158, 11, 0.08)", borderRadius: 12, border: `2px dashed ${C.amber}`, marginBottom: "2rem", textAlign: "center" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.slate, marginBottom: "1rem" }}>
+                See how physical asset accountability leads to technology integration
+              </p>
+              <VideoModal
+                phaseNumber={2}
+                phaseName="Physical Asset Accountability"
+                description="Discover our wall-to-wall inventory process, asset tagging methodology, and floor-to-book reconciliation approach."
+              />
+            </div>
+
+            {/* Video Placeholder - Between Phase 3-4 */}
+            <div style={{ padding: "2rem", background: "rgba(16, 185, 129, 0.08)", borderRadius: 12, border: `2px dashed #10B981`, marginBottom: "2rem", textAlign: "center" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.slate, marginBottom: "1rem" }}>
+                Implement technology platforms for ongoing governance
+              </p>
+              <VideoModal
+                phaseNumber={3}
+                phaseName="Technology Platform Integration"
+                description="Learn how we select, configure, and integrate asset management platforms with your ERP systems."
+              />
             </div>
 
             {/* Audit Image */}
