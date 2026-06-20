@@ -203,7 +203,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                 fontFamily: "'Playfair Display', serif",
                 fontSize: "1.1rem",
                 fontWeight: 700,
-                color: colors.slate,
+                color: "#FFFFFF",
                 marginBottom: "1rem",
               }}
             >
@@ -362,7 +362,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                 style={{
                   fontFamily: "'Source Sans 3', sans-serif",
                   fontWeight: 600,
-                  color: colors.slate,
+                  color: "#FFFFFF",
                   marginBottom: "1rem",
                   fontSize: "0.95rem",
                 }}
@@ -389,7 +389,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
               <div
                 style={{
                   fontSize: "0.8rem",
-                  color: colors.muted,
+                  color: "#FFFFFF",
                   marginTop: "1rem",
                 }}
               >
@@ -405,7 +405,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                     <span style={{ color: cat.color, fontWeight: 600 }}>
                       ● {cat.name}
                     </span>
-                    <span>${(cat.value / 1000).toFixed(0)}K</span>
+                    <span style={{ color: "#FFFFFF" }}>${(cat.value / 1000).toFixed(0)}K</span>
                   </div>
                 ))}
               </div>
@@ -417,7 +417,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                 style={{
                   fontFamily: "'Source Sans 3', sans-serif",
                   fontWeight: 600,
-                  color: colors.slate,
+                  color: "#FFFFFF",
                   marginBottom: "1rem",
                   fontSize: "0.95rem",
                 }}
@@ -456,7 +456,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                       fontSize: "0.85rem",
                     }}
                   >
-                    <span style={{ color: colors.slate, fontWeight: 600 }}>
+                    <span style={{ color: "#FFFFFF", fontWeight: 600 }}>
                       {item.label}
                     </span>
                       <span style={{ color: item.color, fontWeight: 700 }}>
@@ -500,7 +500,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
               style={{
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontWeight: 600,
-                color: colors.slate,
+                color: "#FFFFFF",
                 marginBottom: "1rem",
                 fontSize: "0.95rem",
               }}
@@ -511,7 +511,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
               style={{
                 margin: 0,
                 paddingLeft: "1.5rem",
-                color: colors.slate,
+                color: "#FFFFFF",
                 fontSize: "0.9rem",
                 lineHeight: 1.7,
               }}
@@ -536,7 +536,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
             <p
               style={{
                 fontStyle: "italic",
-                color: colors.slate,
+                color: "#FFFFFF",
                 margin: "0 0 0.75rem 0",
                 fontSize: "0.95rem",
                 lineHeight: 1.7,
@@ -546,7 +546,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
             </p>
             <p
               style={{
-                color: colors.muted,
+                color: "#FFFFFF",
                 margin: 0,
                 fontSize: "0.8rem",
                 fontWeight: 600,
@@ -569,7 +569,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
             <div
               style={{
                 fontSize: "0.75rem",
-                color: colors.muted,
+                color: "#FFFFFF",
                 fontWeight: 600,
                 textTransform: "uppercase",
                 marginBottom: "0.3rem",
@@ -582,7 +582,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: "1.1rem",
                 fontWeight: 700,
-                color: colors.slate,
+                color: "#FFFFFF",
               }}
             >
               {study.timeline}

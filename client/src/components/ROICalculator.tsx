@@ -143,8 +143,8 @@ export default function ROICalculator() {
       </h3>
       
       <div style={{ marginBottom: "1.5rem" }}>
-        <label style={{ display: "block", fontWeight: 600, color: colors.slate, marginBottom: "0.5rem", fontSize: "0.9rem" }}>
-          Total Trackable Physical Assets: <span style={{ color: colors.teal, fontWeight: 700 }}>{state.assetCount.toLocaleString()}</span>
+        <label style={{ display: "block", fontWeight: 600, color: colors.text, marginBottom: "0.5rem", fontSize: "0.9rem", textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
+          Total Trackable Physical Assets: <span style={{ color: colors.text, fontWeight: 700 }}>{state.assetCount.toLocaleString()}</span>
         </label>
         <input
           type="range"
@@ -155,7 +155,7 @@ export default function ROICalculator() {
           onChange={(e) => setState({ ...state, assetCount: parseInt(e.target.value) })}
           style={{ width: "100%", height: 6, borderRadius: 3, background: colors.border, outline: "none", accentColor: colors.teal }}
         />
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: colors.muted, marginTop: "0.3rem" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem", color: "#FFFFFF", marginTop: "0.3rem", fontWeight: 600, textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
           <span>100</span>
           <span>10,000+</span>
         </div>
@@ -163,7 +163,7 @@ export default function ROICalculator() {
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
         <div>
-          <label style={{ display: "block", fontWeight: 600, color: colors.slate, marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+          <label style={{ display: "block", fontWeight: 600, color: colors.text, marginBottom: "0.5rem", fontSize: "0.9rem", textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
             Number of Locations
           </label>
           <input
@@ -172,11 +172,11 @@ export default function ROICalculator() {
             max="50"
             value={state.locations}
             onChange={(e) => setState({ ...state, locations: parseInt(e.target.value) || 1 })}
-            style={{ width: "100%", padding: "0.6rem", border: `1px solid ${colors.border}`, borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem" }}
+            style={{ width: "100%", padding: "0.6rem", border: `1px solid ${colors.border}`, borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: colors.text, fontWeight: 600, textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}
           />
         </div>
         <div>
-          <label style={{ display: "block", fontWeight: 600, color: colors.slate, marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+          <label style={{ display: "block", fontWeight: 600, color: colors.text, marginBottom: "0.5rem", fontSize: "0.9rem", textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
             Number of Departments
           </label>
           <input
@@ -185,13 +185,13 @@ export default function ROICalculator() {
             max="20"
             value={state.departments}
             onChange={(e) => setState({ ...state, departments: parseInt(e.target.value) || 1 })}
-            style={{ width: "100%", padding: "0.6rem", border: `1px solid ${colors.border}`, borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem" }}
+            style={{ width: "100%", padding: "0.6rem", border: `1px solid ${colors.border}`, borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: colors.text, fontWeight: 600, textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}
           />
         </div>
       </div>
 
       <div style={{ marginBottom: "1.5rem" }}>
-        <label style={{ display: "block", fontWeight: 600, color: colors.slate, marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+        <label style={{ display: "block", fontWeight: 600, color: colors.text, marginBottom: "0.5rem", fontSize: "0.9rem", textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
           Industry
         </label>
         <select
@@ -212,7 +212,7 @@ export default function ROICalculator() {
       </div>
 
       <div style={{ marginBottom: "1.5rem" }}>
-        <label style={{ display: "block", fontWeight: 600, color: colors.slate, marginBottom: "0.5rem", fontSize: "0.9rem" }}>
+        <label style={{ display: "block", fontWeight: 600, color: colors.text, marginBottom: "0.5rem", fontSize: "0.9rem", textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
           Last Physical Verification
         </label>
         <select
@@ -694,7 +694,7 @@ export default function ROICalculator() {
   );
 
   return (
-    <div style={{ padding: "2rem", background: "white", borderRadius: 12, border: `1px solid ${colors.border}`, boxShadow: "0 4px 16px rgba(30,58,95,0.1)" }}>
+    <div style={{ padding: "2rem", background: "rgba(255, 255, 255, 0.15)", borderRadius: 12, border: `1px solid rgba(229, 231, 235, 0.3)`, boxShadow: "0 4px 16px rgba(30,58,95,0.05)", backdropFilter: "blur(10px)" }}>
       {state.step === 1 && renderStep1()}
       {state.step === 2 && renderStep2()}
       {state.step === 3 && renderStep3()}

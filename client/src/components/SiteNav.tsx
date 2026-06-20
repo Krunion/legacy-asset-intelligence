@@ -35,18 +35,14 @@ export default function SiteNav() {
     <nav style={{ background: "#0F1419", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
       {/* Top row: Logo + Name + Toggle */}
       <div style={{ maxWidth: 1400, margin: "0 auto", padding: "1rem 2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        {/* Logo */}
+        {/* Logo and Name Container */}
         <button 
           onClick={() => navigate("/")} 
-          style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal, display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}
+          style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal, display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0, flex: 1, justifyContent: "center" }}
         >
-          <img src="/manus-storage/lai-logo-perspective_45f05291.png" alt="LAI Logo" style={{ height: 85, width: 85, objectFit: "contain", imageRendering: "crisp-edges" }} />
+          <img src="/manus-storage/ActualLAIBrandlogo_e61cacb8.png" alt="LAI Logo" style={{ height: 60, width: "auto", objectFit: "contain", imageRendering: "crisp-edges" }} />
+          <img src="/manus-storage/ActualLAINameforLogo_b45a6143.png" alt="Legacy Asset Intelligence" style={{ height: 50, width: "auto", objectFit: "contain", imageRendering: "crisp-edges" }} />
         </button>
-
-        {/* Centered Name */}
-        <div style={{ flex: 1, textAlign: "center" }}>
-          <h1 style={{ fontSize: "1.8rem", fontWeight: 700, color: "#D4C5B0", margin: 0, fontFamily: "'Playfair Display', serif", letterSpacing: "0.05em" }}>Legacy Asset Intelligence</h1>
-        </div>
 
         {/* Toggle Button */}
         <button
