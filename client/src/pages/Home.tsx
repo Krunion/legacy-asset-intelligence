@@ -248,13 +248,15 @@ export default function Home() {
       <header style={{ background: C.slate, position: "sticky", top: 0, zIndex: 50, boxShadow: "0 2px 12px rgba(30,58,95,0.3)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
           <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <img src={LOGO_IMG} alt="LAI Logo" style={{ height: 40, width: 40, objectFit: "contain" }} />
+            <div style={{ background: "white", borderRadius: "0.375rem", padding: "0.25rem", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <img src={LOGO_IMG} alt="LAI Logo" style={{ height: 40, width: 40, objectFit: "contain" }} />
+            </div>
             <div>
               <div style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: "white", fontSize: "1.05rem", lineHeight: 1.1 }}>
                 Legacy Asset Intelligence
               </div>
-              <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "rgba(255,255,255,0.6)", fontSize: "0.7rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
-                Business Plan 2026
+              <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "rgba(255,255,255,0.7)", fontSize: "0.7rem", letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                Enterprise Asset Intelligence
               </div>
             </div>
           </div>
@@ -335,16 +337,16 @@ export default function Home() {
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(30,58,95,0.92) 0%, rgba(30,58,95,0.6) 60%, transparent 100%)" }} />
               <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", justifyContent: "center", padding: "2.5rem 3rem" }}>
                 <p style={{ color: C.tealLight, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.75rem" }}>
-                  Confidential Business Plan · 2026
+                  Enterprise Asset Intelligence Platform
                 </p>
-                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.4rem", fontWeight: 900, color: "white", lineHeight: 1.15, maxWidth: 480, marginBottom: "1rem" }}>
-                  Recover Capital.<br />Govern with Confidence.
+                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.8rem", fontWeight: 900, color: "white", lineHeight: 1.1, maxWidth: 520, marginBottom: "1rem" }}>
+                  Recover Millions in Hidden Capital.
                 </h1>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "rgba(255,255,255,0.85)", fontSize: "1rem", maxWidth: 420, lineHeight: 1.6 }}>
-                  15–30% of your fixed assets don't exist. Legacy Asset Intelligence finds them, tags them, and ensures they never disappear again.
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "rgba(255,255,255,0.9)", fontSize: "1.05rem", maxWidth: 480, lineHeight: 1.7 }}>
+                  Legacy Asset Intelligence helps healthcare systems, manufacturers, utilities, and government organizations recover lost capital, establish complete asset accountability, and implement governance programs that protect investments for years to come.
                 </p>
                 <div style={{ display: "flex", gap: "0.75rem", marginTop: "1.5rem", flexWrap: "wrap" }}>
-                  {["Ghost Asset Recovery", "Inventory Tagging", "Tech Platform", "Recurring Governance"].map(tag => (
+                  {["Capital Recovery", "Asset Accountability", "Governance Framework", "Enterprise Intelligence"].map(tag => (
                     <span key={tag} style={{ background: "rgba(13,148,136,0.25)", border: "1px solid rgba(13,148,136,0.5)", color: C.tealLight, padding: "0.3rem 0.75rem", borderRadius: 20, fontSize: "0.75rem", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600 }}>
                       {tag}
                     </span>
@@ -378,21 +380,26 @@ export default function Home() {
             {/* Mission Box */}
             <div style={{ background: `linear-gradient(135deg, ${C.slate} 0%, ${C.slateLight} 100%)`, borderRadius: 12, padding: "2rem", color: "white" }}>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: C.tealLight, marginBottom: "0.5rem" }}>
-                Our Mission
+                The LAI Executive Intelligence Process
               </p>
-              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 600, lineHeight: 1.4, marginBottom: "1rem" }}>
-                "To eliminate the financial and operational burden of ghost assets by delivering precision inventory intelligence, technology-enabled visibility, and sustainable governance frameworks."
+              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 600, lineHeight: 1.4, marginBottom: "1.5rem" }}>
+                A structured methodology designed for enterprise complexity.
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginTop: "1rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem", marginTop: "1rem" }}>
                 {[
-                  { icon: "🔍", title: "Investigate", desc: "Wall-to-wall physical audits using RFID and barcode technology" },
-                  { icon: "🏷️", title: "Tag & Track", desc: "Modern asset tagging integrated with cloud-based tracking platforms" },
-                  { icon: "📊", title: "Govern", desc: "Recurring audits and governance frameworks to prevent recurrence" },
-                ].map(item => (
-                  <div key={item.title} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "1rem" }}>
-                    <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>{item.icon}</div>
-                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 700, fontSize: "0.9rem", marginBottom: "0.3rem" }}>{item.title}</p>
-                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>{item.desc}</p>
+                  { step: "1", title: "Discover", items: ["Executive interviews", "Asset register review", "Governance assessment"] },
+                  { step: "2", title: "Assess", items: ["Physical verification", "Data reconciliation", "Maturity scoring"] },
+                  { step: "3", title: "Recover", items: ["Capital recovery", "Risk reduction", "Operational improvements"] },
+                  { step: "4", title: "Govern", items: ["Policy frameworks", "Dashboards & audits", "Governance maturity"] },
+                ].map(phase => (
+                  <div key={phase.step} style={{ background: "rgba(255,255,255,0.08)", borderRadius: 8, padding: "1.25rem", border: "1px solid rgba(13,148,136,0.3)" }}>
+                    <div style={{ fontSize: "2rem", fontWeight: 700, color: C.tealLight, marginBottom: "0.5rem" }}>{phase.step}</div>
+                    <p style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: "1rem", marginBottom: "0.75rem" }}>{phase.title}</p>
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                      {phase.items.map((item, idx) => (
+                        <li key={idx} style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: "rgba(255,255,255,0.75)", lineHeight: 1.6, marginBottom: "0.3rem" }}>• {item}</li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>
