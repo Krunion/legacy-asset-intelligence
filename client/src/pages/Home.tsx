@@ -36,13 +36,7 @@ const C = {
 };
 
 // ─── Chart Data ───────────────────────────────────────────────────────────────
-const revenueData = [
-  { year: "Year 1", revenue: 480, expenses: 380, ebitda: 100 },
-  { year: "Year 2", revenue: 920, expenses: 620, ebitda: 300 },
-  { year: "Year 3", revenue: 1650, expenses: 950, ebitda: 700 },
-  { year: "Year 4", revenue: 2400, expenses: 1300, ebitda: 1100 },
-  { year: "Year 5", revenue: 3200, expenses: 1700, ebitda: 1500 },
-];
+
 
 const marketData = [
   { name: "Manufacturing", value: 28, color: C.slate },
@@ -71,15 +65,7 @@ const marketGrowthData = [
   { year: "2030", size: 1513.7 },
 ];
 
-const startupCostData = [
-  { name: "Office & Workspace", value: 45000, color: C.slate },
-  { name: "IT Hardware & Software", value: 25000, color: C.teal },
-  { name: "Analytics Platform", value: 20000, color: C.amber },
-  { name: "Website & Branding", value: 18000, color: C.slateLight },
-  { name: "CRM & PM Setup", value: 15000, color: C.tealLight },
-  { name: "Legal & Insurance", value: 10000, color: "#94A3B8" },
-  { name: "Working Capital", value: 13000, color: "#CBD5E1" },
-];
+
 
 const competitorData = [
   { name: "Kroll", breadth: 95, specialization: 70, techPlatform: 65, governance: 80 },
@@ -94,12 +80,8 @@ const NAV_SECTIONS = [
   { id: "market-analysis", label: "Market Analysis" },
   { id: "services", label: "Services & Methodology" },
   { id: "competitive", label: "Competitive Landscape" },
-  { id: "financial", label: "Financial Projections" },
-  { id: "startup-costs", label: "Startup Investment" },
-  { id: "strategy", label: "Go-to-Market Strategy" },
-  { id: "risk", label: "Risk & Mitigation" },
   { id: "case-studies", label: "Case Studies" },
-  { id: "calculator", label: "ROI Calculator" },
+  { id: "calculator", label: "Recoverable Capital Calculator" },
 ];
 
 // ─── Animated Counter ─────────────────────────────────────────────────────────
@@ -704,382 +686,9 @@ export default function Home() {
 
           <div style={{ height: 48 }} />
 
-          {/* ═══════════════════════════════════════════════════════════════
-              SECTION 5: FINANCIAL PROJECTIONS
-          ═══════════════════════════════════════════════════════════════ */}
-          <Section id="financial">
-            <SectionHeader label="05 · Financial Projections" title="5-Year Revenue & Profitability Forecast" subtitle="Conservative base-case projections with a clear path to profitability by Month 7." />
 
-            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, lineHeight: 1.8, fontSize: "0.97rem", marginBottom: "2rem" }}>
-              <p style={{ marginBottom: "1rem" }}>
-                Legacy Asset Intelligence employs a hybrid revenue model combining project-based fees for initial engagements with recurring retainer revenue from ongoing governance services. This structure provides predictable cash flow while enabling significant revenue growth as the client base expands. Year 1 focuses on client acquisition and establishing operational processes, with profitability achieved by Month 7 as recurring revenue begins to offset fixed costs.
-              </p>
-              <p>
-                Revenue projections are based on a conservative client acquisition model: 8–10 project clients in Year 1 growing to 35–40 by Year 3, with 60% converting to recurring governance retainers. Average project fees range from $45,000 to $120,000 depending on asset volume and facility complexity, while annual governance retainers average $28,000 per client.
-              </p>
-            </div>
 
-            {/* Revenue Chart */}
-            <div style={{ background: "white", borderRadius: 12, padding: "1.5rem", border: `1px solid ${C.border}`, marginBottom: "1.5rem", boxShadow: "0 2px 8px rgba(30,58,95,0.06)" }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", color: C.slate, fontSize: "1.1rem", marginBottom: "1.25rem" }}>
-                Revenue, Expenses & EBITDA (USD Thousands)
-              </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={revenueData} margin={{ top: 10, right: 20, left: 10, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={C.slate} stopOpacity={0.2} />
-                      <stop offset="95%" stopColor={C.slate} stopOpacity={0.02} />
-                    </linearGradient>
-                    <linearGradient id="expGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={C.muted} stopOpacity={0.15} />
-                      <stop offset="95%" stopColor={C.muted} stopOpacity={0.02} />
-                    </linearGradient>
-                    <linearGradient id="ebitGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={C.teal} stopOpacity={0.3} />
-                      <stop offset="95%" stopColor={C.teal} stopOpacity={0.02} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
-                  <XAxis dataKey="year" tick={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12, fill: C.muted }} />
-                  <YAxis tick={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, fill: C.muted }} tickFormatter={v => `$${v}K`} />
-                  <Tooltip content={<CustomTooltip prefix="$" suffix="K" />} />
-                  <Legend wrapperStyle={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.78rem" }} />
-                  <Area type="monotone" dataKey="revenue" name="Revenue" stroke={C.slate} strokeWidth={2.5} fill="url(#revGrad)" />
-                  <Area type="monotone" dataKey="expenses" name="Expenses" stroke={C.muted} strokeWidth={2} fill="url(#expGrad)" strokeDasharray="5 3" />
-                  <Area type="monotone" dataKey="ebitda" name="EBITDA" stroke={C.teal} strokeWidth={2.5} fill="url(#ebitGrad)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
 
-            {/* Financial Summary Table */}
-            <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden", marginBottom: "1.5rem", boxShadow: "0 2px 8px rgba(30,58,95,0.06)" }}>
-              <div style={{ background: C.slate, padding: "0.9rem 1.25rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: "white", fontSize: "1rem" }}>5-Year Financial Summary (USD Thousands)</h3>
-              </div>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                  <tr style={{ background: "#F8FAFC", borderBottom: `2px solid ${C.border}` }}>
-                    {["Metric", "Year 1", "Year 2", "Year 3", "Year 4", "Year 5"].map(h => (
-                      <th key={h} style={{ padding: "0.75rem 1rem", textAlign: h === "Metric" ? "left" : "right", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, fontSize: "0.8rem", color: C.muted, letterSpacing: "0.05em" }}>{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    { label: "Revenue", vals: ["$480K", "$920K", "$1,650K", "$2,400K", "$3,200K"], highlight: false },
-                    { label: "Total Expenses", vals: ["$380K", "$620K", "$950K", "$1,300K", "$1,700K"], highlight: false },
-                    { label: "EBITDA", vals: ["$100K", "$300K", "$700K", "$1,100K", "$1,500K"], highlight: true },
-                    { label: "EBITDA Margin", vals: ["20.8%", "32.6%", "42.4%", "45.8%", "46.9%"], highlight: false },
-                    { label: "Project Clients", vals: ["8–10", "18–22", "30–35", "42–48", "55–65"], highlight: false },
-                    { label: "Governance Retainers", vals: ["3–4", "10–12", "20–24", "30–35", "40–48"], highlight: false },
-                  ].map((row, i) => (
-                    <tr key={row.label} style={{ background: row.highlight ? `${C.teal}10` : i % 2 === 0 ? "white" : "#F8FAFC", borderBottom: `1px solid ${C.border}` }}>
-                      <td style={{ padding: "0.8rem 1rem", fontFamily: "'Source Sans 3', sans-serif", fontWeight: row.highlight ? 700 : 500, fontSize: "0.88rem", color: row.highlight ? C.teal : C.text }}>
-                        {row.label}
-                      </td>
-                      {row.vals.map((v, j) => (
-                        <td key={j} style={{ padding: "0.8rem 1rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem", color: row.highlight ? C.teal : C.text, fontWeight: row.highlight ? 600 : 400 }}>
-                          {v}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Revenue Model Cards */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
-              {[
-                { title: "Project-Based Fees", icon: "📋", range: "$45K – $120K", desc: "Per engagement, scaled by asset volume and facility count. Includes physical audit, tagging, and FAR reconciliation.", color: C.slate },
-                { title: "Governance Retainer", icon: "🔄", range: "$24K – $36K/yr", desc: "Annual recurring revenue for ongoing audits, compliance reporting, and platform management.", color: C.teal },
-                { title: "Value-Based Pricing", icon: "💎", range: "5–10% of Recovery", desc: "Optional performance-based component tied to documented capital recovery from ghost asset elimination.", color: C.amber },
-              ].map(model => (
-                <div key={model.title} style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.25rem", borderTop: `3px solid ${model.color}`, boxShadow: "0 2px 8px rgba(30,58,95,0.06)" }}>
-                  <div style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>{model.icon}</div>
-                  <h4 style={{ fontFamily: "'Playfair Display', serif", color: C.slate, fontSize: "0.95rem", marginBottom: "0.4rem" }}>{model.title}</h4>
-                  <p style={{ fontFamily: "'JetBrains Mono', monospace", color: model.color, fontSize: "0.9rem", fontWeight: 500, marginBottom: "0.5rem" }}>{model.range}</p>
-                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.muted, fontSize: "0.8rem", lineHeight: 1.5 }}>{model.desc}</p>
-                </div>
-              ))}
-            </div>
-          </Section>
-
-          <div style={{ height: 48 }} />
-
-          {/* ═══════════════════════════════════════════════════════════════
-              SECTION 6: STARTUP INVESTMENT
-          ═══════════════════════════════════════════════════════════════ */}
-          <Section id="startup-costs">
-            <SectionHeader label="06 · Startup Investment" title="Initial Capital Requirements" subtitle="A lean, focused investment to launch a high-margin consulting practice." />
-
-            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, lineHeight: 1.8, fontSize: "0.97rem", marginBottom: "2rem" }}>
-              <p>
-                Starting Legacy Asset Intelligence requires an estimated initial capital investment of <strong>$146,000</strong> for an office-based launch, with a total funding target of approximately <strong>$300,000–$400,000</strong> to cover working capital through the Month 7 break-even point. A lean remote-first launch can reduce initial CAPEX to <strong>$81,000</strong>, though this limits the firm's ability to host client meetings and maintain the professional presence expected by enterprise clients.
-              </p>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
-              <div style={{ background: "white", borderRadius: 12, padding: "1.5rem", border: `1px solid ${C.border}`, boxShadow: "0 2px 8px rgba(30,58,95,0.06)" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: C.slate, fontSize: "1.1rem", marginBottom: "1.25rem" }}>
-                  Startup Cost Breakdown
-                </h3>
-                <ResponsiveContainer width="100%" height={240}>
-                  <PieChart>
-                    <Pie data={startupCostData} cx="50%" cy="50%" outerRadius={95} paddingAngle={2} dataKey="value">
-                      {startupCostData.map((entry, index) => (
-                        <Cell key={index} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(v: any) => [`$${Number(v).toLocaleString()}`, "Amount"]} />
-                  </PieChart>
-                </ResponsiveContainer>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                  {startupCostData.map(d => (
-                    <div key={d.name} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <div style={{ width: 10, height: 10, borderRadius: 2, background: d.color, flexShrink: 0 }} />
-                      <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.78rem", color: C.text, flex: 1 }}>{d.name}</span>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.78rem", color: C.muted }}>${d.value.toLocaleString()}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                {[
-                  { label: "Lean Remote Launch", amount: "$81,000", desc: "No office, minimal equipment, remote-first operations", color: C.muted },
-                  { label: "Standard Launch", amount: "$101,000", desc: "Adds advanced analytics platform integration", color: C.teal },
-                  { label: "Full Office Launch", amount: "$146,000", desc: "Includes office setup, furnishings, and full tech stack", color: C.slate },
-                  { label: "Total Funding Target", amount: "$300K–$400K", desc: "Includes working capital through Month 7 break-even", color: C.amber },
-                ].map(item => (
-                  <div key={item.label} style={{ background: "white", borderRadius: 10, padding: "1rem 1.25rem", borderTop: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, borderLeft: `4px solid ${item.color}`, boxShadow: "0 1px 4px rgba(30,58,95,0.06)" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                      <div>
-                        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.text, fontSize: "0.88rem" }}>{item.label}</p>
-                        <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.muted, fontSize: "0.78rem", marginTop: "0.2rem" }}>{item.desc}</p>
-                      </div>
-                      <span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, color: item.color, fontSize: "1rem", whiteSpace: "nowrap", marginLeft: "1rem" }}>{item.amount}</span>
-                    </div>
-                  </div>
-                ))}
-                <div style={{ background: `${C.slate}10`, borderRadius: 10, padding: "1rem 1.25rem", border: `1px solid ${C.slate}30` }}>
-                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 700, color: C.slate, fontSize: "0.85rem", marginBottom: "0.4rem" }}>Key Payroll Assumptions</p>
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.4rem" }}>
-                    {[
-                      ["Founder/Principal", "$180K/yr"],
-                      ["Senior Consultant", "$95K/yr"],
-                      ["Field Analyst", "$70K/yr"],
-                      ["Admin/Operations", "$50K/yr"],
-                    ].map(([role, salary]) => (
-                      <div key={role} style={{ display: "flex", justifyContent: "space-between" }}>
-                        <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.78rem", color: C.muted }}>{role}</span>
-                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.78rem", color: C.text }}>{salary}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </Section>
-
-          <div style={{ height: 48 }} />
-
-          {/* ═══════════════════════════════════════════════════════════════
-              SECTION 7: GO-TO-MARKET STRATEGY
-          ═══════════════════════════════════════════════════════════════ */}
-          <Section id="strategy">
-            <SectionHeader label="07 · Go-to-Market Strategy" title="Building a Durable Client Pipeline" subtitle="A targeted, relationship-driven approach to enterprise client acquisition." />
-
-            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, lineHeight: 1.8, fontSize: "0.97rem", marginBottom: "2rem" }}>
-              <p style={{ marginBottom: "1rem" }}>
-                Legacy Asset Intelligence will pursue a focused go-to-market strategy targeting mid-market enterprises ($50M–$500M revenue) in manufacturing, healthcare, and IT-intensive sectors. These organizations have sufficient asset complexity to generate meaningful ghost asset problems but often lack the internal resources to address them systematically. Our initial client acquisition will leverage the founding team's existing professional networks, supplemented by targeted content marketing and strategic partnerships with accounting firms and ERP implementation consultants.
-              </p>
-              <p>
-                The client acquisition funnel is designed to convert awareness into long-term retainer relationships. Initial project engagements serve as proof-of-concept demonstrations, with the goal of converting 60% of project clients to annual governance retainers within 12 months of engagement completion. This conversion rate is the single most important driver of long-term revenue growth and profitability.
-              </p>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
-              {/* GTM Channels */}
-              <div style={{ background: "white", borderRadius: 12, padding: "1.5rem", border: `1px solid ${C.border}`, boxShadow: "0 2px 8px rgba(30,58,95,0.06)" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: C.slate, fontSize: "1.05rem", marginBottom: "1.25rem" }}>
-                  Client Acquisition Channels
-                </h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                  {[
-                    { channel: "Professional Network & Referrals", weight: 40, color: C.slate },
-                    { channel: "Accounting Firm Partnerships", weight: 25, color: C.teal },
-                    { channel: "Content Marketing & SEO", weight: 15, color: C.amber },
-                    { channel: "Industry Conferences & Events", weight: 12, color: C.slateLight },
-                    { channel: "Direct Outbound Sales", weight: 8, color: C.tealLight },
-                  ].map(item => (
-                    <div key={item.channel}>
-                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.3rem" }}>
-                        <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.82rem", color: C.text }}>{item.channel}</span>
-                        <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.78rem", color: C.muted }}>{item.weight}%</span>
-                      </div>
-                      <div style={{ height: 6, background: C.border, borderRadius: 3, overflow: "hidden" }}>
-                        <div style={{ height: "100%", width: `${item.weight}%`, background: item.color, borderRadius: 3, transition: "width 1s cubic-bezier(0.23, 1, 0.32, 1)" }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Client Journey */}
-              <div style={{ background: "white", borderRadius: 12, padding: "1.5rem", border: `1px solid ${C.border}`, boxShadow: "0 2px 8px rgba(30,58,95,0.06)" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", color: C.slate, fontSize: "1.05rem", marginBottom: "1.25rem" }}>
-                  Client Lifecycle Journey
-                </h3>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0" }}>
-                  {[
-                    { step: "1", title: "Awareness", desc: "Content, referrals, and conference presence", color: C.muted },
-                    { step: "2", title: "Discovery Call", desc: "Ghost asset assessment and ROI estimation", color: C.slateLight },
-                    { step: "3", title: "Proposal", desc: "Scoped project with clear deliverables and pricing", color: C.slate },
-                    { step: "4", title: "Phase 1 Engagement", desc: "Physical audit, tagging, and FAR reconciliation", color: C.teal },
-                    { step: "5", title: "Platform Onboarding", desc: "Technology integration and staff training", color: C.tealLight },
-                    { step: "6", title: "Governance Retainer", desc: "Recurring audits and continuous compliance", color: C.amber },
-                  ].map((item, i) => (
-                    <div key={item.step} style={{ display: "flex", gap: "0.75rem", alignItems: "flex-start", paddingBottom: i < 5 ? "0.75rem" : 0 }}>
-                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-                        <div style={{ width: 28, height: 28, borderRadius: "50%", background: item.color, color: "white", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", fontWeight: 600, flexShrink: 0 }}>
-                          {item.step}
-                        </div>
-                        {i < 5 && <div style={{ width: 2, flex: 1, background: C.border, marginTop: "0.25rem", minHeight: 16 }} />}
-                      </div>
-                      <div style={{ paddingBottom: i < 5 ? "0.5rem" : 0 }}>
-                        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.text, fontSize: "0.85rem" }}>{item.title}</p>
-                        <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.muted, fontSize: "0.78rem" }}>{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Strategic Partnerships */}
-            <div style={{ background: `linear-gradient(135deg, ${C.teal}15 0%, ${C.teal}05 100%)`, borderRadius: 12, padding: "1.5rem", border: `1px solid ${C.teal}30` }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", color: C.slate, fontSize: "1.05rem", marginBottom: "1rem" }}>
-                Strategic Partnership Targets
-              </h3>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem" }}>
-                {[
-                  { type: "Accounting Firms", desc: "CPA firms that identify ghost asset issues during audits and refer clients for remediation", icon: "🏦" },
-                  { type: "ERP Consultants", desc: "SAP, Oracle, and NetSuite implementation partners who need asset data clean-up services", icon: "💻" },
-                  { type: "Insurance Brokers", desc: "Commercial property insurance brokers who can demonstrate premium savings from accurate asset records", icon: "🛡️" },
-                ].map(p => (
-                  <div key={p.type} style={{ background: "white", borderRadius: 8, padding: "1rem", border: `1px solid ${C.border}` }}>
-                    <div style={{ fontSize: "1.4rem", marginBottom: "0.5rem" }}>{p.icon}</div>
-                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 700, color: C.slate, fontSize: "0.88rem", marginBottom: "0.4rem" }}>{p.type}</p>
-                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.muted, fontSize: "0.78rem", lineHeight: 1.5 }}>{p.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Section>
-
-          <div style={{ height: 48 }} />
-
-          {/* ═══════════════════════════════════════════════════════════════
-              SECTION 8: RISK & MITIGATION
-          ═══════════════════════════════════════════════════════════════ */}
-          <Section id="risk">
-            <SectionHeader label="08 · Risk & Mitigation" title="Risk Assessment & Contingency Planning" subtitle="Proactive identification and mitigation of key business risks." />
-
-            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.text, lineHeight: 1.8, fontSize: "0.97rem", marginBottom: "2rem" }}>
-              <p>
-                Every consulting firm startup faces a predictable set of risks. Legacy Asset Intelligence has identified and developed mitigation strategies for the most significant threats to the business, ranging from client acquisition challenges to competitive responses from established players. Our risk management framework is designed to preserve capital and maintain operational continuity through the critical first 18 months of operation.
-              </p>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
-              {[
-                {
-                  risk: "Slow Client Acquisition", level: "High", impact: "High",
-                  mitigation: "Leverage founder's existing network for first 3–5 clients. Offer a pilot engagement at reduced fee to establish proof-of-concept and generate case studies.",
-                  color: "#EF4444"
-                },
-                {
-                  risk: "Competition from Established Firms", level: "Medium", impact: "Medium",
-                  mitigation: "Focus on mid-market segment underserved by Kroll. Differentiate through end-to-end delivery, faster turnaround, and proprietary governance framework.",
-                  color: C.amber
-                },
-                {
-                  risk: "Key Person Dependency", level: "Medium", impact: "High",
-                  mitigation: "Document all methodologies and processes from Day 1. Hire second senior consultant by Month 9 to distribute client relationships and institutional knowledge.",
-                  color: C.amber
-                },
-                {
-                  risk: "Technology Platform Selection", level: "Low", impact: "Medium",
-                  mitigation: "Evaluate and partner with 2–3 established ITAM/CMMS vendors (e.g., ServiceNow, Ivanti, Snipe-IT) rather than building proprietary software in Year 1.",
-                  color: C.teal
-                },
-                {
-                  risk: "Cash Flow in Early Months", level: "High", impact: "High",
-                  mitigation: "Maintain 6-month operating reserve. Structure project payment terms as 50% upfront, 50% on delivery. Prioritize retainer conversion to build recurring revenue base.",
-                  color: "#EF4444"
-                },
-                {
-                  risk: "Regulatory / Compliance Changes", level: "Low", impact: "Low",
-                  mitigation: "Monitor GASB, SOX, and IFRS 16 updates. Maintain relationships with accounting firm partners who provide early warning of regulatory changes affecting clients.",
-                  color: C.tealLight
-                },
-              ].map(item => (
-                <div key={item.risk} style={{ background: "white", borderRadius: 10, padding: "1.25rem", borderTop: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, borderLeft: `4px solid ${item.color}`, boxShadow: "0 1px 4px rgba(30,58,95,0.06)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.6rem" }}>
-                    <h4 style={{ fontFamily: "'Playfair Display', serif", color: C.slate, fontSize: "0.95rem" }}>{item.risk}</h4>
-                    <div style={{ display: "flex", gap: "0.4rem", flexShrink: 0, marginLeft: "0.5rem" }}>
-                      <span style={{ background: `${item.color}20`, color: item.color, padding: "0.15rem 0.5rem", borderRadius: 4, fontSize: "0.65rem", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 700 }}>
-                        {item.level} Risk
-                      </span>
-                    </div>
-                  </div>
-                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.muted, fontSize: "0.8rem", lineHeight: 1.6 }}>
-                    <strong style={{ color: C.teal }}>Mitigation:</strong> {item.mitigation}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* SWOT */}
-            <div style={{ marginTop: "1.5rem" }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", color: C.slate, fontSize: "1.1rem", marginBottom: "1rem" }}>SWOT Analysis</h3>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-                {[
-                  {
-                    type: "Strengths", color: C.teal, bg: "#F0FDFA",
-                    items: ["End-to-end service model (unique in market)", "Technology platform differentiator", "Recurring governance revenue stream", "High ROI visibility for clients"]
-                  },
-                  {
-                    type: "Weaknesses", color: "#EF4444", bg: "#FEF2F2",
-                    items: ["New brand with no established track record", "Key person dependency in early stage", "High initial capital requirement", "Long sales cycles for enterprise clients"]
-                  },
-                  {
-                    type: "Opportunities", color: C.amber, bg: "#FFFBEB",
-                    items: ["$264B+ market growing at 28.3% CAGR", "Increasing regulatory compliance pressure", "Digital transformation driving asset complexity", "Accounting firm partnership channel"]
-                  },
-                  {
-                    type: "Threats", color: C.slate, bg: "#EEF2F7",
-                    items: ["Established firms expanding into mid-market", "Economic downturn reducing consulting spend", "DIY asset management software adoption", "Talent competition for field consultants"]
-                  },
-                ].map(quadrant => (
-                  <div key={quadrant.type} style={{ background: quadrant.bg, borderRadius: 10, padding: "1.25rem", border: `1px solid ${quadrant.color}30` }}>
-                    <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 700, color: quadrant.color, fontSize: "0.85rem", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.75rem" }}>
-                      {quadrant.type}
-                    </h4>
-                    <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-                      {quadrant.items.map(item => (
-                        <li key={item} style={{ display: "flex", gap: "0.5rem", marginBottom: "0.4rem", fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.82rem", color: C.text, lineHeight: 1.4 }}>
-                          <span style={{ color: quadrant.color, fontWeight: 700, flexShrink: 0 }}>•</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
 
           {/* SECTION 8: CASE STUDIES */}
           <Section id="case-studies">
@@ -1095,7 +704,6 @@ export default function Home() {
             <div style={{ marginBottom: "2rem" }}>
               <ROICalculator />
             </div>
-          </Section>
 
             {/* Footer CTA */}
             <div style={{ marginTop: "2.5rem", background: `linear-gradient(135deg, ${C.slate} 0%, ${C.slateLight} 100%)`, borderRadius: 12, padding: "2rem", textAlign: "center", color: "white" }}>
@@ -1120,7 +728,6 @@ export default function Home() {
               </div>
             </div>
           </Section>
-
         </main>
       </div>
 

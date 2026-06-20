@@ -64,6 +64,7 @@
 
 ### Phase 1: Foundation & Architecture
 - [x] Fix LAI logo visibility (contrast issue with "L") - added white background
+- [x] Remove startup/investment-focused content (Financial Projections, Startup Investment, Go-to-Market, Risk & Mitigation sections removed)
 - [ ] Create multi-page routing structure (App.tsx navigation)
 - [ ] Build navigation component with executive positioning
 - [ ] Create page templates for consistency
