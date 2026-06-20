@@ -127,14 +127,15 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
   return (
     <div
       style={{
-        border: `1px solid ${colors.border}`,
+        border: "1px solid rgba(255, 255, 255, 0.15)",
         borderRadius: 12,
         overflow: "hidden",
-        background: "white",
+        background: "rgba(255, 255, 255, 0.08)",
         transition: "all 0.3s",
         boxShadow: isExpanded
-          ? "0 12px 32px rgba(30,58,95,0.15)"
-          : "0 2px 8px rgba(30,58,95,0.08)",
+          ? "0 12px 32px rgba(0,0,0,0.3)"
+          : "0 2px 8px rgba(0,0,0,0.2)",
+        backdropFilter: "blur(8px)",
       }}
     >
       {/* Header */}
@@ -194,7 +195,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
 
       {/* Expanded Content */}
       {isExpanded && (
-        <div style={{ padding: "2rem" }}>
+        <div style={{ padding: "2rem", background: "rgba(255, 255, 255, 0.05)" }}>
           {/* Key Metrics */}
           <div style={{ marginBottom: "2rem" }}>
             <h4
@@ -219,18 +220,20 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
               <div
                 style={{
                   padding: "1rem",
-                  background: colors.bg,
+                  background: "rgba(255, 255, 255, 0.08)",
                   borderRadius: 8,
                   textAlign: "center",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
                 }}
               >
                 <div
                   style={{
                     fontSize: "0.75rem",
-                    color: colors.muted,
+                    color: "#D4AF37",
                     fontWeight: 600,
                     textTransform: "uppercase",
                     marginBottom: "0.5rem",
+                    textShadow: "0 1px 2px rgba(0,0,0,0.3)",
                   }}
                 >
                   Assets Audited
@@ -240,7 +243,8 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: "1.3rem",
                     fontWeight: 700,
-                    color: colors.slate,
+                    color: "#FFFFFF",
+                    textShadow: "0 1px 3px rgba(0,0,0,0.4)",
                   }}
                 >
                   {study.metrics.assetsAudited.toLocaleString()}
@@ -249,18 +253,20 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
               <div
                 style={{
                   padding: "1rem",
-                  background: colors.bg,
+                  background: "rgba(255, 255, 255, 0.08)",
                   borderRadius: 8,
                   textAlign: "center",
+                  border: "1px solid rgba(255, 255, 255, 0.1)",
                 }}
               >
                 <div
                   style={{
                     fontSize: "0.75rem",
-                    color: colors.muted,
+                    color: "#D4AF37",
                     fontWeight: 600,
                     textTransform: "uppercase",
                     marginBottom: "0.5rem",
+                    textShadow: "0 1px 2px rgba(0,0,0,0.3)",
                   }}
                 >
                   Ghost Assets Found
@@ -270,7 +276,8 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: "1.3rem",
                     fontWeight: 700,
-                    color: colors.teal,
+                    color: "#FFFFFF",
+                    textShadow: "0 1px 3px rgba(0,0,0,0.4)",
                   }}
                 >
                   {study.metrics.ghostAssetsFound.toLocaleString()}

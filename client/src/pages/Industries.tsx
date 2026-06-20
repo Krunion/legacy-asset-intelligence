@@ -54,23 +54,23 @@ export default function Industries() {
     >
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem" }}>
         {industries.map((industry, i) => (
-          <div key={i} style={{ padding: "2rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 2px 8px rgba(15,20,25,0.05)" }}>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: C.charcoal, marginBottom: "0.5rem" }}>
+          <div key={i} style={{ padding: "2rem", background: "rgba(255, 255, 255, 0.08)", border: "1px solid rgba(255, 255, 255, 0.15)", borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.2)", backdropFilter: "blur(8px)" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
               {industry.name}
             </h3>
-            <p style={{ color: C.textMuted, marginBottom: "1.5rem", fontSize: "0.95rem" }}>
+            <p style={{ color: "#E8E9EB", marginBottom: "1.5rem", fontSize: "0.95rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
               {industry.description}
             </p>
             <div style={{ marginBottom: "1.5rem" }}>
-              <p style={{ fontSize: "0.8rem", color: C.gold, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase" }}>Key Challenges</p>
+              <p style={{ fontSize: "0.8rem", color: C.gold, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>Key Challenges</p>
               <ul style={{ listStyle: "none", padding: 0 }}>
                 {industry.challenges.map((challenge, j) => (
-                  <li key={j} style={{ color: C.textDark, marginBottom: "0.3rem", fontSize: "0.9rem" }}>• {challenge}</li>
+                  <li key={j} style={{ color: "#D1D5DB", marginBottom: "0.3rem", fontSize: "0.9rem", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>• {challenge}</li>
                 ))}
               </ul>
             </div>
-            <div style={{ padding: "1rem", background: "rgba(212,175,55,0.08)", borderRadius: 6, marginBottom: "1.5rem" }}>
-              <p style={{ fontSize: "0.9rem", fontWeight: 600, color: C.charcoal }}>
+            <div style={{ padding: "1rem", background: "rgba(212,175,55,0.15)", borderRadius: 6, marginBottom: "1.5rem" }}>
+              <p style={{ fontSize: "0.9rem", fontWeight: 600, color: "#E8E9EB", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>
                 Typical Recovery: <span style={{ color: C.gold }}>{industry.recovery}</span>
               </p>
             </div>
