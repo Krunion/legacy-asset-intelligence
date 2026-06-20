@@ -406,6 +406,18 @@ export default function Home() {
             </div>
           </Section>
 
+          {/* ── TRUSTED BY SECTION ── */}
+          <Section id="trusted-by" className="py-12 bg-gray-50">
+            <div className="max-w-6xl mx-auto px-4">
+              <h2 className="text-center text-2xl font-bold text-gray-800 mb-8 font-playfair">
+                Trusted By Industry Leaders
+              </h2>
+              <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
+                <img src="/manus-storage/lai-logo_8d298200.png" alt="Legacy Asset Intelligence Logo" className="h-12" />
+              </div>
+            </div>
+          </Section>
+
           <div style={{ height: 48 }} />
 
           {/* ═══════════════════════════════════════════════════════════════

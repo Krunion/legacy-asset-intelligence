@@ -69,12 +69,15 @@
 - [ ] Create page templates for consistency
 
 ### Phase 2: Homepage Redesign
-- [ ] Rewrite hero section with executive value proposition ("Recover Millions in Hidden Capital")
-- [ ] Add premium consulting-level messaging
-- [ ] Implement statistics/numbers section (15-30% asset visibility loss, etc.)
-- [ ] Create "Trusted By" section with technology partners
-- [ ] Add LAI Executive Intelligence Process (4-step visual flow)
-- [ ] Update CTA language ("Schedule Your Executive Asset Assessment")
+- [x] Rewrite hero section with executive value proposition ("Recover Millions in Hidden Capital")
+- [x] Add premium consulting-level messaging
+- [x] Implement statistics/numbers section (15-30% asset visibility loss, etc.)
+- [x] Create "Trusted By" section with technology partners (placeholder images)
+- [x] Add LAI Executive Intelligence Process (4-step visual flow)
+- [x] Update CTA language ("Schedule Your Executive Asset Assessment")
+- [ ] Replace placeholder.com partner logos with real approved assets or text-based badges
+- [ ] Verify the Trusted By section renders correctly with production assets and responsive layout
+- [ ] Add a note/source/qualification if these are technology ecosystem partners rather than client endorsements
 
 ### Phase 3: Core Service Pages
 - [ ] Executive Asset Assessment page
