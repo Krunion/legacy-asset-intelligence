@@ -1,13 +1,8 @@
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
+import { COLORS } from "@shared/colors";
 
-const C = {
-  slate: "#1E3A5F",
-  teal: "#0D9488",
-  border: "#E2E8F0",
-  text: "#1E293B",
-  muted: "#64748B",
-};
+const C = COLORS;
 
 export default function Industries() {
   const industries = [
@@ -59,27 +54,27 @@ export default function Industries() {
     >
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem" }}>
         {industries.map((industry, i) => (
-          <div key={i} style={{ padding: "2rem", background: "white", border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 2px 8px rgba(30,58,95,0.05)" }}>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: C.slate, marginBottom: "0.5rem" }}>
+          <div key={i} style={{ padding: "2rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 2px 8px rgba(15,20,25,0.05)" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: C.charcoal, marginBottom: "0.5rem" }}>
               {industry.name}
             </h3>
-            <p style={{ color: C.muted, marginBottom: "1.5rem", fontSize: "0.95rem" }}>
+            <p style={{ color: C.textMuted, marginBottom: "1.5rem", fontSize: "0.95rem" }}>
               {industry.description}
             </p>
             <div style={{ marginBottom: "1.5rem" }}>
-              <p style={{ fontSize: "0.8rem", color: C.teal, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase" }}>Key Challenges</p>
+              <p style={{ fontSize: "0.8rem", color: C.gold, fontWeight: 600, marginBottom: "0.5rem", textTransform: "uppercase" }}>Key Challenges</p>
               <ul style={{ listStyle: "none", padding: 0 }}>
                 {industry.challenges.map((challenge, j) => (
-                  <li key={j} style={{ color: C.text, marginBottom: "0.3rem", fontSize: "0.9rem" }}>• {challenge}</li>
+                  <li key={j} style={{ color: C.textDark, marginBottom: "0.3rem", fontSize: "0.9rem" }}>• {challenge}</li>
                 ))}
               </ul>
             </div>
-            <div style={{ padding: "1rem", background: "rgba(13,148,136,0.08)", borderRadius: 6, marginBottom: "1.5rem" }}>
-              <p style={{ fontSize: "0.9rem", fontWeight: 600, color: C.slate }}>
-                Typical Recovery: <span style={{ color: "#F59E0B" }}>{industry.recovery}</span>
+            <div style={{ padding: "1rem", background: "rgba(212,175,55,0.08)", borderRadius: 6, marginBottom: "1.5rem" }}>
+              <p style={{ fontSize: "0.9rem", fontWeight: 600, color: C.charcoal }}>
+                Typical Recovery: <span style={{ color: C.gold }}>{industry.recovery}</span>
               </p>
             </div>
-            <Button style={{ width: "100%", background: C.teal, color: "white" }}>Learn More</Button>
+            <Button style={{ width: "100%", background: C.gold, color: C.charcoal }}>Learn More</Button>
           </div>
         ))}
       </div>

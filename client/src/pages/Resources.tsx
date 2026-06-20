@@ -1,13 +1,7 @@
 import PageLayout from "@/components/PageLayout";
+import { COLORS } from "@shared/colors";
 
-const C = {
-  slate: "#1E3A5F",
-  teal: "#0D9488",
-  amber: "#F59E0B",
-  border: "#E2E8F0",
-  text: "#1E293B",
-  muted: "#64748B",
-};
+const C = COLORS;
 
 export default function Resources() {
   const resources = [
@@ -57,12 +51,12 @@ export default function Resources() {
 
   const getTypeColor = (type: string) => {
     const colors: { [key: string]: string } = {
-      "White Paper": C.teal,
-      "Industry Report": C.amber,
-      "Implementation Guide": C.slate,
-      "Case Study Collection": C.teal
+      "White Paper": C.gold,
+      "Industry Report": C.gold,
+      "Implementation Guide": C.gold,
+      "Case Study Collection": C.gold
     };
-    return colors[type] || C.teal;
+    return colors[type] || C.gold;
   };
 
   return (
@@ -74,34 +68,34 @@ export default function Resources() {
       ctaButtonText="Request Custom Research"
     >
       <div style={{ marginBottom: "2rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1.5rem" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.charcoal, marginBottom: "1.5rem" }}>
           Featured Resources
         </h2>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
           {resources.map((resource, i) => (
-            <div key={i} style={{ padding: "1.5rem", background: "white", border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 2px 8px rgba(30,58,95,0.05)", display: "flex", flexDirection: "column" }}>
+            <div key={i} style={{ padding: "1.5rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 2px 8px rgba(15,20,25,0.05)", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
                 <span style={{ padding: "0.4rem 0.8rem", background: `${getTypeColor(resource.type)}20`, color: getTypeColor(resource.type), borderRadius: 4, fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase" }}>
                   {resource.type}
                 </span>
-                <span style={{ color: C.muted, fontSize: "0.8rem", fontWeight: 500 }}>
+                <span style={{ color: C.textMuted, fontSize: "0.8rem", fontWeight: 500 }}>
                   {resource.pages} pages
                 </span>
               </div>
               
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", fontWeight: 700, color: C.slate, marginBottom: "0.75rem", lineHeight: 1.4 }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", fontWeight: 700, color: C.charcoal, marginBottom: "0.75rem", lineHeight: 1.4 }}>
                 {resource.title}
               </h3>
               
-              <p style={{ color: C.text, fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1rem", flex: 1 }}>
+              <p style={{ color: C.textDark, fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1rem", flex: 1 }}>
                 {resource.description}
               </p>
               
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "1rem", borderTop: `1px solid ${C.border}` }}>
-                <span style={{ color: C.muted, fontSize: "0.8rem" }}>
+                <span style={{ color: C.textMuted, fontSize: "0.8rem" }}>
                   {resource.industry}
                 </span>
-                <button style={{ background: C.teal, color: "white", border: "none", padding: "0.5rem 1rem", borderRadius: 4, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" }}>
+                <button style={{ background: C.gold, color: C.charcoal, border: "none", padding: "0.5rem 1rem", borderRadius: 4, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" }}>
                   Download
                 </button>
               </div>
@@ -110,14 +104,14 @@ export default function Resources() {
         </div>
       </div>
 
-      <div style={{ background: "rgba(13,148,136,0.08)", padding: "2rem", borderRadius: 8, marginTop: "3rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+      <div style={{ background: "rgba(212,175,55,0.08)", padding: "2rem", borderRadius: 8, marginTop: "3rem" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.charcoal, marginBottom: "1rem" }}>
           Knowledge Base
         </h2>
-        <p style={{ color: C.text, fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "1rem" }}>
+        <p style={{ color: C.textDark, fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "1rem" }}>
           Our comprehensive knowledge base includes articles, guides, and FAQs covering every aspect of asset management, capital recovery, and governance implementation. Search by industry, topic, or challenge to find the information you need.
         </p>
-        <button style={{ background: C.teal, color: "white", border: "none", padding: "0.75rem 1.5rem", borderRadius: 4, fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}>
+        <button style={{ background: C.gold, color: C.charcoal, border: "none", padding: "0.75rem 1.5rem", borderRadius: 4, fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}>
           Explore Knowledge Base
         </button>
       </div>

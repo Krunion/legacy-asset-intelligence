@@ -1,16 +1,9 @@
 import SiteNav from "./SiteNav";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
+import { COLORS } from "@shared/colors";
 
-const C = {
-  slate: "#1E3A5F",
-  teal: "#0D9488",
-  amber: "#F59E0B",
-  bg: "#F8FAFC",
-  border: "#E2E8F0",
-  text: "#1E293B",
-  muted: "#64748B",
-};
+const C = COLORS;
 
 interface PageLayoutProps {
   heroTitle: string;
@@ -36,12 +29,12 @@ export default function PageLayout({
     navigate("/faq");
   };
   return (
-    <div style={{ minHeight: "100vh", background: C.bg }}>
+    <div style={{ minHeight: "100vh", background: C.bgLight }}>
       {/* Navigation */}
       <SiteNav />
 
       {/* Hero Section */}
-      <section style={{ background: C.slate, color: "white", padding: "4rem 2rem", textAlign: "center" }}>
+      <section style={{ background: C.charcoal, color: C.text, padding: "4rem 2rem", textAlign: "center" }}>
         <div style={{ maxWidth: 800, margin: "0 auto" }}>
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "3rem", fontWeight: 700, marginBottom: "1rem" }}>
             {heroTitle}
@@ -58,7 +51,7 @@ export default function PageLayout({
       </section>
 
       {/* CTA Section */}
-      <section style={{ background: C.slate, color: "white", padding: "4rem 2rem", marginTop: "4rem", textAlign: "center" }}>
+      <section style={{ background: C.charcoal, color: C.text, padding: "4rem 2rem", marginTop: "4rem", textAlign: "center" }}>
         <div style={{ maxWidth: 600, margin: "0 auto" }}>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, marginBottom: "1rem" }}>
             {ctaTitle}
@@ -68,7 +61,7 @@ export default function PageLayout({
           </p>
           <Button 
             onClick={handleCTA}
-            style={{ background: C.amber, color: C.slate, padding: "0.8rem 2rem", fontSize: "1rem", cursor: "pointer" }}
+            style={{ background: C.gold, color: C.charcoal, padding: "0.8rem 2rem", fontSize: "1rem", cursor: "pointer" }}
           >
             {ctaButtonText}
           </Button>

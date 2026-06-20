@@ -1,14 +1,8 @@
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
+import { COLORS } from "@shared/colors";
 
-const C = {
-  slate: "#1E3A5F",
-  teal: "#0D9488",
-  border: "#E2E8F0",
-  text: "#1E293B",
-  muted: "#64748B",
-  bg: "#F8FAFC",
-};
+const C = COLORS;
 
 export default function Career() {
   const openings = [
@@ -105,22 +99,22 @@ export default function Career() {
     >
       {/* Why Join LAI */}
       <div style={{ marginBottom: "4rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.slate, marginBottom: "1.5rem", textAlign: "center" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.charcoal, marginBottom: "1.5rem", textAlign: "center" }}>
           Why Join Legacy Asset Intelligence?
         </h2>
-        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1rem", color: C.text, lineHeight: 1.8, marginBottom: "2rem", textAlign: "center", maxWidth: "800px", margin: "0 auto 2rem" }}>
+        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1rem", color: C.textDark, lineHeight: 1.8, marginBottom: "2rem", textAlign: "center", maxWidth: "800px", margin: "0 auto 2rem" }}>
           At LAI, we're solving one of the most overlooked financial problems in enterprise operations. Our team members work on high-impact projects that directly affect client bottom lines. We value expertise, innovation, and a commitment to excellence.
         </p>
 
         {/* Benefits Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem" }}>
           {benefits.map((benefit, i) => (
-            <div key={i} style={{ padding: "1.5rem", background: "white", border: `1px solid ${C.border}`, borderRadius: 8, textAlign: "center" }}>
+            <div key={i} style={{ padding: "1.5rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, textAlign: "center" }}>
               <div style={{ fontSize: "2.5rem", marginBottom: "0.75rem" }}>{benefit.icon}</div>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: C.slate, marginBottom: "0.5rem" }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: C.charcoal, marginBottom: "0.5rem" }}>
                 {benefit.title}
               </h3>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.muted, margin: 0 }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.textMuted, margin: 0 }}>
                 {benefit.description}
               </p>
             </div>
@@ -130,15 +124,15 @@ export default function Career() {
 
       {/* Open Positions */}
       <div style={{ marginBottom: "4rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.slate, marginBottom: "2rem", textAlign: "center" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.charcoal, marginBottom: "2rem", textAlign: "center" }}>
           Open Positions
         </h2>
 
         <div style={{ display: "grid", gap: "1rem" }}>
           {openings.map((job, i) => (
-            <div key={i} style={{ padding: "1.5rem", background: "white", border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer", transition: "all 0.2s" }}
+            <div key={i} style={{ padding: "1.5rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer", transition: "all 0.2s" }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(30,58,95,0.12)";
+                (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(15,20,25,0.12)";
                 (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
               }}
               onMouseLeave={(e) => {
@@ -148,28 +142,28 @@ export default function Career() {
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "0.75rem" }}>
                 <div>
-                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", fontWeight: 700, color: C.slate, margin: 0, marginBottom: "0.25rem" }}>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", fontWeight: 700, color: C.charcoal, margin: 0, marginBottom: "0.25rem" }}>
                     {job.title}
                   </h3>
-                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.muted, margin: 0 }}>
+                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.textMuted, margin: 0 }}>
                     {job.department} • {job.level}
                   </p>
                 </div>
-                <span style={{ background: C.teal, color: "white", padding: "0.4rem 0.8rem", borderRadius: 4, fontSize: "0.75rem", fontWeight: 600, whiteSpace: "nowrap" }}>
+                <span style={{ background: C.gold, color: C.charcoal, padding: "0.4rem 0.8rem", borderRadius: 4, fontSize: "0.75rem", fontWeight: 600, whiteSpace: "nowrap" }}>
                   Apply Now
                 </span>
               </div>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.text, lineHeight: 1.6, marginBottom: "1rem" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.textDark, lineHeight: 1.6, marginBottom: "1rem" }}>
                 {job.description}
               </p>
               <div>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", fontWeight: 600, color: C.charcoal, marginBottom: "0.5rem" }}>
                   Key Requirements:
                 </p>
                 <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                   {job.requirements.map((req, j) => (
-                    <li key={j} style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.text, marginBottom: "0.3rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                      <span style={{ color: C.teal, fontWeight: 700 }}>✓</span> {req}
+                    <li key={j} style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.textDark, marginBottom: "0.3rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                      <span style={{ color: C.gold, fontWeight: 700 }}>✓</span> {req}
                     </li>
                   ))}
                 </ul>
@@ -180,14 +174,14 @@ export default function Career() {
       </div>
 
       {/* Culture Section */}
-      <div style={{ padding: "2rem", background: "rgba(13, 148, 136, 0.08)", borderRadius: 12, border: `1px solid ${C.border}` }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+      <div style={{ padding: "2rem", background: "rgba(212, 175, 55, 0.08)", borderRadius: 12, border: `1px solid ${C.border}` }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.charcoal, marginBottom: "1rem" }}>
           Our Culture
         </h2>
-        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.text, lineHeight: 1.8, marginBottom: "1rem" }}>
+        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.textDark, lineHeight: 1.8, marginBottom: "1rem" }}>
           We believe in building a team of experts who are passionate about solving complex problems. Our culture emphasizes continuous learning, collaboration, and delivering exceptional results for our clients. We're committed to diversity, inclusion, and creating an environment where every team member can thrive.
         </p>
-        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.text, lineHeight: 1.8, margin: 0 }}>
+        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.textDark, lineHeight: 1.8, margin: 0 }}>
           Whether you're a seasoned consultant, a technical expert, or someone looking to grow your career in enterprise asset management, we'd love to hear from you.
         </p>
       </div>

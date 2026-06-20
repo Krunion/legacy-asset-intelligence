@@ -1,14 +1,8 @@
 import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
+import { COLORS } from "@shared/colors";
 
-const C = {
-  slate: "#1E3A5F",
-  teal: "#0D9488",
-  amber: "#F59E0B",
-  border: "#E2E8F0",
-  text: "#1E293B",
-  muted: "#64748B",
-};
+const C = COLORS;
 
 export default function FAQ() {
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
@@ -103,7 +97,7 @@ export default function FAQ() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", marginBottom: "3rem" }}>
         {/* FAQs Column */}
         <div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1.5rem" }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.charcoal, marginBottom: "1.5rem" }}>
             General Questions
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -113,15 +107,15 @@ export default function FAQ() {
                   onClick={() => setExpandedFAQ(expandedFAQ === i ? null : i)}
                   style={{ width: "100%", padding: "1rem", background: "white", border: "none", textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
                 >
-                  <span style={{ fontWeight: 600, color: C.slate, fontSize: "0.95rem" }}>
+                  <span style={{ fontWeight: 600, color: C.charcoal, fontSize: "0.95rem" }}>
                     {faq.question}
                   </span>
-                  <span style={{ color: C.teal, fontSize: "1.2rem", fontWeight: "bold" }}>
+                  <span style={{ color: C.gold, fontSize: "1.2rem", fontWeight: "bold" }}>
                     {expandedFAQ === i ? "−" : "+"}
                   </span>
                 </button>
                 {expandedFAQ === i && (
-                  <div style={{ padding: "1rem", background: "rgba(13,148,136,0.05)", borderTop: `1px solid ${C.border}`, color: C.text, fontSize: "0.9rem", lineHeight: 1.6 }}>
+                  <div style={{ padding: "1rem", background: "rgba(212,175,55,0.05)", borderTop: `1px solid ${C.border}`, color: C.textDark, fontSize: "0.9rem", lineHeight: 1.6 }}>
                     {faq.answer}
                   </div>
                 )}
@@ -132,7 +126,7 @@ export default function FAQ() {
 
         {/* Glossary Column */}
         <div>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.slate, marginBottom: "1.5rem" }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.charcoal, marginBottom: "1.5rem" }}>
             Glossary of Terms
           </h2>
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -142,10 +136,10 @@ export default function FAQ() {
                   onClick={() => setExpandedGlossary(expandedGlossary === i ? null : i)}
                   style={{ width: "100%", padding: "1rem", background: "white", border: "none", textAlign: "left", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
                 >
-                  <span style={{ fontWeight: 600, color: C.slate, fontSize: "0.95rem" }}>
+                  <span style={{ fontWeight: 600, color: C.charcoal, fontSize: "0.95rem" }}>
                     {item.term}
                   </span>
-                  <span style={{ color: C.teal, fontSize: "1.2rem", fontWeight: "bold" }}>
+                  <span style={{ color: C.gold, fontSize: "1.2rem", fontWeight: "bold" }}>
                     {expandedGlossary === i ? "−" : "+"}
                   </span>
                 </button>

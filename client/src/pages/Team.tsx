@@ -1,13 +1,7 @@
 import PageLayout from "@/components/PageLayout";
+import { COLORS } from "@shared/colors";
 
-const C = {
-  slate: "#1E3A5F",
-  teal: "#0D9488",
-  amber: "#F59E0B",
-  border: "#E2E8F0",
-  text: "#1E293B",
-  muted: "#64748B",
-};
+const C = COLORS;
 
 export default function Team() {
   const team = [
@@ -47,22 +41,22 @@ export default function Team() {
     >
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2rem", marginBottom: "3rem" }}>
         {team.map((member, i) => (
-          <div key={i} style={{ padding: "2rem", background: "white", border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 2px 8px rgba(30,58,95,0.05)", textAlign: "center" }}>
-            <div style={{ width: "80px", height: "80px", background: C.teal, borderRadius: "50%", margin: "0 auto 1rem", display: "flex", alignItems: "center", justifyContent: "center", color: "white", fontSize: "2rem", fontWeight: "bold" }}>
+          <div key={i} style={{ padding: "2rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 2px 8px rgba(15,20,25,0.05)", textAlign: "center" }}>
+            <div style={{ width: "80px", height: "80px", background: C.gold, borderRadius: "50%", margin: "0 auto 1rem", display: "flex", alignItems: "center", justifyContent: "center", color: C.charcoal, fontSize: "2rem", fontWeight: "bold" }}>
               {member.name.split(" ").map(n => n[0]).join("")}
             </div>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", fontWeight: 700, color: C.slate, marginBottom: "0.3rem" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", fontWeight: 700, color: C.charcoal, marginBottom: "0.3rem" }}>
               {member.name}
             </h3>
-            <p style={{ color: C.teal, fontWeight: 600, fontSize: "0.9rem", marginBottom: "1rem" }}>
+            <p style={{ color: C.gold, fontWeight: 600, fontSize: "0.9rem", marginBottom: "1rem" }}>
               {member.title}
             </p>
-            <p style={{ color: C.text, fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1rem" }}>
+            <p style={{ color: C.textDark, fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1rem" }}>
               {member.bio}
             </p>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center" }}>
               {member.expertise.map((skill, j) => (
-                <span key={j} style={{ padding: "0.3rem 0.8rem", background: "rgba(13,148,136,0.1)", color: C.teal, borderRadius: 4, fontSize: "0.75rem", fontWeight: 600 }}>
+                <span key={j} style={{ padding: "0.3rem 0.8rem", background: "rgba(212,175,55,0.1)", color: C.gold, borderRadius: 4, fontSize: "0.75rem", fontWeight: 600 }}>
                   {skill}
                 </span>
               ))}
@@ -71,11 +65,11 @@ export default function Team() {
         ))}
       </div>
 
-      <div style={{ background: "rgba(13,148,136,0.08)", padding: "2rem", borderRadius: 8, marginTop: "3rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.slate, marginBottom: "1rem" }}>
+      <div style={{ background: "rgba(212,175,55,0.08)", padding: "2rem", borderRadius: 8, marginTop: "3rem" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.charcoal, marginBottom: "1rem" }}>
           Our Commitment
         </h2>
-        <p style={{ color: C.text, fontSize: "0.95rem", lineHeight: 1.8 }}>
+        <p style={{ color: C.textDark, fontSize: "0.95rem", lineHeight: 1.8 }}>
           Every member of the Legacy Asset Intelligence team is committed to delivering exceptional results. We combine deep industry expertise with cutting-edge technology to help organizations discover and recover millions in hidden capital. Our success is measured by your success—when you recover capital and establish sustainable asset governance, we've done our job.
         </p>
       </div>
