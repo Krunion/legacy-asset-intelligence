@@ -36,14 +36,14 @@ export default function SiteNav() {
   return (
     <nav style={{ background: "#0F1419", borderBottom: `1px solid ${C.border}`, position: "sticky", top: 0, zIndex: 100 }}>
       {/* Top row: Logo + Name + Toggle */}
-      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "1rem 2rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ maxWidth: 1400, margin: "0 auto", padding: "1rem 2rem", display: "flex", justifyContent: "center", alignItems: "center", position: "relative" }}>
         {/* Logo and Name Container */}
         <button 
           onClick={() => navigate("/")} 
           style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}
         >
           <img 
-            src="/manus-storage/pasted_file_yudYZ7_image_bfa71831.png" 
+            src="/manus-storage/pasted_file_yudYZ7_image_transparent_32d3d4e2.png" 
             alt="Legacy Asset Intelligence" 
             style={{ height: 60, width: "auto", objectFit: "contain", imageRendering: "crisp-edges" }}
             onError={(e) => {
@@ -69,6 +69,8 @@ export default function SiteNav() {
             justifyContent: "center",
             transition: "all 0.2s",
             flexShrink: 0,
+            position: "absolute",
+            right: "2rem",
           }}
           title={navOpen ? "Collapse menu" : "Expand menu"}
         >
