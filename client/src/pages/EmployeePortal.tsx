@@ -235,15 +235,35 @@ export default function EmployeePortal() {
               </a>
             </div>
 
-            {/* Office 365 Embedded Viewer */}
-            <div style={{ background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)", overflow: "hidden", minHeight: "600px" }}>
-              <iframe
-                src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(selectedResourceData.storageLink || "")}`}
-                width="100%"
-                height="600px"
-                frameBorder="0"
-                style={{ border: "none" }}
-              />
+            {/* Document Access Section */}
+            <div style={{ background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)", padding: "2rem", minHeight: "300px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
+              <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>{selectedResourceData.icon}</div>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", margin: "0 0 0.5rem 0", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+                {selectedResourceData.title}
+              </h3>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", margin: "0 0 1.5rem 0", maxWidth: "500px", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                {selectedResourceData.fileType} • {selectedResourceData.fileSize}
+              </p>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", lineHeight: 1.6, marginBottom: "1.5rem", maxWidth: "600px", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                Use the <strong>Download</strong> button above to save this file to your computer, or click <strong>Open in Browser</strong> to access it directly.
+              </p>
+              <a href={selectedResourceData.storageLink || "#"} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
+                <button
+                  style={{
+                    padding: "0.75rem 1.5rem",
+                    background: C.gold,
+                    color: C.charcoal,
+                    border: "none",
+                    borderRadius: 6,
+                    fontFamily: "'Source Sans 3', sans-serif",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  🔗 Open in Browser
+                </button>
+              </a>
             </div>
 
             {/* Info Section */}
