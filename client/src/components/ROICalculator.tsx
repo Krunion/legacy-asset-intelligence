@@ -559,17 +559,26 @@ export default function ROICalculator() {
             />
             <button
               onClick={async () => {
-                if (state.email) {
-                  try {
-                    // Submit lead to HubSpot
-                    await submitLeadMutation.mutateAsync({
-                      email: state.email,
-                      company: state.industry,
-                      message: `Assets: ${state.assetCount}, Locations: ${state.locations}, Departments: ${state.departments}, Verification: ${state.assetVerificationPractice}, Estimated Recovery: $${Math.round(capitalRecoveryMid).toLocaleString()}`,
-                    });
-                    
-                    // Generate PDF
-                    const result: CalculatorResult = {
+                // Validate email format
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!state.email) {
+                  setSubmitError("Please enter your email address");
+                  return;
+                }
+                if (!emailRegex.test(state.email)) {
+                  setSubmitError("Please enter a valid email address");
+                  return;
+                }
+                try {
+                  // Submit lead to HubSpot
+                  await submitLeadMutation.mutateAsync({
+                    email: state.email,
+                    company: state.industry,
+                    message: `Assets: ${state.assetCount}, Locations: ${state.locations}, Departments: ${state.departments}, Verification: ${state.assetVerificationPractice}, Estimated Recovery: $${Math.round(capitalRecoveryMid).toLocaleString()}`,
+                  });
+                  
+                  // Generate PDF
+                  const result: CalculatorResult = {
                     email: state.email,
                     industry: state.industry,
                     assetCount: state.assetCount,
@@ -595,12 +604,11 @@ export default function ROICalculator() {
                       roiMultiple: Math.round((capitalRecoveryMid - capitalRecoveryMid / 15) / (capitalRecoveryMid / 15) * 10) / 10,
                     },
                   };
-                    generatePDF(result);
-                    setState({ ...state, showResults: true });
-                  } catch (err) {
-                    // Error is already handled in mutation onError
-                    console.error("Lead submission failed:", err);
-                  }
+                  generatePDF(result);
+                  setState({ ...state, showResults: true });
+                } catch (err) {
+                  // Error is already handled in mutation onError
+                  console.error("Lead submission failed:", err);
                 }
               }}
               style={{

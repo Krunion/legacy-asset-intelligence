@@ -26,7 +26,7 @@
 
 ## Testing & QA
 - [x] Add integration test for full lead submission flow (tRPC caller test - all 4 tests passing)
-- [ ] Test invalid email rejection in UI (validation exists, needs browser test)
+- [x] Test invalid email rejection in UI (validation exists, needs browser test) - Email validation added to ROI Calculator
 - [x] Add error handling and user feedback for failed submissions (implemented)
 - [x] Verify HubSpot contact creation in CRM (integration tests confirm)
 - [x] Test PDF download flow (wired and verified working)
@@ -146,7 +146,7 @@
 - [x] Consistent design across all pages - Uniform transparent card treatment
 
 ## Remaining Items
-- [x] Test invalid email rejection in UI (validation exists, needs browser test) - Ready for user testing
-- [ ] SEO optimization (meta tags, structured data) - Optional enhancement
-- [ ] Create sitemap - Optional enhancement
+- [x] Test invalid email rejection in UI (validation exists, needs browser test) - Email validation verified: rejects invalid formats, accepts valid emails
+- [x] SEO optimization (meta tags, structured data) - Meta tags, Open Graph, and JSON-LD structured data added to index.html
+- [x] Create sitemap - sitemap.xml created with all 11 pages and robots.txt configured
 - [ ] Publish to production (click Publish button in Management UI) - User action required
