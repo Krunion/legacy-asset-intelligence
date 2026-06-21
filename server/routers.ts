@@ -3,6 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { submitLeadToHubSpot } from "./_core/hubspot";
+import { sendContactNotificationEmails } from "./_core/emailNotification";
 import { chatbotRouter } from "./routers/chatbot";
 import { z } from "zod";
 
@@ -33,7 +34,8 @@ export const appRouter = router({
         })
       )
       .mutation(async ({ input }) => {
-        const result = await submitLeadToHubSpot({
+        // Submit to HubSpot
+        const hubspotResult = await submitLeadToHubSpot({
           email: input.email,
           firstName: input.firstName,
           lastName: input.lastName,
@@ -41,7 +43,23 @@ export const appRouter = router({
           company: input.company,
           message: input.message,
         });
-        return result;
+
+        // Send notification emails to both team members
+        const emailResult = await sendContactNotificationEmails({
+          email: input.email,
+          firstName: input.firstName,
+          lastName: input.lastName,
+          phone: input.phone,
+          company: input.company,
+          message: input.message,
+        });
+
+        // Return combined result
+        return {
+          success: hubspotResult.success && emailResult.success,
+          contactId: hubspotResult.contactId,
+          error: hubspotResult.error || emailResult.error,
+        };
       }),
   }),
 
