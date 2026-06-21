@@ -1,5 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { COLORS } from "@shared/colors";
@@ -10,6 +10,7 @@ const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTr
 export default function EmployeePortal() {
   const { user, loading, isAuthenticated, logout } = useAuth();
   const [, navigate] = useLocation();
+  const [selectedResource, setSelectedResource] = useState<string | null>(null);
 
   // If still loading auth state, show loading screen
   if (loading) {
@@ -38,7 +39,7 @@ export default function EmployeePortal() {
           </div>
 
           <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.6, marginBottom: "1.5rem", textAlign: "center", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-            Sign in with your LAI account to access the employee portal and download resources.
+            Sign in with your LAI account to access the employee portal and work on spreadsheets.
           </p>
 
           <a href="/api/oauth/microsoft/login" style={{ textDecoration: "none" }}>
@@ -92,45 +93,54 @@ export default function EmployeePortal() {
     );
   }
 
-  // Resources with S3 storage paths
+  // Resources with Office 365 Online embedding
   const resources = [
     {
+      id: "proposal-calculator",
       title: "Proposal Calculator",
       description: "Interactive tool for calculating client recovery opportunities and ROI",
       icon: "📊",
       type: "Spreadsheet",
       fileSize: "37 KB",
       fileType: "Excel",
-      link: "/manus-storage/2_LAI_Proposal_Calculator_d59ad2ae.xlsx",
+      officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7B2_LAI_Proposal_Calculator%7D&action=edit",
+      storageLink: "/manus-storage/2_LAI_Proposal_Calculator_34ef0147.xlsx",
     },
     {
+      id: "asset-intelligence",
       title: "Asset Intelligence Assessment",
       description: "Comprehensive workbook for evaluating client asset management maturity",
       icon: "📋",
       type: "Spreadsheet",
       fileSize: "297 KB",
       fileType: "Excel",
-      link: "/manus-storage/1_Asset_Intelligence_Opportunity_Assessment_Actual_2a67d78c.xlsx",
+      officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7B1_Asset_Intelligence_Opportunity_Assessment%7D&action=edit",
+      storageLink: "/manus-storage/1_Asset_Intelligence_Opportunity_Assessment_Actual_f8e86b8a.xlsx",
     },
     {
+      id: "recoverable-capital",
       title: "Recoverable Capital Assessment",
       description: "Detailed framework for modeling capital recovery scenarios",
       icon: "💰",
       type: "Spreadsheet",
       fileSize: "33 KB",
       fileType: "Excel",
-      link: "/manus-storage/3_Recoverable_Capital_Assessment_Workbook_Actual_746c287c.xlsx",
+      officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7B3_Recoverable_Capital_Assessment%7D&action=edit",
+      storageLink: "/manus-storage/3_Recoverable_Capital_Assessment_Workbook_Actual_36901809.xlsx",
     },
     {
+      id: "investigative-questionnaire",
       title: "Investigative Questionnaire",
       description: "Client discovery document for initial engagement assessment",
       icon: "📝",
       type: "Document",
       fileSize: "21 KB",
       fileType: "Word",
-      link: "/manus-storage/LAIInvestigativeQuestionnaire_76a02885.docx",
+      officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7BLAIInvestigativeQuestionnaire%7D&action=edit",
+      storageLink: "/manus-storage/LAIInvestigativeQuestionnaire_0f2db4d3.docx",
     },
     {
+      id: "asset-panda",
       title: "Asset Panda Demo",
       description: "Access to Asset Panda platform demo for client demonstrations",
       icon: "🐼",
@@ -138,6 +148,7 @@ export default function EmployeePortal() {
       comingSoon: true,
     },
     {
+      id: "ezo-integration",
       title: "EZO Integration",
       description: "EZO asset management platform integration and documentation",
       icon: "🔧",
@@ -146,15 +157,7 @@ export default function EmployeePortal() {
     },
   ];
 
-  const handleDownload = (link: string, fileName: string) => {
-    // Create a temporary link and trigger download
-    const a = document.createElement("a");
-    a.href = link;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
+  const selectedResourceData = resources.find(r => r.id === selectedResource);
 
   return (
     <div style={{ minHeight: "100vh", background: `url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "left center", backgroundAttachment: "fixed", padding: "2rem" }}>
@@ -171,91 +174,54 @@ export default function EmployeePortal() {
           </div>
           <button
             onClick={logout}
-              style={{
-                padding: "0.6rem",
-                background: C.gold,
-                color: C.charcoal,
-                border: "none",
-                borderRadius: 6,
-                fontFamily: "'Source Sans 3', sans-serif",
-                fontWeight: 600,
-                cursor: "pointer",
-                fontSize: "0.85rem",
-              }}
-            >
-              ⬇️ Download
-            </button>
+            style={{
+              padding: "0.6rem 1rem",
+              background: C.gold,
+              color: C.charcoal,
+              border: "none",
+              borderRadius: 6,
+              fontFamily: "'Source Sans 3', sans-serif",
+              fontWeight: 600,
+              cursor: "pointer",
+              fontSize: "0.85rem",
+            }}
+          >
+            🚪 Logout
+          </button>
         </div>
 
-        {/* Resources Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
-          {resources.map((resource, i) => (
-            <div
-              key={i}
-              style={{
-                padding: "1.5rem",
-                background: "white",
-                border: `1px solid ${C.border}`,
-                borderRadius: 12,
-                cursor: resource.comingSoon ? "default" : "pointer",
-                transition: "all 0.2s",
-                opacity: resource.comingSoon ? 0.7 : 1,
-              }}
-              onMouseEnter={(e) => {
-                if (!resource.comingSoon) {
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(30,58,95,0.12)";
-                  (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.boxShadow = "none";
-                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "1rem" }}>
-                <div style={{ fontSize: "2.5rem" }}>{resource.icon}</div>
-                <span style={{
-                  background: resource.comingSoon ? "#E5E7EB" : C.gold,
-                  color: resource.comingSoon ? "#64748B" : C.charcoal,
-                  padding: "0.3rem 0.6rem",
-                  borderRadius: 4,
-                  fontSize: "0.65rem",
-                  fontWeight: 600,
-                  whiteSpace: "nowrap",
-                }}>
-                  {resource.type}
-                </span>
-              </div>
-
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                {resource.title}
-              </h3>
-
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", marginBottom: "1rem", lineHeight: 1.5, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                {resource.description}
-              </p>
-
-              {!resource.comingSoon && (
-                <div style={{ fontSize: "0.8rem", color: "#E8E9EB", marginBottom: "1rem", display: "flex", gap: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                  <span>📦 {resource.fileSize}</span>
-                  <span>📄 {resource.fileType}</span>
-                </div>
-              )}
-
-              {resource.comingSoon ? (
-                <div style={{ padding: "0.75rem", background: "rgba(13, 148, 136, 0.08)", borderRadius: 6, textAlign: "center" }}>
-                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.teal, fontWeight: 600, margin: 0 }}>
-                    Coming Soon
-                  </p>
-                </div>
-              ) : (
+        {/* Main Content Area */}
+        {selectedResourceData && !selectedResourceData.comingSoon ? (
+          <div style={{ marginBottom: "2rem" }}>
+            {/* Document Viewer Header */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", padding: "1rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                 <button
-                  onClick={() => handleDownload(resource.link || "", resource.title)}
+                  onClick={() => setSelectedResource(null)}
                   style={{
-                    width: "100%",
-                    padding: "0.6rem",
-                    background: C.teal,
+                    padding: "0.5rem 1rem",
+                    background: "rgba(255, 255, 255, 0.1)",
                     color: "white",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    borderRadius: 6,
+                    fontFamily: "'Source Sans 3', sans-serif",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                  }}
+                >
+                  ← Back to Resources
+                </button>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", margin: 0, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+                  {selectedResourceData.title}
+                </h2>
+              </div>
+              <a href={selectedResourceData.storageLink || "#"} download style={{ textDecoration: "none" }}>
+                <button
+                  style={{
+                    padding: "0.5rem 1rem",
+                    background: C.gold,
+                    color: C.charcoal,
                     border: "none",
                     borderRadius: 6,
                     fontFamily: "'Source Sans 3', sans-serif",
@@ -266,23 +232,145 @@ export default function EmployeePortal() {
                 >
                   ⬇️ Download
                 </button>
-              )}
+              </a>
             </div>
-          ))}
-        </div>
 
-        {/* Info Section */}
-        <div style={{ marginTop: "2rem", padding: "1.5rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
-            Portal Information
-          </h2>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, marginBottom: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-            This employee portal provides secure access to all essential LAI resources and tools. You can download spreadsheets, access interactive calculators, and connect to partner platforms.
-          </p>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-            For questions or technical support, please contact the LAI support team at support@legacyassetintelligence.com.
-          </p>
-        </div>
+            {/* Office 365 Embedded Viewer */}
+            <div style={{ background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)", overflow: "hidden", minHeight: "600px" }}>
+              <iframe
+                src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(selectedResourceData.storageLink || "")}`}
+                width="100%"
+                height="600px"
+                frameBorder="0"
+                style={{ border: "none" }}
+              />
+            </div>
+
+            {/* Info Section */}
+            <div style={{ marginTop: "1.5rem", padding: "1.5rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+                {selectedResourceData.title}
+              </h3>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                {selectedResourceData.description}
+              </p>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Resources Grid */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem", marginBottom: "2rem" }}>
+              {resources.map((resource) => (
+                <div
+                  key={resource.id}
+                  style={{
+                    padding: "1.5rem",
+                    background: "rgba(15, 20, 25, 0.3)",
+                    border: `1px solid rgba(255, 255, 255, 0.2)`,
+                    borderRadius: 12,
+                    cursor: resource.comingSoon ? "default" : "pointer",
+                    transition: "all 0.3s ease",
+                    opacity: resource.comingSoon ? 0.6 : 1,
+                    backdropFilter: "blur(10px)",
+                  }}
+                  onClick={() => !resource.comingSoon && setSelectedResource(resource.id)}
+                  onMouseEnter={(e) => {
+                    if (!resource.comingSoon) {
+                      (e.currentTarget as HTMLElement).style.background = "rgba(15, 20, 25, 0.5)";
+                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(245, 158, 11, 0.4)";
+                      (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
+                      (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 32px rgba(30,58,95,0.2)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLElement).style.background = "rgba(15, 20, 25, 0.3)";
+                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255, 255, 255, 0.2)";
+                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "1rem" }}>
+                    <div style={{ fontSize: "2.5rem" }}>{resource.icon}</div>
+                    <span style={{
+                      background: resource.comingSoon ? "rgba(100, 116, 139, 0.3)" : "rgba(245, 158, 11, 0.2)",
+                      color: resource.comingSoon ? "#94A3B8" : C.gold,
+                      padding: "0.3rem 0.6rem",
+                      borderRadius: 4,
+                      fontSize: "0.65rem",
+                      fontWeight: 600,
+                      whiteSpace: "nowrap",
+                      border: `1px solid ${resource.comingSoon ? "rgba(100, 116, 139, 0.4)" : "rgba(245, 158, 11, 0.4)"}`,
+                    }}>
+                      {resource.type}
+                    </span>
+                  </div>
+
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                    {resource.title}
+                  </h3>
+
+                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", marginBottom: "1rem", lineHeight: 1.5, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                    {resource.description}
+                  </p>
+
+                  {!resource.comingSoon && (
+                    <div style={{ fontSize: "0.8rem", color: "#E8E9EB", marginBottom: "1rem", display: "flex", gap: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                      <span>📦 {resource.fileSize}</span>
+                      <span>📄 {resource.fileType}</span>
+                    </div>
+                  )}
+
+                  {resource.comingSoon ? (
+                    <div style={{ padding: "0.75rem", background: "rgba(13, 148, 136, 0.15)", borderRadius: 6, textAlign: "center", border: "1px solid rgba(13, 148, 136, 0.3)" }}>
+                      <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.teal, fontWeight: 600, margin: 0 }}>
+                        Coming Soon
+                      </p>
+                    </div>
+                  ) : (
+                    <button
+                      style={{
+                        width: "100%",
+                        padding: "0.6rem",
+                        background: C.teal,
+                        color: "white",
+                        border: "none",
+                        borderRadius: 6,
+                        fontFamily: "'Source Sans 3', sans-serif",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        fontSize: "0.85rem",
+                        transition: "all 0.2s",
+                      }}
+                      onMouseEnter={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = "#0F9488";
+                        (e.currentTarget as HTMLElement).style.transform = "scale(1.02)";
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.currentTarget as HTMLElement).style.background = C.teal;
+                        (e.currentTarget as HTMLElement).style.transform = "scale(1)";
+                      }}
+                    >
+                      📂 Access
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Info Section */}
+            <div style={{ padding: "1.5rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+                Portal Information
+              </h2>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, marginBottom: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                This employee portal provides secure access to all essential LAI resources and tools. You can access spreadsheets directly in your browser, edit data for calculations, and download results for executive reporting.
+              </p>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                For questions or technical support, please contact the LAI support team at support@legacyassetintelligence.com.
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
