@@ -48,6 +48,31 @@ export const appRouter = router({
           error: emailResult.error,
         };
       }),
+
+    notifyCalculatorUsage: publicProcedure
+      .input(
+        z.object({
+          email: z.string().email(),
+          industry: z.string(),
+          assetCount: z.number(),
+          locations: z.number(),
+          departments: z.number(),
+          estimatedRecovery: z.number(),
+          message: z.string().optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        // Send notification emails about calculator usage
+        const emailResult = await sendContactNotificationEmails({
+          email: input.email,
+          message: `ROI Calculator Used - Industry: ${input.industry}, Assets: ${input.assetCount}, Locations: ${input.locations}, Departments: ${input.departments}, Estimated Recovery: $${input.estimatedRecovery.toLocaleString()}${input.message ? `\n\nAdditional Info: ${input.message}` : ''}`,
+        });
+
+        return {
+          success: emailResult.success,
+          error: emailResult.error,
+        };
+      }),
   }),
 
   chatbot: chatbotRouter,

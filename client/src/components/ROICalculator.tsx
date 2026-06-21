@@ -573,7 +573,8 @@ export default function ROICalculator() {
                   // Submit lead to HubSpot
                   await submitLeadMutation.mutateAsync({
                     email: state.email,
-                    company: state.industry,
+                    industry: state.industry,
+                    estimatedRecovery: Math.round(capitalRecoveryMid),
                     message: `Assets: ${state.assetCount}, Locations: ${state.locations}, Departments: ${state.departments}, Verification: ${state.assetVerificationPractice}, Estimated Recovery: $${Math.round(capitalRecoveryMid).toLocaleString()}`,
                   });
                   
