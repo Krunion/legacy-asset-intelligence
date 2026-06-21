@@ -137,7 +137,7 @@ export default function EmployeePortal() {
       fileSize: "21 KB",
       fileType: "Word",
       officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7BLAIInvestigativeQuestionnaire%7D&action=edit",
-      storageLink: "/manus-storage/LAIInvestigativeQuestionnaire_b544ae0c.docx",
+      storageLink: "/manus-storage/LAI_Interview_Questionnaire_bdba29ee.docx",
     },
     {
       id: "asset-panda",

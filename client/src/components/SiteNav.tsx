@@ -40,7 +40,16 @@ export default function SiteNav() {
           onClick={() => navigate("/")} 
           style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal, display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0, flex: 1, justifyContent: "center" }}
         >
-          <img src="/manus-storage/pasted_file_yudYZ7_image_bfa71831.png" alt="Legacy Asset Intelligence" style={{ height: 60, width: "auto", objectFit: "contain", imageRendering: "crisp-edges" }} />
+          <img 
+            src="/manus-storage/pasted_file_yudYZ7_image_bfa71831.png" 
+            alt="Legacy Asset Intelligence" 
+            style={{ height: 60, width: "auto", objectFit: "contain", imageRendering: "crisp-edges" }}
+            onError={(e) => {
+              console.error('Logo failed to load:', e);
+              e.currentTarget.style.display = 'none';
+            }}
+            onLoad={() => console.log('Logo loaded successfully')}
+          />
         </button>
 
         {/* Toggle Button */}
