@@ -95,6 +95,18 @@ export default function ROICalculator() {
     },
   });
 
+  const notifyCalculatorMutation = trpc.leads.notifyCalculatorUsage.useMutation({
+    onSuccess: () => {
+      setSubmitSuccess(true);
+      setSubmitError(null);
+      setTimeout(() => setSubmitSuccess(false), 3000);
+    },
+    onError: (error) => {
+      setSubmitError(error.message || "Failed to submit. Please try again.");
+      setSubmitSuccess(false);
+    },
+  });
+
   const colors = {
     slate: "#0F1419",
     teal: "#0D9488",
@@ -570,12 +582,14 @@ export default function ROICalculator() {
                   return;
                 }
                 try {
-                  // Submit lead to HubSpot
-                  await submitLeadMutation.mutateAsync({
+                  // Notify team about calculator usage
+                  await notifyCalculatorMutation.mutateAsync({
                     email: state.email,
                     industry: state.industry,
+                    assetCount: state.assetCount,
+                    locations: state.locations,
+                    departments: state.departments,
                     estimatedRecovery: Math.round(capitalRecoveryMid),
-                    message: `Assets: ${state.assetCount}, Locations: ${state.locations}, Departments: ${state.departments}, Verification: ${state.assetVerificationPractice}, Estimated Recovery: $${Math.round(capitalRecoveryMid).toLocaleString()}`,
                   });
                   
                   // Generate PDF
@@ -614,22 +628,22 @@ export default function ROICalculator() {
               }}
               style={{
                 padding: "0.8rem 1.5rem",
-                background: submitLeadMutation.isPending ? "#999" : colors.teal,
+                background: notifyCalculatorMutation.isPending ? "#999" : colors.teal,
                 color: "white",
                 border: "none",
                 borderRadius: 6,
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontWeight: 600,
                 fontSize: "0.95rem",
-                cursor: submitLeadMutation.isPending ? "not-allowed" : "pointer",
+                cursor: notifyCalculatorMutation.isPending ? "not-allowed" : "pointer",
                 transition: "all 0.2s",
-                opacity: submitLeadMutation.isPending ? 0.7 : 1,
+                opacity: notifyCalculatorMutation.isPending ? 0.7 : 1,
               }}
-              onMouseEnter={(e) => !submitLeadMutation.isPending && (e.currentTarget.style.background = "#0F766E")}
-              onMouseLeave={(e) => !submitLeadMutation.isPending && (e.currentTarget.style.background = colors.teal)}
-              disabled={submitLeadMutation.isPending}
+              onMouseEnter={(e) => !notifyCalculatorMutation.isPending && (e.currentTarget.style.background = "#0F766E")}
+              onMouseLeave={(e) => !notifyCalculatorMutation.isPending && (e.currentTarget.style.background = colors.teal)}
+              disabled={notifyCalculatorMutation.isPending}
             >
-              {submitLeadMutation.isPending ? "Submitting..." : "Download PDF"}
+              {notifyCalculatorMutation.isPending ? "Submitting..." : "Download PDF"}
             </button>
           </div>
           {submitError && (
