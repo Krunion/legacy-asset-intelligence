@@ -41,6 +41,30 @@ export default function EmployeePortal() {
             Sign in with your LAI account to access the employee portal and download resources.
           </p>
 
+          <a href="/api/oauth/microsoft/login" style={{ textDecoration: "none" }}>
+            <button
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                background: "#0078D4",
+                color: "white",
+                border: "none",
+                borderRadius: 6,
+                fontFamily: "'Source Sans 3', sans-serif",
+                fontWeight: 600,
+                cursor: "pointer",
+                fontSize: "0.9rem",
+                marginBottom: "0.75rem",
+              }}
+            >
+              Sign In with Microsoft 365
+            </button>
+          </a>
+
+          <div style={{ textAlign: "center", margin: "1rem 0", color: "#E8E9EB", fontSize: "0.85rem", fontFamily: "'Source Sans 3', sans-serif" }}>
+            or
+          </div>
+
           <a href={getLoginUrl()} style={{ textDecoration: "none" }}>
             <button
               style={{
@@ -61,7 +85,7 @@ export default function EmployeePortal() {
           </a>
 
           <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: "#E8E9EB", textAlign: "center", marginTop: "1rem", margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-            You must be an LAI employee to access this portal.
+            Use your Microsoft 365 business account or LAI account to access this portal.
           </p>
         </div>
       </div>

@@ -8,4 +8,7 @@ export const ENV = {
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
   hubspotApiKey: process.env.HUBSPOT_API_KEY ?? "",
+  microsoftOAuthClientId: process.env.MICROSOFT_OAUTH_CLIENT_ID ?? "",
+  microsoftOAuthClientSecret: process.env.MICROSOFT_OAUTH_CLIENT_SECRET ?? "",
+  microsoftOAuthTenantId: process.env.MICROSOFT_OAUTH_TENANT_ID ?? "",
 };
