@@ -58,16 +58,17 @@ export class MicrosoftOAuthService {
    */
   async exchangeCodeForToken(code: string): Promise<MicrosoftTokenResponse> {
     try {
+      const params = new URLSearchParams();
+      params.append("client_id", this.clientId);
+      params.append("client_secret", this.clientSecret);
+      params.append("code", code);
+      params.append("redirect_uri", this.redirectUri);
+      params.append("grant_type", "authorization_code");
+      params.append("scope", "openid profile email");
+
       const response = await axios.post<MicrosoftTokenResponse>(
         `https://login.microsoftonline.com/${this.tenantId}/oauth2/v2.0/token`,
-        {
-          client_id: this.clientId,
-          client_secret: this.clientSecret,
-          code,
-          redirect_uri: this.redirectUri,
-          grant_type: "authorization_code",
-          scope: "openid profile email",
-        },
+        params.toString(),
         {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
