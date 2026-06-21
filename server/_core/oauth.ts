@@ -51,10 +51,14 @@ export function registerOAuthRoutes(app: Express) {
       const microsoftOAuth = new MicrosoftOAuthService(redirectUri);
 
       // Exchange code for token
+      console.log("[Microsoft OAuth] Exchanging code for token...");
       const tokenResponse = await microsoftOAuth.exchangeCodeForToken(code);
+      console.log("[Microsoft OAuth] Token exchange successful");
 
       // Get user info
+      console.log("[Microsoft OAuth] Fetching user info...");
       const userInfo = await microsoftOAuth.getUserInfo(tokenResponse.access_token);
+      console.log("[Microsoft OAuth] User info retrieved:", userInfo);
 
       // Use Microsoft ID as the unique identifier
       const openId = `microsoft_${userInfo.id}`;
@@ -85,7 +89,11 @@ export function registerOAuthRoutes(app: Express) {
       res.redirect(302, "/employee-portal");
     } catch (error) {
       console.error("[Microsoft OAuth] Callback failed", error);
-      res.status(500).json({ error: "Microsoft OAuth callback failed" });
+      if (error instanceof Error) {
+        console.error("[Microsoft OAuth] Error message:", error.message);
+        console.error("[Microsoft OAuth] Error stack:", error.stack);
+      }
+      res.status(500).json({ error: "Microsoft OAuth callback failed", details: error instanceof Error ? error.message : String(error) });
     }
   });
 
