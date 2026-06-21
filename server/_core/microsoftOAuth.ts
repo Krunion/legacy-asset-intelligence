@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ENV } from "./env";
+import { decodeJwt } from "jose";
 
 export interface MicrosoftTokenResponse {
   access_token: string;
@@ -46,7 +47,7 @@ export class MicrosoftOAuthService {
       response_type: "code",
       redirect_uri: this.redirectUri,
       response_mode: "query",
-      scope: "openid profile email https://graph.microsoft.com/.default",
+      scope: "openid profile email",
       state,
     });
 
@@ -64,7 +65,7 @@ export class MicrosoftOAuthService {
       params.append("code", code);
       params.append("redirect_uri", this.redirectUri);
       params.append("grant_type", "authorization_code");
-      params.append("scope", "https://graph.microsoft.com/.default");
+      params.append("scope", "openid profile email");
 
       const response = await axios.post<MicrosoftTokenResponse>(
         `https://login.microsoftonline.com/${this.tenantId}/oauth2/v2.0/token`,
@@ -84,10 +85,27 @@ export class MicrosoftOAuthService {
   }
 
   /**
-   * Get user information using access token
+   * Get user information from ID token (no Graph API call needed)
    */
-  async getUserInfo(accessToken: string): Promise<MicrosoftUserInfo> {
+  async getUserInfo(accessToken: string, idToken?: string): Promise<MicrosoftUserInfo> {
     try {
+      // If we have an ID token, decode it to get user info
+      if (idToken) {
+        console.log("[Microsoft OAuth] Decoding ID token for user info");
+        const decoded = decodeJwt(idToken) as any;
+        
+        return {
+          id: decoded.oid || decoded.sub || "",
+          userPrincipalName: decoded.preferred_username || "",
+          displayName: decoded.name || "",
+          mail: decoded.email || "",
+          givenName: decoded.given_name,
+          surname: decoded.family_name,
+        };
+      }
+
+      // Fallback: try to get from Graph API
+      console.log("[Microsoft OAuth] Fetching user info from Graph API");
       const response = await axios.get<MicrosoftUserInfo>(
         "https://graph.microsoft.com/v1.0/me",
         {
@@ -100,6 +118,9 @@ export class MicrosoftOAuthService {
       return response.data;
     } catch (error) {
       console.error("[Microsoft OAuth] Failed to get user info:", error);
+      if (error instanceof Error) {
+        console.error("[Microsoft OAuth] Error details:", error.message);
+      }
       throw new Error("Failed to get user information");
     }
   }

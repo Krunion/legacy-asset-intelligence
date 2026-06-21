@@ -57,7 +57,7 @@ export function registerOAuthRoutes(app: Express) {
 
       // Get user info
       console.log("[Microsoft OAuth] Fetching user info...");
-      const userInfo = await microsoftOAuth.getUserInfo(tokenResponse.access_token);
+      const userInfo = await microsoftOAuth.getUserInfo(tokenResponse.access_token, tokenResponse.id_token);
       console.log("[Microsoft OAuth] User info retrieved:", userInfo);
 
       // Use Microsoft ID as the unique identifier
