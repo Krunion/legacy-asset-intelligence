@@ -104,7 +104,7 @@ export default function EmployeePortal() {
       fileSize: "37 KB",
       fileType: "Excel",
       officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7B2_LAI_Proposal_Calculator%7D&action=edit",
-      storageLink: "/manus-storage/2_LAI_Proposal_Calculator_34ef0147.xlsx",
+      storageLink: "/manus-storage/2_LAI_Proposal_Calculator_74c2c792.xlsx",
     },
     {
       id: "asset-intelligence",
@@ -115,7 +115,7 @@ export default function EmployeePortal() {
       fileSize: "297 KB",
       fileType: "Excel",
       officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7B1_Asset_Intelligence_Opportunity_Assessment%7D&action=edit",
-      storageLink: "/manus-storage/1_Asset_Intelligence_Opportunity_Assessment_Actual_f8e86b8a.xlsx",
+      storageLink: "/manus-storage/1_Asset_Intelligence_Opportunity_Assessment_Actual_573dae9a.xlsx",
     },
     {
       id: "recoverable-capital",
@@ -126,7 +126,7 @@ export default function EmployeePortal() {
       fileSize: "33 KB",
       fileType: "Excel",
       officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7B3_Recoverable_Capital_Assessment%7D&action=edit",
-      storageLink: "/manus-storage/3_Recoverable_Capital_Assessment_Workbook_Actual_36901809.xlsx",
+      storageLink: "/manus-storage/3_Recoverable_Capital_Assessment_Workbook_Actual_6cc4998c.xlsx",
     },
     {
       id: "investigative-questionnaire",
@@ -137,7 +137,7 @@ export default function EmployeePortal() {
       fileSize: "21 KB",
       fileType: "Word",
       officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7BLAIInvestigativeQuestionnaire%7D&action=edit",
-      storageLink: "/manus-storage/LAIInvestigativeQuestionnaire_0f2db4d3.docx",
+      storageLink: "/manus-storage/LAIInvestigativeQuestionnaire_b544ae0c.docx",
     },
     {
       id: "asset-panda",

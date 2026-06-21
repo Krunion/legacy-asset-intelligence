@@ -40,8 +40,8 @@ export default function SiteNav() {
           onClick={() => navigate("/")} 
           style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal, display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0, flex: 1, justifyContent: "center" }}
         >
-          <img src="/manus-storage/ActualLAIBrandlogo_e61cacb8.png" alt="LAI Logo" style={{ height: 60, width: "auto", objectFit: "contain", imageRendering: "crisp-edges" }} />
-          <img src="/manus-storage/ActualLAINameforLogo_b45a6143.png" alt="Legacy Asset Intelligence" style={{ height: 50, width: "auto", objectFit: "contain", imageRendering: "crisp-edges" }} />
+          <img src="/manus-storage/LegacyAssetIntelligenceLogo_Small_9879caa1.png" alt="LAI Logo" style={{ height: 60, width: "auto", objectFit: "contain", imageRendering: "crisp-edges" }} />
+          <img src="/manus-storage/LegacyAssetIntelligenceLogo_Medium_8c0ade6d.png" alt="Legacy Asset Intelligence" style={{ height: 50, width: "auto", objectFit: "contain", imageRendering: "crisp-edges" }} />
         </button>
 
         {/* Toggle Button */}
