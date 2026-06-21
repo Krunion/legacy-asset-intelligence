@@ -15,6 +15,7 @@ interface NavLink {
 }
 
 const navLinks: NavLink[] = [
+  { label: "Home", path: "/" },
   { label: "Services", path: "/services" },
   { label: "Industries", path: "/industries" },
   { label: "Solutions", path: "/solutions" },
@@ -25,6 +26,7 @@ const navLinks: NavLink[] = [
   { label: "FAQ", path: "/faq" },
   { label: "Career", path: "/career" },
   { label: "Employee Portal", path: "/employee-portal" },
+  { label: "Contact Us", path: "/contact" },
 ];
 
 export default function SiteNav() {
@@ -38,7 +40,7 @@ export default function SiteNav() {
         {/* Logo and Name Container */}
         <button 
           onClick={() => navigate("/")} 
-          style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0", fontWeight: 700, color: C.charcoal, display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0, flex: 1, justifyContent: "center" }}
+          style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: "1rem", flexShrink: 0 }}
         >
           <img 
             src="/manus-storage/pasted_file_yudYZ7_image_bfa71831.png" 
