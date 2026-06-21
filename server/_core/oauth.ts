@@ -14,7 +14,8 @@ export function registerOAuthRoutes(app: Express) {
   // Microsoft OAuth login initiation
   app.get("/api/oauth/microsoft/login", (req: Request, res: Response) => {
     try {
-      const redirectUri = `${req.protocol}://${req.get("host")}/api/oauth/microsoft/callback`;
+      // Always use production domain for redirect URI
+      const redirectUri = "https://legacyassetintelligence.com/api/oauth/microsoft/callback";
       const state = btoa(redirectUri);
 
       const microsoftOAuth = new MicrosoftOAuthService(redirectUri);
