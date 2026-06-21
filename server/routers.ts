@@ -1,8 +1,6 @@
-import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
-import { submitLeadToHubSpot } from "./_core/hubspot";
 import { sendContactNotificationEmails } from "./_core/emailNotification";
 import { chatbotRouter } from "./routers/chatbot";
 import { z } from "zod";
@@ -14,7 +12,7 @@ export const appRouter = router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
-      ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
+      ctx.res.clearCookie("session", { ...cookieOptions, maxAge: -1 });
       return {
         success: true,
       } as const;
@@ -34,16 +32,6 @@ export const appRouter = router({
         })
       )
       .mutation(async ({ input }) => {
-        // Submit to HubSpot
-        const hubspotResult = await submitLeadToHubSpot({
-          email: input.email,
-          firstName: input.firstName,
-          lastName: input.lastName,
-          phone: input.phone,
-          company: input.company,
-          message: input.message,
-        });
-
         // Send notification emails to both team members
         const emailResult = await sendContactNotificationEmails({
           email: input.email,
@@ -54,11 +42,10 @@ export const appRouter = router({
           message: input.message,
         });
 
-        // Return combined result
+        // Return result
         return {
-          success: hubspotResult.success && emailResult.success,
-          contactId: hubspotResult.contactId,
-          error: hubspotResult.error || emailResult.error,
+          success: emailResult.success,
+          error: emailResult.error,
         };
       }),
   }),
