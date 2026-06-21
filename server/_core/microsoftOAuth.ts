@@ -46,7 +46,7 @@ export class MicrosoftOAuthService {
       response_type: "code",
       redirect_uri: this.redirectUri,
       response_mode: "query",
-      scope: "openid profile email",
+      scope: "openid profile email https://graph.microsoft.com/.default",
       state,
     });
 
@@ -64,7 +64,7 @@ export class MicrosoftOAuthService {
       params.append("code", code);
       params.append("redirect_uri", this.redirectUri);
       params.append("grant_type", "authorization_code");
-      params.append("scope", "openid profile email");
+      params.append("scope", "https://graph.microsoft.com/.default");
 
       const response = await axios.post<MicrosoftTokenResponse>(
         `https://login.microsoftonline.com/${this.tenantId}/oauth2/v2.0/token`,
