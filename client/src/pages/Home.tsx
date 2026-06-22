@@ -242,9 +242,6 @@ export default function Home() {
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }} className="header-container">
             <div></div>
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <button onClick={() => navigate("/faq")} style={{ background: C.teal, color: "white", padding: "0.4rem 0.8rem", borderRadius: 20, fontSize: "clamp(0.65rem, 1.5vw, 0.75rem)", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, border: "none", cursor: "pointer", whiteSpace: "nowrap" }}>
-              Contact Us
-            </button>
             {/* Mobile nav toggle */}
             <button
               onClick={() => setMobileNavOpen(!mobileNavOpen)}
