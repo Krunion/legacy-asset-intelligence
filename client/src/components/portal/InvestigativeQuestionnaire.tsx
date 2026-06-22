@@ -133,27 +133,51 @@ export default function InvestigativeQuestionnaire({ onBack }: { onBack: () => v
     setData(prev => ({ ...prev, [key]: value }));
   };
 
-  const handlePrint = () => {
-    if (resultsRef.current) {
-      const printWindow = window.open("", "_blank");
-      if (printWindow) {
-        printWindow.document.write(`
-          <html>
-            <head>
-              <title>LAI Investigative Questionnaire - ${data.clientName}</title>
-              <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-              <style>
-                * { margin: 0; padding: 0; box-sizing: border-box; }
-                body { font-family: 'Source Sans 3', sans-serif; color: #1E293B; padding: 40px; }
-                @media print { body { padding: 20px; } .no-print { display: none; } }
-              </style>
-            </head>
-            <body>${resultsRef.current.innerHTML}</body>
-          </html>
-        `);
-        printWindow.document.close();
-        setTimeout(() => printWindow.print(), 500);
-      }
+  const handlePrint = async () => {
+    if (!resultsRef.current) return;
+
+    // Convert logo to base64 so it renders in the print window
+    let logoBase64 = "";
+    try {
+      const response = await fetch(LOGO_URL);
+      const blob = await response.blob();
+      logoBase64 = await new Promise<string>((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      console.warn("Could not load logo for print", e);
+    }
+
+    // Replace logo src in the cloned HTML
+    let htmlContent = resultsRef.current.innerHTML;
+    if (logoBase64) {
+      htmlContent = htmlContent.replace(
+        new RegExp(`src="[^"]*"`, "g"),
+        (match) => match.includes("manus-storage") ? `src="${logoBase64}"` : match
+      );
+    }
+
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>LAI Investigative Questionnaire - ${data.clientName}</title>
+            <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+            <style>
+              * { margin: 0; padding: 0; box-sizing: border-box; }
+              body { font-family: 'Source Sans 3', sans-serif; color: #1E293B; padding: 40px; }
+              img { max-height: 50px; }
+              @media print { body { padding: 20px; } .no-print { display: none; } }
+            </style>
+          </head>
+          <body>${htmlContent}</body>
+        </html>
+      `);
+      printWindow.document.close();
+      setTimeout(() => printWindow.print(), 1000);
     }
   };
 

@@ -150,8 +150,8 @@
 - [x] SEO optimization (meta tags, structured data) - Meta tags, Open Graph, and JSON-LD structured data added to index.html
 - [x] Create sitemap - sitemap.xml created with all 11 pages and robots.txt configured
 - [x] Send notifications for contact form - Contact form, ROI Calculator, and Chatbot now send emails via SendGrid to Kevin and Chris (VERIFIED WORKING - emails received)
-- [ ] Publish to production (click Publish button in Management UI) - Checkpoint 5b5ba279 ready for publishing
-- [ ] Verify live site reflects new navigation and email notifications working
+- [ ] Publish to production (click Publish button in Management UI) - Checkpoint c6c18bf4 ready for publishing
+- [ ] Verify live site reflects new navigation and email notifications working (pending publish)
 
 ## Website Review & Portal Fixes
 - [x] Fix non-functional Download buttons on Resources page - changed to 'Request Access' linking to contact page
