@@ -30,8 +30,10 @@ export async function sendViaWebhook(payload: WebhookPayload): Promise<{
   try {
     console.log("[WebhookEmail] Sending to webhook");
 
-    // Make.com webhook URLs have credentials embedded (user:pass@host)
-    // We need to extract and use them properly
+    // Make.com webhook URLs can have two formats:
+    // 1. With credentials: https://user:pass@host/path
+    // 2. Direct: https://host/path
+    // We handle both formats
     let finalUrl = webhookUrl;
     
     // Check if URL has credentials format (contains @ before the domain)
@@ -44,7 +46,7 @@ export async function sendViaWebhook(payload: WebhookPayload): Promise<{
       // Extract credentials
       const credentials = urlObj.username ? `${urlObj.username}:${urlObj.password}` : null;
       
-      console.log("[WebhookEmail] Extracted credentials from URL");
+      console.log("[WebhookEmail] Extracted credentials from URL, converting to Basic Auth");
       
       const headers: HeadersInit = {
         "Content-Type": "application/json",
@@ -71,10 +73,10 @@ export async function sendViaWebhook(payload: WebhookPayload): Promise<{
         };
       }
 
-      console.log("[WebhookEmail] Successfully sent to webhook");
+      console.log("[WebhookEmail] Successfully sent to webhook with Basic Auth");
       return { success: true };
     } else {
-      // No credentials in URL, send directly
+      // No credentials in URL, send directly to webhook
       const response = await fetch(finalUrl, {
         method: "POST",
         headers: {
@@ -92,7 +94,7 @@ export async function sendViaWebhook(payload: WebhookPayload): Promise<{
         };
       }
 
-      console.log("[WebhookEmail] Successfully sent to webhook");
+      console.log("[WebhookEmail] Successfully sent to webhook directly");
       return { success: true };
     }
   } catch (error) {
