@@ -1,4 +1,4 @@
-import { notifyOwner } from "./notification";
+import { sendViaWebhook } from "./webhookEmailService";
 
 interface ContactFormData {
   email: string;
@@ -10,7 +10,7 @@ interface ContactFormData {
 }
 
 /**
- * Send contact form notification to owner via Manus Notification Service
+ * Send contact form notification via webhook service
  */
 export async function sendContactNotificationEmails(
   contact: ContactFormData,
@@ -19,39 +19,34 @@ export async function sendContactNotificationEmails(
   success: boolean;
   error?: string;
 }> {
-  const fullName = `${contact.firstName || ""} ${contact.lastName || ""}`.trim() || "Visitor";
-
   const sourceLabel = {
     contact_form: "Contact Form Submission",
     roi_calculator: "ROI Calculator Usage",
     chatbot: "Chatbot Inquiry",
   }[source];
 
-  const title = `[LAI] ${sourceLabel} from ${fullName}`;
-  
-  const content = `
-Name: ${fullName}
-Email: ${contact.email}
-Phone: ${contact.phone || "Not provided"}
-Company: ${contact.company || "Not provided"}
-
-Message:
-${contact.message || "No message provided"}
-  `.trim();
-
   try {
-    console.log(`[EmailNotification] Sending ${sourceLabel} notification`);
-    const success = await notifyOwner({ title, content });
+    console.log(`[EmailNotification] Sending ${sourceLabel} via webhook`);
 
-    if (!success) {
-      console.error(`[EmailNotification] Failed to send ${sourceLabel} notification`);
+    const result = await sendViaWebhook({
+      firstName: contact.firstName,
+      lastName: contact.lastName,
+      email: contact.email,
+      phone: contact.phone,
+      company: contact.company,
+      message: contact.message,
+      source,
+    });
+
+    if (!result.success) {
+      console.error(`[EmailNotification] Failed to send ${sourceLabel}:`, result.error);
       return {
         success: false,
-        error: "Failed to send notification",
+        error: result.error,
       };
     }
 
-    console.log(`[EmailNotification] ${sourceLabel} notification sent successfully`);
+    console.log(`[EmailNotification] ${sourceLabel} sent successfully via webhook`);
     return { success: true };
   } catch (error) {
     console.error(`[EmailNotification] Error sending ${sourceLabel}:`, error);
