@@ -33,14 +33,17 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         // Send notification emails to both team members
-        const emailResult = await sendContactNotificationEmails({
-          email: input.email,
-          firstName: input.firstName,
-          lastName: input.lastName,
-          phone: input.phone,
-          company: input.company,
-          message: input.message,
-        });
+        const emailResult = await sendContactNotificationEmails(
+          {
+            email: input.email,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            phone: input.phone,
+            company: input.company,
+            message: input.message,
+          },
+          "contact_form"
+        );
 
         // Return result
         return {
@@ -63,10 +66,13 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         // Send notification emails about calculator usage
-        const emailResult = await sendContactNotificationEmails({
-          email: input.email,
-          message: `ROI Calculator Used - Industry: ${input.industry}, Assets: ${input.assetCount}, Locations: ${input.locations}, Departments: ${input.departments}, Estimated Recovery: $${input.estimatedRecovery.toLocaleString()}${input.message ? `\n\nAdditional Info: ${input.message}` : ''}`,
-        });
+        const emailResult = await sendContactNotificationEmails(
+          {
+            email: input.email,
+            message: `ROI Calculator Used - Industry: ${input.industry}, Assets: ${input.assetCount}, Locations: ${input.locations}, Departments: ${input.departments}, Estimated Recovery: $${input.estimatedRecovery.toLocaleString()}${input.message ? `\n\nAdditional Info: ${input.message}` : ''}`,
+          },
+          "roi_calculator"
+        );
 
         return {
           success: emailResult.success,

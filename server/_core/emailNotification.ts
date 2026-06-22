@@ -1,4 +1,4 @@
-import { notifyOwner } from "./notification";
+import { sendEmailViaMicrosoft365, formatContactEmailBody } from "./microsoftEmailService";
 
 interface ContactFormData {
   email: string;
@@ -9,45 +9,57 @@ interface ContactFormData {
   message?: string;
 }
 
+const RECIPIENTS = [
+  { name: "Kevin Runion", email: "Kevin.Runion@legacyassetintelligence.com" },
+  { name: "Chris Haynes", email: "Chris.Haynes@legacyassetintelligence.com" },
+];
+
 /**
- * Send contact form notification using Manus notification system
- * This sends notifications to the project owner which will be delivered via the Manus platform
+ * Send contact form notification emails to both team members via Microsoft 365
  */
-export async function sendContactNotificationEmails(contact: ContactFormData): Promise<{
+export async function sendContactNotificationEmails(
+  contact: ContactFormData,
+  source: "contact_form" | "roi_calculator" | "chatbot" = "contact_form"
+): Promise<{
   success: boolean;
   error?: string;
 }> {
-  // Build notification content
-  const title = `New Contact Request from ${contact.firstName || "Visitor"}`;
-  const content = `
-Email: ${contact.email}
-Name: ${contact.firstName || ""} ${contact.lastName || ""}
-Phone: ${contact.phone || "Not provided"}
-Company: ${contact.company || "Not provided"}
+  const fullName = `${contact.firstName || ""} ${contact.lastName || ""}`.trim() || "Visitor";
 
-Message:
-${contact.message || "No message provided"}
-  `.trim();
+  const emailBody = formatContactEmailBody({
+    name: fullName,
+    email: contact.email,
+    phone: contact.phone,
+    company: contact.company,
+    message: contact.message,
+    source,
+  });
+
+  const sourceLabel = {
+    contact_form: "Contact Form Submission",
+    roi_calculator: "ROI Calculator Usage",
+    chatbot: "Chatbot Inquiry",
+  }[source];
 
   try {
-    // Send notification using Manus notification system
-    const success = await notifyOwner({
-      title,
-      content,
+    const result = await sendEmailViaMicrosoft365({
+      subject: `[LAI] ${sourceLabel} from ${fullName}`,
+      body: emailBody,
+      recipients: RECIPIENTS,
     });
 
-    if (!success) {
-      console.warn("[Notification] Failed to send contact notification");
+    if (!result.success) {
+      console.error("[EmailNotification] Failed to send email:", result.error);
       return {
         success: false,
-        error: "Failed to send notification",
+        error: result.error,
       };
     }
 
-    console.log("[Notification] Contact notification sent successfully");
+    console.log(`[EmailNotification] ${sourceLabel} sent successfully to both recipients`);
     return { success: true };
   } catch (error) {
-    console.error("[Notification] Error sending contact notification:", error);
+    console.error("[EmailNotification] Error sending notification:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",

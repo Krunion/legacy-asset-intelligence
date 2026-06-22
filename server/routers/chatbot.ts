@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc";
 import { invokeLLM } from "../_core/llm";
-import { submitLeadToHubSpot } from "../_core/hubspot";
+import { sendContactNotificationEmails } from "../_core/emailNotification";
 
 const CHATBOT_SYSTEM_PROMPT = `You are a helpful AI assistant for Legacy Asset Intelligence, a specialized consulting firm that helps organizations recover capital from ghost assets (fixed assets that exist on the books but don't physically exist).
 
@@ -71,18 +71,24 @@ export const chatbotRouter = router({
         // Extract potential email/company from user message for lead capture
         const emailMatch = input.message.match(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/);
         const companyMatch = input.message.match(/(?:at|from|work at|company|organization)\s+([A-Za-z\s&]+?)(?:\.|,|$)/i);
+        const nameMatch = input.message.match(/(?:I'm|I am|my name is|call me)\s+([A-Za-z\s]+?)(?:\.|,|$)/i);
 
         let leadSubmitted = false;
         if (emailMatch) {
           const email = emailMatch[0];
           const company = companyMatch ? companyMatch[1].trim() : undefined;
+          const name = nameMatch ? nameMatch[1].trim() : undefined;
 
-          // Submit lead to HubSpot
-          const leadResult = await submitLeadToHubSpot({
-            email,
-            company,
-            message: `Chatbot conversation: ${input.message}`,
-          });
+          // Send email notification
+          const leadResult = await sendContactNotificationEmails(
+            {
+              email,
+              firstName: name,
+              company,
+              message: `Chatbot conversation: ${input.message}`,
+            },
+            "chatbot"
+          );
 
           if (leadResult.success) {
             leadSubmitted = true;
