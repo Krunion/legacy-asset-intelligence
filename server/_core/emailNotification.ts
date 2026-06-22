@@ -1,4 +1,6 @@
 import { sendEmailViaSendGrid, formatContactEmailBody } from "./sendgridEmailService";
+import { getDb } from "../db";
+import { contactSubmissions } from "../../drizzle/schema";
 
 interface ContactFormData {
   email: string;
@@ -44,6 +46,9 @@ export async function sendContactNotificationEmails(
     chatbot: "Chatbot Inquiry",
   }[source];
 
+  let emailSent = false;
+  let emailError: string | undefined;
+
   try {
     console.log(`[EmailNotification] Attempting to send ${sourceLabel} via SendGrid`);
     console.log(`[EmailNotification] Recipients: ${RECIPIENTS.map(r => r.email).join(", ")}`);
@@ -58,19 +63,41 @@ export async function sendContactNotificationEmails(
 
     if (!result.success) {
       console.error(`[EmailNotification] Failed to send ${sourceLabel}:`, result.error);
-      return {
-        success: false,
-        error: result.error || "Failed to send email",
-      };
+      emailError = result.error || "Failed to send email";
+    } else {
+      console.log(`[EmailNotification] ${sourceLabel} sent successfully to both recipients`);
+      emailSent = true;
     }
-
-    console.log(`[EmailNotification] ${sourceLabel} sent successfully to both recipients`);
-    return { success: true };
   } catch (error) {
     console.error(`[EmailNotification] Error sending ${sourceLabel}:`, error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    emailError = error instanceof Error ? error.message : "Unknown error";
   }
+
+  // Store submission in database
+  try {
+    const db = await getDb();
+    if (db) {
+      await db.insert(contactSubmissions).values({
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        email: contact.email,
+        phone: contact.phone,
+        company: contact.company,
+        message: contact.message,
+        source,
+        emailSent: emailSent ? 1 : 0,
+        emailError: emailError || null,
+      });
+      console.log(`[EmailNotification] Submission stored in database`);
+    } else {
+      console.warn(`[EmailNotification] Database not available, submission not stored`);
+    }
+  } catch (dbError) {
+    console.error(`[EmailNotification] Failed to store submission in database:`, dbError);
+  }
+
+  return {
+    success: true,
+    error: emailError,
+  };
 }
