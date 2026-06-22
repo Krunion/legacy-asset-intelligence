@@ -6,6 +6,7 @@
 import { useState, useRef } from "react";
 
 const LOGO_URL = "/manus-storage/pasted_file_yudYZ7_image_transparent_32d3d4e2.png";
+const LOGO_CDN_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-5QXNLUsEDRp3nBVBAMiXK4.webp";
 
 const C = {
   slate: "#1E3A5F",
@@ -181,31 +182,15 @@ export default function AssetIntelligenceAssessment({ onBack }: { onBack: () => 
     return { category: cat, avg: catAvg, answered: catAnswered.length, total: catQuestions.length };
   });
 
-  const handlePrint = async () => {
+  const handlePrint = () => {
     if (!resultsRef.current) return;
 
-    // Convert logo to base64 so it renders in the print window
-    let logoBase64 = "";
-    try {
-      const response = await fetch(LOGO_URL);
-      const blob = await response.blob();
-      logoBase64 = await new Promise<string>((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.readAsDataURL(blob);
-      });
-    } catch (e) {
-      console.warn("Could not load logo for print", e);
-    }
-
-    // Replace logo src in the cloned HTML
+    // Replace manus-storage logo src with CDN URL for print window
     let htmlContent = resultsRef.current.innerHTML;
-    if (logoBase64) {
-      htmlContent = htmlContent.replace(
-        new RegExp(`src="[^"]*"`, "g"),
-        (match) => match.includes("manus-storage") ? `src="${logoBase64}"` : match
-      );
-    }
+    htmlContent = htmlContent.replace(
+      /src="[^"]*manus-storage[^"]*"/g,
+      `src="${LOGO_CDN_URL}"`
+    );
 
     const printWindow = window.open("", "_blank");
     if (printWindow) {
@@ -225,7 +210,10 @@ export default function AssetIntelligenceAssessment({ onBack }: { onBack: () => 
         </html>
       `);
       printWindow.document.close();
-      setTimeout(() => printWindow.print(), 1000);
+      const img = new Image();
+      img.onload = () => setTimeout(() => printWindow.print(), 500);
+      img.onerror = () => setTimeout(() => printWindow.print(), 500);
+      img.src = LOGO_CDN_URL;
     }
   };
 
