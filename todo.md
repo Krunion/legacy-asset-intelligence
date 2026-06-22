@@ -164,3 +164,4 @@
 - [x] Rebuild Employee Portal: Asset Intelligence Assessment as interactive in-portal form with printable output
 - [x] Rebuild Employee Portal: Recoverable Capital Assessment as interactive in-portal form with printable output
 - [x] Rebuild Employee Portal: Investigative Questionnaire as interactive in-portal form with printable output
+- [x] Fix logo not appearing in print preview/output on live site - embedded logo as base64 data URL directly in components (no network requests needed)

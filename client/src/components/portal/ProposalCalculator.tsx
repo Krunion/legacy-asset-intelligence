@@ -5,6 +5,7 @@
  */
 
 import { useState, useRef } from "react";
+import { LOGO_BASE64 } from "./logoBase64";
 
 // ─── Data Tables (from spreadsheet) ─────────────────────────────────────────
 
@@ -363,8 +364,6 @@ const sectionTitleStyle: React.CSSProperties = {
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
-const LOGO_URL = "/manus-storage/pasted_file_yudYZ7_image_transparent_32d3d4e2.png";
-const LOGO_CDN_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-5QXNLUsEDRp3nBVBAMiXK4.webp";
 
 export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
   const [inputs, setInputs] = useState<CalcInputs>({
@@ -408,12 +407,8 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
   const handlePrint = () => {
     if (!proposalRef.current) return;
 
-    // Replace manus-storage logo src with CDN URL for print window
-    let htmlContent = proposalRef.current.innerHTML;
-    htmlContent = htmlContent.replace(
-      /src="[^"]*manus-storage[^"]*"/g,
-      `src="${LOGO_CDN_URL}"`
-    );
+    // Logo is already embedded as base64 data URL in the img src - no replacement needed
+    const htmlContent = proposalRef.current.innerHTML;
 
     const printWindow = window.open("", "_blank");
     if (printWindow) {
@@ -433,11 +428,8 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
         </html>
       `);
       printWindow.document.close();
-      // Wait for fonts and image to load before printing
-      const img = new Image();
-      img.onload = () => setTimeout(() => printWindow.print(), 500);
-      img.onerror = () => setTimeout(() => printWindow.print(), 500);
-      img.src = LOGO_CDN_URL;
+      // Base64 images don't need loading - just wait for fonts
+      setTimeout(() => printWindow.print(), 800);
     }
   };
 
@@ -466,7 +458,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           {/* Header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem", paddingBottom: "1.5rem", borderBottom: `3px solid ${C.gold}` }}>
             <div>
-              <img src={LOGO_URL} alt="Legacy Asset Intelligence" style={{ height: 50, marginBottom: "0.5rem" }} />
+              <img src={LOGO_BASE64} alt="Legacy Asset Intelligence" style={{ height: 50, marginBottom: "0.5rem" }} />
               <p style={{ fontSize: "0.8rem", color: C.muted }}>Asset Intelligence & Capital Recovery</p>
             </div>
             <div style={{ textAlign: "right" }}>
