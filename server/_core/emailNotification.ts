@@ -45,6 +45,9 @@ export async function sendContactNotificationEmails(
   }[source];
 
   try {
+    console.log(`[EmailNotification] Attempting to send ${sourceLabel} via SendGrid`);
+    console.log(`[EmailNotification] Recipients: ${RECIPIENTS.map(r => r.email).join(", ")}`);
+    
     const result = await sendEmailViaSendGrid({
       subject: `[LAI] ${sourceLabel} from ${fullName}`,
       body: emailBody,
@@ -54,17 +57,17 @@ export async function sendContactNotificationEmails(
     });
 
     if (!result.success) {
-      console.error("[EmailNotification] Failed to send email:", result.error);
+      console.error(`[EmailNotification] Failed to send ${sourceLabel}:`, result.error);
       return {
         success: false,
-        error: result.error,
+        error: result.error || "Failed to send email",
       };
     }
 
     console.log(`[EmailNotification] ${sourceLabel} sent successfully to both recipients`);
     return { success: true };
   } catch (error) {
-    console.error("[EmailNotification] Error sending notification:", error);
+    console.error(`[EmailNotification] Error sending ${sourceLabel}:`, error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Unknown error",

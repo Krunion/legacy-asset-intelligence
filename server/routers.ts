@@ -33,6 +33,7 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         // Send notification emails to both team members
+        console.log("[Contact Form] Received submission from:", input.email);
         const emailResult = await sendContactNotificationEmails(
           {
             email: input.email,
@@ -45,6 +46,7 @@ export const appRouter = router({
           "contact_form"
         );
 
+        console.log("[Contact Form] Email result:", emailResult);
         // Return result
         return {
           success: emailResult.success,
@@ -66,6 +68,7 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         // Send notification emails about calculator usage
+        console.log("[ROI Calculator] Received submission from:", input.email);
         const emailResult = await sendContactNotificationEmails(
           {
             email: input.email,
@@ -74,6 +77,7 @@ export const appRouter = router({
           "roi_calculator"
         );
 
+        console.log("[ROI Calculator] Email result:", emailResult);
         return {
           success: emailResult.success,
           error: emailResult.error,
