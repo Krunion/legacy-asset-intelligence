@@ -13,8 +13,6 @@ interface WebhookPayload {
   source: "contact_form" | "roi_calculator" | "chatbot";
 }
 
-const WEBHOOK_URL = "https://hook.make.com/your-webhook-id"; // Will be configured via env
-
 export async function sendViaWebhook(payload: WebhookPayload): Promise<{
   success: boolean;
   error?: string;
@@ -32,27 +30,71 @@ export async function sendViaWebhook(payload: WebhookPayload): Promise<{
   try {
     console.log("[WebhookEmail] Sending to webhook");
 
-    // Parse the webhook URL to handle credentials properly
-    const url = new URL(webhookUrl);
-    const response = await fetch(url.toString(), {
-      method: "POST",
-      headers: {
+    // Make.com webhook URLs have credentials embedded (user:pass@host)
+    // We need to extract and use them properly
+    let finalUrl = webhookUrl;
+    
+    // Check if URL has credentials format (contains @ before the domain)
+    if (webhookUrl.includes("@")) {
+      // Extract the base URL without credentials for the fetch
+      // Format: https://user:pass@host/path -> https://host/path
+      const urlObj = new URL(webhookUrl);
+      finalUrl = `${urlObj.protocol}//${urlObj.host}${urlObj.pathname}${urlObj.search}`;
+      
+      // Extract credentials
+      const credentials = urlObj.username ? `${urlObj.username}:${urlObj.password}` : null;
+      
+      console.log("[WebhookEmail] Extracted credentials from URL");
+      
+      const headers: HeadersInit = {
         "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      console.error("[WebhookEmail] Webhook failed:", response.status, error);
-      return {
-        success: false,
-        error: `Webhook returned ${response.status}: ${error}`,
       };
-    }
+      
+      // Add Basic Auth header if credentials exist
+      if (credentials) {
+        const encoded = Buffer.from(credentials).toString("base64");
+        headers["Authorization"] = `Basic ${encoded}`;
+      }
+      
+      const response = await fetch(finalUrl, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
 
-    console.log("[WebhookEmail] Successfully sent to webhook");
-    return { success: true };
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("[WebhookEmail] Webhook failed:", response.status, error);
+        return {
+          success: false,
+          error: `Webhook returned ${response.status}: ${error}`,
+        };
+      }
+
+      console.log("[WebhookEmail] Successfully sent to webhook");
+      return { success: true };
+    } else {
+      // No credentials in URL, send directly
+      const response = await fetch(finalUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("[WebhookEmail] Webhook failed:", response.status, error);
+        return {
+          success: false,
+          error: `Webhook returned ${response.status}: ${error}`,
+        };
+      }
+
+      console.log("[WebhookEmail] Successfully sent to webhook");
+      return { success: true };
+    }
   } catch (error) {
     console.error("[WebhookEmail] Error sending to webhook:", error);
     return {
