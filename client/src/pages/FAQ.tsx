@@ -160,18 +160,7 @@ export default function FAQ() {
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div style={{ background: "rgba(212,175,55,0.15)", padding: "2rem", borderRadius: 8, marginTop: "3rem", textAlign: "center", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
-            Need More Information?
-          </h2>
-          <p style={{ color: "#E8E9EB", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "1.5rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-            Our team is available to discuss your specific challenges and answer detailed questions about how Legacy Asset Intelligence can help your organization.
-          </p>
-          <button onClick={() => navigate("/contact")} style={{ background: C.teal, color: "white", border: "none", padding: "0.75rem 1.5rem", borderRadius: 4, fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}>
-            Schedule a Consultation
-          </button>
-        </div>
+
       </div>
     </PageLayout>
   );

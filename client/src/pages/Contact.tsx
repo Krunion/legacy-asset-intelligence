@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { COLORS } from "@shared/colors";
+import PageLayout from "@/components/PageLayout";
 
 const C = COLORS;
 
