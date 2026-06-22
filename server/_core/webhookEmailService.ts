@@ -30,9 +30,11 @@ export async function sendViaWebhook(payload: WebhookPayload): Promise<{
   }
 
   try {
-    console.log("[WebhookEmail] Sending to webhook:", webhookUrl);
+    console.log("[WebhookEmail] Sending to webhook");
 
-    const response = await fetch(webhookUrl, {
+    // Parse the webhook URL to handle credentials properly
+    const url = new URL(webhookUrl);
+    const response = await fetch(url.toString(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +47,7 @@ export async function sendViaWebhook(payload: WebhookPayload): Promise<{
       console.error("[WebhookEmail] Webhook failed:", response.status, error);
       return {
         success: false,
-        error: `Webhook returned ${response.status}`,
+        error: `Webhook returned ${response.status}: ${error}`,
       };
     }
 
