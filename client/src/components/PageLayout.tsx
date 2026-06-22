@@ -27,8 +27,8 @@ export default function PageLayout({
   const [, navigate] = useLocation();
   
   const handleCTA = () => {
-    // Scroll to FAQ page or show contact form
-    navigate("/faq");
+    // Navigate to contact page
+    navigate("/contact");
   };
   return (
     <div style={{ minHeight: "100vh", background: C.bgLight }}>
