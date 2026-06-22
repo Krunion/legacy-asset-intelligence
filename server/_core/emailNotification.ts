@@ -1,4 +1,4 @@
-import { sendEmailViaMicrosoft365, formatContactEmailBody } from "./microsoftEmailService";
+import { sendEmailViaSendGrid, formatContactEmailBody } from "./sendgridEmailService";
 
 interface ContactFormData {
   email: string;
@@ -14,8 +14,11 @@ const RECIPIENTS = [
   { name: "Chris Haynes", email: "Chris.Haynes@legacyassetintelligence.com" },
 ];
 
+const FROM_EMAIL = "Kevin.Runion@legacyassetintelligence.com";
+const FROM_NAME = "Legacy Asset Intelligence";
+
 /**
- * Send contact form notification emails to both team members via Microsoft 365
+ * Send contact form notification emails to both team members via SendGrid
  */
 export async function sendContactNotificationEmails(
   contact: ContactFormData,
@@ -42,10 +45,12 @@ export async function sendContactNotificationEmails(
   }[source];
 
   try {
-    const result = await sendEmailViaMicrosoft365({
+    const result = await sendEmailViaSendGrid({
       subject: `[LAI] ${sourceLabel} from ${fullName}`,
       body: emailBody,
       recipients: RECIPIENTS,
+      fromEmail: FROM_EMAIL,
+      fromName: FROM_NAME,
     });
 
     if (!result.success) {
