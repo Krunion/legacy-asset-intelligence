@@ -1,9 +1,19 @@
 import PageLayout from "@/components/PageLayout";
 import { COLORS } from "@shared/colors";
+import { useLocation } from "wouter";
+import { useState } from "react";
 
 const C = COLORS;
 
 export default function Resources() {
+  const [, navigate] = useLocation();
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3000);
+  };
+
   const resources = [
     {
       type: "White Paper",
@@ -67,6 +77,20 @@ export default function Resources() {
       ctaDescription="Our team can develop custom research and analysis tailored to your specific industry and challenges."
       ctaButtonText="Request Custom Research"
     >
+      {/* Toast notification */}
+      {toastMsg && (
+        <div style={{
+          position: "fixed", top: "1.5rem", right: "1.5rem", zIndex: 9999,
+          background: C.charcoal, color: "#fff", padding: "1rem 1.5rem",
+          borderRadius: 8, boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+          fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem",
+          border: `1px solid ${C.gold}`, maxWidth: 320,
+          animation: "fadeIn 0.2s ease"
+        }}>
+          {toastMsg}
+        </div>
+      )}
+
       <div style={{ marginBottom: "2rem" }}>
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.charcoal, marginBottom: "1.5rem" }}>
           Featured Resources
@@ -95,8 +119,11 @@ export default function Resources() {
                 <span style={{ color: C.textMuted, fontSize: "0.8rem" }}>
                   {resource.industry}
                 </span>
-                <button style={{ background: C.gold, color: C.charcoal, border: "none", padding: "0.5rem 1rem", borderRadius: 4, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" }}>
-                  Download
+                <button
+                  onClick={() => showToast("Contact us to request this resource. Redirecting to contact page...")}
+                  style={{ background: C.gold, color: C.charcoal, border: "none", padding: "0.5rem 1rem", borderRadius: 4, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" }}
+                >
+                  Request Access
                 </button>
               </div>
             </div>
@@ -111,8 +138,11 @@ export default function Resources() {
         <p style={{ color: "#E8E9EB", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
           Our comprehensive knowledge base includes articles, guides, and FAQs covering every aspect of asset management, capital recovery, and governance implementation. Search by industry, topic, or challenge to find the information you need.
         </p>
-        <button style={{ background: C.gold, color: C.charcoal, border: "none", padding: "0.75rem 1.5rem", borderRadius: 4, fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}>
-          Explore Knowledge Base
+        <button
+          onClick={() => navigate("/contact")}
+          style={{ background: C.gold, color: C.charcoal, border: "none", padding: "0.75rem 1.5rem", borderRadius: 4, fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}
+        >
+          Contact Us for Access
         </button>
       </div>
     </PageLayout>

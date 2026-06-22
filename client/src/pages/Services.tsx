@@ -1,10 +1,13 @@
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { COLORS } from "@shared/colors";
+import { useLocation } from "wouter";
 
 const C = COLORS;
 
 export default function Services() {
+  const [, navigate] = useLocation();
+
   const services = [
     {
       title: "Executive Asset Assessment",
@@ -52,7 +55,12 @@ export default function Services() {
                 </li>
               ))}
             </ul>
-            <Button style={{ width: "100%", background: C.gold, color: C.charcoal }}>Learn More</Button>
+            <Button
+              onClick={() => navigate("/contact")}
+              style={{ width: "100%", background: C.gold, color: C.charcoal }}
+            >
+              Schedule Consultation
+            </Button>
           </div>
         ))}
       </div>

@@ -1,5 +1,4 @@
 import PageLayout from "@/components/PageLayout";
-import { Button } from "@/components/ui/button";
 import { COLORS } from "@shared/colors";
 
 const C = COLORS;
@@ -89,6 +88,12 @@ export default function Career() {
     { icon: "🌍", title: "Meaningful Impact", description: "Help enterprises recover millions in hidden capital" }
   ];
 
+  const handleApply = (jobTitle: string) => {
+    const subject = encodeURIComponent(`Application for ${jobTitle}`);
+    const body = encodeURIComponent(`Dear Hiring Team,\n\nI am writing to express my interest in the ${jobTitle} position at Legacy Asset Intelligence.\n\n[Please attach your resume and cover letter]\n\nBest regards,`);
+    window.location.href = `mailto:careers@legacyassetintelligence.com?subject=${subject}&body=${body}`;
+  };
+
   return (
     <PageLayout
       heroTitle="Join Our Team"
@@ -130,7 +135,7 @@ export default function Career() {
 
         <div style={{ display: "grid", gap: "1rem" }}>
           {openings.map((job, i) => (
-            <div key={i} style={{ padding: "1.5rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, cursor: "pointer", transition: "all 0.2s" }}
+            <div key={i} style={{ padding: "1.5rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, transition: "all 0.2s" }}
               onMouseEnter={(e) => {
                 (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(15,20,25,0.12)";
                 (e.currentTarget as HTMLElement).style.transform = "translateY(-2px)";
@@ -149,9 +154,12 @@ export default function Career() {
                     {job.department} • {job.level}
                   </p>
                 </div>
-                <span style={{ background: C.gold, color: C.charcoal, padding: "0.4rem 0.8rem", borderRadius: 4, fontSize: "0.75rem", fontWeight: 600, whiteSpace: "nowrap" }}>
+                <button
+                  onClick={() => handleApply(job.title)}
+                  style={{ background: C.gold, color: C.charcoal, padding: "0.4rem 0.8rem", borderRadius: 4, fontSize: "0.75rem", fontWeight: 600, whiteSpace: "nowrap", border: "none", cursor: "pointer" }}
+                >
                   Apply Now
-                </span>
+                </button>
               </div>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.textDark, lineHeight: 1.6, marginBottom: "1rem" }}>
                 {job.description}

@@ -152,3 +152,15 @@
 - [x] Send notifications for contact form - Contact form, ROI Calculator, and Chatbot now send emails via SendGrid to Kevin and Chris (VERIFIED WORKING - emails received)
 - [ ] Publish to production (click Publish button in Management UI) - Checkpoint 5b5ba279 ready for publishing
 - [ ] Verify live site reflects new navigation and email notifications working
+
+## Website Review & Portal Fixes
+- [x] Fix non-functional Download buttons on Resources page - changed to 'Request Access' linking to contact page
+- [x] Fix non-functional "Explore Knowledge Base" button on Resources page - links to contact page
+- [x] Fix non-functional "Read More" buttons on Blog page - links to contact page with toast
+- [x] Fix non-functional "Learn More" buttons on Services page - changed to 'Schedule Consultation' linking to contact
+- [x] Fix non-functional Career page job cards - 'Apply Now' buttons open email to careers@legacyassetintelligence.com
+- [x] Verify logo loads crisp and clear - confirmed in screenshots
+- [x] Rebuild Employee Portal: Proposal Calculator as interactive in-portal form with printable invoice output
+- [x] Rebuild Employee Portal: Asset Intelligence Assessment as interactive in-portal form with printable output
+- [x] Rebuild Employee Portal: Recoverable Capital Assessment as interactive in-portal form with printable output
+- [x] Rebuild Employee Portal: Investigative Questionnaire as interactive in-portal form with printable output

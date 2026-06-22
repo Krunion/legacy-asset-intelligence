@@ -1,10 +1,13 @@
 import PageLayout from "@/components/PageLayout";
 import { Button } from "@/components/ui/button";
 import { COLORS } from "@shared/colors";
+import { useLocation } from "wouter";
 
 const C = COLORS;
 
 export default function Industries() {
+  const [, navigate] = useLocation();
+
   const industries = [
     {
       name: "Healthcare",
@@ -74,7 +77,12 @@ export default function Industries() {
                 Typical Recovery: <span style={{ color: C.gold }}>{industry.recovery}</span>
               </p>
             </div>
-            <Button style={{ width: "100%", background: C.gold, color: C.charcoal }}>Learn More</Button>
+            <Button
+              onClick={() => navigate("/contact")}
+              style={{ width: "100%", background: C.gold, color: C.charcoal }}
+            >
+              Schedule Consultation
+            </Button>
           </div>
         ))}
       </div>

@@ -1,9 +1,17 @@
 import PageLayout from "@/components/PageLayout";
 import { COLORS } from "@shared/colors";
+import { useState } from "react";
 
 const C = COLORS;
 
 export default function Blog() {
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3000);
+  };
+
   const articles = [
     {
       title: "The Hidden Cost of Ghost Assets in Enterprise Operations",
@@ -69,6 +77,20 @@ export default function Blog() {
       ctaDescription="Get the latest research and case studies delivered to your inbox monthly."
       ctaButtonText="Subscribe Now"
     >
+      {/* Toast notification */}
+      {toastMsg && (
+        <div style={{
+          position: "fixed", top: "1.5rem", right: "1.5rem", zIndex: 9999,
+          background: C.charcoal, color: "#fff", padding: "1rem 1.5rem",
+          borderRadius: 8, boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+          fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem",
+          border: `1px solid ${C.gold}`, maxWidth: 320,
+          animation: "fadeIn 0.2s ease"
+        }}>
+          {toastMsg}
+        </div>
+      )}
+
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem" }}>
         {articles.map((article, i) => (
           <div key={i} style={{ padding: "1.5rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 2px 8px rgba(15,20,25,0.05)", display: "flex", flexDirection: "column" }}>
@@ -93,7 +115,10 @@ export default function Blog() {
               <span style={{ color: C.textMuted, fontSize: "0.8rem" }}>
                 {article.date}
               </span>
-              <button style={{ background: "none", border: "none", color: C.gold, fontWeight: 600, fontSize: "0.9rem", cursor: "pointer", padding: 0 }}>
+              <button
+                onClick={() => showToast("Full articles coming soon. Contact us for early access.")}
+                style={{ background: "none", border: "none", color: C.gold, fontWeight: 600, fontSize: "0.9rem", cursor: "pointer", padding: 0 }}
+              >
                 Read More →
               </button>
             </div>

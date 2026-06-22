@@ -3,14 +3,20 @@ import { useState } from "react";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
 import { COLORS } from "@shared/colors";
+import ProposalCalculator from "@/components/portal/ProposalCalculator";
+import InvestigativeQuestionnaire from "@/components/portal/InvestigativeQuestionnaire";
+import AssetIntelligenceAssessment from "@/components/portal/AssetIntelligenceAssessment";
+import RecoverableCapitalAssessment from "@/components/portal/RecoverableCapitalAssessment";
 
 const C = COLORS;
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
 
+type ActiveTool = null | "proposal-calculator" | "asset-intelligence" | "recoverable-capital" | "investigative-questionnaire";
+
 export default function EmployeePortal() {
   const { user, loading, isAuthenticated, logout } = useAuth();
   const [, navigate] = useLocation();
-  const [selectedResource, setSelectedResource] = useState<string | null>(null);
+  const [activeTool, setActiveTool] = useState<ActiveTool>(null);
 
   // If still loading auth state, show loading screen
   if (loading) {
@@ -39,7 +45,7 @@ export default function EmployeePortal() {
           </div>
 
           <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.6, marginBottom: "1.5rem", textAlign: "center", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-            Sign in with your LAI account to access the employee portal and work on spreadsheets.
+            Sign in with your LAI account to access the employee portal and interactive tools.
           </p>
 
           <a href="/api/oauth/microsoft/login" style={{ textDecoration: "none" }}>
@@ -93,54 +99,54 @@ export default function EmployeePortal() {
     );
   }
 
-  // Resources with Office 365 Online embedding
+  // If a tool is active, render it full-screen with white background
+  if (activeTool) {
+    return (
+      <div style={{ minHeight: "100vh", background: "white" }}>
+        {activeTool === "proposal-calculator" && <ProposalCalculator onBack={() => setActiveTool(null)} />}
+        {activeTool === "asset-intelligence" && <AssetIntelligenceAssessment onBack={() => setActiveTool(null)} />}
+        {activeTool === "recoverable-capital" && <RecoverableCapitalAssessment onBack={() => setActiveTool(null)} />}
+        {activeTool === "investigative-questionnaire" && <InvestigativeQuestionnaire onBack={() => setActiveTool(null)} />}
+      </div>
+    );
+  }
+
+  // Resources
   const resources = [
     {
-      id: "proposal-calculator",
+      id: "proposal-calculator" as ActiveTool,
       title: "Proposal Calculator",
-      description: "Interactive tool for calculating client recovery opportunities and ROI",
+      description: "Generate professional branded proposals with phase-by-phase pricing, ROI projections, and client signature lines",
       icon: "📊",
-      type: "Spreadsheet",
-      fileSize: "37 KB",
-      fileType: "Excel",
-      officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7B2_LAI_Proposal_Calculator%7D&action=edit",
-      storageLink: "/manus-storage/2_LAI_Proposal_Calculator_74c2c792.xlsx",
+      type: "Interactive Tool",
+      action: "Open Calculator",
     },
     {
-      id: "asset-intelligence",
+      id: "asset-intelligence" as ActiveTool,
       title: "Asset Intelligence Assessment",
-      description: "Comprehensive workbook for evaluating client asset management maturity",
+      description: "Score client asset management maturity across inventory, technology, governance, and financial categories",
       icon: "📋",
-      type: "Spreadsheet",
-      fileSize: "297 KB",
-      fileType: "Excel",
-      officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7B1_Asset_Intelligence_Opportunity_Assessment%7D&action=edit",
-      storageLink: "/manus-storage/1_Asset_Intelligence_Opportunity_Assessment_Actual_573dae9a.xlsx",
+      type: "Interactive Tool",
+      action: "Start Assessment",
     },
     {
-      id: "recoverable-capital",
+      id: "recoverable-capital" as ActiveTool,
       title: "Recoverable Capital Assessment",
-      description: "Detailed framework for modeling capital recovery scenarios",
+      description: "Estimate recoverable capital based on asset value, ghost assets, insurance, maintenance, and tax overpayment",
       icon: "💰",
-      type: "Spreadsheet",
-      fileSize: "33 KB",
-      fileType: "Excel",
-      officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7B3_Recoverable_Capital_Assessment%7D&action=edit",
-      storageLink: "/manus-storage/3_Recoverable_Capital_Assessment_Workbook_Actual_6cc4998c.xlsx",
+      type: "Interactive Tool",
+      action: "Run Assessment",
     },
     {
-      id: "investigative-questionnaire",
+      id: "investigative-questionnaire" as ActiveTool,
       title: "Investigative Questionnaire",
-      description: "Client discovery document for initial engagement assessment",
+      description: "Structured client discovery document covering CFO, COO, Facilities, IT, and Governance questions",
       icon: "📝",
-      type: "Document",
-      fileSize: "21 KB",
-      fileType: "Word",
-      officeUrl: "https://legacyassetintelligence-my.sharepoint.com/personal/kevin_runion_legacyassetintelligence_com/_layouts/15/Doc.aspx?sourcedoc=%7BLAIInvestigativeQuestionnaire%7D&action=edit",
-      storageLink: "/manus-storage/LAI_Interview_Questionnaire_bdba29ee.docx",
+      type: "Interactive Tool",
+      action: "Open Questionnaire",
     },
     {
-      id: "asset-panda",
+      id: null as ActiveTool,
       title: "Asset Panda Demo",
       description: "Access to Asset Panda platform demo for client demonstrations",
       icon: "🐼",
@@ -148,7 +154,7 @@ export default function EmployeePortal() {
       comingSoon: true,
     },
     {
-      id: "ezo-integration",
+      id: null as ActiveTool,
       title: "EZO Integration",
       description: "EZO asset management platform integration and documentation",
       icon: "🔧",
@@ -156,8 +162,6 @@ export default function EmployeePortal() {
       comingSoon: true,
     },
   ];
-
-  const selectedResourceData = resources.find(r => r.id === selectedResource);
 
   return (
     <div style={{ minHeight: "100vh", background: `url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "left center", backgroundAttachment: "fixed", padding: "2rem" }}>
@@ -169,7 +173,7 @@ export default function EmployeePortal() {
               Welcome, {user?.name || "Employee"}!
             </h1>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-              Access your resources and tools
+              Access your interactive tools and resources
             </p>
           </div>
           <button
@@ -190,207 +194,110 @@ export default function EmployeePortal() {
           </button>
         </div>
 
-        {/* Main Content Area */}
-        {selectedResourceData && !selectedResourceData.comingSoon ? (
-          <div style={{ marginBottom: "2rem" }}>
-            {/* Document Viewer Header */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem", padding: "1rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                <button
-                  onClick={() => setSelectedResource(null)}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    background: "rgba(255, 255, 255, 0.1)",
-                    color: "white",
-                    border: "1px solid rgba(255, 255, 255, 0.2)",
-                    borderRadius: 6,
-                    fontFamily: "'Source Sans 3', sans-serif",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    fontSize: "0.85rem",
-                  }}
-                >
-                  ← Back to Resources
-                </button>
-                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", margin: 0, textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
-                  {selectedResourceData.title}
-                </h2>
+        {/* Resources Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem", marginBottom: "2rem" }}>
+          {resources.map((resource, idx) => (
+            <div
+              key={idx}
+              style={{
+                padding: "1.5rem",
+                background: "rgba(15, 20, 25, 0.3)",
+                border: `1px solid rgba(255, 255, 255, 0.2)`,
+                borderRadius: 12,
+                cursor: resource.comingSoon ? "default" : "pointer",
+                transition: "all 0.3s ease",
+                opacity: resource.comingSoon ? 0.6 : 1,
+                backdropFilter: "blur(10px)",
+              }}
+              onClick={() => !resource.comingSoon && resource.id && setActiveTool(resource.id)}
+              onMouseEnter={(e) => {
+                if (!resource.comingSoon) {
+                  (e.currentTarget as HTMLElement).style.background = "rgba(15, 20, 25, 0.5)";
+                  (e.currentTarget as HTMLElement).style.borderColor = "rgba(245, 158, 11, 0.4)";
+                  (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
+                  (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 32px rgba(30,58,95,0.2)";
+                }
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.background = "rgba(15, 20, 25, 0.3)";
+                (e.currentTarget as HTMLElement).style.borderColor = "rgba(255, 255, 255, 0.2)";
+                (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
+                (e.currentTarget as HTMLElement).style.boxShadow = "none";
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "1rem" }}>
+                <div style={{ fontSize: "2.5rem" }}>{resource.icon}</div>
+                <span style={{
+                  background: resource.comingSoon ? "rgba(100, 116, 139, 0.3)" : "rgba(13, 148, 136, 0.2)",
+                  color: resource.comingSoon ? "#94A3B8" : C.teal,
+                  padding: "0.3rem 0.6rem",
+                  borderRadius: 4,
+                  fontSize: "0.65rem",
+                  fontWeight: 600,
+                  whiteSpace: "nowrap",
+                  border: `1px solid ${resource.comingSoon ? "rgba(100, 116, 139, 0.4)" : "rgba(13, 148, 136, 0.4)"}`,
+                }}>
+                  {resource.type || "Platform"}
+                </span>
               </div>
-              <a href={selectedResourceData.storageLink || "#"} download style={{ textDecoration: "none" }}>
+
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                {resource.title}
+              </h3>
+
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", marginBottom: "1rem", lineHeight: 1.5, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+                {resource.description}
+              </p>
+
+              {resource.comingSoon ? (
+                <div style={{ padding: "0.75rem", background: "rgba(13, 148, 136, 0.15)", borderRadius: 6, textAlign: "center", border: "1px solid rgba(13, 148, 136, 0.3)" }}>
+                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.teal, fontWeight: 600, margin: 0 }}>
+                    Coming Soon
+                  </p>
+                </div>
+              ) : (
                 <button
                   style={{
-                    padding: "0.5rem 1rem",
-                    background: C.gold,
-                    color: C.charcoal,
+                    width: "100%",
+                    padding: "0.6rem",
+                    background: C.teal,
+                    color: "white",
                     border: "none",
                     borderRadius: 6,
                     fontFamily: "'Source Sans 3', sans-serif",
                     fontWeight: 600,
                     cursor: "pointer",
                     fontSize: "0.85rem",
+                    transition: "all 0.2s",
                   }}
-                >
-                  ⬇️ Download
-                </button>
-              </a>
-            </div>
-
-            {/* Document Access Section */}
-            <div style={{ background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)", padding: "2rem", minHeight: "300px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center" }}>
-              <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>{selectedResourceData.icon}</div>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", margin: "0 0 0.5rem 0", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
-                {selectedResourceData.title}
-              </h3>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", margin: "0 0 1.5rem 0", maxWidth: "500px", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                {selectedResourceData.fileType} • {selectedResourceData.fileSize}
-              </p>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", lineHeight: 1.6, marginBottom: "1.5rem", maxWidth: "600px", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                Use the <strong>Download</strong> button above to save this file to your computer, or click <strong>Open in Browser</strong> to access it directly.
-              </p>
-              <a href={selectedResourceData.storageLink || "#"} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
-                <button
-                  style={{
-                    padding: "0.75rem 1.5rem",
-                    background: C.gold,
-                    color: C.charcoal,
-                    border: "none",
-                    borderRadius: 6,
-                    fontFamily: "'Source Sans 3', sans-serif",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  🔗 Open in Browser
-                </button>
-              </a>
-            </div>
-
-            {/* Info Section */}
-            <div style={{ marginTop: "1.5rem", padding: "1.5rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
-                {selectedResourceData.title}
-              </h3>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                {selectedResourceData.description}
-              </p>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Resources Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem", marginBottom: "2rem" }}>
-              {resources.map((resource) => (
-                <div
-                  key={resource.id}
-                  style={{
-                    padding: "1.5rem",
-                    background: "rgba(15, 20, 25, 0.3)",
-                    border: `1px solid rgba(255, 255, 255, 0.2)`,
-                    borderRadius: 12,
-                    cursor: resource.comingSoon ? "default" : "pointer",
-                    transition: "all 0.3s ease",
-                    opacity: resource.comingSoon ? 0.6 : 1,
-                    backdropFilter: "blur(10px)",
-                  }}
-                  onClick={() => !resource.comingSoon && setSelectedResource(resource.id)}
                   onMouseEnter={(e) => {
-                    if (!resource.comingSoon) {
-                      (e.currentTarget as HTMLElement).style.background = "rgba(15, 20, 25, 0.5)";
-                      (e.currentTarget as HTMLElement).style.borderColor = "rgba(245, 158, 11, 0.4)";
-                      (e.currentTarget as HTMLElement).style.transform = "translateY(-4px)";
-                      (e.currentTarget as HTMLElement).style.boxShadow = "0 12px 32px rgba(30,58,95,0.2)";
-                    }
+                    (e.currentTarget as HTMLElement).style.background = "#0F9488";
+                    (e.currentTarget as HTMLElement).style.transform = "scale(1.02)";
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = "rgba(15, 20, 25, 0.3)";
-                    (e.currentTarget as HTMLElement).style.borderColor = "rgba(255, 255, 255, 0.2)";
-                    (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                    (e.currentTarget as HTMLElement).style.boxShadow = "none";
+                    (e.currentTarget as HTMLElement).style.background = C.teal;
+                    (e.currentTarget as HTMLElement).style.transform = "scale(1)";
                   }}
                 >
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "start", marginBottom: "1rem" }}>
-                    <div style={{ fontSize: "2.5rem" }}>{resource.icon}</div>
-                    <span style={{
-                      background: resource.comingSoon ? "rgba(100, 116, 139, 0.3)" : "rgba(245, 158, 11, 0.2)",
-                      color: resource.comingSoon ? "#94A3B8" : C.gold,
-                      padding: "0.3rem 0.6rem",
-                      borderRadius: 4,
-                      fontSize: "0.65rem",
-                      fontWeight: 600,
-                      whiteSpace: "nowrap",
-                      border: `1px solid ${resource.comingSoon ? "rgba(100, 116, 139, 0.4)" : "rgba(245, 158, 11, 0.4)"}`,
-                    }}>
-                      {resource.type}
-                    </span>
-                  </div>
-
-                  <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                    {resource.title}
-                  </h3>
-
-                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", marginBottom: "1rem", lineHeight: 1.5, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                    {resource.description}
-                  </p>
-
-                  {!resource.comingSoon && (
-                    <div style={{ fontSize: "0.8rem", color: "#E8E9EB", marginBottom: "1rem", display: "flex", gap: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                      <span>📦 {resource.fileSize}</span>
-                      <span>📄 {resource.fileType}</span>
-                    </div>
-                  )}
-
-                  {resource.comingSoon ? (
-                    <div style={{ padding: "0.75rem", background: "rgba(13, 148, 136, 0.15)", borderRadius: 6, textAlign: "center", border: "1px solid rgba(13, 148, 136, 0.3)" }}>
-                      <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.teal, fontWeight: 600, margin: 0 }}>
-                        Coming Soon
-                      </p>
-                    </div>
-                  ) : (
-                    <button
-                      style={{
-                        width: "100%",
-                        padding: "0.6rem",
-                        background: C.teal,
-                        color: "white",
-                        border: "none",
-                        borderRadius: 6,
-                        fontFamily: "'Source Sans 3', sans-serif",
-                        fontWeight: 600,
-                        cursor: "pointer",
-                        fontSize: "0.85rem",
-                        transition: "all 0.2s",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = "#0F9488";
-                        (e.currentTarget as HTMLElement).style.transform = "scale(1.02)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.background = C.teal;
-                        (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-                      }}
-                    >
-                      📂 Access
-                    </button>
-                  )}
-                </div>
-              ))}
+                  {resource.action || "Access"}
+                </button>
+              )}
             </div>
+          ))}
+        </div>
 
-            {/* Info Section */}
-            <div style={{ padding: "1.5rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
-                Portal Information
-              </h2>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, marginBottom: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                This employee portal provides secure access to all essential LAI resources and tools. You can access spreadsheets directly in your browser, edit data for calculations, and download results for executive reporting.
-              </p>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-                For questions or technical support, please contact the LAI support team at support@legacyassetintelligence.com.
-              </p>
-            </div>
-          </>
-        )}
+        {/* Info Section */}
+        <div style={{ padding: "1.5rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+            Portal Information
+          </h2>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, marginBottom: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+            All tools are now interactive — fill in the fields, generate professional branded documents, and print results directly from your browser. No spreadsheet downloads required.
+          </p>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+            For questions or technical support, please contact the LAI support team at support@legacyassetintelligence.com.
+          </p>
+        </div>
       </div>
     </div>
   );
