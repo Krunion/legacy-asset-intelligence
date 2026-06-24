@@ -4,9 +4,10 @@ interface VideoModalProps {
   phaseNumber: number;
   phaseName: string;
   description: string;
+  videoUrl?: string;
 }
 
-export default function VideoModal({ phaseNumber, phaseName, description }: VideoModalProps) {
+export default function VideoModal({ phaseNumber, phaseName, description, videoUrl }: VideoModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const C = {
@@ -128,55 +129,79 @@ export default function VideoModal({ phaseNumber, phaseName, description }: Vide
               </p>
             </div>
 
-            {/* Video Placeholder */}
-            <div
-              style={{
-                background: C.bg,
-                border: `2px dashed ${C.border}`,
-                borderRadius: 8,
-                padding: "3rem",
-                textAlign: "center",
-                marginBottom: "1.5rem",
-                minHeight: 300,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🎥</div>
-              <p
+            {/* Video or Placeholder */}
+            {videoUrl ? (
+              <div
                 style={{
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontWeight: 600,
-                  color: C.slate,
-                  marginBottom: "0.5rem",
+                  background: "#000",
+                  borderRadius: 8,
+                  overflow: "hidden",
+                  marginBottom: "1.5rem",
+                  aspectRatio: "16 / 9",
                 }}
               >
-                Video Coming Soon
-              </p>
-              <p style={{ color: "#64748B", fontSize: "0.9rem" }}>
-                This video will explain the Phase {phaseNumber} methodology and deliverables in detail.
-              </p>
-            </div>
+                <video
+                  width="100%"
+                  height="100%"
+                  controls
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                >
+                  <source src={videoUrl} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            ) : (
+              <>
+                <div
+                  style={{
+                    background: C.bg,
+                    border: `2px dashed ${C.border}`,
+                    borderRadius: 8,
+                    padding: "3rem",
+                    textAlign: "center",
+                    marginBottom: "1.5rem",
+                    minHeight: 300,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🎥</div>
+                  <p
+                    style={{
+                      fontFamily: "'Source Sans 3', sans-serif",
+                      fontWeight: 600,
+                      color: C.slate,
+                      marginBottom: "0.5rem",
+                    }}
+                  >
+                    Video Coming Soon
+                  </p>
+                  <p style={{ color: "#64748B", fontSize: "0.9rem" }}>
+                    This video will explain the Phase {phaseNumber} methodology and deliverables in detail.
+                  </p>
+                </div>
 
-            {/* Placeholder Info */}
-            <div
-              style={{
-                background: "rgba(13, 148, 136, 0.08)",
-                border: `1px solid rgba(13, 148, 136, 0.3)`,
-                borderRadius: 6,
-                padding: "1rem",
-                marginBottom: "1.5rem",
-              }}
-            >
-              <p style={{ color: C.slate, fontWeight: 600, marginBottom: "0.5rem" }}>
-                📝 Placeholder Information
-              </p>
-              <p style={{ color: "#64748B", fontSize: "0.9rem", margin: 0 }}>
-                This is a placeholder for the Phase {phaseNumber} video. The video URL can be added later to replace this placeholder.
-              </p>
-            </div>
+                {/* Placeholder Info */}
+                <div
+                  style={{
+                    background: "rgba(13, 148, 136, 0.08)",
+                    border: `1px solid rgba(13, 148, 136, 0.3)`,
+                    borderRadius: 6,
+                    padding: "1rem",
+                    marginBottom: "1.5rem",
+                  }}
+                >
+                  <p style={{ color: C.slate, fontWeight: 600, marginBottom: "0.5rem" }}>
+                    📝 Placeholder Information
+                  </p>
+                  <p style={{ color: "#64748B", fontSize: "0.9rem", margin: 0 }}>
+                    This is a placeholder for the Phase {phaseNumber} video. The video URL can be added later to replace this placeholder.
+                  </p>
+                </div>
+              </>
+            )}
 
             {/* Close Button */}
             <button
