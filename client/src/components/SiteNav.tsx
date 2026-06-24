@@ -16,13 +16,7 @@ interface NavLink {
 
 const navLinks: NavLink[] = [
   { label: "Home", path: "/" },
-  { label: "Services", path: "/services" },
-  { label: "Industries", path: "/industries" },
-  { label: "Solutions", path: "/solutions" },
-  { label: "Case Studies", path: "/case-studies" },
   { label: "Team", path: "/team" },
-  { label: "Blog", path: "/blog" },
-  { label: "Resources", path: "/resources" },
   { label: "FAQ", path: "/faq" },
   { label: "Career", path: "/career" },
   { label: "Employee Portal", path: "/employee-portal" },

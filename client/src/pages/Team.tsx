@@ -6,27 +6,27 @@ const C = COLORS;
 export default function Team() {
   const team = [
     {
-      name: "Michael Chen",
-      title: "Founder & CEO",
-      bio: "20+ years in enterprise asset management and financial operations. Former VP of Operations at Fortune 500 manufacturing company. Pioneered ghost asset identification methodology.",
+      name: "Kevin Runion",
+      title: "Founder & Chief Executive Officer (CEO)",
+      bio: "Visionary leader with extensive expertise in enterprise asset management and capital recovery. Kevin founded Legacy Asset Intelligence to help organizations unlock millions in hidden capital through intelligent asset verification and governance.",
       expertise: ["Asset Strategy", "Enterprise Operations", "Capital Recovery"]
     },
     {
-      name: "Sarah Williams",
-      title: "Chief Technology Officer",
-      bio: "Expert in asset tracking systems and data analytics. Led digital transformation initiatives for 50+ organizations. Specializes in IoT and RFID integration.",
-      expertise: ["Technology Integration", "Data Analytics", "System Architecture"]
+      name: "Chris Haynes",
+      title: "Co-Founder & Chief Operations Officer (COO)",
+      bio: "Operational excellence expert responsible for scaling LAI's delivery capabilities and ensuring consistent quality across all engagements. Chris brings deep expertise in process optimization and team leadership.",
+      expertise: ["Operations Management", "Process Optimization", "Team Leadership"]
     },
     {
-      name: "James Rodriguez",
-      title: "VP of Consulting Services",
-      bio: "15+ years consulting healthcare and manufacturing sectors. Certified in asset management and compliance frameworks. Manages all client engagements.",
-      expertise: ["Healthcare Assets", "Manufacturing", "Compliance & Audit"]
+      name: "Andrea Haynes",
+      title: "Chief Revenue Officer (CRO)",
+      bio: "Strategic business development leader driving LAI's market expansion and client acquisition. Andrea's expertise in enterprise sales and relationship management has been instrumental in LAI's growth trajectory.",
+      expertise: ["Business Development", "Enterprise Sales", "Strategic Partnerships"]
     },
     {
-      name: "Emily Thompson",
-      title: "Director of Client Success",
-      bio: "Dedicated to ensuring clients achieve measurable results. Oversees implementation and ongoing optimization. Track record of 95%+ client satisfaction.",
+      name: "Jessica Runion",
+      title: "Chief Experience Officer (CXO)",
+      bio: "Customer-focused leader ensuring exceptional client experiences and satisfaction. Jessica oversees client success initiatives, implementation strategies, and long-term relationship management.",
       expertise: ["Client Relations", "Implementation", "Change Management"]
     }
   ];
