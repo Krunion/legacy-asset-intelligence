@@ -548,7 +548,7 @@ export default function Home() {
                 phaseNumber={1}
                 phaseName="Discovery & Executive Assessments"
                 description="Understand how we conduct executive assessments and opportunity modeling to create your recovery roadmap."
-                videoUrl="/manus-storage/InitialLAIIntroductionVideoforPhase1_1080p_82eebcf2.mp4"
+                videoUrl="/manus-storage/InitialLAIIntroductionVideoforPhase1_1080p_3bc7e8d0.mp4"
               />
             </div>
 
