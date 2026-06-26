@@ -4,6 +4,9 @@ import { publicProcedure, router } from "./_core/trpc";
 import { sendContactNotificationEmails } from "./_core/emailNotification";
 import { chatbotRouter } from "./routers/chatbot";
 import { z } from "zod";
+import { getDb } from "./db";
+import { videos } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -86,6 +89,26 @@ export const appRouter = router({
   }),
 
   chatbot: chatbotRouter,
+
+  videos: router({
+    getByPhase: publicProcedure
+      .input(z.object({ phaseNumber: z.number() }))
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return null;
+        const result = await db.select().from(videos).where(eq(videos.phaseNumber, input.phaseNumber)).limit(1);
+        return result.length > 0 ? result[0] : null;
+      }),
+
+    getById: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const db = await getDb();
+        if (!db) return null;
+        const result = await db.select().from(videos).where(eq(videos.id, input.id)).limit(1);
+        return result.length > 0 ? result[0] : null;
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
