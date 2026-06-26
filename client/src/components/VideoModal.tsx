@@ -5,9 +5,22 @@ interface VideoModalProps {
   phaseName: string;
   description: string;
   videoUrl?: string;
+  isYouTube?: boolean;
 }
 
-export default function VideoModal({ phaseNumber, phaseName, description, videoUrl }: VideoModalProps) {
+function extractYouTubeId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/,
+    /youtube\.com\/embed\/([^&\n?#]+)/,
+  ];
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+
+export default function VideoModal({ phaseNumber, phaseName, description, videoUrl, isYouTube }: VideoModalProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const C = {
@@ -131,25 +144,48 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
 
             {/* Video or Placeholder */}
             {videoUrl ? (
-              <div
-                style={{
-                  background: "#000",
-                  borderRadius: 8,
-                  overflow: "hidden",
-                  marginBottom: "1.5rem",
-                  aspectRatio: "16 / 9",
-                }}
-              >
-                <video
-                  width="100%"
-                  height="100%"
-                  controls
-                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
+              isYouTube ? (
+                <div
+                  style={{
+                    background: "#000",
+                    borderRadius: 8,
+                    overflow: "hidden",
+                    marginBottom: "1.5rem",
+                    aspectRatio: "16 / 9",
+                  }}
                 >
-                  <source src={videoUrl} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={`https://www.youtube.com/embed/${extractYouTubeId(videoUrl)}`}
+                    title={phaseName}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ width: "100%", height: "100%" }}
+                  />
+                </div>
+              ) : (
+                <div
+                  style={{
+                    background: "#000",
+                    borderRadius: 8,
+                    overflow: "hidden",
+                    marginBottom: "1.5rem",
+                    aspectRatio: "16 / 9",
+                  }}
+                >
+                  <video
+                    width="100%"
+                    height="100%"
+                    controls
+                    style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                  >
+                    <source src={videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )
             ) : (
               <>
                 <div

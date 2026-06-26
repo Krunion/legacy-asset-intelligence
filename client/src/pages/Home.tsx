@@ -548,7 +548,8 @@ export default function Home() {
                 phaseNumber={1}
                 phaseName="Discovery & Executive Assessments"
                 description="Understand how we conduct executive assessments and opportunity modeling to create your recovery roadmap."
-                videoUrl="/api/videos/phase1-intro.mp4"
+                videoUrl="https://youtu.be/1rpOJFl52nQ"
+                isYouTube={true}
               />
             </div>
 
