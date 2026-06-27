@@ -53,7 +53,7 @@
   --lai-navy: #111820;
   --lai-slate: #1A2230;
   --lai-gold: #C9A84C;
-  --lai-silver: #A8B2BD;
+  --lai-silver: #C8D0D8;
   --lai-emerald: #1B4D3E;
   --lai-teal: #0D9488;
 
@@ -62,15 +62,15 @@
   --primary-foreground: oklch(0.10 0.02 240);
   --radius: 0.5rem;
   --background: oklch(0.10 0.015 240);     /* Deep charcoal */
-  --foreground: oklch(0.92 0.005 240);     /* Light text */
+  --foreground: oklch(0.96 0.003 240);     /* Near-white text */
   --card: oklch(0.14 0.02 240);            /* Dark card */
-  --card-foreground: oklch(0.90 0.005 240);
+  --card-foreground: oklch(0.95 0.003 240);
   --popover: oklch(0.14 0.02 240);
-  --popover-foreground: oklch(0.90 0.005 240);
+  --popover-foreground: oklch(0.95 0.003 240);
   --secondary: oklch(0.18 0.02 240);
-  --secondary-foreground: oklch(0.85 0.005 240);
+  --secondary-foreground: oklch(0.92 0.005 240);
   --muted: oklch(0.20 0.015 240);
-  --muted-foreground: oklch(0.55 0.02 240);
+  --muted-foreground: oklch(0.72 0.015 240);
   --accent: oklch(0.55 0.12 75);           /* Gold accent */
   --accent-foreground: oklch(0.10 0.02 240);
   --destructive: oklch(0.577 0.245 27.325);
@@ -87,11 +87,11 @@
   --chart-5: oklch(0.30 0.04 240);
 
   --sidebar: oklch(0.10 0.015 240);
-  --sidebar-foreground: oklch(0.90 0.005 240);
+  --sidebar-foreground: oklch(0.95 0.003 240);
   --sidebar-primary: oklch(0.55 0.12 75);
   --sidebar-primary-foreground: oklch(0.10 0.02 240);
   --sidebar-accent: oklch(0.18 0.02 240);
-  --sidebar-accent-foreground: oklch(0.90 0.005 240);
+  --sidebar-accent-foreground: oklch(0.95 0.003 240);
   --sidebar-border: oklch(0.22 0.02 240);
   --sidebar-ring: oklch(0.55 0.12 75);
 }
@@ -104,11 +104,11 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     background: #0B0F13;
-    color: #EAEDF0;
+    color: #F5F7FA;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    color: #EAEDF0;
+    color: #F5F7FA;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),

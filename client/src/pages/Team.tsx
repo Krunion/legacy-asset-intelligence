@@ -105,7 +105,7 @@ export default function Team() {
           Our Commitment
         </h2>
         <p style={{ color: C.silver, fontSize: "0.95rem", lineHeight: 1.8, fontFamily: "'Source Sans 3', sans-serif" }}>
-          Every member of the Legacy Asset Intelligence team is committed to delivering exceptional results. We combine deep industry expertise with cutting-edge technology to help organizations discover and recover millions in hidden capital. Our success is measured by your success — when you recover capital and establish sustainable asset governance, we've done our job.
+          Every member of the Legacy Asset Intelligence team brings a commitment to thoroughness, accountability, and measurable outcomes. We combine deep industry expertise with enterprise-grade technology to help organizations identify ghost assets, recover hidden capital, and establish sustainable governance. Our success is measured by yours — when your organization achieves lasting financial visibility and asset accountability, we have fulfilled our purpose.
         </p>
       </div>
     </PageLayout>

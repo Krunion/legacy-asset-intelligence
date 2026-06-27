@@ -14,8 +14,8 @@ export const COLORS = {
   gold: "#C9A84C",            // Primary accent — warm gold
   goldLight: "#DFC06A",       // Hover/active gold
   goldMuted: "rgba(201,168,76,0.15)", // Subtle gold wash
-  silver: "#A8B2BD",          // Secondary accent — cool silver
-  silverLight: "#C8D0D8",     // Light silver for headings
+  silver: "#C8D0D8",          // Secondary accent — brighter silver
+  silverLight: "#E0E6EC",     // Light silver for headings — near white
   
   // Functional Colors
   emerald: "#1B4D3E",         // Success/positive
@@ -23,8 +23,8 @@ export const COLORS = {
   tealLight: "#14B8A6",       // Chart secondary
   
   // Text Colors
-  text: "#EAEDF0",            // Primary text on dark
-  textMuted: "#7A8694",       // Secondary/muted text
+  text: "#F5F7FA",            // Primary text on dark — near white
+  textMuted: "#B0BAC5",       // Secondary/muted text — significantly brighter
   textDark: "#1E293B",        // Text on light surfaces (forms)
   
   // Borders
@@ -39,7 +39,7 @@ export const COLORS = {
   // Legacy aliases (kept for compatibility)
   amber: "#C9A84C",
   platinum: "#A8B2BD",
-  platinumDark: "#7A8694",
+  platinumDark: "#B0BAC5",
   slateLight: "#2A3A4E",
   goldPale: "rgba(201,168,76,0.08)",
   tealPale: "rgba(13,148,136,0.1)",
