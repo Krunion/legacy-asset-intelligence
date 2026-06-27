@@ -180,3 +180,14 @@
 - [ ] Re-introduce Resources/Whitepapers page (refined executive style)
 - [ ] Re-introduce Executive Guides section
 - [ ] Update navigation to include new content pages
+
+## Section 2 - Homepage Redevelopment (Executive Introduction)
+- [ ] Hero: stronger executive presence, outcome-focused headline, video embed, dual CTAs (Schedule Assessment + Learn Methodology)
+- [ ] Business Challenges section: educate on ghost assets, duplicate purchases, insurance, property tax, financial reporting, capital planning, governance
+- [ ] Methodology: position as executive consulting framework (Discovery → Verification → Technology → Governance → Recurring)
+- [ ] Executive Deliverables: Assessment Report, Recoverable Capital Analysis, Asset Accountability Score, Governance Maturity, Strategic Roadmap, Dashboard, Board Presentations
+- [ ] Trust section: Veteran-Owned, SDVOSB (pending), insurance coverage, Asset Panda expertise, future testimonials space
+- [ ] Thought Leadership: featured whitepapers, executive guides, educational articles, video content
+- [ ] Industries Served: healthcare, manufacturing, education, utilities, logistics, construction, government with unique challenges
+- [ ] Consultative CTAs throughout: Schedule Executive Assessment, request consultation, download resources
+- [ ] Strong closing section: summarize challenges, reaffirm ability, final CTA, expanded footer
