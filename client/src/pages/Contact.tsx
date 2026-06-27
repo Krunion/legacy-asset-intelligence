@@ -22,10 +22,7 @@ export default function Contact() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,14 +46,7 @@ export default function Contact() {
 
       if (result.success) {
         setSubmitted(true);
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          company: "",
-          message: "",
-        });
+        setFormData({ firstName: "", lastName: "", email: "", phone: "", company: "", message: "" });
         setTimeout(() => setSubmitted(false), 5000);
       } else {
         setError(result.error || "Failed to submit contact form");
@@ -66,206 +56,125 @@ export default function Contact() {
     }
   };
 
-  return (
-    <div style={{ minHeight: "100vh", background: "#F8FAFC", paddingTop: "2rem", paddingBottom: "4rem" }}>
-      <div style={{ maxWidth: 800, margin: "0 auto", padding: "0 2rem" }}>
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.5rem", fontWeight: 700, color: "#1E293B", marginBottom: "0.5rem" }}>
-            Get in Touch
-          </h1>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1rem", color: "#64748B", lineHeight: 1.6 }}>
-            Have questions about our services? We'd love to hear from you. Fill out the form below and our team will get back to you shortly.
-          </p>
-        </div>
+  const inputStyle = {
+    width: "100%",
+    padding: "0.8rem 1rem",
+    background: C.navy,
+    border: `1px solid ${C.borderLight}`,
+    borderRadius: 4,
+    fontFamily: "'Source Sans 3', sans-serif",
+    fontSize: "0.95rem",
+    color: C.text,
+    boxSizing: "border-box" as const,
+    outline: "none",
+    transition: "border-color 0.2s",
+  };
 
+  const labelStyle = {
+    display: "block",
+    fontFamily: "'Source Sans 3', sans-serif",
+    fontWeight: 500 as const,
+    color: C.silver,
+    marginBottom: "0.5rem",
+    fontSize: "0.85rem",
+  };
+
+  return (
+    <PageLayout
+      heroTitle="Get in Touch"
+      heroSubtitle="Have questions about our services? We'd love to hear from you."
+      ctaTitle="Prefer a Direct Conversation?"
+      ctaDescription="Email us directly and our team will respond within 24 hours."
+      ctaButtonText="Email Us"
+    >
+      <div style={{ maxWidth: 700, margin: "0 auto" }}>
         {/* Success Message */}
         {submitted && (
-          <div style={{ background: "#D1FAE5", border: "1px solid #6EE7B7", borderRadius: 8, padding: "1rem", marginBottom: "2rem", color: "#065F46", fontFamily: "'Source Sans 3', sans-serif" }}>
+          <div style={{ background: "rgba(27,77,62,0.3)", border: `1px solid rgba(13,148,136,0.4)`, borderRadius: 6, padding: "1rem", marginBottom: "2rem", color: C.tealLight, fontFamily: "'Source Sans 3', sans-serif" }}>
             ✓ Thank you for your message! We'll be in touch soon.
           </div>
         )}
 
         {/* Error Message */}
         {error && (
-          <div style={{ background: "#FEE2E2", border: "1px solid #FCA5A5", borderRadius: 8, padding: "1rem", marginBottom: "2rem", color: "#991B1B", fontFamily: "'Source Sans 3', sans-serif" }}>
+          <div style={{ background: "rgba(153,27,27,0.2)", border: "1px solid rgba(252,165,165,0.3)", borderRadius: 6, padding: "1rem", marginBottom: "2rem", color: "#FCA5A5", fontFamily: "'Source Sans 3', sans-serif" }}>
             ✕ {error}
           </div>
         )}
 
         {/* Contact Form */}
-        <form onSubmit={handleSubmit} style={{ background: "white", border: "1px solid #E2E8F0", borderRadius: 12, padding: "2rem", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
+        <form onSubmit={handleSubmit} style={{ background: C.slate, border: `1px solid ${C.border}`, borderRadius: 8, padding: "2.5rem" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
-            {/* First Name */}
             <div>
-              <label style={{ display: "block", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#1E293B", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
-                First Name
-              </label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #E2E8F0",
-                  borderRadius: 6,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.95rem",
-                  boxSizing: "border-box",
-                }}
-              />
+              <label style={labelStyle}>First Name</label>
+              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} style={inputStyle} />
             </div>
-
-            {/* Last Name */}
             <div>
-              <label style={{ display: "block", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#1E293B", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
-                Last Name
-              </label>
-              <input
-                type="text"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #E2E8F0",
-                  borderRadius: 6,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.95rem",
-                  boxSizing: "border-box",
-                }}
-              />
+              <label style={labelStyle}>Last Name</label>
+              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} style={inputStyle} />
             </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
-            {/* Email */}
             <div>
-              <label style={{ display: "block", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#1E293B", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
-                Email *
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #E2E8F0",
-                  borderRadius: 6,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.95rem",
-                  boxSizing: "border-box",
-                }}
-              />
+              <label style={labelStyle}>Email *</label>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} required style={inputStyle} />
             </div>
-
-            {/* Phone */}
             <div>
-              <label style={{ display: "block", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#1E293B", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
-                Phone
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: "1px solid #E2E8F0",
-                  borderRadius: 6,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.95rem",
-                  boxSizing: "border-box",
-                }}
-              />
+              <label style={labelStyle}>Phone</label>
+              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={inputStyle} />
             </div>
           </div>
 
-          {/* Company */}
           <div style={{ marginBottom: "1.5rem" }}>
-            <label style={{ display: "block", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#1E293B", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
-              Company
-            </label>
-            <input
-              type="text"
-              name="company"
-              value={formData.company}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: "1px solid #E2E8F0",
-                borderRadius: 6,
-                fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: "0.95rem",
-                boxSizing: "border-box",
-              }}
-            />
+            <label style={labelStyle}>Company</label>
+            <input type="text" name="company" value={formData.company} onChange={handleChange} style={inputStyle} />
           </div>
 
-          {/* Message */}
-          <div style={{ marginBottom: "1.5rem" }}>
-            <label style={{ display: "block", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#1E293B", marginBottom: "0.5rem", fontSize: "0.9rem" }}>
-              Message
-            </label>
+          <div style={{ marginBottom: "2rem" }}>
+            <label style={labelStyle}>Message</label>
             <textarea
               name="message"
               value={formData.message}
               onChange={handleChange}
-              rows={6}
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: "1px solid #E2E8F0",
-                borderRadius: 6,
-                fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: "0.95rem",
-                boxSizing: "border-box",
-                resize: "vertical",
-              }}
+              rows={5}
+              style={{ ...inputStyle, resize: "vertical" }}
             />
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             disabled={submitLeadMutation.isPending}
             style={{
               width: "100%",
-              padding: "0.75rem",
-              background: C.teal,
-              color: "white",
+              padding: "0.85rem",
+              background: C.gold,
+              color: C.charcoal,
               border: "none",
-              borderRadius: 6,
+              borderRadius: 4,
               fontFamily: "'Source Sans 3', sans-serif",
               fontWeight: 600,
               fontSize: "0.95rem",
               cursor: submitLeadMutation.isPending ? "not-allowed" : "pointer",
               opacity: submitLeadMutation.isPending ? 0.6 : 1,
               transition: "all 0.2s",
+              letterSpacing: "0.02em",
             }}
           >
             {submitLeadMutation.isPending ? "Sending..." : "Send Message"}
           </button>
         </form>
 
-        {/* Contact Info */}
-        <div style={{ marginTop: "3rem", textAlign: "center" }}>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#64748B", fontSize: "0.95rem" }}>
-            Prefer to reach out directly? Contact us at{" "}
-            <a href="mailto:info@legacyassetintelligence.com" style={{ color: C.teal, textDecoration: "none", fontWeight: 600 }}>
+        {/* Direct Contact */}
+        <div style={{ marginTop: "2.5rem", textAlign: "center" }}>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.9rem" }}>
+            Prefer to reach out directly?{" "}
+            <a href="mailto:info@legacyassetintelligence.com" style={{ color: C.gold, textDecoration: "none", fontWeight: 600 }}>
               info@legacyassetintelligence.com
             </a>
           </p>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

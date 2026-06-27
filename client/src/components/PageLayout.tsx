@@ -1,11 +1,8 @@
-import SiteNav from "./SiteNav";
 import { Button } from "@/components/ui/button";
 import { useLocation } from "wouter";
-import { COLORS } from "@shared/colors";
+import { COLORS, HERO_IMG } from "@shared/colors";
 
 const C = COLORS;
-
-const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
 
 interface PageLayoutProps {
   heroTitle: string;
@@ -21,24 +18,50 @@ export default function PageLayout({
   heroSubtitle,
   children,
   ctaTitle = "Ready to Transform Your Asset Management?",
-  ctaDescription = "Let's discuss how we can help your organization.",
+  ctaDescription = "Let's discuss how we can help your organization recover hidden capital.",
   ctaButtonText = "Schedule Consultation",
 }: PageLayoutProps) {
   const [, navigate] = useLocation();
   
   const handleCTA = () => {
-    // Navigate to contact page
     navigate("/contact");
   };
+
   return (
-    <div style={{ minHeight: "100vh", background: C.bgLight }}>
+    <div style={{ 
+      minHeight: "100vh", 
+      background: `url(${HERO_IMG})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundAttachment: "fixed",
+    }}>
       {/* Hero Section */}
-      <section style={{ background: C.charcoal, color: C.text, padding: "4rem 2rem", textAlign: "center" }}>
+      <section style={{ 
+        background: "rgba(11, 15, 19, 0.82)",
+        padding: "6rem 2rem 4rem", 
+        textAlign: "center",
+        borderBottom: `1px solid ${C.border}`
+      }}>
         <div style={{ maxWidth: 800, margin: "0 auto" }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "3rem", fontWeight: 700, marginBottom: "1rem" }}>
+          <h1 style={{ 
+            fontFamily: "'Playfair Display', serif", 
+            fontSize: "clamp(2rem, 5vw, 3.2rem)", 
+            fontWeight: 700, 
+            color: C.text,
+            marginBottom: "1rem",
+            lineHeight: 1.2,
+            textShadow: "0 2px 8px rgba(0,0,0,0.5)"
+          }}>
             {heroTitle}
           </h1>
-          <p style={{ fontSize: "1.1rem", opacity: 0.9 }}>
+          <p style={{ 
+            fontSize: "1.1rem", 
+            color: C.textMuted,
+            lineHeight: 1.7,
+            maxWidth: 600,
+            margin: "0 auto",
+            textShadow: "0 1px 4px rgba(0,0,0,0.4)"
+          }}>
             {heroSubtitle}
           </p>
         </div>
@@ -46,72 +69,57 @@ export default function PageLayout({
 
       {/* Main Content */}
       <section style={{
-        maxWidth: 1200,
-        margin: "4rem auto",
-        padding: "2rem",
-        backgroundImage: `url(${HERO_IMG})`,
-        backgroundSize: "cover",
-        backgroundPosition: "left center",
-        backgroundAttachment: "fixed",
-        position: "relative",
-        borderRadius: "8px",
-        overflow: "hidden"
+        maxWidth: 1100,
+        margin: "0 auto",
+        padding: "4rem 2rem",
+        background: "rgba(11, 15, 19, 0.75)",
+        backdropFilter: "blur(2px)",
       }}>
-        {/* Minimal overlay for background visibility */}
-        <div style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(255, 255, 255, 0.15)",
-          zIndex: 1
-        }} />
-        {/* Content wrapper */}
-        <div style={{ position: "relative", zIndex: 2 }}>
-          {children}
-        </div>
+        {children}
       </section>
 
       {/* CTA Section */}
       <section style={{
-        backgroundImage: `url(${HERO_IMG})`,
-        backgroundSize: "cover",
-        backgroundPosition: "left center",
-        backgroundAttachment: "fixed",
-        color: C.text,
-        padding: "4rem 2rem",
-        marginTop: "4rem",
+        background: "rgba(17, 24, 32, 0.9)",
+        borderTop: `1px solid ${C.border}`,
+        padding: "5rem 2rem",
         textAlign: "center",
-        position: "relative",
-        overflow: "hidden"
       }}>
-        {/* Minimal overlay for background visibility */}
-        <div style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: "rgba(15, 20, 25, 0.20)",
-          zIndex: 1
-        }} />
-        {/* Content wrapper */}
-        <div style={{ position: "relative", zIndex: 2 }}>
-          <div style={{ maxWidth: 600, margin: "0 auto" }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, marginBottom: "1rem", textShadow: "0 2px 8px rgba(0,0,0,0.7)" }}>
-              {ctaTitle}
-            </h2>
-            <p style={{ fontSize: "1rem", opacity: 0.95, marginBottom: "2rem", textShadow: "0 1px 4px rgba(0,0,0,0.6)" }}>
-              {ctaDescription}
-            </p>
-            <Button 
-              onClick={handleCTA}
-              style={{ background: C.gold, color: C.charcoal, padding: "0.8rem 2rem", fontSize: "1rem", cursor: "pointer" }}
-            >
-              {ctaButtonText}
-            </Button>
-          </div>
+        <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <h2 style={{ 
+            fontFamily: "'Playfair Display', serif", 
+            fontSize: "1.8rem", 
+            fontWeight: 700, 
+            color: C.text,
+            marginBottom: "1rem",
+            textShadow: "0 2px 6px rgba(0,0,0,0.4)"
+          }}>
+            {ctaTitle}
+          </h2>
+          <p style={{ 
+            fontSize: "1rem", 
+            color: C.textMuted, 
+            marginBottom: "2rem",
+            lineHeight: 1.7,
+            textShadow: "0 1px 3px rgba(0,0,0,0.3)"
+          }}>
+            {ctaDescription}
+          </p>
+          <Button 
+            onClick={handleCTA}
+            style={{ 
+              background: C.gold, 
+              color: C.charcoal, 
+              padding: "0.85rem 2.5rem", 
+              fontSize: "0.95rem",
+              fontWeight: 600,
+              border: "none",
+              borderRadius: "4px",
+              letterSpacing: "0.02em"
+            }}
+          >
+            {ctaButtonText}
+          </Button>
         </div>
       </section>
     </div>

@@ -165,3 +165,18 @@
 - [x] Rebuild Employee Portal: Recoverable Capital Assessment as interactive in-portal form with printable output
 - [x] Rebuild Employee Portal: Investigative Questionnaire as interactive in-portal form with printable output
 - [x] Fix logo not appearing in print preview/output on live site - embedded logo as base64 data URL directly in components (no network requests needed)
+
+## Executive Consulting Firm Redesign (June 2025)
+- [ ] Remove white card boxes from dark backgrounds across all pages
+- [ ] Eliminate visual clutter, add generous spacing and clean executive layouts
+- [ ] Shift messaging from services to business outcomes (executive-focused language)
+- [ ] Home page - sophisticated executive consulting aesthetic, no white cards on dark backgrounds
+- [ ] Team page - refined executive presentation
+- [ ] FAQ page - clean professional layout matching consulting firm standards
+- [ ] Career page - polished executive aesthetic
+- [ ] Contact page - elevated design matching consulting firm standards
+- [ ] Preserve all existing functionality (forms, email routing, navigation, video, chatbot)
+- [ ] Re-introduce Executive Insights page (refined executive style)
+- [ ] Re-introduce Resources/Whitepapers page (refined executive style)
+- [ ] Re-introduce Executive Guides section
+- [ ] Update navigation to include new content pages

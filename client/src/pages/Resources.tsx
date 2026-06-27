@@ -1,146 +1,175 @@
 import PageLayout from "@/components/PageLayout";
 import { COLORS } from "@shared/colors";
 import { useLocation } from "wouter";
-import { useState } from "react";
 
 const C = COLORS;
 
 export default function Resources() {
   const [, navigate] = useLocation();
-  const [toastMsg, setToastMsg] = useState<string | null>(null);
-
-  const showToast = (msg: string) => {
-    setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3000);
-  };
 
   const resources = [
     {
-      type: "White Paper",
-      title: "The Ghost Asset Phenomenon: A $264B Market Opportunity",
-      description: "Comprehensive analysis of the fixed asset management market, ghost asset prevalence across industries, and the business case for capital recovery initiatives.",
-      pages: 24,
-      industry: "All Industries"
+      category: "Downloadable Guide",
+      title: "Ghost Asset Identification Checklist",
+      description: "A comprehensive 50-point checklist for identifying potential ghost assets across your organization's fixed asset register. Includes department-specific indicators and red flags.",
+      format: "PDF",
+      pages: "12 pages"
     },
     {
-      type: "Industry Report",
-      title: "Healthcare Asset Management: Compliance and Capital Recovery",
-      description: "Deep dive into asset management challenges specific to healthcare systems, regulatory requirements (HIPAA, SOX), and proven recovery methodologies.",
-      pages: 18,
-      industry: "Healthcare"
+      category: "Framework",
+      title: "Asset Accountability Maturity Model",
+      description: "Our proprietary five-level maturity framework for evaluating your organization's asset management sophistication. Includes self-assessment scoring and improvement roadmap.",
+      format: "PDF",
+      pages: "18 pages"
     },
     {
-      type: "White Paper",
-      title: "Manufacturing Asset Optimization: From Chaos to Control",
-      description: "Guide to establishing asset accountability in multi-site manufacturing operations, managing equipment lifecycles, and preventing future ghost asset accumulation.",
-      pages: 20,
-      industry: "Manufacturing"
+      category: "Template",
+      title: "Capital Recovery Business Case Template",
+      description: "A ready-to-use executive presentation template for building an internal business case for asset intelligence investment. Includes ROI calculations and benchmark data.",
+      format: "PPTX",
+      pages: "24 slides"
     },
     {
-      type: "Implementation Guide",
-      title: "Asset Governance Framework: Building Sustainable Controls",
-      description: "Step-by-step framework for implementing governance structures, staff training, ongoing monitoring, and continuous improvement in asset management.",
-      pages: 16,
-      industry: "All Industries"
+      category: "Research Report",
+      title: "2025 State of Enterprise Asset Management",
+      description: "Annual research report covering industry trends, technology adoption rates, ghost asset prevalence by sector, and best practices from leading organizations.",
+      format: "PDF",
+      pages: "42 pages"
     },
     {
-      type: "Case Study Collection",
-      title: "Capital Recovery Success Stories: $50M+ in Recovered Assets",
-      description: "Real-world examples from healthcare, manufacturing, utilities, and government sectors showing how organizations identified and recovered hidden capital.",
-      pages: 28,
-      industry: "All Industries"
+      category: "Methodology Overview",
+      title: "The LAI Four-Phase Methodology",
+      description: "Detailed overview of our proprietary four-phase approach to ghost asset elimination and governance implementation. Includes timelines, deliverables, and expected outcomes.",
+      format: "PDF",
+      pages: "16 pages"
     },
     {
-      type: "Industry Report",
-      title: "Government Asset Management: Compliance, Accountability, and Audit Readiness",
-      description: "Analysis of government-specific asset management challenges, GASB compliance requirements, and strategies for achieving 100% audit readiness.",
-      pages: 22,
-      industry: "Government"
+      category: "Industry Brief",
+      title: "Regulatory Compliance & Asset Accountability",
+      description: "A guide to regulatory requirements (SOX, GASB, IFRS) related to fixed asset management and how proper asset accountability supports compliance objectives.",
+      format: "PDF",
+      pages: "10 pages"
     }
   ];
 
-  const getTypeColor = (type: string) => {
-    const colors: { [key: string]: string } = {
-      "White Paper": C.gold,
-      "Industry Report": C.gold,
-      "Implementation Guide": C.gold,
-      "Case Study Collection": C.gold
-    };
-    return colors[type] || C.gold;
-  };
+  const videos = [
+    {
+      title: "Introduction to Ghost Assets",
+      duration: "2:05",
+      description: "Overview of what ghost assets are, why they matter, and how organizations can begin addressing them."
+    },
+    {
+      title: "The Executive Assessment Process",
+      duration: "Coming Soon",
+      description: "Walk-through of our Phase 1 discovery and executive assessment methodology."
+    },
+    {
+      title: "Technology-Enabled Asset Governance",
+      duration: "Coming Soon",
+      description: "How modern platforms and IoT technology transform asset accountability from reactive to proactive."
+    }
+  ];
 
   return (
     <PageLayout
-      heroTitle="Resources & Research"
-      heroSubtitle="Download white papers, industry reports, and implementation guides to accelerate your asset intelligence journey"
-      ctaTitle="Need Custom Research?"
-      ctaDescription="Our team can develop custom research and analysis tailored to your specific industry and challenges."
-      ctaButtonText="Request Custom Research"
+      heroTitle="Resources & Tools"
+      heroSubtitle="Frameworks, templates, and educational materials to support your asset intelligence journey"
+      ctaTitle="Need Custom Materials?"
+      ctaDescription="Our team can develop industry-specific resources tailored to your organization's needs."
+      ctaButtonText="Request Custom Materials"
     >
-      {/* Toast notification */}
-      {toastMsg && (
-        <div style={{
-          position: "fixed", top: "1.5rem", right: "1.5rem", zIndex: 9999,
-          background: C.charcoal, color: "#fff", padding: "1rem 1.5rem",
-          borderRadius: 8, boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
-          fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem",
-          border: `1px solid ${C.gold}`, maxWidth: 320,
-          animation: "fadeIn 0.2s ease"
-        }}>
-          {toastMsg}
-        </div>
-      )}
-
-      <div style={{ marginBottom: "2rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.charcoal, marginBottom: "1.5rem" }}>
-          Featured Resources
+      {/* Downloadable Resources */}
+      <div style={{ marginBottom: "4rem" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: C.text, marginBottom: "1.5rem", borderLeft: `3px solid ${C.gold}`, paddingLeft: "1rem" }}>
+          Downloadable Resources
         </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.25rem" }}>
           {resources.map((resource, i) => (
-            <div key={i} style={{ padding: "1.5rem", background: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 8, boxShadow: "0 2px 8px rgba(15,20,25,0.05)", display: "flex", flexDirection: "column" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
-                <span style={{ padding: "0.4rem 0.8rem", background: `${getTypeColor(resource.type)}20`, color: getTypeColor(resource.type), borderRadius: 4, fontSize: "0.75rem", fontWeight: 600, textTransform: "uppercase" }}>
-                  {resource.type}
+            <div key={i} style={{ 
+              padding: "1.75rem", 
+              background: C.slate, 
+              border: `1px solid ${C.border}`, 
+              borderRadius: 8,
+              display: "flex",
+              flexDirection: "column"
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+                <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.gold }}>
+                  {resource.category}
                 </span>
-                <span style={{ color: C.textMuted, fontSize: "0.8rem", fontWeight: 500 }}>
-                  {resource.pages} pages
+                <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.7rem", color: C.textMuted, background: C.navy, padding: "0.2rem 0.5rem", borderRadius: 3 }}>
+                  {resource.format} · {resource.pages}
                 </span>
               </div>
-              
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", fontWeight: 700, color: C.charcoal, marginBottom: "0.75rem", lineHeight: 1.4 }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.05rem", fontWeight: 700, color: C.text, marginBottom: "0.75rem", lineHeight: 1.35 }}>
                 {resource.title}
               </h3>
-              
-              <p style={{ color: C.textDark, fontSize: "0.9rem", lineHeight: 1.6, marginBottom: "1rem", flex: 1 }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.85rem", lineHeight: 1.6, flex: 1 }}>
                 {resource.description}
               </p>
-              
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingTop: "1rem", borderTop: `1px solid ${C.border}` }}>
-                <span style={{ color: C.textMuted, fontSize: "0.8rem" }}>
-                  {resource.industry}
-                </span>
-                <button
-                  onClick={() => showToast("Contact us to request this resource. Redirecting to contact page...")}
-                  style={{ background: C.gold, color: C.charcoal, border: "none", padding: "0.5rem 1rem", borderRadius: 4, fontSize: "0.85rem", fontWeight: 600, cursor: "pointer" }}
-                >
-                  Request Access
-                </button>
-              </div>
+              <button
+                onClick={() => navigate("/contact")}
+                style={{ 
+                  marginTop: "1.25rem", 
+                  background: "transparent", 
+                  border: `1px solid ${C.gold}`, 
+                  color: C.gold, 
+                  padding: "0.5rem 1rem", 
+                  borderRadius: 4, 
+                  fontFamily: "'Source Sans 3', sans-serif", 
+                  fontSize: "0.8rem", 
+                  fontWeight: 600,
+                  transition: "all 0.2s",
+                  width: "fit-content"
+                }}
+              >
+                Request Access
+              </button>
             </div>
           ))}
         </div>
       </div>
 
-      <div style={{ background: "rgba(212,175,55,0.15)", padding: "2rem", borderRadius: 8, marginTop: "3rem", border: "1px solid rgba(255, 255, 255, 0.1)" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+      {/* Educational Videos */}
+      <div style={{ marginBottom: "3rem" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: C.text, marginBottom: "1.5rem", borderLeft: `3px solid ${C.gold}`, paddingLeft: "1rem" }}>
+          Educational Videos
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.25rem" }}>
+          {videos.map((video, i) => (
+            <div key={i} style={{ 
+              padding: "1.5rem", 
+              background: C.slate, 
+              border: `1px solid ${C.border}`, 
+              borderRadius: 8 
+            }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+                <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", fontWeight: 700, color: C.text }}>
+                  {video.title}
+                </h3>
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", color: C.gold }}>
+                  {video.duration}
+                </span>
+              </div>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.85rem", lineHeight: 1.6, margin: 0 }}>
+                {video.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Knowledge Base CTA */}
+      <div style={{ padding: "2.5rem", background: C.goldMuted, borderRadius: 8, border: `1px solid rgba(201,168,76,0.2)`, textAlign: "center" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.text, marginBottom: "0.75rem" }}>
           Knowledge Base
         </h2>
-        <p style={{ color: "#E8E9EB", fontSize: "0.95rem", lineHeight: 1.8, marginBottom: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-          Our comprehensive knowledge base includes articles, guides, and FAQs covering every aspect of asset management, capital recovery, and governance implementation. Search by industry, topic, or challenge to find the information you need.
+        <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.silver, fontSize: "0.95rem", lineHeight: 1.7, maxWidth: 600, margin: "0 auto 1.5rem" }}>
+          Our full knowledge base includes detailed methodology documentation, industry-specific guides, technology integration playbooks, and governance framework templates.
         </p>
         <button
           onClick={() => navigate("/contact")}
-          style={{ background: C.gold, color: C.charcoal, border: "none", padding: "0.75rem 1.5rem", borderRadius: 4, fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}
+          style={{ background: C.gold, color: C.charcoal, border: "none", padding: "0.75rem 1.5rem", borderRadius: 4, fontSize: "0.9rem", fontWeight: 600 }}
         >
           Contact Us for Access
         </button>

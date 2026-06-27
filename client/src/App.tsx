@@ -11,35 +11,31 @@ import FAQ from "./pages/FAQ";
 import Career from "./pages/Career";
 import EmployeePortal from "./pages/EmployeePortal";
 import Contact from "./pages/Contact";
+import Insights from "./pages/Insights";
+import Resources from "./pages/Resources";
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
       <Route path={"/team"} component={Team} />
+      <Route path={"/insights"} component={Insights} />
+      <Route path={"/resources"} component={Resources} />
       <Route path={"/faq"} component={FAQ} />
       <Route path={"/career"} component={Career} />
       <Route path={"/employee-portal"} component={EmployeePortal} />
       <Route path={"/contact"} component={Contact} />
       <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
 }
 
-// NOTE: About Theme
-// - First choose a default theme according to your design style (dark or light bg), than change color palette in index.css
-//   to keep consistent foreground/background color across components
-// - If you want to make theme switchable, pass `switchable` ThemeProvider and use `useTheme` hook
-
 function App() {
   return (
     <ErrorBoundary>
       <ThemeProvider
-        defaultTheme="light"
-        // switchable
+        defaultTheme="dark"
       >
         <TooltipProvider>
           <Toaster />

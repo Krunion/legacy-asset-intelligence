@@ -1,68 +1,54 @@
 /**
- * Legacy Asset Intelligence — Business Plan
- * Design: Corporate Clarity
- * Colors: Deep Charcoal (#0F1419), Deep Emerald (#1B4D3E), Gold (#D4AF37)
- * Fonts: Playfair Display (headings), Source Sans 3 (body), JetBrains Mono (numbers)
- * Layout: Sticky left-rail nav + main content with full-width data sections
+ * Legacy Asset Intelligence — Executive Home Page
+ * Design: Dark executive consulting aesthetic
+ * No white cards. Generous spacing. Outcome-focused messaging.
  */
 
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import {
-  AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, LineChart, Line,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from "recharts";
 import ROICalculator from "@/components/ROICalculator";
 import CaseStudies from "@/components/CaseStudies";
 import { ChatbotWidget } from "@/components/ChatbotWidget";
 import VideoModal from "@/components/VideoModal";
+import { HERO_IMG } from "@shared/colors";
 
-// ─── Asset URLs ───────────────────────────────────────────────────────────────
-const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
-const AUDIT_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-audit-eD6BPKVD5ibTfjcC5zXw6B.webp";
-const LOGO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-logo-5QXNLUsEDRp3nBVBAMiXK4.webp";
-
-// ─── Brand Colors - Premium Enterprise with Gold & Silver Accents ─────────────────────────────────────────
+// ─── Colors ───────────────────────────────────────────────────────────────────
 const C = {
-  charcoal: "#0F1419",
-  navy: "#1A2332",
-  emerald: "#1B4D3E",
-  gold: "#D4AF37",
-  goldLight: "#E8C547",
-  platinum: "#E8E9EB",
-  platinumDark: "#D1D5DB",
-  slate: "#2C3E50",
-  slateLight: "#3D5A73",
+  bg: "#0B0F13",
+  navy: "#111820",
+  slate: "#1A2230",
+  gold: "#C9A84C",
+  goldMuted: "rgba(201,168,76,0.12)",
+  silver: "#A8B2BD",
+  silverLight: "#C8D0D8",
+  text: "#EAEDF0",
+  textMuted: "#7A8694",
+  border: "rgba(168,178,189,0.1)",
+  borderLight: "rgba(168,178,189,0.2)",
   teal: "#0D9488",
   tealLight: "#14B8A6",
-  tealPale: "#CCFBF1",
-  amber: "#D4AF37",
-  amberPale: "#FEF3C7",
-  bg: "#FAFBFC",
-  text: "#FFFFFF",
-  textLight: "#E8E9EB",
-  muted: "#B0B5BD",
-  border: "#E5E7EB",
-  cardBg: "#FFFFFF",
+  emerald: "#1B4D3E",
 };
 
 // ─── Chart Data ───────────────────────────────────────────────────────────────
-
-
 const marketData = [
-  { name: "Manufacturing", value: 28, color: C.slate },
+  { name: "Manufacturing", value: 28, color: C.gold },
   { name: "Healthcare", value: 24, color: C.teal },
-  { name: "IT / Data Centers", value: 22, color: C.amber },
-  { name: "Government / Education", value: 16, color: C.slateLight },
-  { name: "Other Industries", value: 10, color: C.tealLight },
+  { name: "IT / Data Centers", value: 22, color: C.silver },
+  { name: "Government / Education", value: 16, color: C.emerald },
+  { name: "Other Industries", value: 10, color: C.textMuted },
 ];
 
 const ghostAssetImpactData = [
-  { category: "Property Tax Overpayment", savings: 35 },
-  { category: "Insurance Premium Reduction", savings: 25 },
-  { category: "Maintenance Contract Elimination", savings: 20 },
-  { category: "Duplicate Purchase Prevention", savings: 12 },
-  { category: "Audit & Compliance Savings", savings: 8 },
+  { category: "Property Tax", savings: 35 },
+  { category: "Insurance", savings: 25 },
+  { category: "Maintenance", savings: 20 },
+  { category: "Duplicate Purchases", savings: 12 },
+  { category: "Audit & Compliance", savings: 8 },
 ];
 
 const marketGrowthData = [
@@ -76,8 +62,6 @@ const marketGrowthData = [
   { year: "2030", size: 1513.7 },
 ];
 
-
-
 const competitorData = [
   { name: "Kroll", breadth: 95, specialization: 70, techPlatform: 65, governance: 80 },
   { name: "Verasset", breadth: 60, specialization: 90, techPlatform: 55, governance: 50 },
@@ -89,10 +73,10 @@ const competitorData = [
 const NAV_SECTIONS = [
   { id: "executive-summary", label: "Executive Summary" },
   { id: "market-analysis", label: "Market Analysis" },
-  { id: "services", label: "Services & Methodology" },
-  { id: "competitive", label: "Competitive Landscape" },
-  { id: "case-studies", label: "Case Studies" },
-  { id: "calculator", label: "Recoverable Capital Calculator" },
+  { id: "services", label: "Methodology" },
+  { id: "competitive", label: "Competitive Position" },
+  { id: "case-studies", label: "Client Results" },
+  { id: "calculator", label: "Capital Calculator" },
 ];
 
 // ─── Animated Counter ─────────────────────────────────────────────────────────
@@ -126,9 +110,7 @@ function AnimatedCounter({ end, suffix = "", prefix = "", duration = 1800 }: {
 }
 
 // ─── Section Wrapper ──────────────────────────────────────────────────────────
-function Section({ id, children, className = "" }: {
-  id: string; children: React.ReactNode; className?: string;
-}) {
+function Section({ id, children }: { id: string; children: React.ReactNode }) {
   const ref = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -144,8 +126,8 @@ function Section({ id, children, className = "" }: {
     <section
       id={id}
       ref={ref}
-      className={`transition-all duration-500 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"} ${className}`}
-      style={{ scrollMarginTop: "2rem" }}
+      className={`transition-all duration-500 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
+      style={{ scrollMarginTop: "2rem", marginBottom: "5rem" }}
     >
       {children}
     </section>
@@ -157,37 +139,18 @@ function SectionHeader({ label, title, subtitle }: {
   label: string; title: string; subtitle?: string;
 }) {
   return (
-    <div className="section-header mb-8">
-      <p style={{ color: C.gold, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: "0.4rem", textShadow: "0 1px 3px rgba(0,0,0,0.5)" }}>
+    <div className="section-header" style={{ marginBottom: "2.5rem" }}>
+      <p style={{ color: C.gold, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: "0.5rem" }}>
         {label}
       </p>
-      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "#FFFFFF", lineHeight: 1.2, textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
+      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.text, lineHeight: 1.2 }}>
         {title}
       </h2>
       {subtitle && (
-        <p style={{ color: "#B0B5BD", marginTop: "0.5rem", fontSize: "1rem", fontFamily: "'Source Sans 3', sans-serif", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
+        <p style={{ color: C.textMuted, marginTop: "0.75rem", fontSize: "1rem", fontFamily: "'Source Sans 3', sans-serif", lineHeight: 1.6 }}>
           {subtitle}
         </p>
       )}
-    </div>
-  );
-}
-
-// ─── Metric Card ──────────────────────────────────────────────────────────────
-function MetricCard({ value, label, sub, prefix = "", suffix = "", accent = C.teal }: {
-  value: number; label: string; sub: string; prefix?: string; suffix?: string; accent?: string;
-}) {
-  return (
-    <div className="metric-card">
-      <div className="stat-number" style={{ color: accent }}>
-        <AnimatedCounter end={value} prefix={prefix} suffix={suffix} />
-      </div>
-      <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.slate, marginTop: "0.5rem", fontSize: "0.95rem" }}>
-        {label}
-      </p>
-      <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.muted, fontSize: "0.8rem", marginTop: "0.25rem" }}>
-        {sub}
-      </p>
     </div>
   );
 }
@@ -196,10 +159,10 @@ function MetricCard({ value, label, sub, prefix = "", suffix = "", accent = C.te
 function CustomTooltip({ active, payload, label, prefix = "", suffix = "" }: any) {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 8, padding: "10px 14px", boxShadow: "0 4px 16px rgba(30,58,95,0.12)" }}>
-      <p style={{ fontWeight: 600, color: C.slate, marginBottom: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem" }}>{label}</p>
+    <div style={{ background: "rgba(26, 34, 48, 0.9)", border: `1px solid ${C.borderLight}`, borderRadius: 6, padding: "10px 14px", backdropFilter: "blur(4px)" }}>
+      <p style={{ fontWeight: 600, color: C.text, marginBottom: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem" }}>{label}</p>
       {payload.map((p: any, i: number) => (
-        <p key={i} style={{ color: p.color, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", margin: 0 }}>
+        <p key={i} style={{ color: p.color || C.silver, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", margin: 0 }}>
           {p.name}: {prefix}{p.value.toLocaleString()}{suffix}
         </p>
       ))}
@@ -212,7 +175,6 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("executive-summary");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  // Scroll spy
   useEffect(() => {
     const handleScroll = () => {
       const sections = NAV_SECTIONS.map(s => document.getElementById(s.id));
@@ -235,443 +197,357 @@ export default function Home() {
   };
 
   return (
-    <div style={{ background: `linear-gradient(135deg, rgba(15,20,25,0.85) 0%, rgba(27,77,62,0.85) 100%), url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed", minHeight: "100vh" }}>
+    <div style={{ background: `url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed", minHeight: "100vh" }}>
 
-      {/* ── TOP NAV BAR ── */}
-      <header style={{ background: C.charcoal, position: "sticky", top: 0, zIndex: 50, boxShadow: "0 2px 12px rgba(15,20,25,0.4)" }}>
-        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }} className="header-container">
-            <div></div>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            {/* Mobile nav toggle */}
-            <button
-              onClick={() => setMobileNavOpen(!mobileNavOpen)}
-              style={{ 
-                display: "none", 
-                background: "transparent", 
-                border: "none", 
-                color: "white", 
-                padding: "0.5rem",
-                fontSize: "1.5rem",
-                cursor: "pointer"
-              }}
-              className="mobile-nav-toggle"
-              aria-label="Toggle navigation"
-            >
-              {mobileNavOpen ? '✕' : '☰'}
-            </button>
+      {/* ── INTERNAL NAV BAR ── */}
+      <header style={{ background: "rgba(17, 24, 32, 0.9)", backdropFilter: "blur(8px)", position: "sticky", top: 56, zIndex: 40, borderBottom: `1px solid ${C.border}` }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 2rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 48 }} className="header-container">
+          <div style={{ display: "flex", gap: "1.5rem", alignItems: "center", overflowX: "auto" }}>
+            {NAV_SECTIONS.map(s => (
+              <button
+                key={s.id}
+                onClick={() => scrollTo(s.id)}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: activeSection === s.id ? C.gold : C.textMuted,
+                  fontFamily: "'Source Sans 3', sans-serif",
+                  fontSize: "0.78rem",
+                  fontWeight: activeSection === s.id ? 600 : 400,
+                  whiteSpace: "nowrap",
+                  transition: "color 0.2s",
+                  padding: "0.5rem 0",
+                  borderBottom: activeSection === s.id ? `2px solid ${C.gold}` : "2px solid transparent",
+                }}
+              >
+                {s.label}
+              </button>
+            ))}
           </div>
+          <button
+            onClick={() => navigate("/contact")}
+            style={{
+              background: C.gold,
+              color: C.bg,
+              border: "none",
+              padding: "0.4rem 1.2rem",
+              borderRadius: 4,
+              fontFamily: "'Source Sans 3', sans-serif",
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              letterSpacing: "0.02em",
+              flexShrink: 0,
+            }}
+          >
+            Schedule Assessment
+          </button>
         </div>
       </header>
 
-      <div style={{ maxWidth: 1280, margin: "0 auto", display: "flex", gap: 0 }}>
+      {/* ── MAIN CONTENT ── */}
+      <main style={{ maxWidth: 1100, margin: "0 auto", padding: "4rem 2rem" }} className="main-content">
 
-        {/* ── LEFT SIDEBAR NAV (Desktop) / Mobile Nav (Mobile) ── */}
-        <aside style={{
-          width: 240, flexShrink: 0, position: "sticky", top: 64, height: "calc(100vh - 64px)",
-          background: C.charcoal, overflowY: "auto", padding: "1.5rem 0",
-          display: "block"
-        }} className={`sidebar-nav ${mobileNavOpen ? 'mobile-open' : ''}`}>
-          <div style={{ padding: "0 1rem 1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", marginBottom: "0.5rem" }}>
-            <p style={{ color: C.gold, fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600 }}>
-              Contents
+        {/* SECTION 1: HERO / EXECUTIVE SUMMARY */}
+        <Section id="executive-summary">
+          {/* Hero */}
+          <div style={{ marginBottom: "4rem", textAlign: "center" }}>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 700, color: C.text, lineHeight: 1.15, marginBottom: "1.5rem" }}>
+              Recover Millions in Hidden Capital.
+            </h1>
+            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "clamp(1rem, 2vw, 1.15rem)", color: C.textMuted, maxWidth: 700, margin: "0 auto", lineHeight: 1.7 }}>
+              We help healthcare systems, manufacturers, utilities, and government organizations identify ghost assets, recover lost capital, and implement governance programs that protect investments permanently.
             </p>
           </div>
-          {NAV_SECTIONS.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => scrollTo(s.id)}
-              style={{
-                display: "block", width: "100%", textAlign: "left",
-                padding: "0.65rem 1.25rem",
-                background: activeSection === s.id ? "rgba(212,175,55,0.15)" : "transparent",
-                borderTop: "none",
-                borderRight: "none",
-                borderBottom: "none",
-                borderLeft: activeSection === s.id ? `3px solid ${C.gold}` : "3px solid transparent",
-                color: activeSection === s.id ? C.gold : "rgba(255,255,255,0.65)",
-                fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: "0.82rem", fontWeight: activeSection === s.id ? 600 : 400,
-                cursor: "pointer", transition: "all 0.2s",
-              }}
-            >
-              {s.label}
-            </button>
-          ))}
-          <div style={{ margin: "1.5rem 1rem 0", padding: "1rem", background: "rgba(212,175,55,0.1)", borderRadius: 8, border: `1px solid ${C.gold}` }}>
-            <p style={{ color: C.tealLight, fontSize: "0.7rem", fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, marginBottom: "0.3rem" }}>
-              MARKET SIZE
-            </p>
-            <p style={{ color: "white", fontFamily: "'JetBrains Mono', monospace", fontSize: "1.1rem", fontWeight: 500 }}>$264.7B</p>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "0.65rem", fontFamily: "'Source Sans 3', sans-serif", marginTop: "0.2rem" }}>Fixed Asset Mgmt (2023)</p>
-          </div>
-        </aside>
 
-        {/* ── MAIN CONTENT ── */}
-        <main style={{ flex: 1, padding: "2rem", minWidth: 0 }} className="main-content">
-
-          {/* SECTION 1: HERO */}
-          <Section id="executive-summary">
-            <div style={{ marginBottom: "3rem" }}>
-              <div style={{ background: `linear-gradient(135deg, rgba(15,20,25,0.5) 0%, rgba(27,77,62,0.5) 100%), url(${HERO_IMG})`, backgroundSize: "cover", backgroundPosition: "center", backgroundAttachment: "fixed", borderRadius: 12, padding: "clamp(2rem, 5vw, 6rem) clamp(1.5rem, 4vw, 4rem)", color: "white", textAlign: "center", minHeight: "clamp(300px, 50vh, 500px)", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.75rem, 6vw, 3.5rem)", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" }}>
-                  Recover Millions in Hidden Capital.
-                </h1>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "clamp(0.95rem, 2.5vw, 1.2rem)", maxWidth: 700, lineHeight: 1.6, opacity: 0.95 }}>
-                  Legacy Asset Intelligence helps healthcare systems, manufacturers, utilities, and government organizations recover lost capital, establish complete asset accountability, and implement governance programs that protect investments for years to come.
+          {/* Key Stats */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem", marginBottom: "4rem" }}>
+            {[
+              { value: 15, suffix: "%", label: "Ghost Asset Loss", sub: "of typical portfolio" },
+              { value: 264, suffix: "B", prefix: "$", label: "Market Opportunity", sub: "Fixed Asset Mgmt" },
+              { value: 25, suffix: "%", label: "IT Budget Waste", sub: "from ghost assets" },
+              { value: 28, suffix: "%", label: "CAGR Growth", sub: "through 2030" },
+            ].map((m, i) => (
+              <div key={i} className="metric-card">
+                <div className="stat-number">
+                  <AnimatedCounter end={m.value} prefix={m.prefix || ""} suffix={m.suffix} />
+                </div>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.silverLight, marginTop: "0.6rem", fontSize: "0.9rem" }}>
+                  {m.label}
+                </p>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.78rem", marginTop: "0.25rem" }}>
+                  {m.sub}
                 </p>
               </div>
+            ))}
+          </div>
+
+          {/* Executive Summary Text */}
+          <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.silver, lineHeight: 1.85, fontSize: "0.97rem", maxWidth: 900 }}>
+            <p style={{ marginBottom: "1.25rem" }}>
+              <strong style={{ color: C.text }}>Legacy Asset Intelligence</strong> is a specialized consulting firm built to solve one of the most overlooked financial problems in enterprise operations: <strong style={{ color: C.gold }}>ghost assets</strong>. These are items that appear on a company's Fixed Asset Register but are physically missing, fully depreciated, or otherwise non-existent. Industry research consistently shows that 15% to 30% of a typical organization's fixed assets are ghosts, silently consuming up to 25% of IT and operational budgets through unnecessary maintenance contracts, inflated insurance premiums, and overpaid property taxes.
+            </p>
+            <p style={{ marginBottom: "1.25rem" }}>
+              Our firm addresses this problem through a proprietary four-phase methodology: executive assessment and opportunity modeling, physical asset accountability and verification, technology platform integration and governance design, and optional recurring governance services.
+            </p>
+            <p>
+              The global fixed asset management market was valued at <strong style={{ color: C.text }}>$264.68 billion in 2023</strong> and is projected to grow at a 28.3% CAGR through 2030, reaching over $1.5 trillion. Legacy Asset Intelligence is positioned to capture a meaningful share of this expanding market.
+            </p>
+          </div>
+        </Section>
+
+        {/* SECTION 2: MARKET ANALYSIS */}
+        <Section id="market-analysis">
+          <SectionHeader label="Market Analysis" title="The Ghost Asset Crisis" subtitle="15-30% of enterprise fixed assets are invisible, costing billions annually in unnecessary expenditures." />
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem", marginBottom: "3rem", alignItems: "start" }}>
+            <div>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", fontWeight: 700, color: C.text, marginBottom: "1.25rem" }}>
+                Industry Impact
+              </h3>
+              <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.silver, lineHeight: 1.8, fontSize: "0.95rem" }}>
+                <p style={{ marginBottom: "1rem" }}>
+                  Ghost assets represent a pervasive financial drain across enterprise organizations, driven by:
+                </p>
+                <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                  {["Inadequate physical inventory controls", "Manual, infrequent asset reconciliation", "Siloed asset management systems", "Lack of governance accountability", "Organizational complexity and M&A integration"].map((item, i) => (
+                    <li key={i} style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.6rem" }}>
+                      <span style={{ color: C.gold, fontSize: "0.7rem" }}>●</span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-
-            {/* Key Stats */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem", marginBottom: "3rem" }}>
-              <MetricCard value={15} label="Ghost Asset Loss" sub="of typical portfolio" suffix="%" accent={C.amber} />
-              <MetricCard value={264} label="Market Opportunity" sub="Fixed Asset Mgmt" suffix="B" prefix="$" accent={C.teal} />
-              <MetricCard value={25} label="IT Budget Waste" sub="from ghost assets" suffix="%" accent={C.slate} />
-              <MetricCard value={28} label="CAGR Growth" sub="through 2030" suffix="%" accent={C.tealLight} />
+            <div style={{ background: "rgba(26, 34, 48, 0.8)", borderRadius: 8, padding: "1.5rem", border: `1px solid ${C.border}`, backdropFilter: "blur(4px)" }}>
+              <ResponsiveContainer width="100%" height={280}>
+                <PieChart>
+                  <Pie data={marketData} cx="50%" cy="50%" labelLine={false} label={({ name, value }) => `${name} ${value}%`} outerRadius={90} fill="#8884d8" dataKey="value">
+                    {marketData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip formatter={(value) => `${value}%`} contentStyle={{ background: C.navy, border: `1px solid ${C.borderLight}`, color: C.text }} />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
+          </div>
 
-            {/* Executive Summary Text */}
-            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", lineHeight: 1.8, fontSize: "0.97rem" }}>
-              <p style={{ marginBottom: "1rem" }}>
-                <strong>Legacy Asset Intelligence</strong> is a specialized consulting firm built to solve one of the most overlooked financial problems in enterprise operations: <strong>ghost assets</strong>. These are items that appear on a company's Fixed Asset Register (FAR) but are physically missing, fully depreciated, or otherwise non-existent in reality. Industry research consistently shows that <strong>15% to 30%</strong> of a typical organization's fixed assets are ghosts, silently consuming up to <strong>25% of IT and operational budgets</strong> through unnecessary maintenance contracts, inflated insurance premiums, and overpaid property taxes.
-              </p>
-              <p style={{ marginBottom: "1rem" }}>
-                Our firm addresses this problem through a proprietary four-phase methodology: executive assessment and opportunity modeling, physical asset accountability and verification, technology platform integration and governance design, and optional recurring governance services. This end-to-end approach differentiates Legacy Asset Intelligence from competitors who offer only one-time audits without the technology infrastructure or ongoing accountability to sustain results.
-              </p>
-              <p>
-                The global fixed asset management market was valued at <strong>$264.68 billion in 2023</strong> and is projected to grow at a <strong>28.3% CAGR through 2030</strong>, reaching over <strong>$1.5 trillion</strong>. This growth is driven by increasing regulatory scrutiny, digital transformation initiatives, and the growing complexity of enterprise asset portfolios. Legacy Asset Intelligence is positioned to capture a meaningful share of this expanding market by serving mid-market and enterprise clients who need more than audits—they need accountability systems that work.
-              </p>
-            </div>
-          </Section>
+          {/* Ghost Asset Impact */}
+          <div style={{ background: "rgba(26, 34, 48, 0.8)", borderRadius: 8, border: `1px solid ${C.border}`, padding: "2rem", marginBottom: "2.5rem", backdropFilter: "blur(4px)" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", fontWeight: 700, color: C.text, marginBottom: "1.5rem" }}>
+              Financial Impact of Ghost Assets
+            </h3>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={ghostAssetImpactData}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="category" tick={{ fill: C.textMuted, fontFamily: "'Source Sans 3', sans-serif", fontSize: 11 }} />
+                <YAxis tick={{ fill: C.textMuted, fontFamily: "'Source Sans 3', sans-serif", fontSize: 11 }} />
+                <Tooltip content={<CustomTooltip suffix="%" />} />
+                <Bar dataKey="savings" fill={C.gold} radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
 
-          {/* SECTION 2: MARKET ANALYSIS */}
-          <Section id="market-analysis">
-            <SectionHeader label="02 · MARKET ANALYSIS" title="The Ghost Asset Crisis" subtitle="15-30% of enterprise fixed assets are invisible, costing billions annually." />
+          {/* Market Growth */}
+          <div style={{ background: "rgba(26, 34, 48, 0.8)", borderRadius: 8, border: `1px solid ${C.border}`, padding: "2rem", backdropFilter: "blur(4px)" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.15rem", fontWeight: 700, color: C.text, marginBottom: "1.5rem" }}>
+              Fixed Asset Management Market Growth
+            </h3>
+            <ResponsiveContainer width="100%" height={280}>
+              <AreaChart data={marketGrowthData}>
+                <defs>
+                  <linearGradient id="colorSize" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={C.gold} stopOpacity={0.4} />
+                    <stop offset="95%" stopColor={C.gold} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis dataKey="year" tick={{ fill: C.textMuted, fontFamily: "'Source Sans 3', sans-serif", fontSize: 11 }} />
+                <YAxis tick={{ fill: C.textMuted, fontFamily: "'Source Sans 3', sans-serif", fontSize: 11 }} />
+                <Tooltip content={<CustomTooltip prefix="$" suffix="B" />} />
+                <Area type="monotone" dataKey="size" stroke={C.gold} fillOpacity={1} fill="url(#colorSize)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </Section>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem" }}>
-              <div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem" }}>
-                  Industry Impact
-                </h3>
-                <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", lineHeight: 1.8, fontSize: "0.95rem" }}>
-                  <p style={{ marginBottom: "1rem" }}>
-                    Ghost assets represent a pervasive, yet largely unaddressed, financial drain across enterprise organizations. The phenomenon is driven by:
+        {/* SECTION 3: SERVICES & METHODOLOGY */}
+        <Section id="services">
+          <SectionHeader label="Methodology" title="The LAI Four-Phase Framework" subtitle="A systematic, technology-backed approach to permanent ghost asset elimination and ongoing governance." />
+
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.silver, lineHeight: 1.8, fontSize: "0.97rem", marginBottom: "2.5rem", maxWidth: 900 }}>
+            Legacy Asset Intelligence employs a proprietary four-phase methodology that distinguishes us from competitors who offer only point-in-time audits. Each phase builds on the previous, creating compounding value for clients who engage us for long-term asset management excellence.
+          </p>
+
+          {/* Phase Cards — Dark, no white */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem", marginBottom: "3rem" }}>
+            {[
+              {
+                phase: "01", title: "Discovery & Executive Assessment", accent: C.silver,
+                description: "Executive assessment, asset accountability maturity review, opportunity modeling, and a practical roadmap.",
+                items: ["Executive stakeholder interviews", "Asset management process review", "Fixed Asset Register analysis", "Ghost asset risk assessment", "Capital recovery modeling", "Governance maturity evaluation"],
+                deliverable: "Discovery Report + Recovery Roadmap"
+              },
+              {
+                phase: "02", title: "Physical Asset Accountability", accent: C.gold,
+                description: "Physical verification, reconciliation, exception analysis, and capital recovery opportunity reporting.",
+                items: ["Wall-to-wall physical inventory", "Asset tagging (RFID/barcode/QR)", "Condition assessment", "Floor-to-book reconciliation", "Ghost asset identification", "FAR cleansing and validation"],
+                deliverable: "Complete Asset Inventory + Reconciled FAR"
+              },
+              {
+                phase: "03", title: "Technology Platform Integration", accent: C.teal,
+                description: "Governance design, technology enablement, training, implementation support, and operating controls.",
+                items: ["Platform selection & configuration", "Data migration & integration", "Custom dashboard setup", "Automated workflow design", "ERP/accounting integration", "Staff training & change mgmt"],
+                deliverable: "Live Asset Tracking Platform"
+              },
+              {
+                phase: "04", title: "Recurring Governance & Audits", accent: C.emerald,
+                description: "Recurring audits, executive reporting, scorecards, maturity updates, and ongoing accountability.",
+                items: ["Quarterly rolling audit program", "Continuous asset reconciliation", "Offboarding/acquisition workflows", "Annual compliance reporting", "Executive KPI dashboards", "Governance policy refinement"],
+                deliverable: "Ongoing Governance Retainer"
+              },
+            ].map(service => (
+              <div key={service.phase} style={{ 
+                background: "rgba(26, 34, 48, 0.8)", 
+                backdropFilter: "blur(4px)",
+                borderRadius: 8, 
+                border: `1px solid ${C.border}`,
+                overflow: "hidden",
+                transition: "border-color 0.3s ease",
+                display: "flex", 
+                flexDirection: "column" 
+              }}>
+                {/* Phase header */}
+                <div style={{ padding: "1.25rem 1.25rem 1rem", borderBottom: `1px solid ${C.border}` }}>
+                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", color: service.accent, marginBottom: "0.5rem" }}>
+                    Phase {service.phase}
                   </p>
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0, marginBottom: "1rem" }}>
-                    <li style={{ marginBottom: "0.5rem" }}><span style={{ color: C.teal, fontWeight: 700 }}>✓</span> Inadequate physical inventory controls</li>
-                    <li style={{ marginBottom: "0.5rem" }}><span style={{ color: C.teal, fontWeight: 700 }}>✓</span> Manual, infrequent asset reconciliation</li>
-                    <li style={{ marginBottom: "0.5rem" }}><span style={{ color: C.teal, fontWeight: 700 }}>✓</span> Siloed asset management systems</li>
-                    <li style={{ marginBottom: "0.5rem" }}><span style={{ color: C.teal, fontWeight: 700 }}>✓</span> Lack of governance accountability</li>
-                    <li style={{ marginBottom: "0.5rem" }}><span style={{ color: C.teal, fontWeight: 700 }}>✓</span> Organizational complexity and M&A integration</li>
+                  <h3 style={{ fontFamily: "'Playfair Display', serif", color: C.text, fontSize: "0.95rem", fontWeight: 700, lineHeight: 1.3 }}>
+                    {service.title}
+                  </h3>
+                </div>
+                {/* Phase body */}
+                <div style={{ padding: "1.25rem", flex: 1, display: "flex", flexDirection: "column" }}>
+                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.textMuted, lineHeight: 1.5, marginBottom: "1rem" }}>
+                    {service.description}
+                  </p>
+                  <ul style={{ listStyle: "none", padding: 0, margin: 0, marginBottom: "1rem", flex: 1 }}>
+                    {service.items.map(item => (
+                      <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", marginBottom: "0.4rem", fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.73rem", color: C.silver, lineHeight: 1.4 }}>
+                        <span style={{ color: service.accent, flexShrink: 0, marginTop: "0.15rem", fontSize: "0.5rem" }}>●</span>
+                        {item}
+                      </li>
+                    ))}
                   </ul>
-                </div>
-              </div>
-              <div>
-                <ResponsiveContainer width="100%" height={300}>
-                  <PieChart>
-                    <Pie data={marketData} cx="50%" cy="50%" labelLine={false} label={({ name, value }) => `${name} ${value}%`} outerRadius={100} fill="#8884d8" dataKey="value">
-                      {marketData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => `${value}%`} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Ghost Asset Impact */}
-            <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: 12, border: `1px solid ${C.border}`, padding: "2rem", marginBottom: "2rem" }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#0F1419", marginBottom: "1.5rem" }}>
-                Financial Impact of Ghost Assets
-              </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={ghostAssetImpactData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
-                  <XAxis dataKey="category" tick={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12 }} />
-                  <YAxis tick={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12 }} />
-                  <Tooltip content={<CustomTooltip suffix="%" />} />
-                  <Bar dataKey="savings" fill={C.teal} radius={[8, 8, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Market Growth */}
-            <div style={{ background: "rgba(255,255,255,0.95)", borderRadius: 12, border: `1px solid ${C.border}`, padding: "2rem" }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#0F1419", marginBottom: "1.5rem" }}>
-                Fixed Asset Management Market Growth
-              </h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <AreaChart data={marketGrowthData}>
-                  <defs>
-                    <linearGradient id="colorSize" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={C.teal} stopOpacity={0.8} />
-                      <stop offset="95%" stopColor={C.teal} stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
-                  <XAxis dataKey="year" tick={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12 }} />
-                  <YAxis tick={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12 }} />
-                  <Tooltip content={<CustomTooltip prefix="$" suffix="B" />} />
-                  <Area type="monotone" dataKey="size" stroke={C.teal} fillOpacity={1} fill="url(#colorSize)" />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-          </Section>
-
-          {/* SECTION 3: SERVICES & METHODOLOGY */}
-          <Section id="services">
-            <SectionHeader label="03 · Services & Methodology" title="The LAI Four-Phase Framework" subtitle="A systematic, technology-backed approach to permanent ghost asset elimination and ongoing governance." />
-
-            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", lineHeight: 1.8, fontSize: "0.97rem", marginBottom: "2rem" }}>
-              <p>
-                Legacy Asset Intelligence employs a proprietary four-phase methodology that distinguishes us from competitors who offer only point-in-time audits. Our approach begins with discovery and executive assessment, moves through physical asset accountability, implements technology platforms, and concludes with optional recurring governance services. Each phase builds on the previous, creating a compounding value proposition for clients who engage us for long-term asset management excellence.
-              </p>
-            </div>
-
-            {/* Service Cards - 4 Phases */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.25rem", marginBottom: "2rem" }}>
-              {[
-                {
-                  phase: "Phase 01",
-                  icon: "🔍",
-                  title: "Discovery & Executive Assessments",
-                  color: C.charcoal,
-                  lightColor: "rgba(15,20,25,0.1)",
-                  description: "Executive assessment, asset accountability maturity review, opportunity modeling, risk findings, and a practical roadmap for next-step engagement.",
-                  items: [
-                    "Executive stakeholder interviews",
-                    "Current asset management process review",
-                    "Fixed Asset Register (FAR) analysis",
-                    "Ghost asset risk assessment",
-                    "Capital recovery opportunity modeling",
-                    "Governance maturity evaluation",
-                  ],
-                  deliverable: "Discovery Report + Recovery Roadmap"
-                },
-                {
-                  phase: "Phase 02",
-                  icon: "🏷️",
-                  title: "Physical Asset Accountability",
-                  color: C.emerald,
-                  lightColor: "rgba(27,77,62,0.1)",
-                  description: "Discovery, physical verification, reconciliation, exception analysis, and capital recovery opportunity reporting.",
-                  items: [
-                    "Wall-to-wall physical inventory of all facilities",
-                    "Asset tagging (RFID/barcode/QR codes)",
-                    "Condition assessment and documentation",
-                    "Floor-to-book reconciliation",
-                    "Ghost asset identification and isolation",
-                    "FAR cleansing and validation",
-                  ],
-                  deliverable: "Complete Asset Inventory + Reconciled FAR"
-                },
-                {
-                  phase: "Phase 03",
-                  icon: "💻",
-                  title: "Technology Platform Integration",
-                  color: C.gold,
-                  lightColor: "rgba(212,175,55,0.1)",
-                  description: "Governance design, technology enablement planning, training, implementation support, accountability structures, and operating controls.",
-                  items: [
-                    "Asset management platform selection",
-                    "Data migration and system integration",
-                    "Custom dashboard and reporting configuration",
-                    "Automated workflow setup",
-                    "ERP/accounting system integration",
-                    "Staff training and change management",
-                  ],
-                  deliverable: "Live Asset Tracking Platform"
-                },
-                {
-                  phase: "Phase 04",
-                  icon: "📊",
-                  title: "Recurring Governance & Audits",
-                  color: C.emerald,
-                  lightColor: "rgba(27,77,62,0.1)",
-                  description: "Recurring audits, executive reporting, scorecards, maturity updates, and ongoing accountability assurance.",
-                  items: [
-                    "Quarterly rolling audit program",
-                    "Continuous asset reconciliation",
-                    "Offboarding and acquisition workflows",
-                    "Annual compliance reporting",
-                    "Executive KPI dashboards",
-                    "Governance policy refinement",
-                  ],
-                  deliverable: "Ongoing Governance Retainer (Optional)"
-                },
-              ].map(service => (
-                <div key={service.phase} style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden", boxShadow: "0 2px 8px rgba(30,58,95,0.06)", transition: "transform 0.2s, box-shadow 0.2s", display: "flex", flexDirection: "column" }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 24px rgba(30,58,95,0.12)"; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; (e.currentTarget as HTMLElement).style.boxShadow = "0 2px 8px rgba(30,58,95,0.06)"; }}
-                >
-                  <div style={{ background: service.color, padding: "1.25rem 1.5rem" }}>
-                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: "0.4rem" }}>
-                      {service.phase}
+                  <div style={{ background: C.goldMuted, borderRadius: 4, padding: "0.6rem 0.75rem", marginTop: "auto" }}>
+                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.6rem", fontWeight: 700, color: C.gold, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.15rem" }}>
+                      Deliverable
                     </p>
-                    <div style={{ fontSize: "1.75rem", marginBottom: "0.4rem" }}>{service.icon}</div>
-                    <h3 style={{ fontFamily: "'Playfair Display', serif", color: "white", fontSize: "1.05rem", fontWeight: 700, lineHeight: 1.3 }}>
-                      {service.title}
-                    </h3>
-                  </div>
-                  <div style={{ padding: "1.25rem 1.5rem", flex: 1, display: "flex", flexDirection: "column" }}>
-                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.82rem", color: "#0F1419", lineHeight: 1.5, marginBottom: "1rem" }}>
-                      {service.description}
+                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.73rem", color: C.text, margin: 0 }}>
+                      {service.deliverable}
                     </p>
-                    <ul style={{ listStyle: "none", padding: 0, margin: 0, marginBottom: "1rem", flex: 1 }}>
-                      {service.items.map(item => (
-                        <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", marginBottom: "0.5rem", fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: "#0F1419", lineHeight: 1.4 }}>
-                          <span style={{ color: service.color, fontWeight: 700, marginTop: "0.1rem", flexShrink: 0 }}>✓</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                    <div style={{ background: service.lightColor, borderRadius: 6, padding: "0.6rem 0.75rem", marginTop: "auto" }}>
-                      <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 700, color: service.color, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.2rem" }}>
-                        Deliverable
-                      </p>
-                      <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: "#0F1419", margin: 0 }}>
-                        {service.deliverable}
-                      </p>
-                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
+          </div>
 
-            {/* Video Placeholder - Between Phase 1-2 */}
-            <div style={{ padding: "2rem", background: "rgba(13, 148, 136, 0.08)", borderRadius: 12, border: `2px dashed ${C.teal}`, marginBottom: "2rem", textAlign: "center" }}>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#FFFFFF", marginBottom: "1rem" }}>
-                Learn more about the transition from Phase 1 to Phase 2
-              </p>
-              <VideoModal
-                phaseNumber={1}
-                phaseName="Discovery & Executive Assessments"
-                description="Understand how we conduct executive assessments and opportunity modeling to create your recovery roadmap."
-                videoUrl="https://youtu.be/1rpOJFl52nQ"
-                isYouTube={true}
-              />
-            </div>
+          {/* Video Section */}
+          <div style={{ padding: "2rem", background: C.goldMuted, borderRadius: 8, border: `1px solid rgba(201,168,76,0.2)`, marginBottom: "2.5rem", textAlign: "center" }}>
+            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: C.text, marginBottom: "1rem", fontSize: "0.95rem" }}>
+              Learn About Our Discovery & Assessment Process
+            </p>
+            <VideoModal
+              phaseNumber={1}
+              phaseName="Discovery & Executive Assessments"
+              description="Understand how we conduct executive assessments and opportunity modeling to create your recovery roadmap."
+              videoUrl="https://youtu.be/1rpOJFl52nQ"
+              isYouTube={true}
+            />
+          </div>
 
-            {/* Video Placeholder - Between Phase 2-3 */}
-            <div style={{ padding: "2rem", background: "rgba(245, 158, 11, 0.08)", borderRadius: 12, border: `2px dashed ${C.amber}`, marginBottom: "2rem", textAlign: "center" }}>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#FFFFFF", marginBottom: "1rem" }}>
-                See how physical asset accountability leads to technology integration
+          {/* Additional Video Placeholders */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "2.5rem" }}>
+            <div style={{ padding: "1.5rem", background: "rgba(26, 34, 48, 0.8)", borderRadius: 8, border: `1px solid ${C.border}`, textAlign: "center", backdropFilter: "blur(4px)" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>
+                Physical Asset Accountability
               </p>
               <VideoModal
                 phaseNumber={2}
                 phaseName="Physical Asset Accountability"
-                description="Discover our wall-to-wall inventory process, asset tagging methodology, and floor-to-book reconciliation approach."
+                description="Discover our wall-to-wall inventory process and floor-to-book reconciliation approach."
               />
             </div>
-
-            {/* Video Placeholder - Between Phase 3-4 */}
-            <div style={{ padding: "2rem", background: "rgba(16, 185, 129, 0.08)", borderRadius: 12, border: `2px dashed #10B981`, marginBottom: "2rem", textAlign: "center" }}>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: "#FFFFFF", marginBottom: "1rem" }}>
-                Implement technology platforms for ongoing governance
+            <div style={{ padding: "1.5rem", background: "rgba(26, 34, 48, 0.8)", borderRadius: 8, border: `1px solid ${C.border}`, textAlign: "center", backdropFilter: "blur(4px)" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>
+                Technology Platform Integration
               </p>
               <VideoModal
                 phaseNumber={3}
                 phaseName="Technology Platform Integration"
-                description="Learn how we select, configure, and integrate asset management platforms with your ERP systems."
+                description="Learn how we select, configure, and integrate asset management platforms."
               />
             </div>
+          </div>
+        </Section>
 
-            {/* Audit Image */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", alignItems: "center" }}>
-              <div>
-                <img src={AUDIT_IMG} alt="Asset audit in progress" style={{ width: "100%", borderRadius: 12, objectFit: "cover", height: 280 }} />
-              </div>
-              <div>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem" }}>
-                  Why Four Phases Matter
+        {/* SECTION 4: COMPETITIVE LANDSCAPE */}
+        <Section id="competitive">
+          <SectionHeader label="Competitive Position" title="How LAI Stands Apart" subtitle="Comprehensive capabilities across breadth, specialization, technology, and governance." />
+
+          <div style={{ background: "rgba(26, 34, 48, 0.8)", borderRadius: 8, border: `1px solid ${C.border}`, padding: "2rem", marginBottom: "2.5rem", backdropFilter: "blur(4px)" }}>
+            <ResponsiveContainer width="100%" height={350}>
+              <BarChart data={competitorData} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
+                <XAxis type="number" tick={{ fill: C.textMuted, fontFamily: "'Source Sans 3', sans-serif", fontSize: 11 }} />
+                <YAxis dataKey="name" type="category" tick={{ fill: C.silver, fontFamily: "'Source Sans 3', sans-serif", fontSize: 12 }} width={80} />
+                <Tooltip content={<CustomTooltip />} />
+                <Bar dataKey="breadth" fill={C.silver} name="Service Breadth" />
+                <Bar dataKey="specialization" fill={C.gold} name="Specialization" />
+                <Bar dataKey="techPlatform" fill={C.teal} name="Tech Platform" />
+                <Bar dataKey="governance" fill={C.tealLight} name="Governance" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.25rem" }}>
+            {[
+              { name: "Kroll", desc: "Broad service offerings but lower specialization in ghost asset recovery. Limited technology platform integration.", highlight: false },
+              { name: "Verasset", desc: "Highly specialized but lacks breadth and governance framework. Point-in-time audit focus.", highlight: false },
+              { name: "TagMyAssets", desc: "Software-only approach. Limited consulting services or governance design capabilities.", highlight: false },
+              { name: "LAI (Us)", desc: "Balanced across all dimensions: consulting breadth, ghost asset specialization, technology enablement, and governance frameworks.", highlight: true },
+            ].map(comp => (
+              <div key={comp.name} style={{ 
+                background: "rgba(26, 34, 48, 0.8)", 
+                backdropFilter: "blur(4px)",
+                borderRadius: 8, 
+                border: comp.highlight ? `1px solid ${C.gold}` : `1px solid ${C.border}`, 
+                padding: "1.5rem" 
+              }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", fontWeight: 700, color: comp.highlight ? C.gold : C.text, marginBottom: "0.75rem" }}>
+                  {comp.name}
                 </h3>
-                <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#FFFFFF", lineHeight: 1.8, fontSize: "0.95rem" }}>
-                  <p style={{ marginBottom: "1rem" }}>
-                    Most consulting firms stop after Phase 2—they deliver a report and walk away. Legacy Asset Intelligence goes further. We design governance systems and implement technology platforms that prevent ghost assets from re-accumulating. The optional Phase 4 engagement ensures your organization maintains accountability indefinitely.
-                  </p>
-                  <p>
-                    This end-to-end approach is why our clients achieve sustainable results. You're not just recovering capital today; you're building the infrastructure to protect it for years to come.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Section>
-
-          {/* SECTION 4: COMPETITIVE LANDSCAPE */}
-          <Section id="competitive">
-            <SectionHeader label="04 · COMPETITIVE LANDSCAPE" title="How LAI Stands Apart" subtitle="Comprehensive capabilities across breadth, specialization, technology, and governance." />
-
-            <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "2rem", marginBottom: "2rem" }}>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={competitorData} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke={C.border} />
-                  <XAxis type="number" tick={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12 }} />
-                  <YAxis dataKey="name" type="category" tick={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: 12 }} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend wrapperStyle={{ fontFamily: "'Source Sans 3', sans-serif" }} />
-                  <Bar dataKey="breadth" fill={C.slate} name="Service Breadth" />
-                  <Bar dataKey="specialization" fill={C.teal} name="Specialization" />
-                  <Bar dataKey="techPlatform" fill={C.amber} name="Tech Platform" />
-                  <Bar dataKey="governance" fill={C.tealLight} name="Governance" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}>
-              <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#0F1419", marginBottom: "1rem" }}>
-                  Kroll
-                </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#0F1419", fontSize: "0.85rem", lineHeight: 1.6 }}>
-                  Broad service offerings but lower specialization in ghost asset recovery. Limited technology platform integration.
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.85rem", lineHeight: 1.6 }}>
+                  {comp.desc}
                 </p>
               </div>
-              <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#0F1419", marginBottom: "1rem" }}>
-                  Verasset
-                </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#0F1419", fontSize: "0.85rem", lineHeight: 1.6 }}>
-                  Highly specialized but lacks breadth and governance framework. Point-in-time audit focus.
-                </p>
-              </div>
-              <div style={{ background: "white", borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#0F1419", marginBottom: "1rem" }}>
-                  TagMyAssets
-                </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#0F1419", fontSize: "0.85rem", lineHeight: 1.6 }}>
-                  Software-only approach. Limited consulting services or governance design capabilities.
-                </p>
-              </div>
-              <div style={{ background: "#FFFFFF", borderRadius: 12, border: `2px solid ${C.teal}`, padding: "1.5rem" }}>
-                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#0F1419", marginBottom: "1rem" }}>
-                  LAI (Us)
-                </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: "#475569", fontSize: "0.85rem", lineHeight: 1.6 }}>
-                  Balanced across all dimensions: consulting breadth, ghost asset specialization, technology enablement, and governance frameworks.
-                </p>
-              </div>
-            </div>
-          </Section>
+            ))}
+          </div>
+        </Section>
 
-          {/* SECTION 5: CASE STUDIES */}
-          <Section id="case-studies">
-            <SectionHeader label="05 · CLIENT RESULTS" title="Real-World Recovery Examples" subtitle="See how organizations across industries have recovered significant capital through LAI's methodology." />
-            <div style={{ marginBottom: "2rem" }}>
-              <CaseStudies />
-            </div>
-          </Section>
+        {/* SECTION 5: CASE STUDIES */}
+        <Section id="case-studies">
+          <SectionHeader label="Client Results" title="Real-World Recovery Examples" subtitle="See how organizations across industries have recovered significant capital through our methodology." />
+          <CaseStudies />
+        </Section>
 
-          {/* SECTION 6: ROI CALCULATOR */}
-          <Section id="calculator">
-            <SectionHeader label="06 · CAPITAL RECOVERY" title="Recoverable Capital Calculator" subtitle="Estimate your organization's ghost asset recovery potential in minutes." />
-            <div style={{ marginBottom: "2rem" }}>
-              <ROICalculator />
-            </div>
-          </Section>
+        {/* SECTION 6: ROI CALCULATOR */}
+        <Section id="calculator">
+          <SectionHeader label="Capital Recovery" title="Recoverable Capital Calculator" subtitle="Estimate your organization's ghost asset recovery potential in minutes." />
+          <ROICalculator />
+        </Section>
 
-        </main>
-      </div>
+      </main>
 
       {/* Chatbot Widget */}
       <ChatbotWidget />

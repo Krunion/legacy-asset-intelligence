@@ -41,60 +41,59 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* LAI Brand Fonts */
+  /* LAI Executive Fonts */
   --font-display: 'Playfair Display', Georgia, serif;
   --font-sans: 'Source Sans 3', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
 :root {
-  /* LAI Premium Brand Colors */
-  --lai-charcoal: #0F1419;        /* Deep charcoal base */
-  --lai-navy: #1A2332;            /* Premium navy */
-  --lai-emerald: #1B4D3E;         /* Deep emerald - trust & stability */
-  --lai-gold: #D4AF37;            /* Gold accents - luxury */
-  --lai-platinum: #E8E9EB;        /* Platinum silver */
-  --lai-slate: #2C3E50;           /* Updated slate */
-  --lai-teal: #0D9488;            /* Keep teal as secondary accent */
-  --lai-amber: #F59E0B;           /* Keep amber as tertiary */
+  /* LAI Executive Dark Theme */
+  --lai-charcoal: #0B0F13;
+  --lai-navy: #111820;
+  --lai-slate: #1A2230;
+  --lai-gold: #C9A84C;
+  --lai-silver: #A8B2BD;
+  --lai-emerald: #1B4D3E;
+  --lai-teal: #0D9488;
 
-  /* Semantic tokens - Premium Enterprise */
-  --primary: oklch(0.15 0.05 240);       /* Deep charcoal #0F1419 */
-  --primary-foreground: oklch(0.98 0 0);
+  /* Semantic tokens — Dark Executive */
+  --primary: oklch(0.55 0.12 75);          /* Gold */
+  --primary-foreground: oklch(0.10 0.02 240);
   --radius: 0.5rem;
-  --background: oklch(0.98 0.001 240);  /* Clean white with subtle warmth */
-  --foreground: oklch(0.12 0.03 240);   /* Deep charcoal text */
-  --card: oklch(0.99 0.001 240);        /* Off-white cards */
-  --card-foreground: oklch(0.12 0.03 240);
-  --popover: oklch(0.99 0.001 240);
-  --popover-foreground: oklch(0.12 0.03 240);
-  --secondary: oklch(0.92 0.01 240);    /* Light gray */
-  --secondary-foreground: oklch(0.15 0.05 240);
-  --muted: oklch(0.93 0.005 240);
-  --muted-foreground: oklch(0.48 0.02 240);
-  --accent: oklch(0.50 0.12 180);       /* Deep emerald #1B4D3E */
-  --accent-foreground: oklch(0.98 0 0);
+  --background: oklch(0.10 0.015 240);     /* Deep charcoal */
+  --foreground: oklch(0.92 0.005 240);     /* Light text */
+  --card: oklch(0.14 0.02 240);            /* Dark card */
+  --card-foreground: oklch(0.90 0.005 240);
+  --popover: oklch(0.14 0.02 240);
+  --popover-foreground: oklch(0.90 0.005 240);
+  --secondary: oklch(0.18 0.02 240);
+  --secondary-foreground: oklch(0.85 0.005 240);
+  --muted: oklch(0.20 0.015 240);
+  --muted-foreground: oklch(0.55 0.02 240);
+  --accent: oklch(0.55 0.12 75);           /* Gold accent */
+  --accent-foreground: oklch(0.10 0.02 240);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.90 0.008 240);
-  --input: oklch(0.90 0.008 240);
-  --ring: oklch(0.50 0.12 180);
+  --border: oklch(0.25 0.015 240);
+  --input: oklch(0.20 0.015 240);
+  --ring: oklch(0.55 0.12 75);
 
-  /* Chart colors: charcoal, emerald, gold, navy, teal */
-  --chart-1: oklch(0.15 0.05 240);
-  --chart-2: oklch(0.50 0.12 180);
-  --chart-3: oklch(0.70 0.15 60);
-  --chart-4: oklch(0.25 0.06 240);
-  --chart-5: oklch(0.55 0.13 185);
+  /* Chart colors: gold, teal, silver, emerald, slate */
+  --chart-1: oklch(0.55 0.12 75);
+  --chart-2: oklch(0.55 0.13 185);
+  --chart-3: oklch(0.70 0.02 240);
+  --chart-4: oklch(0.40 0.10 170);
+  --chart-5: oklch(0.30 0.04 240);
 
-  --sidebar: oklch(0.15 0.05 240);
-  --sidebar-foreground: oklch(0.95 0.005 240);
-  --sidebar-primary: oklch(0.50 0.12 180);
-  --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.25 0.06 240);
-  --sidebar-accent-foreground: oklch(0.95 0.005 240);
-  --sidebar-border: oklch(0.22 0.05 240);
-  --sidebar-ring: oklch(0.50 0.12 180);
+  --sidebar: oklch(0.10 0.015 240);
+  --sidebar-foreground: oklch(0.90 0.005 240);
+  --sidebar-primary: oklch(0.55 0.12 75);
+  --sidebar-primary-foreground: oklch(0.10 0.02 240);
+  --sidebar-accent: oklch(0.18 0.02 240);
+  --sidebar-accent-foreground: oklch(0.90 0.005 240);
+  --sidebar-border: oklch(0.22 0.02 240);
+  --sidebar-ring: oklch(0.55 0.12 75);
 }
 
 @layer base {
@@ -104,9 +103,12 @@
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
+    background: #0B0F13;
+    color: #EAEDF0;
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
+    color: #EAEDF0;
   }
   button:not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
@@ -152,24 +154,23 @@
 
   /* LAI Section Header Style */
   .section-header {
-    border-left: 4px solid var(--lai-teal);
-    padding-left: 1rem;
-    margin-bottom: 1.5rem;
+    border-left: 3px solid var(--lai-gold);
+    padding-left: 1.25rem;
+    margin-bottom: 2rem;
   }
 
-  /* LAI Metric Card */
+  /* LAI Metric Card — Dark Executive */
   .metric-card {
-    background: linear-gradient(135deg, oklch(1 0 0) 0%, oklch(0.97 0.005 240) 100%);
-    border: 1px solid oklch(0.88 0.01 240);
-    border-top: 3px solid var(--lai-teal);
+    background: rgba(26, 34, 48, 0.6);
+    border: 1px solid rgba(168, 178, 189, 0.1);
     border-radius: var(--radius);
-    padding: 1.5rem;
-    transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+    padding: 1.75rem;
+    transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s ease;
   }
 
   .metric-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px oklch(0.28 0.08 240 / 0.12);
+    border-color: rgba(201, 168, 76, 0.3);
   }
 
   /* Stat number style */
@@ -177,15 +178,15 @@
     font-family: var(--font-mono);
     font-size: 2.25rem;
     font-weight: 500;
-    color: var(--lai-slate);
+    color: var(--lai-gold);
     line-height: 1;
   }
 
   /* Nav link active state */
   .nav-link-active {
-    background-color: oklch(0.35 0.09 240);
-    border-left: 3px solid var(--lai-teal);
-    color: white;
+    background-color: rgba(201, 168, 76, 0.1);
+    border-left: 3px solid var(--lai-gold);
+    color: var(--lai-gold);
   }
 
   /* Scroll reveal animation */
@@ -230,10 +231,10 @@
       width: 100% !important;
       height: auto !important;
       max-height: calc(100vh - 64px) !important;
-      background: var(--lai-slate) !important;
+      background: #111820 !important;
       overflow-y: auto !important;
       padding: 0 !important;
-      border-bottom: 1px solid rgba(13, 148, 136, 0.3) !important;
+      border-bottom: 1px solid rgba(201, 168, 76, 0.2) !important;
       z-index: 40 !important;
     }
 
@@ -249,7 +250,7 @@
       padding: 0.5rem 1rem !important;
       font-size: 0.75rem !important;
       border-left: none !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-bottom: 1px solid rgba(168, 178, 189, 0.08) !important;
     }
 
     .sidebar-nav > div:last-child {
@@ -367,19 +368,6 @@
     [style*="display: flex"][style*="gap"] {
       gap: 0.5rem !important;
     }
-
-    /* Responsive text scaling */
-    [style*="fontSize: \"2rem\""] {
-      font-size: 1.5rem !important;
-    }
-
-    [style*="fontSize: \"1.5rem\""] {
-      font-size: 1.25rem !important;
-    }
-
-    [style*="fontSize: \"1.3rem\""] {
-      font-size: 1.1rem !important;
-    }
   }
 
   @media (max-width: 640px) {
@@ -391,14 +379,5 @@
     [style*="display: flex"][style*="gap: 2rem"] {
       flex-direction: column !important;
       gap: 1rem !important;
-    }
-
-    /* Responsive padding for sections */
-    [style*="padding: \"2rem\""] {
-      padding: 1rem !important;
-    }
-
-    [style*="padding: \"1.5rem\""] {
-      padding: 1rem !important;
     }
   }

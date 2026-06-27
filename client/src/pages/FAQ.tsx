@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { useLocation } from "wouter";
 import PageLayout from "@/components/PageLayout";
 import { COLORS } from "@shared/colors";
 
 const C = COLORS;
 
 export default function FAQ() {
-  const [, navigate] = useLocation();
-  const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
-  const [expandedGlossary, setExpandedGlossary] = useState<number | null>(null);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openGlossary, setOpenGlossary] = useState<number | null>(null);
 
   const faqs = [
     {
@@ -17,11 +15,11 @@ export default function FAQ() {
     },
     {
       question: "How common are ghost assets in enterprise organizations?",
-      answer: "Industry research shows that 15-30% of typical organization's fixed assets are ghosts. This translates to millions in unnecessary spending. The problem is particularly acute in organizations with multiple locations, decentralized asset management, or legacy systems."
+      answer: "Industry research shows that 15-30% of a typical organization's fixed assets are ghosts. This translates to millions in unnecessary spending. The problem is particularly acute in organizations with multiple locations, decentralized asset management, or legacy systems."
     },
     {
       question: "What's the typical timeline for a capital recovery engagement?",
-      answer: "Most engagements follow our three-phase methodology: Phase 1 (Physical Inventory & Assessment) typically takes 4-8 weeks depending on asset volume and locations. Phase 2 (Technology Integration) takes 2-4 weeks. Phase 3 (Governance Implementation) is ongoing, with initial setup taking 2-3 weeks. Total time to first capital recovery is typically 8-12 weeks."
+      answer: "Most engagements follow our four-phase methodology: Phase 1 (Discovery & Assessment) takes 2-4 weeks. Phase 2 (Physical Accountability) takes 4-12 weeks depending on asset volume. Phase 3 (Technology Integration) takes 6-10 weeks. Phase 4 (Recurring Governance) is ongoing. Total time to first capital recovery is typically 8-12 weeks."
     },
     {
       question: "How much capital can we realistically recover?",
@@ -46,121 +44,74 @@ export default function FAQ() {
   ];
 
   const glossary = [
-    {
-      term: "Ghost Asset",
-      definition: "An item that appears on a company's Fixed Asset Register (FAR) but is physically missing, fully depreciated, or otherwise non-existent in reality. These assets continue to consume resources through maintenance contracts, insurance premiums, and IT overhead."
-    },
-    {
-      term: "Fixed Asset Register (FAR)",
-      definition: "A comprehensive inventory of all assets owned by an organization, typically maintained in accounting systems. The FAR tracks asset location, condition, depreciation, and ownership."
-    },
-    {
-      term: "Capital Recovery",
-      definition: "The process of identifying, verifying, and recovering value from assets that are no longer in use or have been misclassified in the accounting records."
-    },
-    {
-      term: "Asset Accountability",
-      definition: "A governance framework ensuring that all assets are properly tracked, maintained, and accounted for throughout their lifecycle."
-    },
-    {
-      term: "Depreciation",
-      definition: "The accounting method of allocating the cost of an asset over its useful life. Fully depreciated assets have zero book value but may still exist physically."
-    }
+    { term: "Ghost Asset", definition: "An item that appears on a company's Fixed Asset Register (FAR) but is physically missing, fully depreciated, or otherwise non-existent." },
+    { term: "Fixed Asset Register (FAR)", definition: "A comprehensive inventory of all assets owned by an organization, typically maintained in accounting systems." },
+    { term: "Capital Recovery", definition: "The process of identifying, verifying, and recovering value from assets that are no longer in use or have been misclassified." },
+    { term: "Asset Accountability", definition: "A governance framework ensuring that all assets are properly tracked, maintained, and accounted for throughout their lifecycle." },
+    { term: "Floor-to-Book Reconciliation", definition: "The process of matching physically verified assets against the accounting records to identify discrepancies." },
+    { term: "Depreciation", definition: "The accounting method of allocating the cost of an asset over its useful life. Fully depreciated assets have zero book value but may still exist physically." },
   ];
 
   return (
-    <PageLayout heroTitle="FAQ" heroSubtitle="Find answers to your questions">
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "2rem 1rem" }}>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2.5rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 2px 8px rgba(0,0,0,0.5)" }}>
-          Frequently Asked Questions
-        </h1>
-        <p style={{ color: "#D4C5B0", fontSize: "1rem", marginBottom: "2rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-          Find answers to common questions about ghost assets, capital recovery, and our methodology.
-        </p>
-
-        {/* FAQ Section */}
-        <div style={{ marginBottom: "3rem" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: "#D4C5B0", marginBottom: "1.5rem" }}>
-            General Questions
-          </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {faqs.map((faq, idx) => (
-              <div key={idx} style={{ border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8, overflow: "hidden", background: "rgba(0,0,0,0.2)" }}>
-                <button
-                  onClick={() => setExpandedFAQ(expandedFAQ === idx ? null : idx)}
-                  style={{
-                    width: "100%",
-                    background: "none",
-                    border: "none",
-                    padding: "1rem",
-                    textAlign: "left",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    color: "#FFFFFF",
-                    fontWeight: 600,
-                    fontSize: "1rem",
-                    transition: "all 0.2s"
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(212,175,55,0.1)"}
-                  onMouseLeave={(e) => e.currentTarget.style.background = "none"}
-                >
-                  <span>{faq.question}</span>
-                  <span style={{ fontSize: "1.2rem", transition: "transform 0.2s", transform: expandedFAQ === idx ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
-                </button>
-                {expandedFAQ === idx && (
-                  <div style={{ padding: "1rem", borderTop: `1px solid rgba(255,255,255,0.1)`, color: "#E8E9EB", lineHeight: 1.8, fontSize: "0.95rem" }}>
-                    {faq.answer}
-                  </div>
-                )}
+    <PageLayout
+      heroTitle="Frequently Asked Questions"
+      heroSubtitle="Answers to common questions about ghost assets, capital recovery, and our methodology"
+    >
+      {/* FAQ Section */}
+      <div style={{ marginBottom: "4rem" }}>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: C.text, marginBottom: "1.5rem", borderLeft: `3px solid ${C.gold}`, paddingLeft: "1rem" }}>
+          General Questions
+        </h2>
+        {faqs.map((faq, i) => (
+          <div key={i} style={{ borderBottom: `1px solid ${C.border}` }}>
+            <button
+              onClick={() => setOpenIndex(openIndex === i ? null : i)}
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "1.25rem 0",
+                background: "none",
+                border: "none",
+                textAlign: "left",
+              }}
+            >
+              <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1rem", fontWeight: 600, color: openIndex === i ? C.gold : C.text, transition: "color 0.2s", paddingRight: "1rem" }}>
+                {faq.question}
+              </span>
+              <span style={{ color: C.textMuted, fontSize: "1.2rem", flexShrink: 0, transition: "transform 0.2s", transform: openIndex === i ? "rotate(45deg)" : "none" }}>
+                +
+              </span>
+            </button>
+            {openIndex === i && (
+              <div style={{ padding: "0 0 1.5rem" }}>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.93rem", lineHeight: 1.7 }}>
+                  {faq.answer}
+                </p>
               </div>
-            ))}
+            )}
           </div>
+        ))}
+      </div>
+
+      {/* Glossary Section */}
+      <div>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: C.text, marginBottom: "1.5rem", borderLeft: `3px solid ${C.gold}`, paddingLeft: "1rem" }}>
+          Glossary of Terms
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1rem" }}>
+          {glossary.map((item, i) => (
+            <div key={i} style={{ padding: "1.25rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6 }}>
+              <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", fontWeight: 700, color: C.gold, marginBottom: "0.4rem" }}>
+                {item.term}
+              </h3>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.85rem", lineHeight: 1.6, margin: 0 }}>
+                {item.definition}
+              </p>
+            </div>
+          ))}
         </div>
-
-        {/* Glossary Section */}
-        <div style={{ marginBottom: "3rem" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: "#D4C5B0", marginBottom: "1.5rem" }}>
-            Glossary
-          </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            {glossary.map((item, idx) => (
-              <div key={idx} style={{ border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 8, overflow: "hidden", background: "rgba(0,0,0,0.2)" }}>
-                <button
-                  onClick={() => setExpandedGlossary(expandedGlossary === idx ? null : idx)}
-                  style={{
-                    width: "100%",
-                    background: "none",
-                    border: "none",
-                    padding: "1rem",
-                    textAlign: "left",
-                    cursor: "pointer",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    color: "#FFFFFF",
-                    fontWeight: 600,
-                    fontSize: "1rem",
-                    transition: "all 0.2s"
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.background = "rgba(212,175,55,0.1)"}
-                  onMouseLeave={(e) => e.currentTarget.style.background = "none"}
-                >
-                  <span>{item.term}</span>
-                  <span style={{ fontSize: "1.2rem", transition: "transform 0.2s", transform: expandedGlossary === idx ? "rotate(180deg)" : "rotate(0deg)" }}>▼</span>
-                </button>
-                {expandedGlossary === idx && (
-                  <div style={{ padding: "1rem", borderTop: `1px solid rgba(255,255,255,0.1)`, color: "#E8E9EB", lineHeight: 1.8, fontSize: "0.95rem" }}>
-                    {item.definition}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-
       </div>
     </PageLayout>
   );
