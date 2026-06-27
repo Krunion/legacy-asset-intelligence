@@ -1,17 +1,18 @@
-import { useAuth } from "@/_core/hooks/useAuth";
 import { useState } from "react";
 import { getLoginUrl } from "@/const";
 import { useLocation } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { COLORS } from "@shared/colors";
 import ProposalCalculator from "@/components/portal/ProposalCalculator";
 import InvestigativeQuestionnaire from "@/components/portal/InvestigativeQuestionnaire";
 import AssetIntelligenceAssessment from "@/components/portal/AssetIntelligenceAssessment";
 import RecoverableCapitalAssessment from "@/components/portal/RecoverableCapitalAssessment";
+import ExecutiveAssessmentForm from "@/components/portal/ExecutiveAssessmentForm";
 
 const C = COLORS;
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
 
-type ActiveTool = null | "proposal-calculator" | "asset-intelligence" | "recoverable-capital" | "investigative-questionnaire";
+type ActiveTool = null | "proposal-calculator" | "asset-intelligence" | "recoverable-capital" | "investigative-questionnaire" | "executive-assessment";
 
 export default function EmployeePortal() {
   const { user, loading, isAuthenticated, logout } = useAuth();
@@ -107,6 +108,7 @@ export default function EmployeePortal() {
         {activeTool === "asset-intelligence" && <AssetIntelligenceAssessment onBack={() => setActiveTool(null)} />}
         {activeTool === "recoverable-capital" && <RecoverableCapitalAssessment onBack={() => setActiveTool(null)} />}
         {activeTool === "investigative-questionnaire" && <InvestigativeQuestionnaire onBack={() => setActiveTool(null)} />}
+        {activeTool === "executive-assessment" && <ExecutiveAssessmentForm onBack={() => setActiveTool(null)} />}
       </div>
     );
   }
@@ -144,6 +146,14 @@ export default function EmployeePortal() {
       icon: "📝",
       type: "Interactive Tool",
       action: "Open Questionnaire",
+    },
+    {
+      id: "executive-assessment" as ActiveTool,
+      title: "Executive Assessment Form",
+      description: "Phase 1 discovery form capturing client asset management state, financial exposure, technology maturity, and engagement readiness",
+      icon: "🎯",
+      type: "Interactive Tool",
+      action: "Start Assessment",
     },
     {
       id: null as ActiveTool,
@@ -249,54 +259,44 @@ export default function EmployeePortal() {
                 {resource.description}
               </p>
 
-              {resource.comingSoon ? (
-                <div style={{ padding: "0.75rem", background: "rgba(13, 148, 136, 0.15)", borderRadius: 6, textAlign: "center", border: "1px solid rgba(13, 148, 136, 0.3)" }}>
-                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.teal, fontWeight: 600, margin: 0 }}>
-                    Coming Soon
-                  </p>
-                </div>
-              ) : (
-                <button
-                  style={{
-                    width: "100%",
-                    padding: "0.6rem",
-                    background: C.teal,
-                    color: "white",
-                    border: "none",
-                    borderRadius: 6,
-                    fontFamily: "'Source Sans 3', sans-serif",
-                    fontWeight: 600,
-                    cursor: "pointer",
-                    fontSize: "0.85rem",
-                    transition: "all 0.2s",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = "#0F9488";
+              <button
+                disabled={resource.comingSoon}
+                style={{
+                  width: "100%",
+                  padding: "0.6rem",
+                  background: resource.comingSoon ? "rgba(100, 116, 139, 0.2)" : C.gold,
+                  color: resource.comingSoon ? "#94A3B8" : C.charcoal,
+                  border: "none",
+                  borderRadius: 6,
+                  fontFamily: "'Source Sans 3', sans-serif",
+                  fontWeight: 600,
+                  cursor: resource.comingSoon ? "default" : "pointer",
+                  fontSize: "0.85rem",
+                  transition: "all 0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  if (!resource.comingSoon) {
+                    (e.currentTarget as HTMLElement).style.background = "#DFC06A";
                     (e.currentTarget as HTMLElement).style.transform = "scale(1.02)";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.background = C.teal;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!resource.comingSoon) {
+                    (e.currentTarget as HTMLElement).style.background = C.gold;
                     (e.currentTarget as HTMLElement).style.transform = "scale(1)";
-                  }}
-                >
-                  {resource.action || "Access"}
-                </button>
-              )}
+                  }
+                }}
+              >
+                {resource.comingSoon ? "Coming Soon" : resource.action}
+              </button>
             </div>
           ))}
         </div>
 
-        {/* Info Section */}
-        <div style={{ padding: "1.5rem", background: "rgba(15, 20, 25, 0.85)", borderRadius: 12, border: "1px solid rgba(255, 255, 255, 0.1)" }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "1rem", textShadow: "0 1px 4px rgba(0,0,0,0.5)" }}>
-            Portal Information
-          </h2>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, marginBottom: "1rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-            All tools are now interactive — fill in the fields, generate professional branded documents, and print results directly from your browser. No spreadsheet downloads required.
-          </p>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: "#E8E9EB", lineHeight: 1.8, margin: 0, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
-            For questions or technical support, please contact the LAI support team at support@legacyassetintelligence.com.
-          </p>
+        {/* Footer */}
+        <div style={{ textAlign: "center", padding: "2rem", color: "#E8E9EB", fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+          <p>Legacy Asset Intelligence — Employee Portal</p>
+          <p style={{ margin: "0.5rem 0 0 0" }}>Confidential tools for LAI staff and authorized partners</p>
         </div>
       </div>
     </div>

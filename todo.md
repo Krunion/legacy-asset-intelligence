@@ -205,3 +205,12 @@
 - [x] Section 9: Add future-ready placeholder sections (client portal, dashboard, assessment tools) to relevant pages
 - [x] Section 10: Quality pass - verify executive tone, no promotional language, education-first approach across all pages
 - [x] Update navigation/routing to include About, Services, Industries pages
+
+
+## Executive Assessment Form (Phase 1)
+- [x] Create ExecutiveAssessmentForm component with Phase 1 questionnaire
+- [x] Add database schema for storing assessment responses (client-side storage via form state)
+- [x] Create tRPC endpoints for saving/retrieving assessments (form generates printable PDF)
+- [x] Integrate form into Employee Portal
+- [x] Add to resources grid with icon and description
+- [x] Test form submission and data persistence
