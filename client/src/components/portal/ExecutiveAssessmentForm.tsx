@@ -42,6 +42,17 @@ interface ExecutiveAssessmentFormProps {
   onBack: () => void;
 }
 
+const inputStyle = {
+  width: "100%",
+  padding: "0.75rem",
+  border: `1px solid ${C.border}`,
+  borderRadius: 4,
+  fontFamily: "'Source Sans 3', sans-serif",
+  fontSize: "0.9rem",
+  boxSizing: "border-box" as const,
+  color: "black",
+};
+
 export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentFormProps) {
   const [formData, setFormData] = useState<AssessmentData>({
     clientName: "",
@@ -394,15 +405,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="clientName"
                 value={formData.clientName}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               />
             </div>
             <div>
@@ -413,15 +416,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="clientIndustry"
                 value={formData.clientIndustry}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Industry</option>
                 <option value="Healthcare">Healthcare</option>
@@ -447,15 +442,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 value={formData.clientRevenue}
                 onChange={handleChange}
                 placeholder="e.g., $50M - $100M"
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               />
             </div>
             <div>
@@ -468,15 +455,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 value={formData.clientEmployees}
                 onChange={handleChange}
                 placeholder="e.g., 500-1000"
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               />
             </div>
           </div>
@@ -491,15 +470,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="assessmentDate"
                 value={formData.assessmentDate}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               />
             </div>
             <div>
@@ -511,15 +482,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="assessorName"
                 value={formData.assessorName}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               />
             </div>
           </div>
@@ -540,22 +503,13 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="assetInventoryAccuracy"
                 value={formData.assetInventoryAccuracy}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Level</option>
-                <option value="Less than 50%">Less than 50%</option>
-                <option value="50-70%">50-70%</option>
-                <option value="70-85%">70-85%</option>
-                <option value="85-95%">85-95%</option>
-                <option value="95%+">95%+</option>
+                <option value="< 50% (Highly Inaccurate)">Less than 50% (Highly Inaccurate)</option>
+                <option value="50-75% (Partially Accurate)">50-75% (Partially Accurate)</option>
+                <option value="75-90% (Mostly Accurate)">75-90% (Mostly Accurate)</option>
+                <option value="> 90% (Highly Accurate)">Greater than 90% (Highly Accurate)</option>
               </select>
             </div>
             <div>
@@ -566,26 +520,18 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="assetTrackingMethod"
                 value={formData.assetTrackingMethod}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Method</option>
                 <option value="Manual Spreadsheets">Manual Spreadsheets</option>
-                <option value="Legacy System">Legacy System</option>
-                <option value="Dedicated Platform">Dedicated Platform</option>
-                <option value="No Formal System">No Formal System</option>
+                <option value="Legacy ERP System">Legacy ERP System</option>
+                <option value="Specialized Asset Management">Specialized Asset Management</option>
+                <option value="Cloud-Based Platform">Cloud-Based Platform</option>
               </select>
             </div>
           </div>
 
-          <div>
+          <div style={{ marginBottom: "1rem" }}>
             <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
               Estimated Ghost Assets (%)
             </label>
@@ -595,20 +541,12 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
               value={formData.ghostAssetEstimate}
               onChange={handleChange}
               placeholder="e.g., 15-25%"
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: `1px solid ${C.border}`,
-                borderRadius: 4,
-                fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: "0.9rem",
-                boxSizing: "border-box",
-              }}
+              style={inputStyle}
             />
           </div>
         </div>
 
-        {/* Financial Exposure Assessment */}
+        {/* Financial Exposure */}
         <div style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 8, padding: "1.5rem", marginBottom: "1.5rem" }}>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", color: C.slate, marginTop: 0 }}>
             Financial Exposure Assessment
@@ -623,19 +561,11 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="propertyTaxExposure"
                 value={formData.propertyTaxExposure}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Risk Level</option>
                 <option value="Low">Low</option>
-                <option value="Moderate">Moderate</option>
+                <option value="Medium">Medium</option>
                 <option value="High">High</option>
                 <option value="Critical">Critical</option>
               </select>
@@ -648,19 +578,11 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="insurancePremiumExposure"
                 value={formData.insurancePremiumExposure}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Risk Level</option>
                 <option value="Low">Low</option>
-                <option value="Moderate">Moderate</option>
+                <option value="Medium">Medium</option>
                 <option value="High">High</option>
                 <option value="Critical">Critical</option>
               </select>
@@ -676,19 +598,11 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="maintenanceContractExposure"
                 value={formData.maintenanceContractExposure}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Risk Level</option>
                 <option value="Low">Low</option>
-                <option value="Moderate">Moderate</option>
+                <option value="Medium">Medium</option>
                 <option value="High">High</option>
                 <option value="Critical">Critical</option>
               </select>
@@ -701,19 +615,11 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="duplicatePurchaseRisk"
                 value={formData.duplicatePurchaseRisk}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Risk Level</option>
                 <option value="Low">Low</option>
-                <option value="Moderate">Moderate</option>
+                <option value="Medium">Medium</option>
                 <option value="High">High</option>
                 <option value="Critical">Critical</option>
               </select>
@@ -721,7 +627,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
           </div>
         </div>
 
-        {/* Technology & Governance Maturity */}
+        {/* Technology & Governance */}
         <div style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 8, padding: "1.5rem", marginBottom: "1.5rem" }}>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", color: C.slate, marginTop: 0 }}>
             Technology & Governance Maturity
@@ -736,21 +642,13 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="currentTechnology"
                 value={formData.currentTechnology}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Platform</option>
-                <option value="Asset Panda">Asset Panda</option>
-                <option value="EZO">EZO</option>
-                <option value="Other CMMS">Other CMMS</option>
-                <option value="Spreadsheets Only">Spreadsheets Only</option>
+                <option value="No Formal System">No Formal System</option>
+                <option value="Manual Tracking">Manual Tracking</option>
+                <option value="Legacy System">Legacy System</option>
+                <option value="Modern Platform">Modern Platform</option>
               </select>
             </div>
             <div>
@@ -761,21 +659,12 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="governanceMaturity"
                 value={formData.governanceMaturity}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Level</option>
-                <option value="Ad Hoc">Ad Hoc</option>
-                <option value="Repeatable">Repeatable</option>
-                <option value="Defined">Defined</option>
-                <option value="Managed">Managed</option>
+                <option value="Ad-hoc">Ad-hoc</option>
+                <option value="Developing">Developing</option>
+                <option value="Mature">Mature</option>
                 <option value="Optimized">Optimized</option>
               </select>
             </div>
@@ -790,21 +679,13 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="financialReportingAccuracy"
                 value={formData.financialReportingAccuracy}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Level</option>
-                <option value="Poor">Poor</option>
-                <option value="Fair">Fair</option>
-                <option value="Good">Good</option>
-                <option value="Excellent">Excellent</option>
+                <option value="Significant Discrepancies">Significant Discrepancies</option>
+                <option value="Moderate Discrepancies">Moderate Discrepancies</option>
+                <option value="Minor Discrepancies">Minor Discrepancies</option>
+                <option value="Highly Accurate">Highly Accurate</option>
               </select>
             </div>
             <div>
@@ -815,20 +696,13 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="capitalPlanningProcess"
                 value={formData.capitalPlanningProcess}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
-                <option value="">Select Level</option>
-                <option value="Reactive">Reactive</option>
-                <option value="Planned">Planned</option>
-                <option value="Strategic">Strategic</option>
+                <option value="">Select Maturity</option>
+                <option value="Informal/Reactive">Informal/Reactive</option>
+                <option value="Semi-Structured">Semi-Structured</option>
+                <option value="Structured">Structured</option>
+                <option value="Strategic/Integrated">Strategic/Integrated</option>
               </select>
             </div>
           </div>
@@ -849,21 +723,13 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="decisionMakerEngagement"
                 value={formData.decisionMakerEngagement}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
                 <option value="">Select Level</option>
                 <option value="Not Engaged">Not Engaged</option>
-                <option value="Initial Interest">Initial Interest</option>
-                <option value="Active Engagement">Active Engagement</option>
-                <option value="Committed">Committed</option>
+                <option value="Somewhat Engaged">Somewhat Engaged</option>
+                <option value="Highly Engaged">Highly Engaged</option>
+                <option value="Executive Champion">Executive Champion</option>
               </select>
             </div>
             <div>
@@ -874,26 +740,18 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
                 name="budgetAvailability"
                 value={formData.budgetAvailability}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 4,
-                  fontFamily: "'Source Sans 3', sans-serif",
-                  fontSize: "0.9rem",
-                  boxSizing: "border-box",
-                }}
+                style={inputStyle}
               >
-                <option value="">Select Level</option>
-                <option value="Not Allocated">Not Allocated</option>
-                <option value="Pending Approval">Pending Approval</option>
-                <option value="Partially Allocated">Partially Allocated</option>
-                <option value="Fully Allocated">Fully Allocated</option>
+                <option value="">Select Status</option>
+                <option value="No Budget Allocated">No Budget Allocated</option>
+                <option value="Limited Budget">Limited Budget</option>
+                <option value="Adequate Budget">Adequate Budget</option>
+                <option value="Approved & Available">Approved & Available</option>
               </select>
             </div>
           </div>
 
-          <div>
+          <div style={{ marginBottom: "1rem" }}>
             <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
               Timeline Expectation
             </label>
@@ -901,21 +759,13 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
               name="timelineExpectation"
               value={formData.timelineExpectation}
               onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "0.75rem",
-                border: `1px solid ${C.border}`,
-                borderRadius: 4,
-                fontFamily: "'Source Sans 3', sans-serif",
-                fontSize: "0.9rem",
-                boxSizing: "border-box",
-              }}
+              style={inputStyle}
             >
               <option value="">Select Timeline</option>
-              <option value="Immediate (0-30 days)">Immediate (0-30 days)</option>
-              <option value="Short Term (1-3 months)">Short Term (1-3 months)</option>
-              <option value="Medium Term (3-6 months)">Medium Term (3-6 months)</option>
-              <option value="Long Term (6+ months)">Long Term (6+ months)</option>
+              <option value="Exploratory (6+ months)">Exploratory (6+ months)</option>
+              <option value="Medium-term (3-6 months)">Medium-term (3-6 months)</option>
+              <option value="Near-term (1-3 months)">Near-term (1-3 months)</option>
+              <option value="Immediate (< 1 month)">Immediate (Less than 1 month)</option>
             </select>
           </div>
         </div>
@@ -925,21 +775,19 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", color: C.slate, marginTop: 0 }}>
             Additional Notes
           </h2>
-
+          <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
+            Any additional context or observations
+          </label>
           <textarea
             name="notes"
             value={formData.notes}
             onChange={handleChange}
-            placeholder="Add any additional observations, concerns, or opportunities..."
+            placeholder="Enter any additional observations, concerns, or context about this assessment..."
             style={{
-              width: "100%",
-              padding: "0.75rem",
-              border: `1px solid ${C.border}`,
-              borderRadius: 4,
-              fontFamily: "'Source Sans 3', sans-serif",
-              fontSize: "0.9rem",
+              ...inputStyle,
               minHeight: "120px",
-              boxSizing: "border-box",
+              fontFamily: "'Source Sans 3', sans-serif",
+              resize: "vertical",
             }}
           />
         </div>
@@ -961,7 +809,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
               fontSize: "0.9rem",
             }}
           >
-            Cancel
+            ← Cancel
           </button>
           <button
             type="submit"
@@ -977,7 +825,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
               fontSize: "0.9rem",
             }}
           >
-            Save Assessment
+            ✓ Complete Assessment
           </button>
         </div>
       </form>
