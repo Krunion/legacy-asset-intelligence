@@ -6,14 +6,14 @@ interface CorporateFinanceCalculatorProps {
 }
 
 const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({ onBack }) => {
-  const [ghostAssets, setGhostAssets] = useState<string>('0');
-  const [nbvGhostAssets, setNbvGhostAssets] = useState<string>('0');
-  const [unrecordedAssets, setUnrecordedAssets] = useState<string>('0');
-  const [replacementValueUnrecorded, setReplacementValueUnrecorded] = useState<string>('0');
-  const [propertyTaxSavings, setPropertyTaxSavings] = useState<string>('0');
-  const [insurancePremiumSavings, setInsurancePremiumSavings] = useState<string>('0');
-  const [maintenanceCostReductions, setMaintenanceCostReductions] = useState<string>('0');
-  const [engagementFee, setEngagementFee] = useState<string>('0');
+  const [ghostAssets, setGhostAssets] = useState<string>('');
+  const [nbvGhostAssets, setNbvGhostAssets] = useState<string>('');
+  const [unrecordedAssets, setUnrecordedAssets] = useState<string>('');
+  const [replacementValueUnrecorded, setReplacementValueUnrecorded] = useState<string>('');
+  const [propertyTaxSavings, setPropertyTaxSavings] = useState<string>('');
+  const [insurancePremiumSavings, setInsurancePremiumSavings] = useState<string>('');
+  const [maintenanceCostReductions, setMaintenanceCostReductions] = useState<string>('');
+  const [engagementFee, setEngagementFee] = useState<string>('');
   const [discountRate, setDiscountRate] = useState<string>('10');
   const [projectionYears, setProjectionYears] = useState<string>('5');
 
@@ -58,6 +58,14 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
 
   const financials = calculateFinancials();
 
+  const handleInputChange = (value: string) => {
+    // Allow empty string, numbers, and decimal point
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      return value;
+    }
+    return value;
+  };
+
   const InputField = ({ label, value, onChange, placeholder = "0" }: any) => (
     <div style={{ marginBottom: "1rem" }}>
       <label style={{ display: "block", fontSize: "0.9rem", fontWeight: 600, color: "#1E293B", marginBottom: "0.4rem" }}>
@@ -67,13 +75,7 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
         type="text"
         inputMode="decimal"
         value={value}
-        onChange={(e) => {
-          const inputValue = e.target.value;
-          // Allow only numbers and decimal point
-          if (inputValue === '' || /^\d*\.?\d*$/.test(inputValue)) {
-            onChange(inputValue);
-          }
-        }}
+        onChange={(e) => onChange(handleInputChange(e.target.value))}
         placeholder={placeholder}
         style={{
           width: "100%",
