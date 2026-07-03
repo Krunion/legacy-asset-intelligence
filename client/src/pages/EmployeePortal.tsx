@@ -8,11 +8,12 @@ import InvestigativeQuestionnaire from "@/components/portal/InvestigativeQuestio
 import AssetIntelligenceAssessment from "@/components/portal/AssetIntelligenceAssessment";
 import RecoverableCapitalAssessment from "@/components/portal/RecoverableCapitalAssessment";
 import ExecutiveAssessmentForm from "@/components/portal/ExecutiveAssessmentForm";
+import CorporateFinanceCalculator from "@/components/portal/CorporateFinanceCalculator";
 
 const C = COLORS;
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
 
-type ActiveTool = null | "proposal-calculator" | "asset-intelligence" | "recoverable-capital" | "investigative-questionnaire" | "executive-assessment";
+type ActiveTool = null | "proposal-calculator" | "asset-intelligence" | "recoverable-capital" | "investigative-questionnaire" | "executive-assessment" | "corporate-finance-calculator";
 
 export default function EmployeePortal() {
   const { user, loading, isAuthenticated, logout } = useAuth();
@@ -109,6 +110,7 @@ export default function EmployeePortal() {
         {activeTool === "recoverable-capital" && <RecoverableCapitalAssessment onBack={() => setActiveTool(null)} />}
         {activeTool === "investigative-questionnaire" && <InvestigativeQuestionnaire onBack={() => setActiveTool(null)} />}
         {activeTool === "executive-assessment" && <ExecutiveAssessmentForm onBack={() => setActiveTool(null)} />}
+        {activeTool === "corporate-finance-calculator" && <CorporateFinanceCalculator onBack={() => setActiveTool(null)} />}
       </div>
     );
   }
@@ -154,6 +156,14 @@ export default function EmployeePortal() {
       icon: "🎯",
       type: "Interactive Tool",
       action: "Start Assessment",
+    },
+    {
+      id: "corporate-finance-calculator" as ActiveTool,
+      title: "Corporate Finance Calculator",
+      description: "Calculate ROI, NPV, IRR, and payback periods for client engagements with dynamic financial modeling",
+      icon: "💹",
+      type: "Interactive Tool",
+      action: "Open Calculator",
     },
     {
       id: null as ActiveTool,

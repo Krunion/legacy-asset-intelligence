@@ -14,6 +14,7 @@ import FAQ from "./pages/FAQ";
 import Career from "./pages/Career";
 import EmployeePortal from "./pages/EmployeePortal";
 import Contact from "./pages/Contact";
+import Calculator from "./pages/Calculator";
 import Insights from "./pages/Insights";
 import Resources from "./pages/Resources";
 
@@ -30,7 +31,8 @@ function Router() {
       <Route path={"/faq"} component={FAQ} />
       <Route path={"/career"} component={Career} />
       <Route path={"/employee-portal"} component={EmployeePortal} />
-      <Route path={"/contact"} component={Contact} />
+          <Route path={"/contact"} component={Contact} />
+          <Route path={"/calculator"} component={Calculator} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
