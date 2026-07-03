@@ -6,39 +6,46 @@ interface CorporateFinanceCalculatorProps {
 }
 
 const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({ onBack }) => {
-  const [ghostAssets, setGhostAssets] = useState<number>(0);
-  const [nbvGhostAssets, setNbvGhostAssets] = useState<number>(0);
-  const [unrecordedAssets, setUnrecordedAssets] = useState<number>(0);
-  const [replacementValueUnrecorded, setReplacementValueUnrecorded] = useState<number>(0);
-  const [propertyTaxSavings, setPropertyTaxSavings] = useState<number>(0);
-  const [insurancePremiumSavings, setInsurancePremiumSavings] = useState<number>(0);
-  const [maintenanceCostReductions, setMaintenanceCostReductions] = useState<number>(0);
-  const [engagementFee, setEngagementFee] = useState<number>(0);
-  const [discountRate, setDiscountRate] = useState<number>(10);
-  const [projectionYears, setProjectionYears] = useState<number>(5);
+  const [ghostAssets, setGhostAssets] = useState<string>('0');
+  const [nbvGhostAssets, setNbvGhostAssets] = useState<string>('0');
+  const [unrecordedAssets, setUnrecordedAssets] = useState<string>('0');
+  const [replacementValueUnrecorded, setReplacementValueUnrecorded] = useState<string>('0');
+  const [propertyTaxSavings, setPropertyTaxSavings] = useState<string>('0');
+  const [insurancePremiumSavings, setInsurancePremiumSavings] = useState<string>('0');
+  const [maintenanceCostReductions, setMaintenanceCostReductions] = useState<string>('0');
+  const [engagementFee, setEngagementFee] = useState<string>('0');
+  const [discountRate, setDiscountRate] = useState<string>('10');
+  const [projectionYears, setProjectionYears] = useState<string>('5');
 
   const calculateFinancials = () => {
-    const totalOneTimeCapitalRecovery = nbvGhostAssets + replacementValueUnrecorded;
-    const totalAnnualSavings = propertyTaxSavings + insurancePremiumSavings + maintenanceCostReductions;
+    const nbvGhost = parseFloat(nbvGhostAssets) || 0;
+    const replacementUnrecorded = parseFloat(replacementValueUnrecorded) || 0;
+    const propTax = parseFloat(propertyTaxSavings) || 0;
+    const insurance = parseFloat(insurancePremiumSavings) || 0;
+    const maintenance = parseFloat(maintenanceCostReductions) || 0;
+    const fee = parseFloat(engagementFee) || 0;
+    const discount = parseFloat(discountRate) || 10;
+    const years = parseFloat(projectionYears) || 5;
+
+    const totalOneTimeCapitalRecovery = nbvGhost + replacementUnrecorded;
+    const totalAnnualSavings = propTax + insurance + maintenance;
 
     // Calculate Payback Period
     let paybackPeriodMonths = 'N/A';
     if (totalAnnualSavings > 0) {
-      const initialInvestment = engagementFee;
-      const monthsToPayback = initialInvestment / (totalAnnualSavings / 12);
+      const monthsToPayback = fee / (totalAnnualSavings / 12);
       paybackPeriodMonths = monthsToPayback.toFixed(2);
     }
 
     // Calculate NPV (simplified)
-    let npv = -engagementFee + totalOneTimeCapitalRecovery;
-    for (let i = 1; i <= projectionYears; i++) {
-      npv += totalAnnualSavings / Math.pow(1 + discountRate / 100, i);
+    let npv = -fee + totalOneTimeCapitalRecovery;
+    for (let i = 1; i <= years; i++) {
+      npv += totalAnnualSavings / Math.pow(1 + discount / 100, i);
     }
 
     // Calculate IRR (simplified - using average return)
-    const totalBenefit = totalOneTimeCapitalRecovery + (totalAnnualSavings * projectionYears);
-    const totalInvestment = engagementFee;
-    const irr = totalInvestment > 0 ? (((totalBenefit / totalInvestment) ** (1 / projectionYears)) - 1) * 100 : 0;
+    const totalBenefit = totalOneTimeCapitalRecovery + (totalAnnualSavings * years);
+    const irr = fee > 0 ? (((totalBenefit / fee) ** (1 / years)) - 1) * 100 : 0;
 
     return {
       totalOneTimeCapitalRecovery,
@@ -57,9 +64,16 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
         {label}
       </label>
       <input
-        type="number"
+        type="text"
+        inputMode="decimal"
         value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
+        onChange={(e) => {
+          const inputValue = e.target.value;
+          // Allow only numbers and decimal point
+          if (inputValue === '' || /^\d*\.?\d*$/.test(inputValue)) {
+            onChange(inputValue);
+          }
+        }}
         placeholder={placeholder}
         style={{
           width: "100%",
@@ -69,6 +83,8 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
           fontSize: "0.95rem",
           fontFamily: "'Source Sans 3', sans-serif",
           boxSizing: "border-box",
+          backgroundColor: "#FFFFFF",
+          color: "#1E293B",
         }}
       />
     </div>
