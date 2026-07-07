@@ -261,11 +261,11 @@ export default function EmployeePortal() {
                 </span>
               </div>
 
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "0.5rem", textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: "#1E3A5F", marginBottom: "0.5rem" }}>
                 {resource.title}
               </h3>
 
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#E8E9EB", marginBottom: "1rem", lineHeight: 1.5, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: "#333333", marginBottom: "1rem", lineHeight: 1.5 }}>
                 {resource.description}
               </p>
 
