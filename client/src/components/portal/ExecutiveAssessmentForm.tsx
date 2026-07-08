@@ -50,7 +50,8 @@ const inputStyle = {
   fontFamily: "'Source Sans 3', sans-serif",
   fontSize: "0.9rem",
   boxSizing: "border-box" as const,
-  color: "black",
+  color: "#1E293B",
+  backgroundColor: "#FFFFFF",
 };
 
 export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentFormProps) {
@@ -301,20 +302,20 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
           <h3 style={{ color: C.slate, marginTop: 0 }}>Assessment Summary</h3>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
             <div>
-              <p style={{ fontSize: "0.85rem", color: C.textMuted, margin: "0 0 0.25rem 0" }}>Client</p>
-              <p style={{ fontSize: "1rem", fontWeight: 600, color: C.text, margin: 0 }}>{formData.clientName}</p>
+              <p style={{ fontSize: "0.85rem", color: "#64748B", margin: "0 0 0.25rem 0" }}>Client</p>
+              <p style={{ fontSize: "1rem", fontWeight: 600, color: "#1E293B", margin: 0 }}>{formData.clientName}</p>
             </div>
             <div>
-              <p style={{ fontSize: "0.85rem", color: C.textMuted, margin: "0 0 0.25rem 0" }}>Industry</p>
-              <p style={{ fontSize: "1rem", fontWeight: 600, color: C.text, margin: 0 }}>{formData.clientIndustry}</p>
+              <p style={{ fontSize: "0.85rem", color: "#64748B", margin: "0 0 0.25rem 0" }}>Industry</p>
+              <p style={{ fontSize: "1rem", fontWeight: 600, color: "#1E293B", margin: 0 }}>{formData.clientIndustry}</p>
             </div>
             <div>
-              <p style={{ fontSize: "0.85rem", color: C.textMuted, margin: "0 0 0.25rem 0" }}>Ghost Assets</p>
-              <p style={{ fontSize: "1rem", fontWeight: 600, color: C.text, margin: 0 }}>{formData.ghostAssetEstimate}</p>
+              <p style={{ fontSize: "0.85rem", color: "#64748B", margin: "0 0 0.25rem 0" }}>Ghost Assets</p>
+              <p style={{ fontSize: "1rem", fontWeight: 600, color: "#1E293B", margin: 0 }}>{formData.ghostAssetEstimate}</p>
             </div>
             <div>
-              <p style={{ fontSize: "0.85rem", color: C.textMuted, margin: "0 0 0.25rem 0" }}>Assessment Date</p>
-              <p style={{ fontSize: "1rem", fontWeight: 600, color: C.text, margin: 0 }}>{formData.assessmentDate}</p>
+              <p style={{ fontSize: "0.85rem", color: "#64748B", margin: "0 0 0.25rem 0" }}>Assessment Date</p>
+              <p style={{ fontSize: "1rem", fontWeight: 600, color: "#1E293B", margin: 0 }}>{formData.assessmentDate}</p>
             </div>
           </div>
 
