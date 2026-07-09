@@ -243,3 +243,4 @@
 - [x] Fix CorporateFinanceCalculator root container - added color: #1E293B
 - [x] Fix ExecutiveAssessmentForm - replaced shared COLORS.text (near-white) with dark #1E293B for list items
 - [x] Fix ExecutiveAssessmentForm - replaced shared COLORS.textMuted (too light) with #64748B for subtitles
+- [x] Fix number inputs across all portal tools: clear "0" on focus, restore "0" on blur if empty

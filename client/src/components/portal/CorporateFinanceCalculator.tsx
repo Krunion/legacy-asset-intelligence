@@ -75,6 +75,16 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
         type="text"
         inputMode="decimal"
         value={value}
+        onFocus={(e) => {
+          if (e.target.value === "0" || e.target.value === "") {
+            onChange("");
+          }
+        }}
+        onBlur={(e) => {
+          if (e.target.value === "") {
+            onChange("0");
+          }
+        }}
         onChange={(e) => onChange(handleInputChange(e.target.value))}
         placeholder={placeholder}
         style={{

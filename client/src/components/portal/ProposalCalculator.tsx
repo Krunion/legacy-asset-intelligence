@@ -6,6 +6,7 @@
 
 import { useState, useRef } from "react";
 import { LOGO_BASE64 } from "./logoBase64";
+import NumericInput from "./NumericInput";
 
 // ─── Data Tables (from spreadsheet) ─────────────────────────────────────────
 
@@ -633,15 +634,15 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           </div>
           <div>
             <label style={labelStyle}>Estimated Trackable Physical Assets</label>
-            <input style={inputStyle} type="number" value={inputs.assets} onChange={e => update("assets", Number(e.target.value))} />
+            <NumericInput style={inputStyle} value={inputs.assets} onChange={v => update("assets", v)} />
           </div>
           <div>
             <label style={labelStyle}>Number of Locations / Sites</label>
-            <input style={inputStyle} type="number" value={inputs.locations} onChange={e => update("locations", Number(e.target.value))} />
+            <NumericInput style={inputStyle} value={inputs.locations} onChange={v => update("locations", v)} />
           </div>
           <div>
             <label style={labelStyle}>Number of Departments</label>
-            <input style={inputStyle} type="number" value={inputs.departments} onChange={e => update("departments", Number(e.target.value))} />
+            <NumericInput style={inputStyle} value={inputs.departments} onChange={v => update("departments", v)} />
           </div>
           <div>
             <label style={labelStyle}>Geographic Footprint</label>
@@ -657,11 +658,11 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           </div>
           <div>
             <label style={labelStyle}>Expected Travel Visits</label>
-            <input style={inputStyle} type="number" value={inputs.travelVisits} onChange={e => update("travelVisits", Number(e.target.value))} />
+            <NumericInput style={inputStyle} value={inputs.travelVisits} onChange={v => update("travelVisits", v)} />
           </div>
           <div>
             <label style={labelStyle}>Traveling Team Members</label>
-            <input style={inputStyle} type="number" value={inputs.travelTeamMembers} onChange={e => update("travelTeamMembers", Number(e.target.value))} />
+            <NumericInput style={inputStyle} value={inputs.travelTeamMembers} onChange={v => update("travelTeamMembers", v)} />
           </div>
           <div>
             <label style={labelStyle}>Complexity Level</label>
@@ -827,11 +828,11 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Low Estimate ($)</label>
-            <input style={inputStyle} type="number" value={inputs.recoverableOpportunityLow} onChange={e => update("recoverableOpportunityLow", Number(e.target.value))} />
+            <NumericInput style={inputStyle} value={inputs.recoverableOpportunityLow} onChange={v => update("recoverableOpportunityLow", v)} />
           </div>
           <div>
             <label style={labelStyle}>High Estimate ($)</label>
-            <input style={inputStyle} type="number" value={inputs.recoverableOpportunityHigh} onChange={e => update("recoverableOpportunityHigh", Number(e.target.value))} />
+            <NumericInput style={inputStyle} value={inputs.recoverableOpportunityHigh} onChange={v => update("recoverableOpportunityHigh", v)} />
           </div>
         </div>
       </div>

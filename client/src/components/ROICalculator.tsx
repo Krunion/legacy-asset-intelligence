@@ -8,6 +8,7 @@ import { useState } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { generatePDF, type CalculatorResult } from "@/lib/pdfGenerator";
 import { trpc } from "@/lib/trpc";
+import NumericInput from "@/components/portal/NumericInput";
 import { useEffect } from "react";
 
 // ─── Industry Data ────────────────────────────────────────────────────────────
@@ -178,12 +179,10 @@ export default function ROICalculator() {
           <label style={{ display: "block", fontWeight: 600, color: colors.text, marginBottom: "0.5rem", fontSize: "0.9rem", textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
             Number of Locations
           </label>
-          <input
-            type="number"
-            min="1"
-            max="50"
+          <NumericInput
             value={state.locations}
-            onChange={(e) => setState({ ...state, locations: parseInt(e.target.value) || 1 })}
+            onChange={(v) => setState({ ...state, locations: Number(v) || 1 })}
+            defaultValue={1}
             style={{ width: "100%", padding: "0.6rem", border: `1px solid ${colors.border}`, borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: colors.text, fontWeight: 600, textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}
           />
         </div>
@@ -191,12 +190,10 @@ export default function ROICalculator() {
           <label style={{ display: "block", fontWeight: 600, color: colors.text, marginBottom: "0.5rem", fontSize: "0.9rem", textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
             Number of Departments
           </label>
-          <input
-            type="number"
-            min="1"
-            max="20"
+          <NumericInput
             value={state.departments}
-            onChange={(e) => setState({ ...state, departments: parseInt(e.target.value) || 1 })}
+            onChange={(v) => setState({ ...state, departments: Number(v) || 1 })}
+            defaultValue={1}
             style={{ width: "100%", padding: "0.6rem", border: `1px solid ${colors.border}`, borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: colors.text, fontWeight: 600, textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}
           />
         </div>
