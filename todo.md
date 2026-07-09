@@ -214,3 +214,9 @@
 - [x] Integrate form into Employee Portal
 - [x] Add to resources grid with icon and description
 - [x] Test form submission and data persistence
+
+## Insight Article Pages (Resources → Learn More)
+- [x] Create InsightArticle component for rendering individual insight articles
+- [x] Add routes for all 12 insight article pages in App.tsx
+- [x] Write article content data file with all 12 articles
+- [x] Test all insight article links from Resources page

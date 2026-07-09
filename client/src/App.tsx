@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import Calculator from "./pages/Calculator";
 import Insights from "./pages/Insights";
 import Resources from "./pages/Resources";
+import InsightArticle from "./pages/InsightArticle";
 
 function Router() {
   return (
@@ -28,6 +29,7 @@ function Router() {
       <Route path={"/team"} component={Team} />
       <Route path={"/insights"} component={Insights} />
       <Route path={"/resources"} component={Resources} />
+      <Route path="/insights/:slug" component={InsightArticle} />
       <Route path={"/faq"} component={FAQ} />
       <Route path={"/career"} component={Career} />
       <Route path={"/employee-portal"} component={EmployeePortal} />
