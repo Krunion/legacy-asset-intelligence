@@ -36,21 +36,21 @@ export default function Resources() {
   const [, navigate] = useLocation();
 
   const whitepapers = [
-    { category: "Executive Whitepaper", title: "The Hidden Cost of Ghost Assets: A CFO's Perspective", desc: "Organizations unknowingly pay millions in property taxes, insurance, and maintenance on assets that no longer exist. This guide examines the financial impact and provides a framework for executive action.", pages: "18 pages", readTime: "12 min" },
-    { category: "Research Report", title: "2025 State of Enterprise Asset Management", desc: "Annual research report covering industry trends, technology adoption rates, ghost asset prevalence by sector, and best practices from leading organizations.", pages: "42 pages", readTime: "25 min" },
-    { category: "Whitepaper", title: "The $264 Billion Opportunity: Fixed Asset Management Market Dynamics", desc: "In-depth analysis of the global fixed asset management market, growth drivers, competitive landscape, and where organizations should invest for maximum capital recovery.", pages: "28 pages", readTime: "14 min" },
-    { category: "Whitepaper", title: "From Spreadsheets to Smart Governance: The Asset Maturity Journey", desc: "A five-level maturity framework for evaluating your organization's asset management sophistication, with practical steps to advance from reactive tracking to proactive governance.", pages: "22 pages", readTime: "15 min" },
-    { category: "Industry Report", title: "Fixed Asset Management in Healthcare: Regulatory Compliance and Capital Recovery", desc: "Healthcare systems face unique challenges in asset accountability due to regulatory requirements, rapid technology turnover, and distributed facility networks.", pages: "16 pages", readTime: "9 min" },
-    { category: "Compliance Guide", title: "Regulatory Compliance & Asset Accountability (SOX, GASB, IFRS)", desc: "A guide to regulatory requirements related to fixed asset management and how proper asset accountability supports compliance objectives across frameworks.", pages: "14 pages", readTime: "10 min" },
+    { category: "Executive Whitepaper", title: "The Hidden Cost of Ghost Assets: A CFO's Perspective", desc: "Organizations unknowingly pay millions in property taxes, insurance, and maintenance on assets that no longer exist. This guide examines the financial impact and provides a framework for executive action.", pages: "18 pages", readTime: "12 min", url: "/insights/ghost-assets-cfo-perspective" },
+    { category: "Research Report", title: "2025 State of Enterprise Asset Management", desc: "Annual research report covering industry trends, technology adoption rates, ghost asset prevalence by sector, and best practices from leading organizations.", pages: "42 pages", readTime: "25 min", url: "/insights/2025-state-enterprise-asset-management" },
+    { category: "Whitepaper", title: "The $264 Billion Opportunity: Fixed Asset Management Market Dynamics", desc: "In-depth analysis of the global fixed asset management market, growth drivers, competitive landscape, and where organizations should invest for maximum capital recovery.", pages: "28 pages", readTime: "14 min", url: "/insights/fixed-asset-management-market-dynamics" },
+    { category: "Whitepaper", title: "From Spreadsheets to Smart Governance: The Asset Maturity Journey", desc: "A five-level maturity framework for evaluating your organization's asset management sophistication, with practical steps to advance from reactive tracking to proactive governance.", pages: "22 pages", readTime: "15 min", url: "/insights/asset-maturity-journey" },
+    { category: "Industry Report", title: "Fixed Asset Management in Healthcare: Regulatory Compliance and Capital Recovery", desc: "Healthcare systems face unique challenges in asset accountability due to regulatory requirements, rapid technology turnover, and distributed facility networks.", pages: "16 pages", readTime: "9 min", url: "/insights/fixed-asset-management-healthcare" },
+    { category: "Compliance Guide", title: "Regulatory Compliance & Asset Accountability (SOX, GASB, IFRS)", desc: "A guide to regulatory requirements related to fixed asset management and how proper asset accountability supports compliance objectives across frameworks.", pages: "14 pages", readTime: "10 min", url: "/insights/regulatory-compliance-asset-accountability" },
   ];
 
   const guides = [
-    { title: "Ghost Asset Identification Checklist", desc: "A comprehensive 50-point checklist for identifying potential ghost assets across your organization's fixed asset register. Includes department-specific indicators and red flags.", format: "PDF · 12 pages" },
-    { title: "Asset Accountability Maturity Model", desc: "Our proprietary five-level maturity framework for evaluating your organization's asset management sophistication. Includes self-assessment scoring and improvement roadmap.", format: "PDF · 18 pages" },
-    { title: "Capital Recovery Business Case Template", desc: "A ready-to-use executive presentation template for building an internal business case for asset intelligence investment. Includes ROI calculations and benchmark data.", format: "PPTX · 24 slides" },
-    { title: "The LAI Four-Phase Methodology Overview", desc: "Detailed overview of our proprietary four-phase approach to ghost asset elimination and governance implementation. Includes timelines, deliverables, and expected outcomes.", format: "PDF · 16 pages" },
-    { title: "Executive Assessment Preparation Guide", desc: "How to prepare your organization for an Executive Asset Intelligence Assessment — what to gather, who to involve, and what to expect from the process.", format: "PDF · 8 pages" },
-    { title: "Technology Selection Framework", desc: "A structured evaluation framework for selecting asset management technology platforms, including scoring criteria, integration requirements, and implementation considerations.", format: "PDF · 14 pages" },
+    { title: "Ghost Asset Identification Checklist", desc: "A comprehensive 50-point checklist for identifying potential ghost assets across your organization's fixed asset register. Includes department-specific indicators and red flags.", format: "PDF · 12 pages", url: "/insights/ghost-asset-identification-checklist" },
+    { title: "Asset Accountability Maturity Model", desc: "Our proprietary five-level maturity framework for evaluating your organization's asset management sophistication. Includes self-assessment scoring and improvement roadmap.", format: "PDF · 18 pages", url: "/insights/asset-accountability-maturity-model" },
+    { title: "Capital Recovery Business Case Template", desc: "A ready-to-use executive presentation template for building an internal business case for asset intelligence investment. Includes ROI calculations and benchmark data.", format: "PPTX · 24 slides", url: "/insights/capital-recovery-business-case-template" },
+    { title: "The LAI Four-Phase Methodology Overview", desc: "Detailed overview of our proprietary four-phase approach to ghost asset elimination and governance implementation. Includes timelines, deliverables, and expected outcomes.", format: "PDF · 16 pages", url: "/insights/lai-four-phase-methodology" },
+    { title: "Executive Assessment Preparation Guide", desc: "How to prepare your organization for an Executive Asset Intelligence Assessment — what to gather, who to involve, and what to expect from the process.", format: "PDF · 8 pages", url: "/insights/executive-assessment-preparation" },
+    { title: "Technology Selection Framework", desc: "A structured evaluation framework for selecting asset management technology platforms, including scoring criteria, integration requirements, and implementation considerations.", format: "PDF · 14 pages", url: "/insights/technology-selection-framework" },
   ];
 
   const videos = [
@@ -92,8 +92,8 @@ export default function Resources() {
                 </div>
                 <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.05rem", fontWeight: 700, color: C.text, marginBottom: "0.75rem", lineHeight: 1.35 }}>{wp.title}</h3>
                 <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.85rem", lineHeight: 1.65, flex: 1 }}>{wp.desc}</p>
-                <button onClick={() => navigate("/contact")} style={{ marginTop: "1.25rem", background: "transparent", border: `1px solid ${C.goldBorder}`, color: C.gold, padding: "0.5rem 1rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", width: "fit-content" }}>
-                  Request Access
+                <button onClick={() => navigate(wp.url)} style={{ marginTop: "1.25rem", background: "transparent", border: `1px solid ${C.goldBorder}`, color: C.gold, padding: "0.5rem 1rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.78rem", fontWeight: 600, cursor: "pointer", width: "fit-content" }}>
+                  Learn More
                 </button>
               </div>
             ))}
@@ -116,8 +116,8 @@ export default function Resources() {
                 </div>
                 <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", fontWeight: 700, color: C.text, marginBottom: "0.6rem", lineHeight: 1.35 }}>{guide.title}</h3>
                 <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.82rem", lineHeight: 1.6, flex: 1 }}>{guide.desc}</p>
-                <button onClick={() => navigate("/contact")} style={{ marginTop: "1rem", background: "transparent", border: `1px solid ${C.glassBorder}`, color: C.silver, padding: "0.45rem 0.9rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, cursor: "pointer", width: "fit-content" }}>
-                  Download Guide
+                <button onClick={() => navigate(guide.url)} style={{ marginTop: "1rem", background: "transparent", border: `1px solid ${C.glassBorder}`, color: C.silver, padding: "0.45rem 0.9rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, cursor: "pointer", width: "fit-content" }}>
+                  Learn More
                 </button>
               </div>
             ))}
