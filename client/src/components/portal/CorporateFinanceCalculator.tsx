@@ -106,7 +106,7 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
   );
 
   return (
-    <div style={{ minHeight: "100vh", background: "#F8FAFC", padding: "2rem" }}>
+    <div style={{ minHeight: "100vh", background: "#F8FAFC", color: "#1E293B", padding: "2rem" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         {/* Header with Back Button */}
         <div style={{ display: "flex", alignItems: "center", marginBottom: "2rem", gap: "1rem" }}>

@@ -283,14 +283,14 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", color: C.slate, margin: 0 }}>
             Assessment Recorded
           </h2>
-          <p style={{ color: C.textMuted, marginTop: "0.5rem" }}>
+          <p style={{ color: "#64748B", marginTop: "0.5rem" }}>
             Executive Assessment for {formData.clientName} has been saved.
           </p>
         </div>
 
         <div style={{ background: "rgba(13, 148, 136, 0.1)", border: `1px solid ${C.teal}`, borderRadius: 8, padding: "1.5rem", marginBottom: "2rem" }}>
           <h3 style={{ color: C.teal, margin: "0 0 1rem 0" }}>Next Steps</h3>
-          <ul style={{ color: C.text, lineHeight: 1.8, margin: 0, paddingLeft: "1.5rem" }}>
+          <ul style={{ color: "#1E293B", lineHeight: 1.8, margin: 0, paddingLeft: "1.5rem" }}>
             <li>Review the assessment summary below</li>
             <li>Print or download the report for client presentation</li>
             <li>Schedule Phase 2 Physical Verification engagement</li>
@@ -365,7 +365,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", color: C.slate, margin: 0 }}>
             Executive Assessment Form
           </h1>
-          <p style={{ color: C.textMuted, margin: "0.5rem 0 0 0" }}>Phase 1: Discovery & Assessment</p>
+          <p style={{ color: "#64748B", margin: "0.5rem 0 0 0" }}>Phase 1: Discovery & Assessment</p>
         </div>
         <button
           onClick={onBack}

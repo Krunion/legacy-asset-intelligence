@@ -235,3 +235,11 @@
 - [x] Fix InsightArticle back button - changed from "/resources" to "/insights"
 - [x] Update SiteNav Careers link to use /careers (plural)
 - [x] Update Home footer Careers link to use /careers (plural)
+- [x] Fix Employee Portal tool wrapper - added explicit color: #1E293B to white background container
+- [x] Fix ProposalCalculator white proposal container - added color: #1E293B
+- [x] Fix AssetIntelligenceAssessment white results container - added color: #1E293B
+- [x] Fix RecoverableCapitalAssessment white results container - added color: #1E293B
+- [x] Fix InvestigativeQuestionnaire white results container - added color: #1E293B
+- [x] Fix CorporateFinanceCalculator root container - added color: #1E293B
+- [x] Fix ExecutiveAssessmentForm - replaced shared COLORS.text (near-white) with dark #1E293B for list items
+- [x] Fix ExecutiveAssessmentForm - replaced shared COLORS.textMuted (too light) with #64748B for subtitles

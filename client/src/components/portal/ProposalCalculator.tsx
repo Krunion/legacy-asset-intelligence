@@ -454,7 +454,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
         </div>
 
         {/* Printable Proposal */}
-        <div ref={proposalRef} style={{ background: "white", padding: "2.5rem", borderRadius: 8, border: `1px solid ${C.border}`, maxWidth: 850, margin: "0 auto" }}>
+        <div ref={proposalRef} style={{ background: "white", color: "#1E293B", padding: "2.5rem", borderRadius: 8, border: `1px solid ${C.border}`, maxWidth: 850, margin: "0 auto" }}>
           {/* Header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem", paddingBottom: "1.5rem", borderBottom: `3px solid ${C.gold}` }}>
             <div>
