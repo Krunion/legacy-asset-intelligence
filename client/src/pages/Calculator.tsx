@@ -69,52 +69,52 @@ const Calculator: React.FC = () => {
 
           <div className="mb-4">
             <label htmlFor="ghostAssets" className="block text-sm font-medium text-gray-300">Number of Ghost Assets:</label>
-            <NumericInput style={inputStyle} value={ghostAssets} onChange={v => setGhostAssets(Number(v))} />
+            <NumericInput style={inputStyle} value={ghostAssets} onChange={v => setGhostAssets(Number(v))} min={0} />
           </div>
 
           <div className="mb-4">
             <label htmlFor="nbvGhostAssets" className="block text-sm font-medium text-gray-300">NBV of Ghost Assets ($):</label>
-            <NumericInput style={inputStyle} value={nbvGhostAssets} onChange={v => setNbvGhostAssets(Number(v))} />
+            <NumericInput style={inputStyle} value={nbvGhostAssets} onChange={v => setNbvGhostAssets(Number(v))} currency showDollarSign />
           </div>
 
           <div className="mb-4">
             <label htmlFor="unrecordedAssets" className="block text-sm font-medium text-gray-300">Number of Unrecorded Assets:</label>
-            <NumericInput style={inputStyle} value={unrecordedAssets} onChange={v => setUnrecordedAssets(Number(v))} />
+            <NumericInput style={inputStyle} value={unrecordedAssets} onChange={v => setUnrecordedAssets(Number(v))} min={0} />
           </div>
 
           <div className="mb-4">
             <label htmlFor="replacementValueUnrecorded" className="block text-sm font-medium text-gray-300">Replacement Value of Unrecorded Assets ($):</label>
-            <NumericInput style={inputStyle} value={replacementValueUnrecorded} onChange={v => setReplacementValueUnrecorded(Number(v))} />
+            <NumericInput style={inputStyle} value={replacementValueUnrecorded} onChange={v => setReplacementValueUnrecorded(Number(v))} currency showDollarSign />
           </div>
 
           <div className="mb-4">
             <label htmlFor="propertyTaxSavings" className="block text-sm font-medium text-gray-300">Annual Property Tax Savings ($):</label>
-            <NumericInput style={inputStyle} value={propertyTaxSavings} onChange={v => setPropertyTaxSavings(Number(v))} />
+            <NumericInput style={inputStyle} value={propertyTaxSavings} onChange={v => setPropertyTaxSavings(Number(v))} currency showDollarSign />
           </div>
 
           <div className="mb-4">
             <label htmlFor="insurancePremiumSavings" className="block text-sm font-medium text-gray-300">Annual Insurance Premium Savings ($):</label>
-            <NumericInput style={inputStyle} value={insurancePremiumSavings} onChange={v => setInsurancePremiumSavings(Number(v))} />
+            <NumericInput style={inputStyle} value={insurancePremiumSavings} onChange={v => setInsurancePremiumSavings(Number(v))} currency showDollarSign />
           </div>
 
           <div className="mb-4">
             <label htmlFor="maintenanceCostReductions" className="block text-sm font-medium text-gray-300">Annual Maintenance Cost Reductions ($):</label>
-            <NumericInput style={inputStyle} value={maintenanceCostReductions} onChange={v => setMaintenanceCostReductions(Number(v))} />
+            <NumericInput style={inputStyle} value={maintenanceCostReductions} onChange={v => setMaintenanceCostReductions(Number(v))} currency showDollarSign />
           </div>
 
           <div className="mb-4">
             <label htmlFor="engagementFee" className="block text-sm font-medium text-gray-300">Total Engagement Fee ($):</label>
-            <NumericInput style={inputStyle} value={engagementFee} onChange={v => setEngagementFee(Number(v))} />
+            <NumericInput style={inputStyle} value={engagementFee} onChange={v => setEngagementFee(Number(v))} currency showDollarSign />
           </div>
 
           <div className="mb-4">
             <label htmlFor="discountRate" className="block text-sm font-medium text-gray-300">Discount Rate (%):</label>
-            <NumericInput style={inputStyle} value={discountRate} onChange={v => setDiscountRate(Number(v))} />
+            <NumericInput style={inputStyle} value={discountRate} onChange={v => setDiscountRate(Number(v))} min={0} max={100} validationMessage="Must be 0-100%" />
           </div>
 
           <div className="mb-4">
             <label htmlFor="projectionYears" className="block text-sm font-medium text-gray-300">Projection Years:</label>
-            <NumericInput style={inputStyle} value={projectionYears} onChange={v => setProjectionYears(Number(v))} defaultValue={5} />
+            <NumericInput style={inputStyle} value={projectionYears} onChange={v => setProjectionYears(Number(v))} defaultValue={5} min={1} max={30} validationMessage="Must be 1-30 years" />
           </div>
         </div>
 

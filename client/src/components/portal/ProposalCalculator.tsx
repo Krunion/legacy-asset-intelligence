@@ -634,15 +634,15 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           </div>
           <div>
             <label style={labelStyle}>Estimated Trackable Physical Assets</label>
-            <NumericInput style={inputStyle} value={inputs.assets} onChange={v => update("assets", v)} />
+            <NumericInput style={inputStyle} value={inputs.assets} onChange={v => update("assets", v)} currency min={1} validationMessage="Must be at least 1 asset" />
           </div>
           <div>
             <label style={labelStyle}>Number of Locations / Sites</label>
-            <NumericInput style={inputStyle} value={inputs.locations} onChange={v => update("locations", v)} />
+            <NumericInput style={inputStyle} value={inputs.locations} onChange={v => update("locations", v)} min={1} validationMessage="Must be at least 1 location" />
           </div>
           <div>
             <label style={labelStyle}>Number of Departments</label>
-            <NumericInput style={inputStyle} value={inputs.departments} onChange={v => update("departments", v)} />
+            <NumericInput style={inputStyle} value={inputs.departments} onChange={v => update("departments", v)} min={1} validationMessage="Must be at least 1 department" />
           </div>
           <div>
             <label style={labelStyle}>Geographic Footprint</label>
@@ -658,11 +658,11 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           </div>
           <div>
             <label style={labelStyle}>Expected Travel Visits</label>
-            <NumericInput style={inputStyle} value={inputs.travelVisits} onChange={v => update("travelVisits", v)} />
+            <NumericInput style={inputStyle} value={inputs.travelVisits} onChange={v => update("travelVisits", v)} min={0} max={100} validationMessage="Expected range: 0-100 visits" />
           </div>
           <div>
             <label style={labelStyle}>Traveling Team Members</label>
-            <NumericInput style={inputStyle} value={inputs.travelTeamMembers} onChange={v => update("travelTeamMembers", v)} />
+            <NumericInput style={inputStyle} value={inputs.travelTeamMembers} onChange={v => update("travelTeamMembers", v)} min={1} max={20} validationMessage="Expected range: 1-20 members" />
           </div>
           <div>
             <label style={labelStyle}>Complexity Level</label>
@@ -828,11 +828,11 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Low Estimate ($)</label>
-            <NumericInput style={inputStyle} value={inputs.recoverableOpportunityLow} onChange={v => update("recoverableOpportunityLow", v)} />
+            <NumericInput style={inputStyle} value={inputs.recoverableOpportunityLow} onChange={v => update("recoverableOpportunityLow", v)} currency showDollarSign />
           </div>
           <div>
             <label style={labelStyle}>High Estimate ($)</label>
-            <NumericInput style={inputStyle} value={inputs.recoverableOpportunityHigh} onChange={v => update("recoverableOpportunityHigh", v)} />
+            <NumericInput style={inputStyle} value={inputs.recoverableOpportunityHigh} onChange={v => update("recoverableOpportunityHigh", v)} currency showDollarSign />
           </div>
         </div>
       </div>

@@ -292,7 +292,7 @@ export default function RecoverableCapitalAssessment({ onBack }: { onBack: () =>
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Asset Information</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          <div><label style={labelStyle}>Total Asset Value ($)</label><NumericInput style={inputStyle} value={data.totalAssetValue} onChange={v => update("totalAssetValue", String(v))} stringMode placeholder="e.g., 5000000" /></div>
+          <div><label style={labelStyle}>Total Asset Value ($)</label><NumericInput style={inputStyle} value={data.totalAssetValue} onChange={v => update("totalAssetValue", String(v))} stringMode placeholder="e.g., 5000000" currency showDollarSign /></div>
           <div><label style={labelStyle}>Total Asset Count</label><input style={inputStyle} value={data.totalAssetCount} onChange={e => update("totalAssetCount", e.target.value)} placeholder="e.g., 2500" /></div>
           <div><label style={labelStyle}>Years Since Last Comprehensive Audit</label>
             <select style={selectStyle} value={data.lastAuditYears} onChange={e => update("lastAuditYears", e.target.value)}>
@@ -320,11 +320,11 @@ export default function RecoverableCapitalAssessment({ onBack }: { onBack: () =>
         <h3 style={sectionTitleStyle}>Recovery Estimates (Adjust as needed)</h3>
         <p style={{ fontSize: "0.85rem", color: C.muted, marginBottom: "1rem" }}>These percentages represent the estimated portion of assets affected in each category. Adjust based on your assessment of the client's situation.</p>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          <div><label style={labelStyle}>Ghost Asset Estimate (%)</label><NumericInput style={inputStyle} value={data.ghostAssetEstimate} onChange={v => update("ghostAssetEstimate", String(v))} stringMode defaultValue="15" /></div>
-          <div><label style={labelStyle}>Duplicate Purchase Rate (%)</label><NumericInput style={inputStyle} value={data.duplicatePurchases} onChange={v => update("duplicatePurchases", String(v))} stringMode defaultValue="5" /></div>
-          <div><label style={labelStyle}>Insurance Overpayment (%)</label><NumericInput style={inputStyle} value={data.insuranceOverpay} onChange={v => update("insuranceOverpay", String(v))} stringMode defaultValue="10" /></div>
-          <div><label style={labelStyle}>Maintenance Waste (%)</label><NumericInput style={inputStyle} value={data.maintenanceWaste} onChange={v => update("maintenanceWaste", String(v))} stringMode defaultValue="8" /></div>
-          <div><label style={labelStyle}>Property Tax Overpayment (%)</label><NumericInput style={inputStyle} value={data.taxOverpay} onChange={v => update("taxOverpay", String(v))} stringMode defaultValue="12" /></div>
+          <div><label style={labelStyle}>Ghost Asset Estimate (%)</label><NumericInput style={inputStyle} value={data.ghostAssetEstimate} onChange={v => update("ghostAssetEstimate", String(v))} stringMode defaultValue="15" min={0} max={50} validationMessage="Must be 0-50%" /></div>
+          <div><label style={labelStyle}>Duplicate Purchase Rate (%)</label><NumericInput style={inputStyle} value={data.duplicatePurchases} onChange={v => update("duplicatePurchases", String(v))} stringMode defaultValue="5" min={0} max={30} validationMessage="Must be 0-30%" /></div>
+          <div><label style={labelStyle}>Insurance Overpayment (%)</label><NumericInput style={inputStyle} value={data.insuranceOverpay} onChange={v => update("insuranceOverpay", String(v))} stringMode defaultValue="10" min={0} max={30} validationMessage="Must be 0-30%" /></div>
+          <div><label style={labelStyle}>Maintenance Waste (%)</label><NumericInput style={inputStyle} value={data.maintenanceWaste} onChange={v => update("maintenanceWaste", String(v))} stringMode defaultValue="8" min={0} max={30} validationMessage="Must be 0-30%" /></div>
+          <div><label style={labelStyle}>Property Tax Overpayment (%)</label><NumericInput style={inputStyle} value={data.taxOverpay} onChange={v => update("taxOverpay", String(v))} stringMode defaultValue="12" min={0} max={30} validationMessage="Must be 0-30%" /></div>
         </div>
       </div>
 

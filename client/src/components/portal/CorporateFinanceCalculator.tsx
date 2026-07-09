@@ -66,41 +66,66 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
     return value;
   };
 
-  const InputField = ({ label, value, onChange, placeholder = "0" }: any) => (
-    <div style={{ marginBottom: "1rem" }}>
-      <label style={{ display: "block", fontSize: "0.9rem", fontWeight: 600, color: "#1E293B", marginBottom: "0.4rem" }}>
-        {label}
-      </label>
-      <input
-        type="text"
-        inputMode="decimal"
-        value={value}
-        onFocus={(e) => {
-          if (e.target.value === "0" || e.target.value === "") {
-            onChange("");
-          }
-        }}
-        onBlur={(e) => {
-          if (e.target.value === "") {
-            onChange("0");
-          }
-        }}
-        onChange={(e) => onChange(handleInputChange(e.target.value))}
-        placeholder={placeholder}
-        style={{
-          width: "100%",
-          padding: "0.6rem",
-          border: "1px solid #CBD5E1",
-          borderRadius: "6px",
-          fontSize: "0.95rem",
-          fontFamily: "'Source Sans 3', sans-serif",
-          boxSizing: "border-box",
-          backgroundColor: "#FFFFFF",
-          color: "#1E293B",
-        }}
-      />
-    </div>
-  );
+  const formatWithCommas = (val: string): string => {
+    const num = parseFloat(val);
+    if (isNaN(num) || val === "" || val === "0") return val;
+    const parts = num.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  };
+
+  const InputField = ({ label, value, onChange, placeholder = "0", isCurrency = false, isPercent = false, min, max, validationMsg }: any) => {
+    const [focused, setFocused] = useState(false);
+    const numVal = parseFloat(value) || 0;
+    const outOfRange = (min !== undefined && numVal < min) || (max !== undefined && numVal > max);
+    const displayVal = !focused && isCurrency && value && value !== "0" ? "$" + formatWithCommas(value) : value;
+
+    return (
+      <div style={{ marginBottom: "1rem" }}>
+        <label style={{ display: "block", fontSize: "0.9rem", fontWeight: 600, color: "#1E293B", marginBottom: "0.4rem" }}>
+          {label}
+        </label>
+        <input
+          type="text"
+          inputMode="decimal"
+          value={focused ? value : displayVal}
+          onFocus={(e) => {
+            setFocused(true);
+            if (e.target.value === "0" || e.target.value === "" || e.target.value.startsWith("$")) {
+              const raw = e.target.value.replace(/[$,]/g, "");
+              if (raw === "0" || raw === "") onChange("");
+              else onChange(raw);
+            }
+          }}
+          onBlur={(e) => {
+            setFocused(false);
+            if (e.target.value === "") {
+              onChange("0");
+            }
+          }}
+          onChange={(e) => onChange(handleInputChange(e.target.value))}
+          placeholder={placeholder}
+          style={{
+            width: "100%",
+            padding: "0.6rem",
+            border: `1px solid ${outOfRange ? "#EF4444" : "#CBD5E1"}`,
+            borderRadius: "6px",
+            fontSize: "0.95rem",
+            fontFamily: "'Source Sans 3', sans-serif",
+            boxSizing: "border-box" as const,
+            backgroundColor: "#FFFFFF",
+            color: "#1E293B",
+            ...(outOfRange ? { boxShadow: "0 0 0 1px #EF4444" } : {}),
+          }}
+        />
+        {outOfRange && validationMsg && (
+          <span style={{ display: "block", fontSize: "0.75rem", color: "#EF4444", marginTop: "0.25rem", fontWeight: 500 }}>
+            {validationMsg}
+          </span>
+        )}
+      </div>
+    );
+  };
 
   const OutputField = ({ label, value }: any) => (
     <div style={{ marginBottom: "1rem", padding: "1rem", background: "#F1F5F9", borderRadius: "6px", border: "1px solid #E2E8F0" }}>
@@ -155,28 +180,28 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
 
             <div style={{ marginBottom: "1.5rem", paddingBottom: "1.5rem", borderBottom: "1px solid #E2E8F0" }}>
               <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0D9488", marginBottom: "1rem" }}>Ghost Assets</h3>
-              <InputField label="Number of Ghost Assets" value={ghostAssets} onChange={setGhostAssets} />
-              <InputField label="NBV of Ghost Assets ($)" value={nbvGhostAssets} onChange={setNbvGhostAssets} />
+              <InputField label="Number of Ghost Assets" value={ghostAssets} onChange={setGhostAssets} min={0} />
+              <InputField label="NBV of Ghost Assets ($)" value={nbvGhostAssets} onChange={setNbvGhostAssets} isCurrency />
             </div>
 
             <div style={{ marginBottom: "1.5rem", paddingBottom: "1.5rem", borderBottom: "1px solid #E2E8F0" }}>
               <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0D9488", marginBottom: "1rem" }}>Unrecorded Assets</h3>
-              <InputField label="Number of Unrecorded Assets" value={unrecordedAssets} onChange={setUnrecordedAssets} />
-              <InputField label="Replacement Value ($)" value={replacementValueUnrecorded} onChange={setReplacementValueUnrecorded} />
+              <InputField label="Number of Unrecorded Assets" value={unrecordedAssets} onChange={setUnrecordedAssets} min={0} />
+              <InputField label="Replacement Value ($)" value={replacementValueUnrecorded} onChange={setReplacementValueUnrecorded} isCurrency />
             </div>
 
             <div style={{ marginBottom: "1.5rem", paddingBottom: "1.5rem", borderBottom: "1px solid #E2E8F0" }}>
               <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0D9488", marginBottom: "1rem" }}>Annual Savings</h3>
-              <InputField label="Property Tax Savings ($)" value={propertyTaxSavings} onChange={setPropertyTaxSavings} />
-              <InputField label="Insurance Premium Savings ($)" value={insurancePremiumSavings} onChange={setInsurancePremiumSavings} />
-              <InputField label="Maintenance Cost Reductions ($)" value={maintenanceCostReductions} onChange={setMaintenanceCostReductions} />
+              <InputField label="Property Tax Savings ($)" value={propertyTaxSavings} onChange={setPropertyTaxSavings} isCurrency />
+              <InputField label="Insurance Premium Savings ($)" value={insurancePremiumSavings} onChange={setInsurancePremiumSavings} isCurrency />
+              <InputField label="Maintenance Cost Reductions ($)" value={maintenanceCostReductions} onChange={setMaintenanceCostReductions} isCurrency />
             </div>
 
             <div style={{ marginBottom: "1.5rem", paddingBottom: "1.5rem", borderBottom: "1px solid #E2E8F0" }}>
               <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#0D9488", marginBottom: "1rem" }}>Financial Assumptions</h3>
-              <InputField label="Total Engagement Fee ($)" value={engagementFee} onChange={setEngagementFee} />
-              <InputField label="Discount Rate (%)" value={discountRate} onChange={setDiscountRate} />
-              <InputField label="Projection Years" value={projectionYears} onChange={setProjectionYears} />
+              <InputField label="Total Engagement Fee ($)" value={engagementFee} onChange={setEngagementFee} isCurrency />
+              <InputField label="Discount Rate (%)" value={discountRate} onChange={setDiscountRate} isPercent min={0} max={100} validationMsg="Must be 0-100%" />
+              <InputField label="Projection Years" value={projectionYears} onChange={setProjectionYears} min={1} max={30} validationMsg="Must be 1-30 years" />
             </div>
           </div>
 

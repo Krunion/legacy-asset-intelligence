@@ -183,6 +183,9 @@ export default function ROICalculator() {
             value={state.locations}
             onChange={(v) => setState({ ...state, locations: Number(v) || 1 })}
             defaultValue={1}
+            min={1}
+            max={50}
+            validationMessage="Must be 1-50 locations"
             style={{ width: "100%", padding: "0.6rem", border: `1px solid ${colors.border}`, borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: colors.text, fontWeight: 600, textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}
           />
         </div>
@@ -194,6 +197,9 @@ export default function ROICalculator() {
             value={state.departments}
             onChange={(v) => setState({ ...state, departments: Number(v) || 1 })}
             defaultValue={1}
+            min={1}
+            max={20}
+            validationMessage="Must be 1-20 departments"
             style={{ width: "100%", padding: "0.6rem", border: `1px solid ${colors.border}`, borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: colors.text, fontWeight: 600, textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}
           />
         </div>

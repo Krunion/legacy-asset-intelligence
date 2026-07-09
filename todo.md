@@ -244,3 +244,5 @@
 - [x] Fix ExecutiveAssessmentForm - replaced shared COLORS.text (near-white) with dark #1E293B for list items
 - [x] Fix ExecutiveAssessmentForm - replaced shared COLORS.textMuted (too light) with #64748B for subtitles
 - [x] Fix number inputs across all portal tools: clear "0" on focus, restore "0" on blur if empty
+- [x] Add currency formatting (comma-separated display) on blur for dollar-amount fields
+- [x] Add input validation feedback (visual cues for out-of-range values like percentages)
