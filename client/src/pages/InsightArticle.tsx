@@ -31,8 +31,8 @@ export default function InsightArticle() {
       <div style={{ minHeight: "100vh", background: C.charcoal, color: C.text, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "1.5rem" }}>
         <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", color: C.gold }}>Article Not Found</h1>
         <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted }}>The requested insight article could not be found.</p>
-        <button onClick={() => navigate("/resources")} style={{ padding: "0.75rem 2rem", background: C.gold, color: C.charcoal, border: "none", borderRadius: 4, fontWeight: 600, cursor: "pointer", fontFamily: "'Source Sans 3', sans-serif" }}>
-          Back to Resources
+        <button onClick={() => navigate("/insights")} style={{ padding: "0.75rem 2rem", background: C.gold, color: C.charcoal, border: "none", borderRadius: 4, fontWeight: 600, cursor: "pointer", fontFamily: "'Source Sans 3', sans-serif" }}>
+          Back to Insights
         </button>
       </div>
     );
@@ -44,10 +44,10 @@ export default function InsightArticle() {
       {/* ═══ ARTICLE HEADER ═══ */}
       <header style={{ padding: "8rem 2rem 3rem", maxWidth: 860, margin: "0 auto", textAlign: "center" }}>
         <button
-          onClick={() => navigate("/resources")}
+          onClick={() => navigate("/insights")}
           style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.gold, background: "none", border: "none", cursor: "pointer", marginBottom: "2rem", letterSpacing: "0.05em" }}
         >
-          ← Back to Resources
+          ← Back to Insights
         </button>
 
         <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "1rem" }}>

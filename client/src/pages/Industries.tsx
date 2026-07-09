@@ -199,21 +199,7 @@ export default function Industries() {
         </div>
       </Section>
 
-      {/* ═══ CLIENT PORTAL PREVIEW ═══ */}
-      <Section id="client-portal">
-        <div style={{ maxWidth: 900, margin: "0 auto", padding: "4rem 2rem" }}>
-          <div style={{ background: "rgba(26,34,48,0.5)", border: "1px solid rgba(168,178,189,0.08)", borderRadius: 8, padding: "3rem", textAlign: "center" }}>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "1rem" }}>Coming Soon</p>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.text, marginBottom: "1rem" }}>Industry-Specific Client Portal</h3>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.95rem", lineHeight: 1.8, maxWidth: 600, margin: "0 auto 1.5rem" }}>A dedicated client portal with real-time dashboards, industry benchmarking, asset verification progress tracking, and executive reporting — tailored to your specific sector's requirements and compliance standards.</p>
-            <div style={{ display: "flex", gap: "2rem", justifyContent: "center", flexWrap: "wrap" }}>
-              {["Real-Time Dashboards", "Industry Benchmarks", "Compliance Tracking", "Executive Reports"].map((item, i) => (
-                <span key={i} style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.gold, fontWeight: 500 }}>{item}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Section>
+
 
       {/* ═══ CLOSING CTA ═══ */}
       <Section id="industries-cta">

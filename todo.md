@@ -220,3 +220,18 @@
 - [x] Add routes for all 12 insight article pages in App.tsx
 - [x] Write article content data file with all 12 articles
 - [x] Test all insight article links from Resources page
+
+## Website Audit Fixes (July 2025)
+- [x] Fix Careers page 404 - added /careers route alias (both /career and /careers now work)
+- [x] Add "Why We Are The Only Solution" value proposition to hero section first fold
+- [x] Fix "Explore Our Methodology" button - changed from transparent to solid teal background
+- [x] Fix Insights featured article button - changed from "Request Full Article" to "Read Full Article" linking to actual article page
+- [x] Make all Insights grid cards clickable - navigate to their respective article pages
+- [x] Fix Resources video section - removed Coming Soon videos, added YouTube embed for available video
+- [x] Remove Coming Soon interactive tools from Resources page (kept only ROI Calculator)
+- [x] Remove Coming Soon "Executive Intelligence Dashboard" section from About page
+- [x] Remove Coming Soon "Industry-Specific Client Portal" section from Industries page
+- [x] Fix Employee Portal card text colors - changed from dark (#1E3A5F, #333) to light (#F5F7FA, #C8D0D8) for dark background readability
+- [x] Fix InsightArticle back button - changed from "/resources" to "/insights"
+- [x] Update SiteNav Careers link to use /careers (plural)
+- [x] Update Home footer Careers link to use /careers (plural)

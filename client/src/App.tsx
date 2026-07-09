@@ -31,6 +31,7 @@ function Router() {
       <Route path={"/resources"} component={Resources} />
       <Route path="/insights/:slug" component={InsightArticle} />
       <Route path={"/faq"} component={FAQ} />
+      <Route path={"/careers"} component={Career} />
       <Route path={"/career"} component={Career} />
       <Route path={"/employee-portal"} component={EmployeePortal} />
           <Route path={"/contact"} component={Contact} />

@@ -105,9 +105,32 @@ export default function Home() {
           <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(2.2rem, 5vw, 3.8rem)", fontWeight: 700, color: C.text, lineHeight: 1.1, marginBottom: "1.75rem" }}>
             Recover Hidden Capital.<br />Strengthen Financial Accountability.
           </h1>
-          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "clamp(1rem, 2vw, 1.15rem)", color: C.silver, maxWidth: 720, margin: "0 auto 2.5rem", lineHeight: 1.8 }}>
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "clamp(1rem, 2vw, 1.15rem)", color: C.silver, maxWidth: 720, margin: "0 auto 2rem", lineHeight: 1.8 }}>
             Legacy Asset Intelligence helps executive leadership make better financial and operational decisions by identifying ghost assets, recovering lost capital, and building governance programs that protect investments permanently.
           </p>
+
+          {/* WHY WE ARE THE ONLY SOLUTION */}
+          <div style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.goldBorder}`, borderRadius: 8, padding: "2rem 2.5rem", maxWidth: 780, margin: "0 auto 3rem", textAlign: "left" }}>
+            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.gold, marginBottom: "1rem", textAlign: "center" }}>
+              Why We Are The Only Solution
+            </h3>
+            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.silver, lineHeight: 1.8, marginBottom: "1.25rem" }}>
+              Most consulting firms offer fragmented services — an audit here, a software recommendation there. <strong style={{ color: C.text }}>Legacy Asset Intelligence is the only firm that combines physical asset verification, financial reconciliation, technology integration, and ongoing governance into a single, unified engagement.</strong>
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+              {[
+                { point: "End-to-End Methodology", detail: "From discovery through permanent governance — no handoffs, no gaps" },
+                { point: "Technology-Enabled Verification", detail: "RFID, barcode, and IoT integration that eliminates manual error" },
+                { point: "Recurring Governance Programs", detail: "We don't just fix the problem — we prevent it from returning" },
+                { point: "Executive-Level Deliverables", detail: "Board-ready reports, not spreadsheets buried in operations" },
+              ].map((item, i) => (
+                <div key={i} style={{ padding: "0.75rem", borderLeft: `2px solid ${C.gold}`, paddingLeft: "1rem" }}>
+                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", fontWeight: 600, color: C.text, marginBottom: "0.25rem" }}>{item.point}</p>
+                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.textMuted, margin: 0, lineHeight: 1.5 }}>{item.detail}</p>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* Dual CTAs */}
           <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap", marginBottom: "3rem" }}>
@@ -121,7 +144,9 @@ export default function Home() {
             </button>
             <button
               onClick={() => document.getElementById("methodology")?.scrollIntoView({ behavior: "smooth" })}
-              style={{ background: "transparent", color: C.silver, border: `1px solid ${C.borderLight}`, padding: "0.85rem 2rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", fontWeight: 500, cursor: "pointer", transition: "border-color 0.2s" }}
+              style={{ background: C.teal, color: "#FFFFFF", border: "none", padding: "0.85rem 2rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", fontWeight: 600, cursor: "pointer", transition: "transform 0.16s ease-out" }}
+              onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.97)")}
+              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
               Explore Our Methodology
             </button>
@@ -532,7 +557,7 @@ export default function Home() {
             {/* Quick Links */}
             <div>
               <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, color: C.gold, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1rem" }}>Company</h4>
-              {[{ label: "Team", path: "/team" }, { label: "Careers", path: "/career" }, { label: "Contact", path: "/contact" }, { label: "FAQ", path: "/faq" }].map(l => (
+              {[{ label: "Team", path: "/team" }, { label: "Careers", path: "/careers" }, { label: "Contact", path: "/contact" }, { label: "FAQ", path: "/faq" }].map(l => (
                 <p key={l.path} onClick={() => navigate(l.path)} style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.silver, marginBottom: "0.5rem", cursor: "pointer" }}>{l.label}</p>
               ))}
             </div>

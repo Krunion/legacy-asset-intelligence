@@ -55,11 +55,6 @@ export default function Resources() {
 
   const videos = [
     { title: "Introduction to Ghost Assets", duration: "2:05", desc: "Overview of what ghost assets are, why they matter, and how organizations can begin addressing them.", status: "Available" },
-    { title: "The Executive Assessment Process", duration: "Coming Soon", desc: "Walk-through of our Phase 1 discovery and executive assessment methodology.", status: "Coming Soon" },
-    { title: "Technology-Enabled Asset Governance", duration: "Coming Soon", desc: "How modern platforms and IoT technology transform asset accountability from reactive to proactive.", status: "Coming Soon" },
-    { title: "Understanding Your Asset Accountability Score", duration: "Coming Soon", desc: "Explanation of our proprietary scoring methodology and what it reveals about organizational maturity.", status: "Coming Soon" },
-    { title: "Capital Recovery: From Identification to Realization", duration: "Coming Soon", desc: "The process of identifying, validating, and realizing capital recovery opportunities from ghost assets.", status: "Coming Soon" },
-    { title: "Building Executive Support for Asset Intelligence", duration: "Coming Soon", desc: "How to build internal support and secure executive sponsorship for asset intelligence initiatives.", status: "Coming Soon" },
   ];
 
   return (
@@ -132,16 +127,20 @@ export default function Resources() {
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "0.5rem" }}>Video Library</p>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.6rem", fontWeight: 700, color: C.text }}>Educational Video Content</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.25rem" }}>
-            {videos.map((video, i) => (
-              <div key={i} style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: 8, padding: "1.5rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-                  <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.92rem", fontWeight: 700, color: C.text }}>{video.title}</h3>
-                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.72rem", color: video.status === "Available" ? C.gold : C.textMuted }}>{video.duration}</span>
-                </div>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.82rem", lineHeight: 1.6, margin: 0 }}>{video.desc}</p>
+          <div style={{ maxWidth: 640, margin: "0 auto" }}>
+            <div style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: 8, padding: "1.5rem" }}>
+              <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: 6, marginBottom: "1rem" }}>
+                <iframe
+                  src="https://www.youtube.com/embed/1rpOJFl52nQ"
+                  title="Introduction to Ghost Assets"
+                  style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               </div>
-            ))}
+              <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", fontWeight: 700, color: C.text, marginBottom: "0.5rem" }}>Introduction to Ghost Assets</h3>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.82rem", lineHeight: 1.6, margin: 0 }}>Overview of what ghost assets are, why they matter, and how organizations can begin addressing them.</p>
+            </div>
           </div>
         </div>
       </Section>
@@ -154,21 +153,11 @@ export default function Resources() {
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.6rem", fontWeight: 700, color: C.text }}>Self-Assessment & Planning Tools</h2>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.9rem", lineHeight: 1.7, marginTop: "0.75rem" }}>Interactive tools to help you evaluate your organization's asset management maturity and estimate potential capital recovery.</p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem" }}>
+          <div style={{ maxWidth: 400 }}>
             <div style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.goldBorder}`, borderRadius: 8, padding: "1.75rem" }}>
               <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", fontWeight: 700, color: C.text, marginBottom: "0.5rem" }}>ROI Calculator</h3>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.82rem", lineHeight: 1.6, marginBottom: "1.25rem" }}>Estimate your organization's potential capital recovery based on asset base size, industry, and current verification practices.</p>
-              <button onClick={() => navigate("/#roi-calculator")} style={{ background: C.gold, color: "#0B0F13", border: "none", padding: "0.6rem 1.25rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer" }}>Open Calculator</button>
-            </div>
-            <div style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: 8, padding: "1.75rem", opacity: 0.7 }}>
-              <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", fontWeight: 700, color: C.text, marginBottom: "0.5rem" }}>Maturity Self-Assessment</h3>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.82rem", lineHeight: 1.6, marginBottom: "1.25rem" }}>Score your organization across five dimensions of asset management maturity and receive a personalized improvement roadmap.</p>
-              <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.gold, fontWeight: 600 }}>Coming Soon</span>
-            </div>
-            <div style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: 8, padding: "1.75rem", opacity: 0.7 }}>
-              <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", fontWeight: 700, color: C.text, marginBottom: "0.5rem" }}>Governance Readiness Scorecard</h3>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.82rem", lineHeight: 1.6, marginBottom: "1.25rem" }}>Evaluate your organization's readiness for implementing a comprehensive asset governance framework.</p>
-              <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.gold, fontWeight: 600 }}>Coming Soon</span>
+              <button onClick={() => navigate("/calculator")} style={{ background: C.gold, color: "#0B0F13", border: "none", padding: "0.6rem 1.25rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer" }}>Open Calculator</button>
             </div>
           </div>
         </div>

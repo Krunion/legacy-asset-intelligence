@@ -275,23 +275,7 @@ export default function About() {
         </div>
       </Section>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
-          FUTURE: EXECUTIVE DASHBOARD
-          ═══════════════════════════════════════════════════════════════════════ */}
-      <Section id="dashboard-preview">
-        <div style={{ maxWidth: 900, margin: "0 auto", padding: "4rem 2rem" }}>
-          <div style={{ background: "rgba(26,34,48,0.5)", border: `1px solid ${C.glassBorder}`, borderRadius: 8, padding: "3rem", textAlign: "center" }}>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "1rem" }}>Coming Soon</p>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: C.text, marginBottom: "1rem" }}>Executive Intelligence Dashboard</h3>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.95rem", lineHeight: 1.8, maxWidth: 600, margin: "0 auto 1.5rem" }}>A dedicated executive dashboard providing real-time visibility into asset verification progress, recoverable capital identification, governance maturity scoring, and strategic recommendations — accessible to authorized leadership at any time.</p>
-            <div style={{ display: "flex", gap: "2rem", justifyContent: "center", flexWrap: "wrap" }}>
-              {["Live Progress Tracking", "Capital Recovery Metrics", "Governance Scoring", "Board-Ready Reports"].map((item, i) => (
-                <span key={i} style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.gold, fontWeight: 500 }}>{item}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Section>
+
 
       {/* ═══════════════════════════════════════════════════════════════════════
           CLOSING CTA
