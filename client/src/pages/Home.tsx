@@ -295,11 +295,11 @@ export default function Home() {
             </div>
             <div style={{ padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, textAlign: "center" }}>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>Physical Verification</p>
-              <VideoModal phaseNumber={2} phaseName="Physical Asset Accountability" description="Our wall-to-wall inventory process and floor-to-book reconciliation." />
+              <VideoModal phaseNumber={2} phaseName="Physical Asset Accountability" description="Our wall-to-wall inventory process and floor-to-book reconciliation." videoUrl="https://youtube.com/shorts/Cm6eZ142c4o" isYouTube={true} />
             </div>
             <div style={{ padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, textAlign: "center" }}>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>Technology & Governance</p>
-              <VideoModal phaseNumber={3} phaseName="Technology Platform Integration" description="How we select, configure, and integrate asset management platforms." />
+              <VideoModal phaseNumber={3} phaseName="Technology Platform Integration" description="How we select, configure, and integrate asset management platforms." videoUrl="https://youtu.be/z_W3IvQCNcw" isYouTube={true} />
             </div>
           </div>
         </div>
