@@ -153,12 +153,28 @@ export default function Home() {
           </div>
 
           {/* Founder Video */}
-          <div style={{ maxWidth: 600, margin: "0 auto" }}>
+          <div style={{ maxWidth: 600, margin: "0 auto", textAlign: "center" }}>
+            {/* Video Preview Thumbnail */}
+            <div
+              style={{ position: "relative", borderRadius: 10, overflow: "hidden", marginBottom: "1rem", cursor: "pointer", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}
+              onClick={() => window.open("https://youtu.be/4wXH2-1dwlI", "_blank")}
+            >
+              <img
+                src="https://img.youtube.com/vi/4wXH2-1dwlI/maxresdefault.jpg"
+                alt="Legacy Asset Intelligence - Founder Introduction"
+                style={{ width: "100%", display: "block", aspectRatio: "16/9", objectFit: "cover" }}
+              />
+              <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(0,0,0,0.3)" }}>
+                <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(13,148,136,0.9)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontSize: "1.5rem", color: "white", marginLeft: 4 }}>▶</span>
+                </div>
+              </div>
+            </div>
             <VideoModal
               phaseNumber={1}
               phaseName="Founder Introduction"
               description="Hear from our Founder about the mission of Legacy Asset Intelligence and why Executive Asset Intelligence matters for modern organizations."
-              videoUrl="https://youtu.be/1rpOJFl52nQ"
+              videoUrl="https://youtu.be/4wXH2-1dwlI"
               isYouTube={true}
             />
           </div>

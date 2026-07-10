@@ -248,3 +248,4 @@
 - [x] Add input validation feedback (visual cues for out-of-range values like percentages)
 - [x] Verify Google Tag Manager (GTM-WK6Z2R87) is installed in head and body — already present
 - [x] Add Google Analytics (gtag.js) with ID G-WGHGJ2ZNQV to head section
+- [x] Update hero section video to use https://youtu.be/4wXH2-1dwlI with preview thumbnail above Watch button
