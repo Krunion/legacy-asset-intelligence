@@ -32,6 +32,12 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
     border: "#E2E8F0",
   };
 
+  const handleClose = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpen(false);
+  };
+
   return (
     <>
       {/* Watch Video Button */}
@@ -53,12 +59,12 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
           gap: "0.5rem",
         }}
         onMouseEnter={(e) => {
-          (e.target as HTMLButtonElement).style.background = "#0B7A7B";
-          (e.target as HTMLButtonElement).style.transform = "translateY(-2px)";
+          (e.currentTarget as HTMLButtonElement).style.background = "#0B7A7B";
+          (e.currentTarget as HTMLButtonElement).style.transform = "translateY(-2px)";
         }}
         onMouseLeave={(e) => {
-          (e.target as HTMLButtonElement).style.background = C.teal;
-          (e.target as HTMLButtonElement).style.transform = "translateY(0)";
+          (e.currentTarget as HTMLButtonElement).style.background = C.teal;
+          (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
         }}
       >
         ▶ Watch Video
@@ -67,19 +73,19 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
       {/* Modal Overlay */}
       {isOpen && (
         <div
-          onClick={() => setIsOpen(false)}
+          onClick={handleClose}
           style={{
             position: "fixed",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            background: "rgba(0, 0, 0, 0.7)",
+            background: "rgba(0, 0, 0, 0.85)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            zIndex: 1000,
-            padding: "1rem",
+            zIndex: 9999,
+            padding: "2rem",
           }}
         >
           {/* Modal Content */}
@@ -88,32 +94,44 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
             style={{
               background: "white",
               borderRadius: 12,
-              padding: "2rem",
-              maxWidth: 800,
+              padding: "1.5rem",
+              maxWidth: 900,
               width: "100%",
-              boxShadow: "0 20px 60px rgba(0, 0, 0, 0.3)",
+              maxHeight: "90vh",
+              overflow: "auto",
+              boxShadow: "0 20px 60px rgba(0, 0, 0, 0.5)",
               position: "relative",
             }}
           >
-            {/* Close Button */}
+            {/* Close Button - X in top right */}
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={handleClose}
               style={{
                 position: "absolute",
-                top: "1rem",
-                right: "1rem",
-                background: "transparent",
+                top: "0.75rem",
+                right: "0.75rem",
+                background: "#EF4444",
                 border: "none",
-                fontSize: "1.5rem",
+                fontSize: "1.2rem",
                 cursor: "pointer",
-                color: C.slate,
+                color: "white",
+                width: "36px",
+                height: "36px",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 10001,
+                lineHeight: 1,
+                fontWeight: 700,
               }}
+              aria-label="Close video modal"
             >
               ✕
             </button>
 
             {/* Modal Header */}
-            <div style={{ marginBottom: "1.5rem" }}>
+            <div style={{ marginBottom: "1rem", paddingRight: "2.5rem" }}>
               <p
                 style={{
                   color: C.teal,
@@ -122,7 +140,7 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
                   fontWeight: 600,
                   letterSpacing: "0.12em",
                   textTransform: "uppercase",
-                  marginBottom: "0.5rem",
+                  marginBottom: "0.4rem",
                 }}
               >
                 Phase {phaseNumber}
@@ -130,15 +148,15 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
               <h2
                 style={{
                   fontFamily: "'Playfair Display', serif",
-                  fontSize: "2rem",
+                  fontSize: "1.5rem",
                   fontWeight: 700,
                   color: C.slate,
-                  marginBottom: "0.5rem",
+                  marginBottom: "0.4rem",
                 }}
               >
                 {phaseName}
               </h2>
-              <p style={{ color: "#64748B", fontSize: "0.95rem" }}>
+              <p style={{ color: "#64748B", fontSize: "0.9rem", margin: 0 }}>
                 {description}
               </p>
             </div>
@@ -151,19 +169,27 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
                     background: "#000",
                     borderRadius: 8,
                     overflow: "hidden",
-                    marginBottom: "1.5rem",
-                    aspectRatio: "16 / 9",
+                    marginBottom: "1rem",
+                    width: "100%",
+                    position: "relative",
+                    paddingBottom: "56.25%", /* 16:9 aspect ratio */
+                    height: 0,
                   }}
                 >
                   <iframe
-                    width="100%"
-                    height="100%"
-                    src={`https://www.youtube.com/embed/${extractYouTubeId(videoUrl)}`}
+                    src={`https://www.youtube.com/embed/${extractYouTubeId(videoUrl)}?autoplay=1&rel=0`}
                     title={phaseName}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
-                    style={{ width: "100%", height: "100%" }}
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      border: "none",
+                    }}
                   />
                 </div>
               ) : (
@@ -172,15 +198,24 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
                     background: "#000",
                     borderRadius: 8,
                     overflow: "hidden",
-                    marginBottom: "1.5rem",
-                    aspectRatio: "16 / 9",
+                    marginBottom: "1rem",
+                    width: "100%",
+                    position: "relative",
+                    paddingBottom: "56.25%",
+                    height: 0,
                   }}
                 >
                   <video
-                    width="100%"
-                    height="100%"
                     controls
-                    style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                    autoPlay
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
                   >
                     <source src={videoUrl} type="video/mp4" />
                     Your browser does not support the video tag.
@@ -188,61 +223,41 @@ export default function VideoModal({ phaseNumber, phaseName, description, videoU
                 </div>
               )
             ) : (
-              <>
-                <div
+              <div
+                style={{
+                  background: C.bg,
+                  border: `2px dashed ${C.border}`,
+                  borderRadius: 8,
+                  padding: "3rem",
+                  textAlign: "center",
+                  marginBottom: "1rem",
+                  minHeight: 250,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🎥</div>
+                <p
                   style={{
-                    background: C.bg,
-                    border: `2px dashed ${C.border}`,
-                    borderRadius: 8,
-                    padding: "3rem",
-                    textAlign: "center",
-                    marginBottom: "1.5rem",
-                    minHeight: 300,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    fontFamily: "'Source Sans 3', sans-serif",
+                    fontWeight: 600,
+                    color: C.slate,
+                    marginBottom: "0.5rem",
                   }}
                 >
-                  <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🎥</div>
-                  <p
-                    style={{
-                      fontFamily: "'Source Sans 3', sans-serif",
-                      fontWeight: 600,
-                      color: C.slate,
-                      marginBottom: "0.5rem",
-                    }}
-                  >
-                    Video Coming Soon
-                  </p>
-                  <p style={{ color: "#64748B", fontSize: "0.9rem" }}>
-                    This video will explain the Phase {phaseNumber} methodology and deliverables in detail.
-                  </p>
-                </div>
-
-                {/* Placeholder Info */}
-                <div
-                  style={{
-                    background: "rgba(13, 148, 136, 0.08)",
-                    border: `1px solid rgba(13, 148, 136, 0.3)`,
-                    borderRadius: 6,
-                    padding: "1rem",
-                    marginBottom: "1.5rem",
-                  }}
-                >
-                  <p style={{ color: C.slate, fontWeight: 600, marginBottom: "0.5rem" }}>
-                    📝 Placeholder Information
-                  </p>
-                  <p style={{ color: "#64748B", fontSize: "0.9rem", margin: 0 }}>
-                    This is a placeholder for the Phase {phaseNumber} video. The video URL can be added later to replace this placeholder.
-                  </p>
-                </div>
-              </>
+                  Video Coming Soon
+                </p>
+                <p style={{ color: "#64748B", fontSize: "0.9rem" }}>
+                  This video will explain the Phase {phaseNumber} methodology and deliverables in detail.
+                </p>
+              </div>
             )}
 
-            {/* Close Button */}
+            {/* Bottom Close Button */}
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={handleClose}
               style={{
                 width: "100%",
                 padding: "0.75rem",
