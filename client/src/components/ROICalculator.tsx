@@ -674,7 +674,7 @@ export default function ROICalculator() {
           onClick={() => {
             const subject = `ROI Calculator Assessment - ${state.industry}`;
             const body = `I completed your ROI calculator and would like to discuss my results. My estimated recoverable capital is $${(capitalRecoveryMid / 1000).toFixed(0)}K.`;
-            window.location.href = `mailto:hello@legacyassetintelligence.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = `mailto:info@legacyassetintelligence.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
           }}
           style={{
             padding: "0.8rem 2rem",

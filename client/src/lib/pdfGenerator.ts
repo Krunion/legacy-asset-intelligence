@@ -226,7 +226,7 @@ export function generatePDF(result: CalculatorResult): void {
   yPos += 35;
 
   drawText("Questions? Contact us:", 40, yPos, "bold 12px 'Source Sans 3', sans-serif", colors.slate);
-  drawText("hello@legacyassetintelligence.com", 40, yPos + 18, "12px 'JetBrains Mono', monospace", colors.teal);
+  drawText("info@legacyassetintelligence.com", 40, yPos + 18, "12px 'JetBrains Mono', monospace", colors.teal);
 
   yPos = canvas.height - 50;
 

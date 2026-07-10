@@ -477,7 +477,7 @@ export default function ExecutiveROIEstimator() {
             onClick={() => {
               const subject = `Executive ROI Estimate - ${INDUSTRY_BENCHMARKS[input.industry]?.label || input.industry}`;
               const body = `I completed your Executive ROI Estimator and would like to discuss my results.\n\nTotal Financial Opportunity: ${formatCurrency(results.totalFinancialOpportunity)}\nRecommended Engagement: ${results.recommendedEngagementLevel}\nNet ROI: ${results.netROI}%`;
-              window.location.href = `mailto:hello@legacyassetintelligence.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+              window.location.href = `mailto:info@legacyassetintelligence.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             }}
             style={{ ...btnPrimary, flex: 1 }}
             onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(0.98)"; e.currentTarget.style.opacity = "0.9"; }}

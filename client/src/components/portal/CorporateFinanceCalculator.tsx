@@ -5,6 +5,89 @@ interface CorporateFinanceCalculatorProps {
   onBack: () => void;
 }
 
+// ─── InputField extracted OUTSIDE the main component to prevent re-creation on every render ───
+const InputField = ({ label, value, onChange, placeholder = "0", isCurrency = false, isPercent = false, min, max, validationMsg }: any) => {
+  const [focused, setFocused] = useState(false);
+  const numVal = parseFloat(value) || 0;
+  const outOfRange = (min !== undefined && numVal < min) || (max !== undefined && numVal > max);
+
+  const formatWithCommas = (val: string): string => {
+    const num = parseFloat(val);
+    if (isNaN(num) || val === "" || val === "0") return val;
+    const parts = num.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  };
+
+  const displayVal = !focused && isCurrency && value && value !== "0" ? "$" + formatWithCommas(value) : value;
+
+  const handleInputChange = (inputValue: string) => {
+    if (inputValue === '' || /^\d*\.?\d*$/.test(inputValue)) {
+      return inputValue;
+    }
+    return value; // return current value if invalid
+  };
+
+  return (
+    <div style={{ marginBottom: "1rem" }}>
+      <label style={{ display: "block", fontSize: "0.9rem", fontWeight: 600, color: "#1E293B", marginBottom: "0.4rem" }}>
+        {label}
+      </label>
+      <input
+        type="text"
+        inputMode="decimal"
+        value={focused ? value : displayVal}
+        onFocus={(e) => {
+          setFocused(true);
+          if (e.target.value === "0" || e.target.value === "" || e.target.value.startsWith("$")) {
+            const raw = e.target.value.replace(/[$,]/g, "");
+            if (raw === "0" || raw === "") onChange("");
+            else onChange(raw);
+          }
+        }}
+        onBlur={(e) => {
+          setFocused(false);
+          if (e.target.value === "") {
+            onChange("0");
+          }
+        }}
+        onChange={(e) => onChange(handleInputChange(e.target.value))}
+        placeholder={placeholder}
+        style={{
+          width: "100%",
+          padding: "0.6rem",
+          border: `1px solid ${outOfRange ? "#EF4444" : "#CBD5E1"}`,
+          borderRadius: "6px",
+          fontSize: "0.95rem",
+          fontFamily: "'Source Sans 3', sans-serif",
+          boxSizing: "border-box" as const,
+          backgroundColor: "#FFFFFF",
+          color: "#1E293B",
+          ...(outOfRange ? { boxShadow: "0 0 0 1px #EF4444" } : {}),
+        }}
+      />
+      {outOfRange && validationMsg && (
+        <span style={{ display: "block", fontSize: "0.75rem", color: "#EF4444", marginTop: "0.25rem", fontWeight: 500 }}>
+          {validationMsg}
+        </span>
+      )}
+    </div>
+  );
+};
+
+const OutputField = ({ label, value }: any) => (
+  <div style={{ marginBottom: "1rem", padding: "1rem", background: "#F1F5F9", borderRadius: "6px", border: "1px solid #E2E8F0" }}>
+    <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: "#64748B", marginBottom: "0.4rem" }}>
+      {label}
+    </label>
+    <p style={{ fontSize: "1.4rem", fontWeight: 700, color: "#1E3A5F", margin: 0 }}>
+      {typeof value === 'number' && (label.includes('$') || label.includes('Recovery') || label.includes('Savings') || label.includes('NPV'))
+        ? `$${value.toLocaleString()}`
+        : value}
+    </p>
+  </div>
+);
+
 const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({ onBack }) => {
   const [ghostAssets, setGhostAssets] = useState<string>('');
   const [nbvGhostAssets, setNbvGhostAssets] = useState<string>('');
@@ -57,88 +140,6 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
   };
 
   const financials = calculateFinancials();
-
-  const handleInputChange = (value: string) => {
-    // Allow empty string, numbers, and decimal point
-    if (value === '' || /^\d*\.?\d*$/.test(value)) {
-      return value;
-    }
-    return value;
-  };
-
-  const formatWithCommas = (val: string): string => {
-    const num = parseFloat(val);
-    if (isNaN(num) || val === "" || val === "0") return val;
-    const parts = num.toString().split(".");
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    return parts.join(".");
-  };
-
-  const InputField = ({ label, value, onChange, placeholder = "0", isCurrency = false, isPercent = false, min, max, validationMsg }: any) => {
-    const [focused, setFocused] = useState(false);
-    const numVal = parseFloat(value) || 0;
-    const outOfRange = (min !== undefined && numVal < min) || (max !== undefined && numVal > max);
-    const displayVal = !focused && isCurrency && value && value !== "0" ? "$" + formatWithCommas(value) : value;
-
-    return (
-      <div style={{ marginBottom: "1rem" }}>
-        <label style={{ display: "block", fontSize: "0.9rem", fontWeight: 600, color: "#1E293B", marginBottom: "0.4rem" }}>
-          {label}
-        </label>
-        <input
-          type="text"
-          inputMode="decimal"
-          value={focused ? value : displayVal}
-          onFocus={(e) => {
-            setFocused(true);
-            if (e.target.value === "0" || e.target.value === "" || e.target.value.startsWith("$")) {
-              const raw = e.target.value.replace(/[$,]/g, "");
-              if (raw === "0" || raw === "") onChange("");
-              else onChange(raw);
-            }
-          }}
-          onBlur={(e) => {
-            setFocused(false);
-            if (e.target.value === "") {
-              onChange("0");
-            }
-          }}
-          onChange={(e) => onChange(handleInputChange(e.target.value))}
-          placeholder={placeholder}
-          style={{
-            width: "100%",
-            padding: "0.6rem",
-            border: `1px solid ${outOfRange ? "#EF4444" : "#CBD5E1"}`,
-            borderRadius: "6px",
-            fontSize: "0.95rem",
-            fontFamily: "'Source Sans 3', sans-serif",
-            boxSizing: "border-box" as const,
-            backgroundColor: "#FFFFFF",
-            color: "#1E293B",
-            ...(outOfRange ? { boxShadow: "0 0 0 1px #EF4444" } : {}),
-          }}
-        />
-        {outOfRange && validationMsg && (
-          <span style={{ display: "block", fontSize: "0.75rem", color: "#EF4444", marginTop: "0.25rem", fontWeight: 500 }}>
-            {validationMsg}
-          </span>
-        )}
-      </div>
-    );
-  };
-
-  const OutputField = ({ label, value }: any) => (
-    <div style={{ marginBottom: "1rem", padding: "1rem", background: "#F1F5F9", borderRadius: "6px", border: "1px solid #E2E8F0" }}>
-      <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: "#64748B", marginBottom: "0.4rem" }}>
-        {label}
-      </label>
-      <p style={{ fontSize: "1.4rem", fontWeight: 700, color: "#1E3A5F", margin: 0 }}>
-        {typeof value === 'number' && (label.includes('$') || label.includes('Recovery') || label.includes('Savings') || label.includes('NPV'))
-          ? `$${value.toLocaleString()}`
-          : value}
-      </p>
-    </div>
-  );
 
   return (
     <div style={{ minHeight: "100vh", background: "#F8FAFC", color: "#1E293B", padding: "2rem" }}>

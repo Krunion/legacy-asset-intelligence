@@ -263,3 +263,7 @@
 - [x] Generate professional reports at either stage (estimated or verified)
 - [x] Calculate: recoverable capital, ghost/zombie/duplicate exposure, maintenance waste, insurance optimization, property tax, procurement waste, 5-year projections, payback, executive ROI
 - [x] Serve as central data source for all deliverables (proposal engine uses shared laiEstimationModels)
+
+## Bug Fixes (July 10)
+- [x] Fix Corporate Finance Calculator - only allows one number input at a time per section (InputField moved outside component)
+- [x] Change all email references from hello@legacyassetintelligence.com to info@legacyassetintelligence.com (3 files updated)
