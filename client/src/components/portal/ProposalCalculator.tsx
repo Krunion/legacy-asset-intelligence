@@ -4,9 +4,14 @@
  * Generates professional branded proposals with signature line
  */
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { LOGO_BASE64 } from "./logoBase64";
 import NumericInput from "./NumericInput";
+import {
+  calculatePublicEstimate,
+  type PublicEstimatorInput,
+  type PublicEstimatorOutput,
+} from "@/lib/laiEstimationModels";
 
 // ─── Data Tables (from spreadsheet) ─────────────────────────────────────────
 
@@ -175,6 +180,27 @@ function getRecurringPerAssetRate(assets: number, tier: string) {
   return t[key] || t.bronze;
 }
 
+// ─── Mapping from Proposal inputs → Estimation Model inputs ──────────────────
+const INDUSTRY_INDEX_TO_KEY: Record<number, string> = {
+  0: "healthcare", 1: "healthcare", 2: "healthcare",
+  3: "manufacturing", 4: "distribution", 5: "logistics",
+  6: "government", 7: "education", 8: "other",
+  9: "other", 10: "other", 11: "other",
+  12: "construction", 13: "utilities", 14: "logistics",
+  15: "other", 16: "education", 17: "realestate",
+  18: "other", 19: "other",
+};
+
+const RECORD_QUALITY_TO_SYSTEM: Record<number, string> = {
+  0: "dedicated_eam", 1: "erp_module", 2: "basic_system",
+  3: "spreadsheets", 4: "none",
+};
+
+const LAST_INVENTORY_TO_RECENCY: Record<number, string> = {
+  0: "within_12m", 1: "1_3_years", 2: "3_5_years",
+  3: "5_plus_years", 4: "never",
+};
+
 interface CalcInputs {
   clientName: string;
   industry: number;
@@ -204,8 +230,15 @@ interface CalcInputs {
   includeRecurring: boolean;
   recurringTier: number;
   auditFrequency: number;
-  recoverableOpportunityLow: number;
-  recoverableOpportunityHigh: number;
+  // ROI Mode
+  roiMode: "estimated" | "verified";
+  // Verified overrides (only used when roiMode === "verified")
+  verifiedGhostAssetValue: number;
+  verifiedUnrecordedValue: number;
+  verifiedMaintenanceWaste: number;
+  verifiedInsuranceOptimization: number;
+  verifiedPropertyTaxReduction: number;
+  verifiedProcurementWaste: number;
 }
 
 function calculateProposal(inputs: CalcInputs) {
@@ -307,9 +340,7 @@ function calculateProposal(inputs: CalcInputs) {
     totalInitialInvestment,
     totalTravelEstimate,
     controlledRiskModifier,
-    recoverableOpportunityLow: inputs.recoverableOpportunityLow,
-    recoverableOpportunityHigh: inputs.recoverableOpportunityHigh,
-    roiRange: totalInitialInvestment > 0 ? `${(inputs.recoverableOpportunityLow / totalInitialInvestment).toFixed(1)}x - ${(inputs.recoverableOpportunityHigh / totalInitialInvestment).toFixed(1)}x` : "N/A",
+
   };
 }
 
@@ -396,14 +427,79 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
     includeRecurring: true,
     recurringTier: 0,
     auditFrequency: 1,
-    recoverableOpportunityLow: 500000,
-    recoverableOpportunityHigh: 1500000,
+    // ROI Mode
+    roiMode: "estimated",
+    verifiedGhostAssetValue: 0,
+    verifiedUnrecordedValue: 0,
+    verifiedMaintenanceWaste: 0,
+    verifiedInsuranceOptimization: 0,
+    verifiedPropertyTaxReduction: 0,
+    verifiedProcurementWaste: 0,
   });
 
   const [showProposal, setShowProposal] = useState(false);
   const proposalRef = useRef<HTMLDivElement>(null);
 
   const result = calculateProposal(inputs);
+
+  // ─── ROI Estimation Engine ─────────────────────────────────────────────────
+  const roiEstimate = useMemo((): PublicEstimatorOutput | null => {
+    const estimatorInput: PublicEstimatorInput = {
+      industry: INDUSTRY_INDEX_TO_KEY[inputs.industry] || "other",
+      facilityCount: inputs.locations,
+      estimatedAssetCount: inputs.assets,
+      approximateReplacementValue: 0, // Let model estimate from asset count
+      annualCapex: 0,
+      annualMaintenanceBudget: 0,
+      annualInsurancePremiums: 0,
+      assetManagementSystem: RECORD_QUALITY_TO_SYSTEM[inputs.recordQuality] || "basic_system",
+      lastPhysicalInventoryDate: LAST_INVENTORY_TO_RECENCY[inputs.lastInventory] || "3_5_years",
+    };
+    return calculatePublicEstimate(estimatorInput);
+  }, [inputs.industry, inputs.locations, inputs.assets, inputs.recordQuality, inputs.lastInventory]);
+
+  // Resolve final ROI values based on mode
+  const roiValues = useMemo(() => {
+    if (inputs.roiMode === "verified") {
+      const totalRecovery = inputs.verifiedGhostAssetValue + inputs.verifiedUnrecordedValue;
+      const annualSavings = inputs.verifiedMaintenanceWaste + inputs.verifiedInsuranceOptimization + inputs.verifiedPropertyTaxReduction + inputs.verifiedProcurementWaste;
+      const totalOpportunity = totalRecovery + annualSavings;
+      const fiveYear = totalRecovery + (annualSavings * 5);
+      const avgFee = result.totalInitialInvestment;
+      const netROI = avgFee > 0 ? Math.round(((totalOpportunity - avgFee) / avgFee) * 100) : 0;
+      const payback = annualSavings > 0 ? Math.round((avgFee / (annualSavings / 12)) * 10) / 10 : 12;
+      return {
+        ghostAssetValue: inputs.verifiedGhostAssetValue,
+        unrecordedValue: inputs.verifiedUnrecordedValue,
+        maintenanceWaste: inputs.verifiedMaintenanceWaste,
+        insuranceOptimization: inputs.verifiedInsuranceOptimization,
+        propertyTaxReduction: inputs.verifiedPropertyTaxReduction,
+        procurementWaste: inputs.verifiedProcurementWaste,
+        totalOpportunity,
+        firstYearBenefit: totalOpportunity,
+        fiveYearBenefit: fiveYear,
+        netROI,
+        paybackMonths: payback,
+        mode: "verified" as const,
+      };
+    }
+    // Estimated mode
+    if (!roiEstimate) return null;
+    return {
+      ghostAssetValue: roiEstimate.estimatedGhostAssetValue,
+      unrecordedValue: roiEstimate.estimatedUnrecordedValue,
+      maintenanceWaste: roiEstimate.maintenanceWaste,
+      insuranceOptimization: roiEstimate.insuranceOptimization,
+      propertyTaxReduction: roiEstimate.propertyTaxReduction,
+      procurementWaste: roiEstimate.procurementWaste,
+      totalOpportunity: roiEstimate.totalFinancialOpportunity,
+      firstYearBenefit: roiEstimate.firstYearBenefit,
+      fiveYearBenefit: roiEstimate.fiveYearBenefit,
+      netROI: roiEstimate.netROI,
+      paybackMonths: roiEstimate.estimatedPaybackPeriodMonths,
+      mode: "estimated" as const,
+    };
+  }, [inputs.roiMode, inputs.verifiedGhostAssetValue, inputs.verifiedUnrecordedValue, inputs.verifiedMaintenanceWaste, inputs.verifiedInsuranceOptimization, inputs.verifiedPropertyTaxReduction, inputs.verifiedProcurementWaste, roiEstimate, result.totalInitialInvestment]);
 
   const handlePrint = () => {
     if (!proposalRef.current) return;
@@ -530,16 +626,31 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           </table>
 
           {/* ROI Projection */}
-          {(inputs.recoverableOpportunityLow > 0 || inputs.recoverableOpportunityHigh > 0) && (
+          {roiValues && roiValues.totalOpportunity > 0 && (
             <div style={{ marginBottom: "2rem", padding: "1.25rem", background: "rgba(13, 148, 136, 0.05)", borderRadius: 8, border: `1px solid rgba(13, 148, 136, 0.2)` }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: C.teal, marginBottom: "0.75rem" }}>Projected Return on Investment</h3>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: C.teal }}>Projected Return on Investment</h3>
+                <span style={{ fontSize: "0.7rem", color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em", background: "#F0FDF4", padding: "0.25rem 0.5rem", borderRadius: 4 }}>{roiValues.mode === "estimated" ? "Model-Based Estimate" : "Verified Field Data"}</span>
+              </div>
               <table style={{ width: "100%", fontSize: "0.9rem" }}>
                 <tbody>
-                  <tr><td style={{ padding: "0.25rem 0", fontWeight: 600, width: "50%" }}>Estimated Recoverable Opportunity:</td><td>${inputs.recoverableOpportunityLow.toLocaleString()} – ${inputs.recoverableOpportunityHigh.toLocaleString()}</td></tr>
-                  <tr><td style={{ padding: "0.25rem 0", fontWeight: 600 }}>Total Engagement Cost:</td><td>${Math.round(result.totalInitialInvestment).toLocaleString()}</td></tr>
-                  <tr><td style={{ padding: "0.25rem 0", fontWeight: 600, color: C.teal }}>Projected ROI:</td><td style={{ fontWeight: 700, color: C.teal }}>{result.roiRange}</td></tr>
+                  <tr><td style={{ padding: "0.4rem 0", fontWeight: 600, width: "50%" }}>Ghost Asset Exposure:</td><td style={{ fontFamily: "'JetBrains Mono', monospace" }}>${roiValues.ghostAssetValue.toLocaleString()}</td></tr>
+                  <tr><td style={{ padding: "0.4rem 0", fontWeight: 600 }}>Unrecorded Asset Value:</td><td style={{ fontFamily: "'JetBrains Mono', monospace" }}>${roiValues.unrecordedValue.toLocaleString()}</td></tr>
+                  <tr><td style={{ padding: "0.4rem 0", fontWeight: 600 }}>Maintenance Waste (Annual):</td><td style={{ fontFamily: "'JetBrains Mono', monospace" }}>${roiValues.maintenanceWaste.toLocaleString()}</td></tr>
+                  <tr><td style={{ padding: "0.4rem 0", fontWeight: 600 }}>Insurance Optimization (Annual):</td><td style={{ fontFamily: "'JetBrains Mono', monospace" }}>${roiValues.insuranceOptimization.toLocaleString()}</td></tr>
+                  <tr><td style={{ padding: "0.4rem 0", fontWeight: 600 }}>Property Tax Reduction (Annual):</td><td style={{ fontFamily: "'JetBrains Mono', monospace" }}>${roiValues.propertyTaxReduction.toLocaleString()}</td></tr>
+                  <tr><td style={{ padding: "0.4rem 0", fontWeight: 600 }}>Procurement Waste (Annual):</td><td style={{ fontFamily: "'JetBrains Mono', monospace" }}>${roiValues.procurementWaste.toLocaleString()}</td></tr>
+                  <tr style={{ borderTop: "2px solid rgba(13,148,136,0.3)" }}><td style={{ padding: "0.6rem 0", fontWeight: 700, color: C.teal }}>Total Financial Opportunity:</td><td style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: C.teal }}>${roiValues.totalOpportunity.toLocaleString()}</td></tr>
+                  <tr><td style={{ padding: "0.4rem 0", fontWeight: 600 }}>Total Engagement Investment:</td><td style={{ fontFamily: "'JetBrains Mono', monospace" }}>${Math.round(result.totalInitialInvestment).toLocaleString()}</td></tr>
+                  <tr><td style={{ padding: "0.4rem 0", fontWeight: 700, color: C.gold }}>Net ROI:</td><td style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: C.gold }}>{roiValues.netROI}%</td></tr>
+                  <tr><td style={{ padding: "0.4rem 0", fontWeight: 600 }}>Estimated Payback Period:</td><td style={{ fontFamily: "'JetBrains Mono', monospace" }}>{roiValues.paybackMonths < 1 ? "< 1 month" : `${roiValues.paybackMonths.toFixed(1)} months`}</td></tr>
                 </tbody>
               </table>
+              {roiValues.mode === "estimated" && (
+                <p style={{ fontSize: "0.75rem", color: C.muted, marginTop: "0.75rem", fontStyle: "italic" }}>
+                  * Projections based on LAI proprietary estimation model using industry benchmarks, asset management maturity, and inventory recency. Actual values will be confirmed during Phase 2 field verification.
+                </p>
+              )}
             </div>
           )}
 
@@ -822,19 +933,72 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
         </div>
       </div>
 
-      {/* Recovery Opportunity */}
+      {/* ROI Projection Mode */}
       <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>Estimated Recoverable Opportunity (Optional)</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <h3 style={sectionTitleStyle}>Financial Recovery & ROI Projection</h3>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
           <div>
-            <label style={labelStyle}>Low Estimate ($)</label>
-            <NumericInput style={inputStyle} value={inputs.recoverableOpportunityLow} onChange={v => update("recoverableOpportunityLow", v)} currency showDollarSign />
+            <label style={labelStyle}>Data Mode</label>
+            <select style={selectStyle} value={inputs.roiMode} onChange={e => update("roiMode", e.target.value)}>
+              <option value="estimated">Phase 1 — Estimated (Model-Based)</option>
+              <option value="verified">Phase 2 — Verified (Field Data)</option>
+            </select>
           </div>
-          <div>
-            <label style={labelStyle}>High Estimate ($)</label>
-            <NumericInput style={inputStyle} value={inputs.recoverableOpportunityHigh} onChange={v => update("recoverableOpportunityHigh", v)} currency showDollarSign />
+          <div style={{ display: "flex", alignItems: "flex-end", paddingBottom: "0.25rem" }}>
+            <span style={{ fontSize: "0.8rem", color: inputs.roiMode === "estimated" ? C.teal : C.gold, fontWeight: 600, fontFamily: "'Source Sans 3', sans-serif", background: inputs.roiMode === "estimated" ? "rgba(13,148,136,0.1)" : "rgba(201,168,76,0.1)", padding: "0.4rem 0.75rem", borderRadius: 4 }}>
+              {inputs.roiMode === "estimated" ? "⚡ Using LAI Proprietary Estimation Model" : "✓ Using Verified Field Data"}
+            </span>
           </div>
         </div>
+
+        {inputs.roiMode === "verified" && (
+          <div style={{ padding: "1.25rem", background: "rgba(201,168,76,0.05)", border: `1px solid rgba(201,168,76,0.2)`, borderRadius: 8, marginBottom: "1rem" }}>
+            <p style={{ fontSize: "0.85rem", color: C.muted, marginBottom: "1rem", fontStyle: "italic" }}>Enter verified values from Phase 2 field discovery. These override the estimation model.</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+              <div>
+                <label style={labelStyle}>Ghost Asset Value (Verified)</label>
+                <NumericInput style={inputStyle} value={inputs.verifiedGhostAssetValue} onChange={v => update("verifiedGhostAssetValue", v)} currency showDollarSign />
+              </div>
+              <div>
+                <label style={labelStyle}>Unrecorded Asset Value (Verified)</label>
+                <NumericInput style={inputStyle} value={inputs.verifiedUnrecordedValue} onChange={v => update("verifiedUnrecordedValue", v)} currency showDollarSign />
+              </div>
+              <div>
+                <label style={labelStyle}>Maintenance Waste (Annual)</label>
+                <NumericInput style={inputStyle} value={inputs.verifiedMaintenanceWaste} onChange={v => update("verifiedMaintenanceWaste", v)} currency showDollarSign />
+              </div>
+              <div>
+                <label style={labelStyle}>Insurance Optimization (Annual)</label>
+                <NumericInput style={inputStyle} value={inputs.verifiedInsuranceOptimization} onChange={v => update("verifiedInsuranceOptimization", v)} currency showDollarSign />
+              </div>
+              <div>
+                <label style={labelStyle}>Property Tax Reduction (Annual)</label>
+                <NumericInput style={inputStyle} value={inputs.verifiedPropertyTaxReduction} onChange={v => update("verifiedPropertyTaxReduction", v)} currency showDollarSign />
+              </div>
+              <div>
+                <label style={labelStyle}>Procurement Waste (Annual)</label>
+                <NumericInput style={inputStyle} value={inputs.verifiedProcurementWaste} onChange={v => update("verifiedProcurementWaste", v)} currency showDollarSign />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ROI Summary Preview */}
+        {roiValues && (
+          <div style={{ padding: "1.25rem", background: "rgba(13,148,136,0.05)", border: `1px solid rgba(13,148,136,0.2)`, borderRadius: 8 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+              <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 700, color: C.teal, fontSize: "0.9rem" }}>ROI Projection Summary</h4>
+              <span style={{ fontSize: "0.7rem", color: C.muted, textTransform: "uppercase", letterSpacing: "0.08em" }}>{roiValues.mode === "estimated" ? "Model-Based Estimate" : "Verified Data"}</span>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "0.75rem" }}>
+              <div><span style={{ fontSize: "0.75rem", color: C.muted }}>Total Opportunity</span><br/><span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: C.teal }}>${roiValues.totalOpportunity.toLocaleString()}</span></div>
+              <div><span style={{ fontSize: "0.75rem", color: C.muted }}>First-Year Benefit</span><br/><span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>${roiValues.firstYearBenefit.toLocaleString()}</span></div>
+              <div><span style={{ fontSize: "0.75rem", color: C.muted }}>5-Year Benefit</span><br/><span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>${roiValues.fiveYearBenefit.toLocaleString()}</span></div>
+              <div><span style={{ fontSize: "0.75rem", color: C.muted }}>Net ROI</span><br/><span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700, color: C.gold }}>{roiValues.netROI}%</span></div>
+              <div><span style={{ fontSize: "0.75rem", color: C.muted }}>Payback Period</span><br/><span style={{ fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{roiValues.paybackMonths < 1 ? "< 1 mo" : `${roiValues.paybackMonths.toFixed(1)} mo`}</span></div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Live Preview */}

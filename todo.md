@@ -249,3 +249,17 @@
 - [x] Verify Google Tag Manager (GTM-WK6Z2R87) is installed in head and body — already present
 - [x] Add Google Analytics (gtag.js) with ID G-WGHGJ2ZNQV to head section
 - [x] Update hero section video to use https://youtu.be/4wXH2-1dwlI with preview thumbnail above Watch button
+
+## ROI Calculator Redesign
+- [x] Remove current public ROI calculator (wrong workflow - assumes user knows recovery values)
+- [x] Build public Executive ROI Estimator (inputs: industry, facilities, asset count, replacement value, capex, maintenance budget, insurance, asset mgmt system, last inventory date)
+- [x] Implement LAI proprietary estimation models for ghost assets, unrecorded assets, recoverable capital, maintenance waste, insurance optimization, property tax, procurement waste
+- [x] Public calculator outputs: engagement level, projected investment, 1-year benefit, 5-year benefit, net ROI, payback period
+- [x] Build Employee Portal Financial Recovery & Proposal ROI Engine
+- [x] Engine supports Phase 1 estimated mode (uses assessment data + modeling algorithms)
+- [x] Engine supports Phase 2 verified mode (replaces estimates with verified field data)
+- [x] Clear distinction between Estimated Results vs Verified Results (badge + color coding)
+- [x] Auto-recalculate all projections when verified data replaces estimates (useMemo reactive)
+- [x] Generate professional reports at either stage (estimated or verified)
+- [x] Calculate: recoverable capital, ghost/zombie/duplicate exposure, maintenance waste, insurance optimization, property tax, procurement waste, 5-year projections, payback, executive ROI
+- [x] Serve as central data source for all deliverables (proposal engine uses shared laiEstimationModels)

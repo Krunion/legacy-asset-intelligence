@@ -6,7 +6,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
-import ROICalculator from "@/components/ROICalculator";
+import ExecutiveROIEstimator from "@/components/ExecutiveROIEstimator";
 import CaseStudies from "@/components/CaseStudies";
 import { ChatbotWidget } from "@/components/ChatbotWidget";
 import VideoModal from "@/components/VideoModal";
@@ -507,13 +507,13 @@ export default function Home() {
               Assess Your Opportunity
             </p>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 700, color: C.text, lineHeight: 1.2, marginBottom: "1rem" }}>
-              Recoverable Capital Calculator
+              Executive ROI Estimator
             </h2>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "1rem", maxWidth: 700, margin: "0 auto", lineHeight: 1.7 }}>
-              Estimate your organization's ghost asset recovery potential in minutes. Receive a personalized analysis of potential savings across property tax, insurance, maintenance, and duplicate purchases.
+              Estimate your organization's total financial recovery opportunity in minutes. Our proprietary models predict ghost asset exposure, recoverable capital, and annual savings — using only information you already know.
             </p>
           </div>
-          <ROICalculator />
+          <ExecutiveROIEstimator />
         </div>
       </Section>
 
