@@ -276,3 +276,8 @@
 - [x] Phase 3: Add barcode procurement decision - Option A (LAI purchases) vs Option B (Client purchases)
 - [x] Phase 3: Technology Advisory is now mandatory (not optional) - auto-include when Phase 3 selected
 - [x] Verify all pricing calculations flow correctly through proposal output
+
+## Page Title Fix (July 12)
+- [x] Remove "Business Plan" from page title everywhere - user wants just "Legacy Asset Intelligence" with no hyphen/em-dash
+- [x] Update index.html title, og:title, twitter:title to just "Legacy Asset Intelligence"
+- [ ] Update VITE_APP_TITLE system secret (cannot be changed via tool - requires platform-level update)
