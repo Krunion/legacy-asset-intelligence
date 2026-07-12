@@ -267,3 +267,12 @@
 ## Bug Fixes (July 10)
 - [x] Fix Corporate Finance Calculator - only allows one number input at a time per section (InputField moved outside component)
 - [x] Change all email references from hello@legacyassetintelligence.com to info@legacyassetintelligence.com (3 files updated)
+
+## Engagement Intelligence Engine (EIE) Modifications
+- [x] Phase 2: Remove all tagging/barcoding references and pricing (barcode tagging, asset tagging, QR code, RFID, label replacement, label procurement)
+- [x] Phase 2: Ensure only physical verification, inventory validation, FAR reconciliation, existence/condition verification, recovery analysis, executive reporting remain
+- [x] Phase 3: Add deployment decision logic - Option A (LAI performs barcode/tag deployment) vs Option B (Client performs)
+- [x] Phase 3: When client deploys - LAI tagging labor = 0, travel for tagging = 0, technology implementation continues
+- [x] Phase 3: Add barcode procurement decision - Option A (LAI purchases) vs Option B (Client purchases)
+- [x] Phase 3: Technology Advisory is now mandatory (not optional) - auto-include when Phase 3 selected
+- [x] Verify all pricing calculations flow correctly through proposal output

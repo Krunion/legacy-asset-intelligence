@@ -97,6 +97,13 @@ const BASELINE_ID_METHODS = [
   { label: "RFID Pilot Tags", perAsset: 5 },
 ];
 
+const BARCODE_PROCUREMENT_COSTS = [
+  { label: "Temporary Labels", perAsset: 0.75 },
+  { label: "QR Labels", perAsset: 1.50 },
+  { label: "Barcode Labels", perAsset: 2.00 },
+  { label: "RFID Tags", perAsset: 5.00 },
+];
+
 const RECOVERY_ANALYSIS = [
   { label: "None", addOn: 0 },
   { label: "Basic", addOn: 3500 },
@@ -219,12 +226,16 @@ interface CalcInputs {
   assessmentLevel: number;
   includePhase2: boolean;
   verificationDepth: number;
-  baselineIdMethod: number;
   recoveryAnalysis: number;
   includePhase3: boolean;
   governanceLevel: number;
   techEnablement: number;
   trainingDepth: number;
+  // Phase 3 Deployment Decisions
+  tagDeployment: "lai" | "client";
+  tagType: number;
+  barcodeProcurement: "lai" | "client";
+  barcodeType: number;
   offHours: boolean;
   accelerated: boolean;
   includeRecurring: boolean;
@@ -291,15 +302,16 @@ function calculateProposal(inputs: CalcInputs) {
     const locationComponent = inputs.locations * 500;
     const deptComponent = inputs.departments * 150;
     const verificationDepthMod = VERIFICATION_DEPTHS[inputs.verificationDepth].multiplier;
-    const baselineIdAddOn = inputs.assets * BASELINE_ID_METHODS[inputs.baselineIdMethod].perAsset;
     const recoveryAddOn = RECOVERY_ANALYSIS[inputs.recoveryAnalysis].addOn;
     const travelAllocation = totalTravelEstimate * 0.65;
-    const subtotal = (((baseDiscoveryFee + assetComponent + locationComponent + deptComponent) * verificationDepthMod + baselineIdAddOn + recoveryAddOn) * controlledRiskModifier * marketPositionModifier * (1 + offHoursPremium + acceleratedPremium)) + travelAllocation;
+    const subtotal = (((baseDiscoveryFee + assetComponent + locationComponent + deptComponent) * verificationDepthMod + recoveryAddOn) * controlledRiskModifier * marketPositionModifier * (1 + offHoursPremium + acceleratedPremium)) + travelAllocation;
     phase2Price = Math.max(subtotal, scaleTier.phase2Min);
   }
 
   // ─── Phase 3 ───
   let phase3Price = 0;
+  let taggingLaborCost = 0;
+  let barcodeProcurementCost = 0;
   if (inputs.includePhase3) {
     const baseEffort = 6500 + (inputs.locations * 500) + (inputs.departments * 150);
     const perAssetFee = perAssetTier.phase3;
@@ -307,10 +319,14 @@ function calculateProposal(inputs: CalcInputs) {
     const locationComponent = inputs.locations * 500;
     const deptComponent = inputs.departments * 150;
     const governanceMod = GOVERNANCE_LEVELS[inputs.governanceLevel].modifier;
-    const techAddOn = TECH_ENABLEMENT[inputs.techEnablement].addOn;
+    const techAddOn = TECH_ENABLEMENT[inputs.techEnablement].addOn; // Always mandatory
     const trainingAddOn = TRAINING_DEPTHS[inputs.trainingDepth].addOn;
-    const travelAllocation = totalTravelEstimate * 0.10;
-    const subtotal = (((baseEffort + assetComponent + locationComponent + deptComponent) * governanceMod) * controlledRiskModifier + techAddOn + trainingAddOn) * marketPositionModifier * (1 + offHoursPremium + acceleratedPremium) + travelAllocation;
+    // Deployment decisions
+    taggingLaborCost = inputs.tagDeployment === "lai" ? inputs.assets * BASELINE_ID_METHODS[inputs.tagType].perAsset : 0;
+    barcodeProcurementCost = inputs.barcodeProcurement === "lai" ? inputs.assets * BARCODE_PROCUREMENT_COSTS[inputs.barcodeType].perAsset : 0;
+    const deploymentTravelAllocation = inputs.tagDeployment === "lai" ? totalTravelEstimate * 0.15 : 0;
+    const travelAllocation = totalTravelEstimate * 0.10 + deploymentTravelAllocation;
+    const subtotal = (((baseEffort + assetComponent + locationComponent + deptComponent) * governanceMod) * controlledRiskModifier + techAddOn + trainingAddOn + taggingLaborCost + barcodeProcurementCost) * marketPositionModifier * (1 + offHoursPremium + acceleratedPremium) + travelAllocation;
     phase3Price = Math.max(subtotal, scaleTier.phase3Min);
   }
 
@@ -416,12 +432,16 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
     assessmentLevel: 1,
     includePhase2: true,
     verificationDepth: 1,
-    baselineIdMethod: 1,
     recoveryAnalysis: 1,
     includePhase3: true,
     governanceLevel: 0,
     techEnablement: 1,
     trainingDepth: 0,
+    // Phase 3 Deployment Decisions
+    tagDeployment: "lai",
+    tagType: 2, // QR Baseline Labels
+    barcodeProcurement: "lai",
+    barcodeType: 1, // QR Labels
     offHours: false,
     accelerated: false,
     includeRecurring: true,
@@ -600,13 +620,13 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
               </tr>
               <tr style={{ borderBottom: `1px solid ${C.border}` }}>
                 <td style={{ padding: "0.75rem", fontWeight: 600 }}>Phase 2</td>
-                <td style={{ padding: "0.75rem" }}>Discovery, Verification & Capital Recovery</td>
+                <td style={{ padding: "0.75rem" }}>Physical Verification & Recovery Analysis</td>
                 <td style={{ padding: "0.75rem", textAlign: "center" }}>{inputs.includePhase2 ? "✓" : "—"}</td>
                 <td style={{ padding: "0.75rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace" }}>{inputs.includePhase2 ? `$${Math.round(result.phase2Price).toLocaleString()}` : "—"}</td>
               </tr>
               <tr style={{ borderBottom: `1px solid ${C.border}` }}>
                 <td style={{ padding: "0.75rem", fontWeight: 600 }}>Phase 3</td>
-                <td style={{ padding: "0.75rem" }}>Governance & Implementation</td>
+                <td style={{ padding: "0.75rem" }}>Governance, Technology & Implementation</td>
                 <td style={{ padding: "0.75rem", textAlign: "center" }}>{inputs.includePhase3 ? "✓" : "—"}</td>
                 <td style={{ padding: "0.75rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace" }}>{inputs.includePhase3 ? `$${Math.round(result.phase3Price).toLocaleString()}` : "—"}</td>
               </tr>
@@ -665,14 +685,14 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
             )}
             {inputs.includePhase2 && (
               <div style={{ marginBottom: "0.75rem", paddingLeft: "1rem", borderLeft: `3px solid ${C.teal}` }}>
-                <p style={{ fontWeight: 600, marginBottom: "0.25rem" }}>Phase 2 – Discovery & Capital Recovery</p>
-                <p style={{ fontSize: "0.85rem", color: C.muted }}>Physical verification, reconciliation, exception analysis, and capital recovery opportunity reporting.</p>
+                <p style={{ fontWeight: 600, marginBottom: "0.25rem" }}>Phase 2 – Physical Verification & Recovery Analysis</p>
+                <p style={{ fontSize: "0.85rem", color: C.muted }}>Physical asset verification, inventory validation, FAR reconciliation, existence/condition verification, recovery analysis, and executive reporting.</p>
               </div>
             )}
             {inputs.includePhase3 && (
               <div style={{ marginBottom: "0.75rem", paddingLeft: "1rem", borderLeft: `3px solid ${C.slate}` }}>
-                <p style={{ fontWeight: 600, marginBottom: "0.25rem" }}>Phase 3 – Governance & Implementation</p>
-                <p style={{ fontSize: "0.85rem", color: C.muted }}>Governance design, technology roadmap, training, implementation support, and ongoing accountability structure.</p>
+                <p style={{ fontWeight: 600, marginBottom: "0.25rem" }}>Phase 3 – Governance, Technology & Implementation</p>
+                <p style={{ fontSize: "0.85rem", color: C.muted }}>Governance design, technology advisory, {inputs.tagDeployment === "lai" ? "tag deployment (LAI-managed), " : ""}barcode procurement{inputs.barcodeProcurement === "lai" ? " (LAI-managed)" : " (client-managed)"}, training, implementation support, and ongoing accountability structure.</p>
               </div>
             )}
             {inputs.includeRecurring && (
@@ -824,7 +844,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
 
       {/* Phase 2 */}
       <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>Phase 2 – Discovery & Recovery</h3>
+        <h3 style={sectionTitleStyle}>Phase 2 – Physical Verification & Recovery Analysis</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Include Phase 2?</label>
@@ -840,12 +860,6 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
             </select>
           </div>
           <div>
-            <label style={labelStyle}>Baseline ID Method</label>
-            <select style={selectStyle} value={inputs.baselineIdMethod} onChange={e => update("baselineIdMethod", Number(e.target.value))} disabled={!inputs.includePhase2}>
-              {BASELINE_ID_METHODS.map((b, i) => <option key={i} value={i}>{b.label}</option>)}
-            </select>
-          </div>
-          <div>
             <label style={labelStyle}>Recovery Analysis Depth</label>
             <select style={selectStyle} value={inputs.recoveryAnalysis} onChange={e => update("recoveryAnalysis", Number(e.target.value))} disabled={!inputs.includePhase2}>
               {RECOVERY_ANALYSIS.map((r, i) => <option key={i} value={i}>{r.label}</option>)}
@@ -856,7 +870,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
 
       {/* Phase 3 */}
       <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>Phase 3 – Governance & Implementation</h3>
+        <h3 style={sectionTitleStyle}>Phase 3 – Governance, Technology & Implementation</h3>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Include Phase 3?</label>
@@ -872,9 +886,9 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
             </select>
           </div>
           <div>
-            <label style={labelStyle}>Technology Enablement</label>
+            <label style={{...labelStyle, color: C.teal}}>Technology Advisory (Mandatory)</label>
             <select style={selectStyle} value={inputs.techEnablement} onChange={e => update("techEnablement", Number(e.target.value))} disabled={!inputs.includePhase3}>
-              {TECH_ENABLEMENT.map((t, i) => <option key={i} value={i}>{t.label}</option>)}
+              {TECH_ENABLEMENT.map((t, i) => <option key={i} value={i}>{t.label} (${t.addOn.toLocaleString()})</option>)}
             </select>
           </div>
           <div>
@@ -883,6 +897,36 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
               {TRAINING_DEPTHS.map((t, i) => <option key={i} value={i}>{t.label}</option>)}
             </select>
           </div>
+          <div>
+            <label style={labelStyle}>Tag/Barcode Deployment</label>
+            <select style={selectStyle} value={inputs.tagDeployment} onChange={e => update("tagDeployment", e.target.value)} disabled={!inputs.includePhase3}>
+              <option value="lai">LAI Deploys Tags</option>
+              <option value="client">Client Deploys Tags</option>
+            </select>
+          </div>
+          {inputs.tagDeployment === "lai" && (
+            <div>
+              <label style={labelStyle}>Tag Type (LAI Labor)</label>
+              <select style={selectStyle} value={inputs.tagType} onChange={e => update("tagType", Number(e.target.value))} disabled={!inputs.includePhase3}>
+                {BASELINE_ID_METHODS.map((b, i) => <option key={i} value={i}>{b.label} (${b.perAsset}/asset)</option>)}
+              </select>
+            </div>
+          )}
+          <div>
+            <label style={labelStyle}>Barcode Procurement</label>
+            <select style={selectStyle} value={inputs.barcodeProcurement} onChange={e => update("barcodeProcurement", e.target.value)} disabled={!inputs.includePhase3}>
+              <option value="lai">LAI Purchases Barcodes</option>
+              <option value="client">Client Purchases Barcodes</option>
+            </select>
+          </div>
+          {inputs.barcodeProcurement === "lai" && (
+            <div>
+              <label style={labelStyle}>Barcode Type (LAI Procurement)</label>
+              <select style={selectStyle} value={inputs.barcodeType} onChange={e => update("barcodeType", Number(e.target.value))} disabled={!inputs.includePhase3}>
+                {BARCODE_PROCUREMENT_COSTS.map((b, i) => <option key={i} value={i}>{b.label} (${b.perAsset}/asset)</option>)}
+              </select>
+            </div>
+          )}
         </div>
       </div>
 
