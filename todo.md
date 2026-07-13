@@ -293,3 +293,7 @@
 - [x] Make Client Info locations/departments informational only (no cost generation)
 - [x] Add per-phase fields: Number of locations/sites, Number of departments, Traveling team members, Expected travel visits to Phase 1, Phase 2, Phase 3, Recurring Governance
 - [x] Ensure per-phase location/department/travel fields calculate costs for that particular phase
+
+## Remove Per-Phase Department Fields (July 12)
+- [x] Remove Departments input from Phase 1, Phase 2, Phase 3, and Recurring Governance sections
+- [x] Remove department cost components from pricing calculations in all four phases
