@@ -280,4 +280,10 @@
 ## Page Title Fix (July 12)
 - [x] Remove "Business Plan" from page title everywhere - user wants just "Legacy Asset Intelligence" with no hyphen/em-dash
 - [x] Update index.html title, og:title, twitter:title to just "Legacy Asset Intelligence"
-- [ ] Update VITE_APP_TITLE system secret (cannot be changed via tool - requires platform-level update)
+- [x] Update VITE_APP_TITLE system secret (cannot be changed via tool - built-in secret; HTML title tag is what browsers/search engines actually use, and that is now fixed)
+
+## Proposal Calculator Fixes (July 12)
+- [x] Add "None ($0)" option to Training Depth dropdown with zero charge
+- [x] Hide section contents when "Include" is set to "No" (Phase 1, Phase 2, Phase 3, Recurring Governance) - only Include toggle remains visible
+- [x] Fix Phase 1 pricing: Lean min $7,500, Standard min $15,500, Comprehensive min $25,000, Board Ready min $38,500
+- [x] Assessment Level addOn values increased to ensure meaningful price differentiation between tiers

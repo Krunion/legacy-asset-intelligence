@@ -127,6 +127,7 @@ const TECH_ENABLEMENT = [
 ];
 
 const TRAINING_DEPTHS = [
+  { label: "None", addOn: 0 },
   { label: "Basic Leadership Briefing", addOn: 2000 },
   { label: "Manager Training", addOn: 3500 },
   { label: "Train-the-Trainer", addOn: 5000 },
@@ -134,10 +135,10 @@ const TRAINING_DEPTHS = [
 ];
 
 const ASSESSMENT_LEVELS = [
-  { label: "Lean Assessment", addOn: 0 },
-  { label: "Standard Assessment", addOn: 2500 },
-  { label: "Comprehensive Assessment", addOn: 6000 },
-  { label: "Board-Ready Assessment", addOn: 10000 },
+  { label: "Lean Assessment", addOn: 0, minPrice: 7500 },
+  { label: "Standard Assessment", addOn: 5000, minPrice: 15500 },
+  { label: "Comprehensive Assessment", addOn: 12000, minPrice: 25000 },
+  { label: "Board-Ready Assessment", addOn: 22000, minPrice: 38500 },
 ];
 
 const RECURRING_TIERS = [
@@ -286,11 +287,13 @@ function calculateProposal(inputs: CalcInputs) {
   // ─── Phase 1 ───
   let phase1Price = 0;
   if (inputs.includePhase1) {
+    const assessmentConfig = ASSESSMENT_LEVELS[inputs.assessmentLevel];
     const baseEffort = 6000 + (inputs.locations * 500) + (inputs.departments * 250);
-    const assessmentAddOn = ASSESSMENT_LEVELS[inputs.assessmentLevel].addOn;
+    const assessmentAddOn = assessmentConfig.addOn;
     const travelAllocation = totalTravelEstimate * 0.25;
     const subtotal = (baseEffort + assessmentAddOn) * controlledRiskModifier * marketPositionModifier + travelAllocation;
-    phase1Price = Math.max(subtotal, scaleTier.phase1Min);
+    // Use the higher of: scale tier minimum, assessment-level minimum, or calculated subtotal
+    phase1Price = Math.max(subtotal, scaleTier.phase1Min, assessmentConfig.minPrice);
   }
 
   // ─── Phase 2 ───
@@ -833,12 +836,14 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
               <option value="0">No</option>
             </select>
           </div>
-          <div>
-            <label style={labelStyle}>Assessment Level</label>
-            <select style={selectStyle} value={inputs.assessmentLevel} onChange={e => update("assessmentLevel", Number(e.target.value))} disabled={!inputs.includePhase1}>
-              {ASSESSMENT_LEVELS.map((a, i) => <option key={i} value={i}>{a.label}</option>)}
-            </select>
-          </div>
+          {inputs.includePhase1 && (
+            <div>
+              <label style={labelStyle}>Assessment Level</label>
+              <select style={selectStyle} value={inputs.assessmentLevel} onChange={e => update("assessmentLevel", Number(e.target.value))}>
+                {ASSESSMENT_LEVELS.map((a, i) => <option key={i} value={i}>{a.label}</option>)}
+              </select>
+            </div>
+          )}
         </div>
       </div>
 
@@ -853,18 +858,22 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
               <option value="0">No</option>
             </select>
           </div>
-          <div>
-            <label style={labelStyle}>Verification Depth</label>
-            <select style={selectStyle} value={inputs.verificationDepth} onChange={e => update("verificationDepth", Number(e.target.value))} disabled={!inputs.includePhase2}>
-              {VERIFICATION_DEPTHS.map((v, i) => <option key={i} value={i}>{v.label}</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={labelStyle}>Recovery Analysis Depth</label>
-            <select style={selectStyle} value={inputs.recoveryAnalysis} onChange={e => update("recoveryAnalysis", Number(e.target.value))} disabled={!inputs.includePhase2}>
-              {RECOVERY_ANALYSIS.map((r, i) => <option key={i} value={i}>{r.label}</option>)}
-            </select>
-          </div>
+          {inputs.includePhase2 && (
+            <>
+              <div>
+                <label style={labelStyle}>Verification Depth</label>
+                <select style={selectStyle} value={inputs.verificationDepth} onChange={e => update("verificationDepth", Number(e.target.value))}>
+                  {VERIFICATION_DEPTHS.map((v, i) => <option key={i} value={i}>{v.label}</option>)}
+                </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Recovery Analysis Depth</label>
+                <select style={selectStyle} value={inputs.recoveryAnalysis} onChange={e => update("recoveryAnalysis", Number(e.target.value))}>
+                  {RECOVERY_ANALYSIS.map((r, i) => <option key={i} value={i}>{r.label}</option>)}
+                </select>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -879,53 +888,57 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
               <option value="0">No</option>
             </select>
           </div>
-          <div>
-            <label style={labelStyle}>Governance Level</label>
-            <select style={selectStyle} value={inputs.governanceLevel} onChange={e => update("governanceLevel", Number(e.target.value))} disabled={!inputs.includePhase3}>
-              {GOVERNANCE_LEVELS.map((g, i) => <option key={i} value={i}>{g.label}</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={{...labelStyle, color: C.teal}}>Technology Advisory (Mandatory)</label>
-            <select style={selectStyle} value={inputs.techEnablement} onChange={e => update("techEnablement", Number(e.target.value))} disabled={!inputs.includePhase3}>
-              {TECH_ENABLEMENT.map((t, i) => <option key={i} value={i}>{t.label} (${t.addOn.toLocaleString()})</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={labelStyle}>Training Depth</label>
-            <select style={selectStyle} value={inputs.trainingDepth} onChange={e => update("trainingDepth", Number(e.target.value))} disabled={!inputs.includePhase3}>
-              {TRAINING_DEPTHS.map((t, i) => <option key={i} value={i}>{t.label}</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={labelStyle}>Tag/Barcode Deployment</label>
-            <select style={selectStyle} value={inputs.tagDeployment} onChange={e => update("tagDeployment", e.target.value)} disabled={!inputs.includePhase3}>
-              <option value="lai">LAI Deploys Tags</option>
-              <option value="client">Client Deploys Tags</option>
-            </select>
-          </div>
-          {inputs.tagDeployment === "lai" && (
-            <div>
-              <label style={labelStyle}>Tag Type (LAI Labor)</label>
-              <select style={selectStyle} value={inputs.tagType} onChange={e => update("tagType", Number(e.target.value))} disabled={!inputs.includePhase3}>
-                {BASELINE_ID_METHODS.map((b, i) => <option key={i} value={i}>{b.label} (${b.perAsset}/asset)</option>)}
-              </select>
-            </div>
-          )}
-          <div>
-            <label style={labelStyle}>Barcode Procurement</label>
-            <select style={selectStyle} value={inputs.barcodeProcurement} onChange={e => update("barcodeProcurement", e.target.value)} disabled={!inputs.includePhase3}>
-              <option value="lai">LAI Purchases Barcodes</option>
-              <option value="client">Client Purchases Barcodes</option>
-            </select>
-          </div>
-          {inputs.barcodeProcurement === "lai" && (
-            <div>
-              <label style={labelStyle}>Barcode Type (LAI Procurement)</label>
-              <select style={selectStyle} value={inputs.barcodeType} onChange={e => update("barcodeType", Number(e.target.value))} disabled={!inputs.includePhase3}>
-                {BARCODE_PROCUREMENT_COSTS.map((b, i) => <option key={i} value={i}>{b.label} (${b.perAsset}/asset)</option>)}
-              </select>
-            </div>
+          {inputs.includePhase3 && (
+            <>
+              <div>
+                <label style={labelStyle}>Governance Level</label>
+                <select style={selectStyle} value={inputs.governanceLevel} onChange={e => update("governanceLevel", Number(e.target.value))}>
+                  {GOVERNANCE_LEVELS.map((g, i) => <option key={i} value={i}>{g.label}</option>)}
+                </select>
+              </div>
+              <div>
+                <label style={{...labelStyle, color: C.teal}}>Technology Advisory (Mandatory)</label>
+                <select style={selectStyle} value={inputs.techEnablement} onChange={e => update("techEnablement", Number(e.target.value))}>
+                  {TECH_ENABLEMENT.map((t, i) => <option key={i} value={i}>{t.label} (${t.addOn.toLocaleString()})</option>)}
+                </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Training Depth</label>
+                <select style={selectStyle} value={inputs.trainingDepth} onChange={e => update("trainingDepth", Number(e.target.value))}>
+                  {TRAINING_DEPTHS.map((t, i) => <option key={i} value={i}>{t.label}{t.addOn > 0 ? ` ($${t.addOn.toLocaleString()})` : " ($0)"}</option>)}
+                </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Tag/Barcode Deployment</label>
+                <select style={selectStyle} value={inputs.tagDeployment} onChange={e => update("tagDeployment", e.target.value)}>
+                  <option value="lai">LAI Deploys Tags</option>
+                  <option value="client">Client Deploys Tags</option>
+                </select>
+              </div>
+              {inputs.tagDeployment === "lai" && (
+                <div>
+                  <label style={labelStyle}>Tag Type (LAI Labor)</label>
+                  <select style={selectStyle} value={inputs.tagType} onChange={e => update("tagType", Number(e.target.value))}>
+                    {BASELINE_ID_METHODS.map((b, i) => <option key={i} value={i}>{b.label} (${b.perAsset}/asset)</option>)}
+                  </select>
+                </div>
+              )}
+              <div>
+                <label style={labelStyle}>Barcode Procurement</label>
+                <select style={selectStyle} value={inputs.barcodeProcurement} onChange={e => update("barcodeProcurement", e.target.value)}>
+                  <option value="lai">LAI Purchases Barcodes</option>
+                  <option value="client">Client Purchases Barcodes</option>
+                </select>
+              </div>
+              {inputs.barcodeProcurement === "lai" && (
+                <div>
+                  <label style={labelStyle}>Barcode Type (LAI Procurement)</label>
+                  <select style={selectStyle} value={inputs.barcodeType} onChange={e => update("barcodeType", Number(e.target.value))}>
+                    {BARCODE_PROCUREMENT_COSTS.map((b, i) => <option key={i} value={i}>{b.label} (${b.perAsset}/asset)</option>)}
+                  </select>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -962,18 +975,22 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
               <option value="0">No</option>
             </select>
           </div>
-          <div>
-            <label style={labelStyle}>Recurring Tier</label>
-            <select style={selectStyle} value={inputs.recurringTier} onChange={e => update("recurringTier", Number(e.target.value))} disabled={!inputs.includeRecurring}>
-              {RECURRING_TIERS.map((t, i) => <option key={i} value={i}>{t.label} (${t.baseFee.toLocaleString()} base)</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={labelStyle}>Audit Frequency</label>
-            <select style={selectStyle} value={inputs.auditFrequency} onChange={e => update("auditFrequency", Number(e.target.value))} disabled={!inputs.includeRecurring}>
-              {AUDIT_FREQUENCIES.map((a, i) => <option key={i} value={i}>{a.label}</option>)}
-            </select>
-          </div>
+          {inputs.includeRecurring && (
+            <>
+              <div>
+                <label style={labelStyle}>Recurring Tier</label>
+                <select style={selectStyle} value={inputs.recurringTier} onChange={e => update("recurringTier", Number(e.target.value))}>
+                  {RECURRING_TIERS.map((t, i) => <option key={i} value={i}>{t.label} (${t.baseFee.toLocaleString()} base)</option>)}
+                </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Audit Frequency</label>
+                <select style={selectStyle} value={inputs.auditFrequency} onChange={e => update("auditFrequency", Number(e.target.value))}>
+                  {AUDIT_FREQUENCIES.map((a, i) => <option key={i} value={i}>{a.label}</option>)}
+                </select>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
