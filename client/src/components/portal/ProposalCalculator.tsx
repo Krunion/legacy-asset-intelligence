@@ -213,25 +213,38 @@ interface CalcInputs {
   clientName: string;
   industry: number;
   assets: number;
-  locations: number;
-  departments: number;
+  locations: number; // informational only
+  departments: number; // informational only
   geoFootprint: number;
   distance: number;
-  travelVisits: number;
-  travelTeamMembers: number;
   complexity: number;
   recordQuality: number;
   lastInventory: number;
   pricePosition: number;
   includePhase1: boolean;
   assessmentLevel: number;
+  // Phase 1 per-phase travel/location
+  p1Locations: number;
+  p1Departments: number;
+  p1TravelVisits: number;
+  p1TravelTeamMembers: number;
   includePhase2: boolean;
   verificationDepth: number;
   recoveryAnalysis: number;
+  // Phase 2 per-phase travel/location
+  p2Locations: number;
+  p2Departments: number;
+  p2TravelVisits: number;
+  p2TravelTeamMembers: number;
   includePhase3: boolean;
   governanceLevel: number;
   techEnablement: number;
   trainingDepth: number;
+  // Phase 3 per-phase travel/location
+  p3Locations: number;
+  p3Departments: number;
+  p3TravelVisits: number;
+  p3TravelTeamMembers: number;
   // Phase 3 Deployment Decisions
   tagDeployment: "lai" | "client";
   tagType: number;
@@ -242,6 +255,11 @@ interface CalcInputs {
   includeRecurring: boolean;
   recurringTier: number;
   auditFrequency: number;
+  // Recurring per-phase travel/location
+  recLocations: number;
+  recDepartments: number;
+  recTravelVisits: number;
+  recTravelTeamMembers: number;
   // ROI Mode
   roiMode: "estimated" | "verified";
   // Verified overrides (only used when roiMode === "verified")
@@ -251,6 +269,13 @@ interface CalcInputs {
   verifiedInsuranceOptimization: number;
   verifiedPropertyTaxReduction: number;
   verifiedProcurementWaste: number;
+}
+
+function calculatePhaseTravel(distance: number, travelVisits: number, travelTeamMembers: number, locations: number) {
+  const costPerMember = DISTANCE_BANDS[distance].costPerMember;
+  const travelCostPerVisit = costPerMember * travelTeamMembers;
+  const siteTravelComplexityFactor = Math.min(3, 1 + Math.max(0, locations - 1) * 0.12);
+  return travelCostPerVisit * travelVisits * siteTravelComplexityFactor;
 }
 
 function calculateProposal(inputs: CalcInputs) {
@@ -264,11 +289,6 @@ function calculateProposal(inputs: CalcInputs) {
   const recordQualityMult = RECORD_QUALITY[inputs.recordQuality].multiplier;
   const lastInventoryMult = LAST_INVENTORY[inputs.lastInventory].multiplier;
   const pricePositionMult = PRICE_POSITIONS[inputs.pricePosition].multiplier;
-
-  // Travel calculations
-  const travelCostPerVisit = DISTANCE_BANDS[inputs.distance].costPerMember * inputs.travelTeamMembers;
-  const siteTravelComplexityFactor = Math.min(3, 1 + Math.max(0, inputs.locations - 1) * 0.12);
-  const totalTravelEstimate = travelCostPerVisit * inputs.travelVisits * siteTravelComplexityFactor;
 
   // Controlled Risk Modifier
   const controlledRiskModifier = 1 + Math.min(0.5, Math.max(-0.15,
@@ -288,26 +308,25 @@ function calculateProposal(inputs: CalcInputs) {
   let phase1Price = 0;
   if (inputs.includePhase1) {
     const assessmentConfig = ASSESSMENT_LEVELS[inputs.assessmentLevel];
-    const baseEffort = 6000 + (inputs.locations * 500) + (inputs.departments * 250);
+    const p1Travel = calculatePhaseTravel(inputs.distance, inputs.p1TravelVisits, inputs.p1TravelTeamMembers, inputs.p1Locations);
+    const baseEffort = 6000 + (inputs.p1Locations * 500) + (inputs.p1Departments * 250);
     const assessmentAddOn = assessmentConfig.addOn;
-    const travelAllocation = totalTravelEstimate * 0.25;
-    const subtotal = (baseEffort + assessmentAddOn) * controlledRiskModifier * marketPositionModifier + travelAllocation;
-    // Use the higher of: scale tier minimum, assessment-level minimum, or calculated subtotal
+    const subtotal = (baseEffort + assessmentAddOn) * controlledRiskModifier * marketPositionModifier + p1Travel;
     phase1Price = Math.max(subtotal, scaleTier.phase1Min, assessmentConfig.minPrice);
   }
 
   // ─── Phase 2 ───
   let phase2Price = 0;
   if (inputs.includePhase2) {
+    const p2Travel = calculatePhaseTravel(inputs.distance, inputs.p2TravelVisits, inputs.p2TravelTeamMembers, inputs.p2Locations);
     const baseDiscoveryFee = scaleTier.baseDiscoveryFee;
     const perAssetRate = perAssetTier.phase2;
     const assetComponent = inputs.assets * perAssetRate;
-    const locationComponent = inputs.locations * 500;
-    const deptComponent = inputs.departments * 150;
+    const locationComponent = inputs.p2Locations * 500;
+    const deptComponent = inputs.p2Departments * 150;
     const verificationDepthMod = VERIFICATION_DEPTHS[inputs.verificationDepth].multiplier;
     const recoveryAddOn = RECOVERY_ANALYSIS[inputs.recoveryAnalysis].addOn;
-    const travelAllocation = totalTravelEstimate * 0.65;
-    const subtotal = (((baseDiscoveryFee + assetComponent + locationComponent + deptComponent) * verificationDepthMod + recoveryAddOn) * controlledRiskModifier * marketPositionModifier * (1 + offHoursPremium + acceleratedPremium)) + travelAllocation;
+    const subtotal = (((baseDiscoveryFee + assetComponent + locationComponent + deptComponent) * verificationDepthMod + recoveryAddOn) * controlledRiskModifier * marketPositionModifier * (1 + offHoursPremium + acceleratedPremium)) + p2Travel;
     phase2Price = Math.max(subtotal, scaleTier.phase2Min);
   }
 
@@ -316,34 +335,33 @@ function calculateProposal(inputs: CalcInputs) {
   let taggingLaborCost = 0;
   let barcodeProcurementCost = 0;
   if (inputs.includePhase3) {
-    const baseEffort = 6500 + (inputs.locations * 500) + (inputs.departments * 150);
+    const p3Travel = calculatePhaseTravel(inputs.distance, inputs.p3TravelVisits, inputs.p3TravelTeamMembers, inputs.p3Locations);
+    const baseEffort = 6500 + (inputs.p3Locations * 500) + (inputs.p3Departments * 150);
     const perAssetFee = perAssetTier.phase3;
     const assetComponent = inputs.assets * perAssetFee;
-    const locationComponent = inputs.locations * 500;
-    const deptComponent = inputs.departments * 150;
+    const locationComponent = inputs.p3Locations * 500;
+    const deptComponent = inputs.p3Departments * 150;
     const governanceMod = GOVERNANCE_LEVELS[inputs.governanceLevel].modifier;
-    const techAddOn = TECH_ENABLEMENT[inputs.techEnablement].addOn; // Always mandatory
+    const techAddOn = TECH_ENABLEMENT[inputs.techEnablement].addOn;
     const trainingAddOn = TRAINING_DEPTHS[inputs.trainingDepth].addOn;
-    // Deployment decisions
     taggingLaborCost = inputs.tagDeployment === "lai" ? inputs.assets * BASELINE_ID_METHODS[inputs.tagType].perAsset : 0;
     barcodeProcurementCost = inputs.barcodeProcurement === "lai" ? inputs.assets * BARCODE_PROCUREMENT_COSTS[inputs.barcodeType].perAsset : 0;
-    const deploymentTravelAllocation = inputs.tagDeployment === "lai" ? totalTravelEstimate * 0.15 : 0;
-    const travelAllocation = totalTravelEstimate * 0.10 + deploymentTravelAllocation;
-    const subtotal = (((baseEffort + assetComponent + locationComponent + deptComponent) * governanceMod) * controlledRiskModifier + techAddOn + trainingAddOn + taggingLaborCost + barcodeProcurementCost) * marketPositionModifier * (1 + offHoursPremium + acceleratedPremium) + travelAllocation;
+    const subtotal = (((baseEffort + assetComponent + locationComponent + deptComponent) * governanceMod) * controlledRiskModifier + techAddOn + trainingAddOn + taggingLaborCost + barcodeProcurementCost) * marketPositionModifier * (1 + offHoursPremium + acceleratedPremium) + p3Travel;
     phase3Price = Math.max(subtotal, scaleTier.phase3Min);
   }
 
   // ─── Recurring Governance ───
   let recurringPrice = 0;
   if (inputs.includeRecurring) {
+    const recTravel = calculatePhaseTravel(inputs.distance, inputs.recTravelVisits, inputs.recTravelTeamMembers, inputs.recLocations);
     const tierBaseFee = RECURRING_TIERS[inputs.recurringTier].baseFee;
     const perAssetAnnualRate = getRecurringPerAssetRate(inputs.assets, RECURRING_TIERS[inputs.recurringTier].label);
     const assetComponent = inputs.assets * perAssetAnnualRate;
-    const locationComponent = inputs.locations * 500;
-    const deptComponent = inputs.departments * 150;
+    const locationComponent = inputs.recLocations * 500;
+    const deptComponent = inputs.recDepartments * 150;
     const auditFreqMod = AUDIT_FREQUENCIES[inputs.auditFrequency].multiplier;
     const scaleFactor = scaleTier.recurringScaleFactor;
-    const subtotal = ((tierBaseFee + assetComponent + locationComponent + deptComponent) * auditFreqMod * scaleFactor * controlledRiskModifier) * marketPositionModifier;
+    const subtotal = ((tierBaseFee + assetComponent + locationComponent + deptComponent) * auditFreqMod * scaleFactor * controlledRiskModifier) * marketPositionModifier + recTravel;
     const minimum = tierBaseFee * 0.65;
     recurringPrice = Math.max(subtotal, minimum);
   }
@@ -357,9 +375,7 @@ function calculateProposal(inputs: CalcInputs) {
     phase3Price,
     recurringPrice,
     totalInitialInvestment,
-    totalTravelEstimate,
     controlledRiskModifier,
-
   };
 }
 
@@ -425,21 +441,31 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
     departments: 10,
     geoFootprint: 1,
     distance: 0,
-    travelVisits: 12,
-    travelTeamMembers: 2,
     complexity: 0,
     recordQuality: 2,
     lastInventory: 2,
     pricePosition: 1,
     includePhase1: true,
     assessmentLevel: 1,
+    p1Locations: 3,
+    p1Departments: 5,
+    p1TravelVisits: 3,
+    p1TravelTeamMembers: 2,
     includePhase2: true,
     verificationDepth: 1,
     recoveryAnalysis: 1,
+    p2Locations: 3,
+    p2Departments: 10,
+    p2TravelVisits: 8,
+    p2TravelTeamMembers: 2,
     includePhase3: true,
     governanceLevel: 0,
     techEnablement: 1,
     trainingDepth: 0,
+    p3Locations: 3,
+    p3Departments: 10,
+    p3TravelVisits: 4,
+    p3TravelTeamMembers: 2,
     // Phase 3 Deployment Decisions
     tagDeployment: "lai",
     tagType: 2, // QR Baseline Labels
@@ -450,6 +476,10 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
     includeRecurring: true,
     recurringTier: 0,
     auditFrequency: 1,
+    recLocations: 3,
+    recDepartments: 10,
+    recTravelVisits: 4,
+    recTravelTeamMembers: 2,
     // ROI Mode
     roiMode: "estimated",
     verifiedGhostAssetValue: 0,
@@ -790,14 +820,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
               {DISTANCE_BANDS.map((d, i) => <option key={i} value={i}>{d.label}</option>)}
             </select>
           </div>
-          <div>
-            <label style={labelStyle}>Expected Travel Visits</label>
-            <NumericInput style={inputStyle} value={inputs.travelVisits} onChange={v => update("travelVisits", v)} min={0} max={100} validationMessage="Expected range: 0-100 visits" />
-          </div>
-          <div>
-            <label style={labelStyle}>Traveling Team Members</label>
-            <NumericInput style={inputStyle} value={inputs.travelTeamMembers} onChange={v => update("travelTeamMembers", v)} min={1} max={20} validationMessage="Expected range: 1-20 members" />
-          </div>
+
           <div>
             <label style={labelStyle}>Complexity Level</label>
             <select style={selectStyle} value={inputs.complexity} onChange={e => update("complexity", Number(e.target.value))}>
@@ -837,12 +860,30 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
             </select>
           </div>
           {inputs.includePhase1 && (
-            <div>
-              <label style={labelStyle}>Assessment Level</label>
-              <select style={selectStyle} value={inputs.assessmentLevel} onChange={e => update("assessmentLevel", Number(e.target.value))}>
-                {ASSESSMENT_LEVELS.map((a, i) => <option key={i} value={i}>{a.label}</option>)}
-              </select>
-            </div>
+            <>
+              <div>
+                <label style={labelStyle}>Assessment Level</label>
+                <select style={selectStyle} value={inputs.assessmentLevel} onChange={e => update("assessmentLevel", Number(e.target.value))}>
+                  {ASSESSMENT_LEVELS.map((a, i) => <option key={i} value={i}>{a.label}</option>)}
+                </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Locations / Sites</label>
+                <NumericInput style={inputStyle} value={inputs.p1Locations} onChange={v => update("p1Locations", v)} min={1} max={100} validationMessage="1-100 locations" />
+              </div>
+              <div>
+                <label style={labelStyle}>Departments</label>
+                <NumericInput style={inputStyle} value={inputs.p1Departments} onChange={v => update("p1Departments", v)} min={1} max={100} validationMessage="1-100 departments" />
+              </div>
+              <div>
+                <label style={labelStyle}>Traveling Team Members</label>
+                <NumericInput style={inputStyle} value={inputs.p1TravelTeamMembers} onChange={v => update("p1TravelTeamMembers", v)} min={1} max={20} validationMessage="1-20 members" />
+              </div>
+              <div>
+                <label style={labelStyle}>Expected Travel Visits</label>
+                <NumericInput style={inputStyle} value={inputs.p1TravelVisits} onChange={v => update("p1TravelVisits", v)} min={0} max={50} validationMessage="0-50 visits" />
+              </div>
+            </>
           )}
         </div>
       </div>
@@ -871,6 +912,22 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
                 <select style={selectStyle} value={inputs.recoveryAnalysis} onChange={e => update("recoveryAnalysis", Number(e.target.value))}>
                   {RECOVERY_ANALYSIS.map((r, i) => <option key={i} value={i}>{r.label}</option>)}
                 </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Locations / Sites</label>
+                <NumericInput style={inputStyle} value={inputs.p2Locations} onChange={v => update("p2Locations", v)} min={1} max={200} validationMessage="1-200 locations" />
+              </div>
+              <div>
+                <label style={labelStyle}>Departments</label>
+                <NumericInput style={inputStyle} value={inputs.p2Departments} onChange={v => update("p2Departments", v)} min={1} max={200} validationMessage="1-200 departments" />
+              </div>
+              <div>
+                <label style={labelStyle}>Traveling Team Members</label>
+                <NumericInput style={inputStyle} value={inputs.p2TravelTeamMembers} onChange={v => update("p2TravelTeamMembers", v)} min={1} max={20} validationMessage="1-20 members" />
+              </div>
+              <div>
+                <label style={labelStyle}>Expected Travel Visits</label>
+                <NumericInput style={inputStyle} value={inputs.p2TravelVisits} onChange={v => update("p2TravelVisits", v)} min={0} max={100} validationMessage="0-100 visits" />
               </div>
             </>
           )}
@@ -938,6 +995,22 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
                   </select>
                 </div>
               )}
+              <div>
+                <label style={labelStyle}>Locations / Sites</label>
+                <NumericInput style={inputStyle} value={inputs.p3Locations} onChange={v => update("p3Locations", v)} min={1} max={200} validationMessage="1-200 locations" />
+              </div>
+              <div>
+                <label style={labelStyle}>Departments</label>
+                <NumericInput style={inputStyle} value={inputs.p3Departments} onChange={v => update("p3Departments", v)} min={1} max={200} validationMessage="1-200 departments" />
+              </div>
+              <div>
+                <label style={labelStyle}>Traveling Team Members</label>
+                <NumericInput style={inputStyle} value={inputs.p3TravelTeamMembers} onChange={v => update("p3TravelTeamMembers", v)} min={1} max={20} validationMessage="1-20 members" />
+              </div>
+              <div>
+                <label style={labelStyle}>Expected Travel Visits</label>
+                <NumericInput style={inputStyle} value={inputs.p3TravelVisits} onChange={v => update("p3TravelVisits", v)} min={0} max={50} validationMessage="0-50 visits" />
+              </div>
             </>
           )}
         </div>
@@ -988,6 +1061,22 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
                 <select style={selectStyle} value={inputs.auditFrequency} onChange={e => update("auditFrequency", Number(e.target.value))}>
                   {AUDIT_FREQUENCIES.map((a, i) => <option key={i} value={i}>{a.label}</option>)}
                 </select>
+              </div>
+              <div>
+                <label style={labelStyle}>Locations / Sites</label>
+                <NumericInput style={inputStyle} value={inputs.recLocations} onChange={v => update("recLocations", v)} min={1} max={200} validationMessage="1-200 locations" />
+              </div>
+              <div>
+                <label style={labelStyle}>Departments</label>
+                <NumericInput style={inputStyle} value={inputs.recDepartments} onChange={v => update("recDepartments", v)} min={1} max={200} validationMessage="1-200 departments" />
+              </div>
+              <div>
+                <label style={labelStyle}>Traveling Team Members</label>
+                <NumericInput style={inputStyle} value={inputs.recTravelTeamMembers} onChange={v => update("recTravelTeamMembers", v)} min={1} max={20} validationMessage="1-20 members" />
+              </div>
+              <div>
+                <label style={labelStyle}>Expected Travel Visits</label>
+                <NumericInput style={inputStyle} value={inputs.recTravelVisits} onChange={v => update("recTravelVisits", v)} min={0} max={50} validationMessage="0-50 visits" />
               </div>
             </>
           )}

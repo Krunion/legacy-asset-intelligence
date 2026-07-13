@@ -287,3 +287,9 @@
 - [x] Hide section contents when "Include" is set to "No" (Phase 1, Phase 2, Phase 3, Recurring Governance) - only Include toggle remains visible
 - [x] Fix Phase 1 pricing: Lean min $7,500, Standard min $15,500, Comprehensive min $25,000, Board Ready min $38,500
 - [x] Assessment Level addOn values increased to ensure meaningful price differentiation between tiers
+
+## Proposal Calculator - Per-Phase Travel & ROI Fix (July 12)
+- [x] Fix ROI Projection Summary not updating when entering verified Phase 2 data
+- [x] Make Client Info locations/departments informational only (no cost generation)
+- [x] Add per-phase fields: Number of locations/sites, Number of departments, Traveling team members, Expected travel visits to Phase 1, Phase 2, Phase 3, Recurring Governance
+- [x] Ensure per-phase location/department/travel fields calculate costs for that particular phase
