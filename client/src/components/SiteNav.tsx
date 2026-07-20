@@ -32,7 +32,7 @@ export default function SiteNav() {
       <div style={{ 
         maxWidth: 1200, 
         margin: "0 auto", 
-        padding: "0.75rem 2rem", 
+        padding: "1rem 2rem", 
         display: "flex", 
         justifyContent: "space-between", 
         alignItems: "center" 
@@ -62,7 +62,7 @@ export default function SiteNav() {
                 color: location === link.path ? "#C9A84C" : "#A8B2BD",
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontWeight: location === link.path ? 600 : 400,
-                fontSize: "0.85rem",
+                fontSize: "1rem",
                 letterSpacing: "0.02em",
                 transition: "color 0.2s",
                 padding: "0.25rem 0",

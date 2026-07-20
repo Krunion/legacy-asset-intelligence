@@ -109,19 +109,19 @@ export default function Home() {
             Legacy Asset Intelligence helps executive leadership make better financial and operational decisions by identifying ghost assets, recovering lost capital, and building governance programs that protect investments permanently.
           </p>
 
-          {/* WHY WE ARE THE ONLY SOLUTION */}
+          {/* AN INTEGRATED ASSET INTELLIGENCE SOLUTION */}
           <div style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.goldBorder}`, borderRadius: 8, padding: "2rem 2.5rem", maxWidth: 780, margin: "0 auto 3rem", textAlign: "left" }}>
             <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.gold, marginBottom: "1rem", textAlign: "center" }}>
-              Why We Are The Only Solution
+              An Integrated Asset Intelligence Solution
             </h3>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.silver, lineHeight: 1.8, marginBottom: "1.25rem" }}>
-              Most consulting firms offer fragmented services — an audit here, a software recommendation there. <strong style={{ color: C.text }}>Legacy Asset Intelligence is the only firm that combines physical asset verification, financial reconciliation, technology integration, and ongoing governance into a single, unified engagement.</strong>
+              Many consulting firms offer fragmented services — an inventory count here, a software recommendation there. <strong style={{ color: C.text }}>Legacy Asset Intelligence integrates physical asset verification, financial reconciliation, technology implementation, and ongoing governance into a single, unified engagement framework.</strong>
             </p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
               {[
                 { point: "End-to-End Methodology", detail: "From discovery through permanent governance — no handoffs, no gaps" },
-                { point: "Technology-Enabled Verification", detail: "RFID, barcode, and IoT integration that eliminates manual error" },
-                { point: "Recurring Governance Programs", detail: "We don't just fix the problem — we prevent it from returning" },
+                { point: "Technology-Enabled Verification", detail: "Optional barcode and QR integration designed to reduce manual error" },
+                { point: "Recurring Governance Programs", detail: "Helps prevent record inaccuracies from returning" },
                 { point: "Executive-Level Deliverables", detail: "Board-ready reports, not spreadsheets buried in operations" },
               ].map((item, i) => (
                 <div key={i} style={{ padding: "0.75rem", borderLeft: `2px solid ${C.gold}`, paddingLeft: "1rem" }}>
@@ -226,10 +226,10 @@ export default function Home() {
           {/* Summary stat bar */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }}>
             {[
-              { value: 5, suffix: ".87B", prefix: "$", label: "EAM Market", sub: "Enterprise Asset Mgmt (2024)" },
-              { value: 9, suffix: "%", label: "Market CAGR", sub: "through 2030" },
-              { value: 4, suffix: " Phases", label: "Methodology", sub: "end-to-end framework" },
-              { value: 7, suffix: "+", label: "Industries", sub: "sectors served" },
+              { value: 5, suffix: ".87B", prefix: "$", label: "EAM Market (2025)", sub: "MarketsandMarkets" },
+              { value: 9, suffix: "%+", label: "Market CAGR", sub: "projected through 2030" },
+              { value: 4, suffix: " Phases", label: "Methodology", sub: "integrated framework" },
+              { value: 7, suffix: "+", label: "Industries", sub: "sectors addressed" },
             ].map((m, i) => (
               <div key={i} style={{ textAlign: "center", padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}` }}>
                 <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.gold }}>
@@ -264,8 +264,8 @@ export default function Home() {
           <div style={{ display: "flex", alignItems: "stretch", gap: 0, marginBottom: "3rem", position: "relative" }}>
             {[
               { phase: "01", title: "Executive Discovery & Assessment", accent: C.silver, desc: "Stakeholder interviews, asset management maturity review, opportunity modeling, and a strategic roadmap for capital recovery.", deliverable: "Discovery Report + Recovery Roadmap" },
-              { phase: "02", title: "Physical Verification & Accountability", accent: C.gold, desc: "Wall-to-wall inventory, asset tagging, condition assessment, floor-to-book reconciliation, and ghost asset identification.", deliverable: "Complete Asset Inventory + Reconciled FAR" },
-              { phase: "03", title: "Technology Enablement & Governance", accent: C.teal, desc: "Platform selection, data migration, dashboard configuration, automated workflows, ERP integration, and staff training.", deliverable: "Live Asset Tracking Platform" },
+              { phase: "02", title: "Physical Verification & Recovery Analysis", accent: C.gold, desc: "Wall-to-wall physical verification, condition assessment, floor-to-book and book-to-floor reconciliation, ghost asset identification, and recovery opportunity analysis.", deliverable: "Verified Asset Inventory + Reconciled FAR" },
+              { phase: "03", title: "Technology Implementation & Enablement", accent: C.teal, desc: "Optional barcode/QR tagging, platform selection, data migration, dashboard configuration, automated workflows, and staff training.", deliverable: "Configured Asset Management Platform" },
               { phase: "04", title: "Recurring Intelligence & Accountability", accent: C.emerald, desc: "Quarterly rolling audits, continuous reconciliation, executive KPI dashboards, compliance reporting, and governance refinement.", deliverable: "Ongoing Governance Retainer" },
             ].map((p, i) => (
               <div key={i} style={{ flex: 1, background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: i === 0 ? "8px 0 0 8px" : i === 3 ? "0 8px 8px 0" : 0, padding: "2rem 1.5rem", borderRight: i < 3 ? `1px solid ${C.border}` : undefined, display: "flex", flexDirection: "column" }}>
@@ -295,11 +295,11 @@ export default function Home() {
             </div>
             <div style={{ padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, textAlign: "center" }}>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>Physical Verification</p>
-              <VideoModal phaseNumber={2} phaseName="Physical Asset Accountability" description="Our wall-to-wall inventory process and floor-to-book reconciliation." videoUrl="https://youtube.com/shorts/Cm6eZ142c4o" isYouTube={true} />
+              <VideoModal phaseNumber={2} phaseName="Physical Verification & Recovery Analysis" description="Our wall-to-wall physical verification process and reconciliation methodology." videoUrl="https://youtube.com/shorts/Cm6eZ142c4o" isYouTube={true} />
             </div>
             <div style={{ padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, textAlign: "center" }}>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>Technology & Governance</p>
-              <VideoModal phaseNumber={3} phaseName="Technology Platform Integration" description="How we select, configure, and integrate asset management platforms." videoUrl="https://youtu.be/z_W3IvQCNcw" isYouTube={true} />
+              <VideoModal phaseNumber={3} phaseName="Technology Implementation & Enablement" description="How we implement optional barcode/QR tagging and configure asset management platforms." videoUrl="https://youtu.be/z_W3IvQCNcw" isYouTube={true} />
             </div>
           </div>
         </div>

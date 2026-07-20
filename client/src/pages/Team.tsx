@@ -8,33 +8,51 @@ export default function Team() {
     {
       name: "Kevin Runion",
       title: "Founder & Chief Executive Officer (CEO)",
-      bio: "Visionary leader with extensive expertise in enterprise asset management and capital recovery. Kevin founded Legacy Asset Intelligence to help organizations unlock millions in hidden capital through intelligent asset verification and governance.",
-      expertise: ["Asset Strategy", "Enterprise Operations", "Capital Recovery"]
+      bio: "Visionary leader with extensive expertise in enterprise asset management and operational performance. Kevin founded Legacy Asset Intelligence after witnessing how executives are forced to make critical business decisions based on inaccurate or outdated asset information. His methodology integrates executive assessment, physical verification, technology enablement, and sustainable governance into a single comprehensive framework.",
+      expertise: ["Asset Strategy", "Enterprise Operations", "Organizational Performance"]
     },
     {
       name: "Chris Haynes",
       title: "Co-Founder & Chief Operations Officer (COO)",
-      bio: "Operational excellence expert responsible for scaling LAI's delivery capabilities and ensuring consistent quality across all engagements. Chris brings deep expertise in process optimization and team leadership.",
+      bio: "Operational excellence expert responsible for scaling LAI's delivery capabilities and ensuring consistent quality across all engagements. Chris brings deep expertise in process optimization, field team management, and measurable accountability.",
       expertise: ["Operations Management", "Process Optimization", "Team Leadership"]
+    },
+    {
+      name: "Jimmy Smith",
+      title: "Chief Strategy Officer (CSO)",
+      bio: "Strategic planning leader guiding LAI's long-term business direction, market positioning, and growth initiatives. Jimmy brings analytical rigor and forward-thinking vision to ensure the organization remains ahead of industry trends and client needs.",
+      expertise: ["Strategic Planning", "Market Analysis", "Business Development"]
     },
     {
       name: "Andrea Haynes",
       title: "Chief Revenue Officer (CRO)",
-      bio: "Strategic business development leader driving LAI's market expansion and client acquisition. Andrea's expertise in enterprise sales and relationship management has been instrumental in LAI's growth trajectory.",
+      bio: "Strategic business development leader driving LAI's market expansion and client acquisition. Andrea's expertise in enterprise sales and relationship management ensures that every prospective engagement is approached with professionalism and transparency.",
       expertise: ["Business Development", "Enterprise Sales", "Strategic Partnerships"]
     },
     {
-      name: "Jessica Runion",
+      name: "Darryl Fedric",
       title: "Chief Experience Officer (CXO)",
-      bio: "Customer-focused leader ensuring exceptional client experiences and satisfaction. Jessica oversees client success initiatives, implementation strategies, and long-term relationship management.",
-      expertise: ["Client Relations", "Implementation", "Change Management"]
+      bio: "Client experience leader ensuring exceptional engagement quality from initial contact through long-term partnership. Darryl oversees client success initiatives and ensures every interaction reflects the professionalism and attention to detail that defines Legacy Asset Intelligence.",
+      expertise: ["Client Experience", "Engagement Quality", "Relationship Management"]
+    },
+    {
+      name: "Jessica Runion",
+      title: "Chief Training & Technology Officer (CTO)",
+      bio: "Training and technology leader responsible for developing LAI's training programs, technology implementation strategies, and team capability development. Jessica ensures that both internal teams and client organizations are equipped with the knowledge and tools needed for sustainable asset governance.",
+      expertise: ["Training Development", "Technology Implementation", "Capability Building"]
+    },
+    {
+      name: "Christine Smith",
+      title: "Chief Projects Officer (CPO)",
+      bio: "Project delivery leader overseeing the execution and coordination of all client engagements. Christine ensures that every project is delivered on time, within scope, and with the quality standards that LAI's methodology demands.",
+      expertise: ["Project Management", "Delivery Coordination", "Quality Assurance"]
     }
   ];
 
   return (
     <PageLayout
       heroTitle="Leadership"
-      heroSubtitle="Experienced professionals dedicated to helping organizations recover millions in hidden capital"
+      heroSubtitle="Experienced professionals dedicated to helping organizations identify and address asset record challenges"
       ctaTitle="Ready to Meet Our Team?"
       ctaDescription="Schedule a consultation with our experts to discuss your asset intelligence needs."
       ctaButtonText="Schedule a Consultation"

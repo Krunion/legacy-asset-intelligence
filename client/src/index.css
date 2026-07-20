@@ -108,6 +108,32 @@
   }
   h1, h2, h3, h4 {
     font-family: var(--font-display);
+    color: #C9A84C;
+    font-weight: 700;
+  }
+  h1 {
+    font-size: 3rem;
+    line-height: 1.1;
+  }
+  h2 {
+    font-size: 2.25rem;
+    line-height: 1.2;
+  }
+  h3 {
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+  h4 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+  /* Small/label text gold for contrast */
+  .text-xs, .text-sm, small, label, figcaption, .text-muted-foreground {
+    color: #C9A84C;
+    opacity: 0.9;
+  }
+  /* Keep body paragraph text light for readability */
+  p, li, td, th, span, .text-base, .text-lg {
     color: #F5F7FA;
   }
   button:not(:disabled),
@@ -154,9 +180,18 @@
 
   /* LAI Section Header Style */
   .section-header {
-    border-left: 3px solid var(--lai-gold);
+    border-left: 4px solid var(--lai-gold);
     padding-left: 1.25rem;
     margin-bottom: 2rem;
+  }
+  .section-header h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #C9A84C;
+  }
+  .section-header p {
+    color: #C9A84C;
+    opacity: 0.85;
   }
 
   /* LAI Metric Card — Dark Executive */
@@ -270,15 +305,15 @@
     }
 
     h1 {
-      font-size: 2rem !important;
+      font-size: 2.25rem !important;
     }
 
     h2 {
-      font-size: 1.5rem !important;
+      font-size: 1.75rem !important;
     }
 
     h3 {
-      font-size: 1.1rem !important;
+      font-size: 1.25rem !important;
     }
 
     .section-header {
@@ -317,15 +352,15 @@
     }
 
     h1 {
-      font-size: 1.5rem !important;
+      font-size: 1.75rem !important;
     }
 
     h2 {
-      font-size: 1.25rem !important;
+      font-size: 1.5rem !important;
     }
 
     h3 {
-      font-size: 1rem !important;
+      font-size: 1.1rem !important;
     }
 
     p {

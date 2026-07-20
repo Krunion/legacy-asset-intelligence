@@ -1,7 +1,8 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, useLocation } from "wouter";
+import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import SiteNav from "./components/SiteNav";
@@ -14,10 +15,17 @@ import FAQ from "./pages/FAQ";
 import Career from "./pages/Career";
 import EmployeePortal from "./pages/EmployeePortal";
 import Contact from "./pages/Contact";
-import Calculator from "./pages/Calculator";
 import Insights from "./pages/Insights";
 import Resources from "./pages/Resources";
 import InsightArticle from "./pages/InsightArticle";
+
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [location]);
+  return null;
+}
 
 function Router() {
   return (
@@ -34,8 +42,7 @@ function Router() {
       <Route path={"/careers"} component={Career} />
       <Route path={"/career"} component={Career} />
       <Route path={"/employee-portal"} component={EmployeePortal} />
-          <Route path={"/contact"} component={Contact} />
-          {/* Calculator route removed - estimator available inline on homepage */}
+      <Route path={"/contact"} component={Contact} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
@@ -51,6 +58,7 @@ function App() {
         <TooltipProvider>
           <Toaster />
           <SiteNav />
+          <ScrollToTop />
           <Router />
         </TooltipProvider>
       </ThemeProvider>

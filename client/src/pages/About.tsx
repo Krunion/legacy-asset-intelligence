@@ -133,23 +133,11 @@ export default function About() {
             </div>
 
             {/* Executive Team */}
-            <div>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.text, marginBottom: "1.5rem" }}>
-                Executive Leadership Team
-              </h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-                {[
-                  { name: "Chris Haynes", title: "Co-Founder & Chief Operations Officer", desc: "Brings deep expertise in operational execution, field team management, and process optimization. Chris ensures that every engagement is delivered with precision, consistency, and measurable accountability." },
-                  { name: "Andrea Haynes", title: "Chief Revenue Officer", desc: "Leads business development and client relationship strategy, ensuring that every prospective engagement is approached with professionalism, transparency, and a genuine commitment to understanding organizational challenges." },
-                  { name: "Jessica Runion", title: "Chief Experience Officer", desc: "Oversees the client experience from initial engagement through long-term partnership, ensuring that every interaction reflects the professionalism and attention to detail that defines Legacy Asset Intelligence." },
-                ].map((leader, i) => (
-                  <div key={i} style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: 8, padding: "1.5rem" }}>
-                    <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1rem", fontWeight: 600, color: C.text, marginBottom: "0.25rem" }}>{leader.name}</h4>
-                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, color: C.gold, letterSpacing: "0.05em", marginBottom: "0.75rem" }}>{leader.title}</p>
-                    <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.88rem", color: C.textMuted, lineHeight: 1.7, margin: 0 }}>{leader.desc}</p>
-                  </div>
-                ))}
-              </div>
+            {/* Full executive team available on the Team page */}
+            <div style={{ textAlign: "center", marginTop: "2rem" }}>
+              <button onClick={() => navigate("/team")} style={{ background: "none", border: `1px solid ${C.gold}`, color: C.gold, padding: "0.75rem 2rem", borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}>
+                Meet the Full Executive Team →
+              </button>
             </div>
           </div>
         </div>
