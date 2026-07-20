@@ -106,34 +106,35 @@ export default function Contact() {
         <form onSubmit={handleSubmit} style={{ background: C.slate, border: `1px solid ${C.border}`, borderRadius: 8, padding: "2.5rem" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
             <div>
-              <label style={labelStyle}>First Name</label>
-              <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} style={inputStyle} />
+              <label htmlFor="firstName" style={labelStyle}>First Name</label>
+              <input id="firstName" type="text" name="firstName" value={formData.firstName} onChange={handleChange} style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>Last Name</label>
-              <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} style={inputStyle} />
+              <label htmlFor="lastName" style={labelStyle}>Last Name</label>
+              <input id="lastName" type="text" name="lastName" value={formData.lastName} onChange={handleChange} style={inputStyle} />
             </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
             <div>
-              <label style={labelStyle}>Email *</label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} required style={inputStyle} />
+              <label htmlFor="email" style={labelStyle}>Email *</label>
+              <input id="email" type="email" name="email" value={formData.email} onChange={handleChange} required style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>Phone</label>
-              <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={inputStyle} />
+              <label htmlFor="phone" style={labelStyle}>Phone</label>
+              <input id="phone" type="tel" name="phone" value={formData.phone} onChange={handleChange} style={inputStyle} />
             </div>
           </div>
 
           <div style={{ marginBottom: "1.5rem" }}>
-            <label style={labelStyle}>Company</label>
-            <input type="text" name="company" value={formData.company} onChange={handleChange} style={inputStyle} />
+            <label htmlFor="company" style={labelStyle}>Company</label>
+            <input id="company" type="text" name="company" value={formData.company} onChange={handleChange} style={inputStyle} />
           </div>
 
           <div style={{ marginBottom: "2rem" }}>
-            <label style={labelStyle}>Message</label>
+            <label htmlFor="message" style={labelStyle}>Message</label>
             <textarea
+              id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
@@ -141,6 +142,10 @@ export default function Contact() {
               style={{ ...inputStyle, resize: "vertical" }}
             />
           </div>
+
+          <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.7rem", color: C.textMuted, lineHeight: 1.5, marginBottom: "1rem" }}>
+            By submitting this form, you consent to Legacy Asset Intelligence contacting you regarding your inquiry. Your information will not be shared with third parties.
+          </p>
 
           <button
             type="submit"

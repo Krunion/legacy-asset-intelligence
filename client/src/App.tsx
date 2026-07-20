@@ -35,7 +35,7 @@ function Router() {
       <Route path={"/career"} component={Career} />
       <Route path={"/employee-portal"} component={EmployeePortal} />
           <Route path={"/contact"} component={Contact} />
-          <Route path={"/calculator"} component={Calculator} />
+          {/* Calculator route removed - estimator available inline on homepage */}
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

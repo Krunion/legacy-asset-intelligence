@@ -30,7 +30,7 @@ export default function FAQ() {
         },
         {
           question: "How common are ghost assets in enterprise organizations?",
-          answer: "Industry research consistently shows that 15-30% of a typical organization's fixed assets are ghosts. For organizations that have never conducted a comprehensive physical verification, rates can exceed 40%. This translates to millions in unnecessary spending annually. The problem is particularly acute in organizations with multiple locations, decentralized asset management, legacy systems, or those that have undergone mergers and acquisitions."
+          answer: "Industry sources suggest that a significant percentage of assets on a typical fixed asset register may be ghost assets. The rate varies widely by organization, industry, and how recently a physical verification was conducted. The problem is particularly acute in organizations with multiple locations, decentralized asset management, legacy systems, or those that have undergone mergers and acquisitions. A professional assessment can determine your organization's specific exposure."
         },
         {
           question: "What causes ghost assets to accumulate?",
@@ -51,7 +51,7 @@ export default function FAQ() {
       questions: [
         {
           question: "What's the typical timeline for a capital recovery engagement?",
-          answer: "Most engagements follow our four-phase methodology: Phase 1 (Discovery & Assessment) takes 2-4 weeks and involves analyzing your current asset register, identifying high-risk categories, and developing a verification strategy. Phase 2 (Physical Accountability) takes 4-12 weeks depending on asset volume and location count. Phase 3 (Technology & Governance Integration) takes 6-10 weeks. Phase 4 (Recurring Intelligence) is ongoing. Total time to first capital recovery identification is typically 8-12 weeks."
+          answer: "Most engagements follow our four-phase methodology: Phase 1 (Executive Asset Intelligence Assessment) takes 2-4 weeks and involves analyzing your current asset register, identifying high-risk categories, and developing a verification strategy. Phase 2 (Physical Verification & Reconciliation) takes 4-12 weeks depending on asset volume and location count. Phase 3 (Capital Recovery & Financial Impact) takes 6-10 weeks. Phase 4 (Governance Implementation & Technology Enablement) is ongoing. Total time to initial findings is typically 8-12 weeks."
         },
         {
           question: "How do you conduct physical verification without disrupting operations?",
@@ -76,11 +76,11 @@ export default function FAQ() {
       questions: [
         {
           question: "How much capital can we realistically recover?",
-          answer: "Recovery amounts vary significantly based on asset base size, industry, and current asset verification maturity. Typical recoveries range from $500K for smaller organizations to $15M+ for large enterprises with multiple locations. The primary sources of recovery include property tax reduction (removing ghost assets from tax rolls), insurance premium reduction, maintenance contract elimination, and prevention of duplicate purchases. Our ROI Calculator provides personalized estimates based on your specific situation."
+          answer: "Recovery potential varies significantly based on asset base size, industry, and current asset verification maturity. The primary sources of cost reduction include property tax exposure from ghost assets on tax rolls, insurance premium alignment with actual asset values, maintenance contract optimization, and prevention of duplicate purchases. Our ROI Estimator provides directional estimates based on your inputs, though actual outcomes depend on organizational factors. Contact us for a confidential preliminary assessment."
         },
         {
           question: "What's the typical ROI on an LAI engagement?",
-          answer: "Most organizations see a 5:1 to 15:1 return on their investment within the first 12 months. The initial engagement cost is typically recovered within 60-90 days through immediate property tax and insurance savings alone. Ongoing governance prevents re-accumulation, meaning the benefits compound year over year. Organizations that implement our full governance framework see sustained annual savings of 2-5% of total asset value."
+          answer: "Organizations that engage in structured asset verification and governance programs often find that the engagement investment is recovered through identified cost reductions. The primary return drivers include property tax exposure reduction, insurance coverage alignment, and maintenance contract optimization. Ongoing governance helps prevent re-accumulation of record exceptions, meaning benefits can compound over time. Specific ROI depends on portfolio size, data quality, and organizational factors."
         },
         {
           question: "How quickly do we see financial results?",
@@ -88,7 +88,7 @@ export default function FAQ() {
         },
         {
           question: "Do you guarantee specific savings amounts?",
-          answer: "We don't guarantee specific dollar amounts because every organization's situation is unique. However, we do guarantee our methodology — if we don't identify recoverable capital during the Discovery phase, there's no obligation to proceed. Our track record shows that organizations with 5,000+ assets and no recent physical verification virtually always have significant recovery potential. We provide detailed projections during the assessment phase so you can make informed decisions."
+          answer: "We do not guarantee specific dollar amounts because every organization's situation is unique. Our engagement structure is designed so that Phase 1 (Executive Assessment) provides you with a clear picture of potential opportunity before committing to subsequent phases. Organizations with substantial fixed asset portfolios that have not conducted recent physical verification typically have meaningful improvement potential. We provide detailed projections during the assessment phase so you can make informed decisions about next steps."
         }
       ]
     },
@@ -105,7 +105,7 @@ export default function FAQ() {
         },
         {
           question: "How do you ensure audit compliance during this process?",
-          answer: "We follow established audit frameworks (SOX, GASB, IFRS) throughout the engagement. All procedures are documented with full audit trails, all findings are independently verified, and we provide comprehensive audit-ready reporting. Many of our clients use our work to achieve 100% audit readiness. We also coordinate with your internal audit team and external auditors to ensure alignment."
+          answer: "Our work product is designed to support your organization's compliance objectives. All procedures are documented with supporting detail, and findings include verification evidence. We provide audit-supportive reporting that can assist your organization and its auditors. Note: LAI does not perform audits or provide assurance opinions. We coordinate with your internal audit team and external auditors to ensure our work product aligns with their requirements."
         },
         {
           question: "What happens after the initial recovery phase?",
@@ -148,7 +148,7 @@ export default function FAQ() {
     { term: "Asset Verification Maturity", definition: "A measure of how well an organization manages its asset lifecycle, from ad-hoc tracking to fully governed, technology-enabled oversight." },
     { term: "Property Tax Exposure", definition: "The excess property tax paid on ghost assets that no longer exist but remain on tax declarations." },
     { term: "Governance Framework", definition: "The policies, procedures, and technology systems that ensure ongoing asset accountability and prevent ghost asset re-accumulation." },
-    { term: "Recurring Intelligence", definition: "Ongoing monitoring and periodic verification that maintains asset register accuracy after initial recovery." },
+    { term: "Governance & Technology Enablement", definition: "Ongoing monitoring, periodic verification, and technology-enabled oversight that maintains asset register accuracy after initial engagement." },
   ];
 
   return (

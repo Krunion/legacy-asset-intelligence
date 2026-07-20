@@ -728,7 +728,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
             {inputs.includeRecurring && (
               <div style={{ marginBottom: "0.75rem", paddingLeft: "1rem", borderLeft: `3px solid #94A3B8` }}>
                 <p style={{ fontWeight: 600, marginBottom: "0.25rem" }}>Recurring Governance – Annual Program</p>
-                <p style={{ fontSize: "0.85rem", color: C.muted }}>Recurring audits, executive reporting, scorecards, maturity updates, and ongoing accountability assurance.</p>
+                <p style={{ fontSize: "0.85rem", color: C.muted }}>Recurring reviews, executive reporting, scorecards, maturity updates, and ongoing accountability monitoring.</p>
               </div>
             )}
           </div>

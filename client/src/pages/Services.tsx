@@ -202,8 +202,8 @@ export default function Services() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }}>
             {[
               { title: "Executive Assessment Report", desc: "Comprehensive evaluation of current asset management practices, governance maturity, and strategic recommendations for improvement." },
-              { title: "Recoverable Capital Analysis", desc: "Detailed identification of ghost assets, duplicate expenditures, insurance savings, and property tax reduction opportunities." },
-              { title: "Asset Accountability Score", desc: "Proprietary scoring methodology that quantifies organizational asset management maturity across multiple governance dimensions." },
+              { title: "Potential Recovery Analysis", desc: "Identification of record exceptions, potential duplicate expenditures, and areas where insurance and property tax exposure may be reduced." },
+              { title: "Asset Accountability Score", desc: "Structured scoring framework that evaluates organizational asset management maturity across multiple governance dimensions." },
               { title: "Governance Maturity Evaluation", desc: "Assessment of current governance practices against industry best practices with a structured improvement roadmap." },
               { title: "Strategic Roadmap", desc: "Multi-year implementation plan with prioritized recommendations, resource requirements, and projected return on investment." },
               { title: "Executive Dashboard", desc: "Real-time visibility into asset accountability metrics, governance KPIs, and organizational performance indicators." },
@@ -259,9 +259,9 @@ export default function Services() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.25rem" }}>
             {[
-              { title: "Audit-Ready Documentation", desc: "Every finding is documented with full audit trails that satisfy SOX, GASB, and IFRS requirements. Our reports are designed for external auditor review." },
+              { title: "Audit-Supportive Documentation", desc: "Findings are documented with supporting detail designed to assist organizations and their auditors. LAI does not perform audits or provide assurance opinions; our work product supports client-directed reporting." },
               { title: "Veteran-Owned Leadership", desc: "Founded by a United States military veteran, our organization brings discipline, accountability, and service-oriented leadership to every engagement." },
-              { title: "Comprehensive Insurance Coverage", desc: "Full professional liability and errors & omissions coverage protects our clients throughout every phase of the engagement." },
+              { title: "Professional Insurance Coverage", desc: "Professional liability (E&O) and general liability coverage is maintained. Certificate of Insurance is available upon request." },
               { title: "Technology-Enabled Verification", desc: "Enterprise-grade platforms including Asset Panda provide real-time tracking, photographic documentation, and governance automation." },
               { title: "Structured Quality Assurance", desc: "Multi-level review processes ensure every deliverable meets executive presentation standards before client delivery." },
               { title: "Continuous Methodology Refinement", desc: "Our approach evolves with every engagement, incorporating lessons learned and emerging best practices into our consulting framework." },

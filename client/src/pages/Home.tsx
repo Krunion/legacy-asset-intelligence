@@ -194,19 +194,19 @@ export default function Home() {
               Inaccurate Asset Information Creates<br />Significant Financial Exposure
             </h2>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "1rem", maxWidth: 700, margin: "0 auto", lineHeight: 1.7 }}>
-              Most organizations unknowingly carry 15–30% of their fixed asset register as ghost assets — items that no longer exist physically but continue generating real financial obligations.
+              Many organizations carry records for assets that no longer exist physically — generating ongoing property taxes, insurance premiums, and maintenance costs on equipment they no longer own.
             </p>
           </div>
 
           {/* Challenge Cards */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "1.5rem", marginBottom: "3rem" }}>
             {[
-              { title: "Ghost Assets & Phantom Costs", desc: "Assets that appear on your register but no longer exist physically — generating property taxes, insurance premiums, and maintenance contracts on equipment you don't own.", stat: "15–30%", statLabel: "of typical registers" },
-              { title: "Duplicate & Unnecessary Purchases", desc: "Without accurate visibility into existing assets, organizations routinely purchase equipment they already own, wasting capital that could be deployed strategically.", stat: "$2.4M", statLabel: "avg. annual waste" },
-              { title: "Insurance & Tax Overpayment", desc: "Inflated asset registers directly increase insurance premiums and property tax assessments. Organizations pay to insure and tax assets that no longer exist.", stat: "35%", statLabel: "of recoverable savings" },
-              { title: "Inaccurate Financial Reporting", desc: "Ghost assets distort depreciation schedules, net book values, and balance sheet accuracy — creating compliance risk and misleading executive decision-making.", stat: "SOX", statLabel: "compliance risk" },
-              { title: "Inefficient Capital Planning", desc: "Without accurate asset intelligence, capital expenditure decisions are based on incomplete information, leading to misallocated budgets and deferred critical investments.", stat: "25%", statLabel: "of IT budgets affected" },
-              { title: "Governance & Accountability Gaps", desc: "Organizations without formal asset governance programs experience recurring accuracy degradation, losing the benefits of any previous inventory effort within 18–24 months.", stat: "18mo", statLabel: "accuracy half-life" },
+              { title: "Ghost Assets & Phantom Costs", desc: "Records that cannot be physically verified — assets disposed, lost, or destroyed but still generating property taxes, insurance premiums, and maintenance contracts.", stat: "Common", statLabel: "across industries" },
+              { title: "Duplicate & Unnecessary Purchases", desc: "Without accurate visibility into existing assets, organizations may purchase equipment they already own, wasting capital that could be deployed strategically.", stat: "Frequent", statLabel: "finding in audits" },
+              { title: "Insurance & Tax Overpayment", desc: "Inflated asset registers can increase insurance premiums and property tax assessments. Organizations may be paying to insure and tax assets that no longer exist.", stat: "Significant", statLabel: "potential exposure" },
+              { title: "Inaccurate Financial Reporting", desc: "Ghost assets distort depreciation schedules, net book values, and balance sheet accuracy — creating compliance risk and potentially misleading executive decision-making.", stat: "Risk", statLabel: "compliance exposure" },
+              { title: "Inefficient Capital Planning", desc: "Without accurate asset intelligence, capital expenditure decisions may be based on incomplete information, leading to misallocated budgets and deferred critical investments.", stat: "Variable", statLabel: "by organization" },
+              { title: "Governance & Accountability Gaps", desc: "Organizations without formal asset governance programs often experience recurring accuracy degradation after any inventory effort, as records drift without ongoing controls.", stat: "Ongoing", statLabel: "without governance" },
             ].map((challenge, i) => (
               <div key={i} style={{ background: C.glass, backdropFilter: "blur(8px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, padding: "2rem", transition: "border-color 0.3s" }}>
                 <div style={{ display: "flex", alignItems: "baseline", gap: "0.75rem", marginBottom: "1rem" }}>
@@ -226,10 +226,10 @@ export default function Home() {
           {/* Summary stat bar */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }}>
             {[
-              { value: 15, suffix: "%", label: "Ghost Asset Rate", sub: "of typical portfolio" },
-              { value: 264, suffix: "B", prefix: "$", label: "Market Size", sub: "Fixed Asset Mgmt (2023)" },
-              { value: 25, suffix: "%", label: "Budget Waste", sub: "from ghost assets" },
-              { value: 28, suffix: "%", label: "Market Growth", sub: "CAGR through 2030" },
+              { value: 5, suffix: ".87B", prefix: "$", label: "EAM Market", sub: "Enterprise Asset Mgmt (2024)" },
+              { value: 9, suffix: "%", label: "Market CAGR", sub: "through 2030" },
+              { value: 4, suffix: " Phases", label: "Methodology", sub: "end-to-end framework" },
+              { value: 7, suffix: "+", label: "Industries", sub: "sectors served" },
             ].map((m, i) => (
               <div key={i} style={{ textAlign: "center", padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}` }}>
                 <div style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: C.gold }}>
@@ -363,10 +363,10 @@ export default function Home() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem", marginBottom: "3rem" }}>
             {[
               { title: "Veteran-Owned Business", desc: "Founded by military veterans who bring discipline, integrity, and mission-focused execution to every client engagement." },
-              { title: "SDVOSB Certification", desc: "Service-Disabled Veteran-Owned Small Business certification pending — providing procurement advantages for government and enterprise clients." },
+              { title: "SDVOSB Status", desc: "Service-Disabled Veteran-Owned Small Business certification application pending. LAI does not represent itself as SBA-certified or eligible for SDVOSB set-aside benefits unless and until certification is approved." },
               { title: "Professional Liability Coverage", desc: "Comprehensive Professional Liability, General Liability, and Cyber Liability insurance protecting every client engagement." },
               { title: "Asset Panda Expertise", desc: "Deep platform expertise in Asset Panda configuration, implementation, and optimization for enterprise asset tracking environments." },
-              { title: "Proven Methodology", desc: "Our four-phase framework has been developed through extensive industry research and real-world consulting experience across multiple sectors." },
+              { title: "Structured Methodology", desc: "Our four-phase framework provides a repeatable, structured approach to asset intelligence — from discovery through ongoing governance." },
               { title: "Executive-Level Engagement", desc: "We work directly with CFOs, COOs, and VP-level leadership — ensuring strategic alignment and organizational commitment from day one." },
             ].map((t, i) => (
               <div key={i} style={{ background: C.glass, backdropFilter: "blur(8px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, padding: "1.75rem" }}>
@@ -484,13 +484,13 @@ export default function Home() {
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: "5rem 2rem" }}>
           <div style={{ textAlign: "center", marginBottom: "3rem" }}>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.7rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "0.75rem" }}>
-              Proven Results
+              Illustrative Scenarios
             </p>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 700, color: C.text, lineHeight: 1.2, marginBottom: "1rem" }}>
-              Real-World Capital Recovery Examples
+              Financial Scenario Examples
             </h2>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "1rem", maxWidth: 700, margin: "0 auto", lineHeight: 1.7 }}>
-              See how organizations across industries have recovered significant capital and strengthened governance through our methodology.
+              These illustrative scenarios demonstrate how organizations in various industries might evaluate asset-record exceptions and potential recovery opportunities using our methodology.
             </p>
           </div>
           <CaseStudies />
@@ -510,7 +510,7 @@ export default function Home() {
               Executive ROI Estimator
             </h2>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "1rem", maxWidth: 700, margin: "0 auto", lineHeight: 1.7 }}>
-              Estimate your organization's total financial recovery opportunity in minutes. Our proprietary models predict ghost asset exposure, recoverable capital, and annual savings — using only information you already know.
+              Explore a directional planning estimate for your organization's potential asset-record exposure. This tool provides general guidance based on the information and assumptions you provide — it is not a quote, valuation, appraisal, or guarantee of recovery.
             </p>
           </div>
           <ExecutiveROIEstimator />
@@ -527,7 +527,7 @@ export default function Home() {
               Your Organization Deserves Accurate Asset Intelligence
             </h2>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1rem", color: C.silver, lineHeight: 1.8, maxWidth: 650, margin: "0 auto 2rem" }}>
-              Ghost assets are silently eroding your financial position. Inaccurate registers are inflating your tax obligations, insurance premiums, and maintenance costs. Legacy Asset Intelligence provides the expertise, methodology, and technology to recover hidden capital and build permanent accountability.
+              Inaccurate asset records may be inflating your tax obligations, insurance premiums, and maintenance costs. Legacy Asset Intelligence provides the expertise, methodology, and technology to help identify record exceptions, evaluate recovery opportunities, and build sustainable governance.
             </p>
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.textMuted, lineHeight: 1.7, maxWidth: 600, margin: "0 auto 2.5rem" }}>
               Schedule an Executive Asset Intelligence Assessment to understand your organization's recovery opportunity, evaluate your governance maturity, and receive a strategic roadmap for improvement.
@@ -580,7 +580,7 @@ export default function Home() {
             {/* Resources */}
             <div>
               <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, color: C.gold, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1rem" }}>Resources</h4>
-              {[{ label: "Executive Insights", path: "/insights" }, { label: "Whitepapers & Guides", path: "/resources" }, { label: "ROI Calculator", path: "#calculator" }, { label: "FAQ", path: "/faq" }].map(l => (
+              {[{ label: "Executive Insights", path: "/insights" }, { label: "Whitepapers & Guides", path: "/resources" }, { label: "ROI Estimator", path: "#calculator" }, { label: "FAQ", path: "/faq" }].map(l => (
                 <p key={l.label} onClick={() => l.path.startsWith("#") ? document.getElementById(l.path.slice(1))?.scrollIntoView({ behavior: "smooth" }) : navigate(l.path)} style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.silver, marginBottom: "0.5rem", cursor: "pointer" }}>{l.label}</p>
               ))}
             </div>
@@ -599,12 +599,17 @@ export default function Home() {
           </div>
 
           {/* Bottom bar */}
-          <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.textMuted }}>
-              &copy; {new Date().getFullYear()} Legacy Asset Intelligence. All rights reserved.
-            </p>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.textMuted }}>
-              Veteran-Owned &middot; Professional Liability Insured &middot; Cyber Liability Insured
+          <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: "1.5rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.textMuted }}>
+                &copy; {new Date().getFullYear()} Legacy Asset Intelligence. All rights reserved.
+              </p>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.textMuted }}>
+                Veteran-Owned &middot; Professionally Insured
+              </p>
+            </div>
+            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", color: C.textMuted, lineHeight: 1.5, opacity: 0.7 }}>
+              Disclaimer: Legacy Asset Intelligence provides consulting services related to fixed asset record reconciliation and governance. All estimates, projections, and scenario analyses are for informational and planning purposes only and do not constitute financial advice, audit opinions, appraisals, or guarantees of recovery. Actual results depend on client-specific conditions. LAI is not a CPA firm and does not provide assurance or attestation services.
             </p>
           </div>
         </div>

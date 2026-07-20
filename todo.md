@@ -297,3 +297,34 @@
 ## Remove Per-Phase Department Fields (July 12)
 - [x] Remove Departments input from Phase 1, Phase 2, Phase 3, and Recurring Governance sections
 - [x] Remove department cost components from pricing calculations in all four phases
+
+## Website Correction Brief Implementation (July 20, 2026)
+
+### P0 — Critical Corrections
+- [x] Hide/disable public ROI calculator from navigation (removed /calculator route, kept inline with disclaimers)
+- [x] Reframe CaseStudies.tsx as "Illustrative Financial Scenarios" (not real clients)
+- [x] Fix Home.tsx: remove "Proven Results", "Real-World Capital Recovery Examples"
+- [x] Fix SDVOSB language: change to "certification application pending"
+- [x] Remove/qualify unsupported statistics (15-30% ghost rate sourced to Gartner, $2.4M removed)
+- [x] Fix Phase methodology consistency across all routes (use approved names)
+- [x] Remove guarantee language (ensures, guarantees, audit-proof, etc.)
+- [x] Fix Resources.tsx broken download buttons (link to insights articles)
+- [x] Add professional-scope disclaimer (footer disclaimer added)
+- [x] Add calculator disclaimer to remaining calculator references
+- [x] Remove fabricated research claims (500-org survey, $264B market, Big Four citations)
+- [x] Fix insightArticles.ts: all 8 articles corrected for unsupported claims
+
+### P1 — Production-Ready
+- [x] Fix compliance language (SOX, IFRS, GASB, CMS, Joint Commission) - softened to "audit-supportive"
+- [x] Add privacy notices to forms (Contact page consent notice added)
+- [x] Fix accessibility: labels, landmarks, keyboard navigation (htmlFor/id pairs added)
+- [x] Fix SEO: meta descriptions updated to neutral language
+- [x] Fix insurance claims (removed specific coverage types, now "Professionally Insured")
+- [ ] Fix accounting definitions (ghost asset, zombie asset) across site — minor, deferred
+- [ ] Fix careers page: remove unverifiable benefit claims — minor, deferred
+- [ ] Correct industry page outcome claims — minor, deferred
+
+### P2 — Quality
+- [x] Create claim register document (CLAIM_REGISTER.md)
+- [ ] Centralize phase definitions in shared content source — deferred
+- [ ] Remove "Made with Manus" branding if possible — platform-level, cannot change

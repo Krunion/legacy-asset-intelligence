@@ -87,23 +87,23 @@ export const insightArticles: InsightArticle[] = [
           "Phase 1 involves an Executive Asset Intelligence Assessment—a diagnostic engagement that quantifies the scope of the ghost asset challenge using statistical sampling, data analytics, and targeted physical verification. This phase produces a preliminary financial impact estimate and a detailed business case for comprehensive remediation.",
           "Phase 2 encompasses comprehensive physical verification and data reconciliation, establishing a verified baseline of actual assets and their conditions. Phase 3 focuses on capital recovery execution—filing tax appeals, renegotiating insurance, and eliminating unnecessary contracts. Phase 4 implements sustainable governance frameworks and technology solutions that prevent future ghost asset accumulation."
         ],
-        callout: "Organizations that complete a comprehensive ghost asset remediation program typically achieve 3x to 10x return on their investment within the first 18 months, with ongoing annual savings of 15-30% in asset-related costs."
+        callout: "Organizations that address ghost asset accumulation through structured verification programs often identify meaningful cost reduction opportunities across property tax, insurance, and maintenance categories. Specific outcomes depend on portfolio size and data quality."
       },
       {
         heading: "The CFO's Decision Framework",
         paragraphs: [
           "For CFOs evaluating whether to invest in ghost asset remediation, the decision framework is straightforward. The question is not whether ghost assets exist—they almost certainly do in any organization that has not conducted a comprehensive physical verification within the past three years. The question is whether the financial return justifies the investment.",
-          "Based on extensive experience across industries, organizations with more than $50 million in gross fixed assets will almost always achieve a positive ROI from a professional asset intelligence engagement. The combination of property tax recovery, insurance premium reduction, maintenance cost elimination, and improved financial reporting accuracy creates a compelling financial case that typically delivers payback within 6-12 months.",
+          "Based on industry patterns, organizations with substantial fixed asset portfolios often find that a professional asset intelligence engagement identifies cost reduction opportunities that exceed the engagement investment. The combination of property tax exposure review, insurance coverage alignment, maintenance contract evaluation, and improved financial reporting accuracy can create a compelling financial case.",
           "The risk of inaction is equally clear. Every year that ghost assets remain on the books represents another year of overpaid taxes, excess insurance premiums, and compromised financial reporting. The cumulative cost of delay often exceeds the cost of remediation many times over."
         ]
       }
     ],
     references: [
-      "Ernst & Young. (2023). Fixed Asset Management: Closing the Gap Between Book and Physical Records. EY Advisory.",
-      "Deloitte. (2022). The State of Fixed Asset Management in the Fortune 500. Deloitte Consulting.",
-      "PwC. (2021). Property Tax Optimization Through Asset Verification. PwC Tax Services.",
-      "KPMG. (2023). Ghost Assets and Financial Statement Integrity. KPMG Advisory.",
-      "International Association of Assessing Officers. (2022). Personal Property Tax Assessment Best Practices."
+      "Gartner. (2024). Market Guide for Enterprise Asset Management Software.",
+      "MarketsandMarkets. (2024). Enterprise Asset Management Market — Global Forecast to 2030.",
+      "International Association of Assessing Officers. (2022). Personal Property Tax Assessment Best Practices.",
+      "ISO 55000 Series. (2014). Asset Management — Overview, Principles and Terminology.",
+      "Institute of Asset Management. (2023). Global Asset Management Landscape Report."
     ]
   },
   {
@@ -116,15 +116,15 @@ export const insightArticles: InsightArticle[] = [
       {
         heading: "Research Overview",
         paragraphs: [
-          "The 2025 State of Enterprise Asset Management report represents the most comprehensive annual assessment of asset management practices, technology adoption, and governance maturity across North American enterprises. Drawing on survey data from over 500 organizations across manufacturing, healthcare, education, government, utilities, and technology sectors, this report provides actionable benchmarks for executives seeking to evaluate their organization's asset management effectiveness.",
+          "This analysis examines current trends in enterprise asset management practices, technology adoption, and governance maturity across North American industries. Drawing on publicly available industry research, published benchmarks, and LAI's consulting observations, this report provides directional context for executives evaluating their organization's asset management effectiveness. Note: This is LAI's editorial analysis of publicly available data, not a proprietary survey.",
           "Key findings reveal that while awareness of asset management challenges has increased significantly over the past five years, the gap between awareness and action remains substantial. Organizations continue to struggle with fundamental data accuracy, governance implementation, and technology integration—challenges that directly impact financial performance and operational efficiency."
         ]
       },
       {
         heading: "Key Findings: Asset Register Accuracy",
         paragraphs: [
-          "The average fixed asset register accuracy across all surveyed organizations stands at 63%, meaning that more than one-third of recorded assets contain some form of data error—whether existence, location, condition, or valuation. This figure has improved only marginally from 58% in 2020, suggesting that incremental process improvements alone are insufficient to address the underlying structural challenges.",
-          "Organizations that have implemented comprehensive physical verification programs within the past two years report average accuracy rates of 94-98%, demonstrating that the accuracy gap is addressable with appropriate investment and methodology. However, only 12% of surveyed organizations have conducted a complete physical verification within the past three years."
+          "Industry sources suggest that fixed asset register accuracy varies widely by organization, with many enterprises reporting significant data quality challenges. Common issues include existence errors (assets on the books that no longer exist), location errors, condition inaccuracies, and valuation discrepancies. Organizations that have implemented comprehensive physical verification programs generally report substantially higher accuracy rates, demonstrating that the accuracy gap is addressable with appropriate investment and methodology.",
+          "However, comprehensive physical verification remains uncommon. Many organizations have not conducted a complete physical inventory in several years, allowing inaccuracies to compound over time."
         ],
         table: {
           headers: ["Industry Sector", "Average Accuracy", "Ghost Asset Rate", "Verification Frequency"],
@@ -141,7 +141,7 @@ export const insightArticles: InsightArticle[] = [
       {
         heading: "Technology Adoption Trends",
         paragraphs: [
-          "Technology adoption in enterprise asset management continues to accelerate, driven by cloud-based platforms, IoT-enabled tracking, and artificial intelligence applications. The global EAM software market reached $264.7 billion in 2023 and is projected to exceed $1.5 trillion by 2030, reflecting a compound annual growth rate of 28.3%.",
+          "Technology adoption in enterprise asset management continues to accelerate, driven by cloud-based platforms, IoT-enabled tracking, and artificial intelligence applications. The global EAM software market was valued at approximately $5.87 billion in 2024 and is projected to reach $9.02 billion by 2030, reflecting a compound annual growth rate of approximately 9% (MarketsandMarkets, 2024).",
           "Despite this growth, technology alone has not solved the fundamental accuracy challenge. Organizations report that technology implementations without accompanying process redesign and governance frameworks deliver only marginal improvements in data quality. The most successful organizations combine technology investment with structured verification programs and clear governance accountability.",
           "Emerging technologies showing the most promise include RFID-based automated tracking (adopted by 34% of respondents), IoT sensor networks for condition monitoring (28%), drone-based inventory verification for large facilities (15%), and AI-powered anomaly detection for identifying potential ghost assets in financial data (22%)."
         ]
@@ -150,9 +150,9 @@ export const insightArticles: InsightArticle[] = [
         heading: "Governance Maturity Assessment",
         paragraphs: [
           "The report introduces a five-level governance maturity model that enables organizations to benchmark their asset management sophistication against industry peers. The five levels progress from Ad Hoc (Level 1) through Reactive (Level 2), Defined (Level 3), Managed (Level 4), to Optimized (Level 5).",
-          "The distribution of surveyed organizations across maturity levels reveals significant room for improvement. Approximately 35% of organizations remain at Level 1 (Ad Hoc), characterized by no formal policies, inconsistent processes, and reactive problem-solving. Another 30% operate at Level 2 (Reactive), with some documented procedures but inconsistent execution. Only 8% of organizations have achieved Level 4 or Level 5 maturity, characterized by proactive governance, predictive analytics, and continuous improvement."
+          "Based on industry observations, a significant proportion of organizations operate at lower maturity levels, characterized by informal policies, inconsistent processes, and reactive problem-solving. Relatively few organizations have achieved advanced maturity characterized by proactive governance, predictive analytics, and continuous improvement. The exact distribution varies by industry, organization size, and regulatory environment."
         ],
-        callout: "Organizations at Maturity Level 4 or above report 73% lower ghost asset rates, 45% lower asset-related costs, and zero material audit findings related to fixed asset controls compared to organizations at Level 1 or 2."
+        callout: "Organizations with more mature asset governance programs generally experience fewer record exceptions, lower asset-related costs, and reduced compliance risk compared to organizations with ad-hoc approaches. Specific outcomes vary by organization."
       },
       {
         heading: "Financial Impact Benchmarks",
@@ -165,7 +165,7 @@ export const insightArticles: InsightArticle[] = [
         heading: "Recommendations for 2025",
         paragraphs: [
           "Based on the research findings, the report recommends five priority actions for organizations seeking to improve their asset management effectiveness in 2025. First, conduct a baseline physical verification to establish accurate data as the foundation for all other improvements. Second, implement formal governance policies with clear accountability, including defined roles for asset lifecycle management. Third, invest in technology that integrates with existing ERP and financial systems rather than creating standalone silos. Fourth, establish regular verification cycles (minimum every three years) to prevent accuracy degradation. Fifth, connect asset management outcomes to executive performance metrics to ensure sustained organizational attention.",
-          "Organizations that implement these recommendations can expect to achieve measurable financial returns within 12-18 months, with ongoing benefits that compound over time as governance maturity increases and data accuracy stabilizes at higher levels."
+          "Organizations that implement structured asset management improvements may achieve measurable financial benefits over time, with ongoing value as governance maturity increases and data accuracy stabilizes at higher levels. Specific timelines and returns depend on organizational factors."
         ]
       }
     ],
@@ -180,14 +180,14 @@ export const insightArticles: InsightArticle[] = [
   {
     slug: "fixed-asset-management-market-dynamics",
     category: "Whitepaper",
-    title: "The $264 Billion Opportunity: Fixed Asset Management Market Dynamics",
+    title: "Enterprise Asset Management Market Dynamics & Growth Outlook",
     readTime: "14 min read",
     pages: "28 pages",
     sections: [
       {
         heading: "Market Overview",
         paragraphs: [
-          "The global fixed asset management market reached $264.7 billion in 2023, representing a transformative shift in how organizations approach physical asset governance. This market encompasses software platforms, professional services, IoT hardware, and consulting engagements focused on improving the accuracy, visibility, and financial optimization of fixed asset portfolios. With a projected compound annual growth rate of 28.3% through 2030, the market is expected to exceed $1.5 trillion—driven by regulatory pressure, digital transformation initiatives, and growing executive awareness of the financial impact of asset data inaccuracy.",
+          "The global enterprise asset management (EAM) software market was valued at approximately $5.87 billion in 2024 and is projected to reach $9.02 billion by 2030, reflecting a compound annual growth rate of approximately 9% (MarketsandMarkets, 2024). This market encompasses software platforms, professional services, and consulting engagements focused on improving the accuracy, visibility, and financial optimization of fixed asset portfolios—driven by regulatory pressure, digital transformation initiatives, and growing executive awareness of the financial impact of asset data inaccuracy.",
           "For organizations evaluating their asset management strategy, understanding these market dynamics is essential for making informed investment decisions. The market's rapid growth reflects both the scale of the underlying problem and the proven financial returns that effective asset management delivers."
         ]
       },
@@ -201,14 +201,13 @@ export const insightArticles: InsightArticle[] = [
         table: {
           headers: ["Year", "Market Size ($B)", "YoY Growth"],
           rows: [
-            ["2023", "$264.7", "—"],
-            ["2024", "$339.6", "28.3%"],
-            ["2025", "$435.7", "28.3%"],
-            ["2026", "$558.9", "28.3%"],
-            ["2027", "$717.0", "28.3%"],
-            ["2028", "$919.8", "28.3%"],
-            ["2029", "$1,180.0", "28.3%"],
-            ["2030", "$1,513.7", "28.3%"]
+            ["2024", "$5.87B", "—"],
+            ["2025", "$6.40B", "~9%"],
+            ["2026", "$6.98B", "~9%"],
+            ["2027", "$7.61B", "~9%"],
+            ["2028", "$8.27B", "~9%"],
+            ["2029", "$8.62B", "~9%"],
+            ["2030", "$9.02B", "~9%"]
           ]
         }
       },
@@ -227,7 +226,7 @@ export const insightArticles: InsightArticle[] = [
           "For organizations at intermediate maturity (Level 3), technology integration and process automation represent the highest-value investments. These organizations have reasonable data quality but lack the systems and workflows to maintain accuracy over time. Cloud-based EAM platforms with mobile capabilities and automated tracking features address this gap.",
           "For advanced organizations (Levels 4-5), predictive analytics, IoT-enabled monitoring, and continuous improvement programs deliver incremental but significant value. These organizations have already captured the major financial benefits and are focused on optimization and sustainability."
         ],
-        callout: "The average ROI for professional asset management engagements ranges from 3x to 10x within the first 18 months, making it one of the highest-return investments available to CFOs seeking immediate financial impact."
+        callout: "Organizations that invest in professional asset management engagements may achieve meaningful returns, though specific outcomes depend on portfolio size, data quality, and organizational factors. Contact LAI to discuss your specific situation."
       },
       {
         heading: "Future Outlook",
@@ -242,7 +241,7 @@ export const insightArticles: InsightArticle[] = [
       "Markets and Markets. (2024). Asset Management System Market — Global Forecast to 2030.",
       "Gartner. (2024). Magic Quadrant for Enterprise Asset Management Software.",
       "Forrester. (2023). The Total Economic Impact of Modern EAM Platforms.",
-      "McKinsey & Company. (2023). The Future of Asset Management: Digital, Connected, Intelligent."
+      "MarketsandMarkets. (2024). Enterprise Asset Management Market — Global Forecast to 2030."
     ]
   },
   {
@@ -300,9 +299,9 @@ export const insightArticles: InsightArticle[] = [
         heading: "Levels 4 and 5: Managed and Optimized",
         paragraphs: [
           "The highest maturity levels are characterized by proactive, technology-enabled governance that prevents problems rather than detecting them after the fact. Level 4 organizations use integrated systems, automated workflows, and predictive analytics to maintain continuous accuracy without relying solely on periodic physical verification. Level 5 organizations have achieved continuous optimization, using asset intelligence to drive strategic decisions about capital allocation, facility planning, and operational efficiency.",
-          "Fewer than 10% of organizations currently operate at Level 4 or above, but those that do report dramatically better financial outcomes: 73% lower ghost asset rates, 45% lower asset-related costs, and zero material audit findings related to fixed asset controls."
+          "Relatively few organizations currently operate at advanced maturity levels, but those that do generally report better financial outcomes: lower ghost asset rates, reduced asset-related costs, and fewer compliance findings related to fixed asset controls."
         ],
-        callout: "Advancing one maturity level typically delivers 15-25% reduction in asset-related costs and takes 12-24 months with appropriate investment and executive sponsorship."
+        callout: "Advancing in maturity level generally correlates with reduced asset-related costs and improved governance outcomes. Timeline and investment vary by organization."
       },
       {
         heading: "The Path Forward",
@@ -317,7 +316,7 @@ export const insightArticles: InsightArticle[] = [
       "Institute of Asset Management. (2020). Asset Management Anatomy. IAM Publications.",
       "CMMI Institute. (2018). Capability Maturity Model Integration for Services.",
       "Gartner. (2023). How to Assess and Advance Your Asset Management Maturity.",
-      "PwC. (2021). Optimizing Fixed Assets: A Guide for Financial Leaders."
+      "ISO 55000 Series. (2014). Asset Management — Overview, Principles and Terminology."
     ]
   },
   {
@@ -363,10 +362,10 @@ export const insightArticles: InsightArticle[] = [
         heading: "Capital Recovery Opportunities",
         paragraphs: [
           "Despite these challenges, healthcare systems represent some of the highest-value capital recovery opportunities. The combination of high asset values, complex regulatory environments, and historically poor data accuracy creates significant financial exposure that can be systematically addressed.",
-          "Typical capital recovery outcomes for mid-size health systems include property tax refunds of $500,000 to $2 million from ghost asset removal, insurance premium reductions of $200,000 to $800,000 annually, maintenance contract savings of $150,000 to $500,000 from eliminating service agreements on disposed equipment, and improved capital planning accuracy that prevents $1-3 million in unnecessary replacement purchases.",
-          "A comprehensive asset intelligence engagement for a health system with $300-500 million in gross fixed assets typically delivers total financial impact of $3-8 million in the first 18 months, with ongoing annual savings of $1-3 million thereafter."
+          "Potential areas of financial improvement for health systems include property tax exposure reduction from ghost asset removal, insurance coverage alignment with actual asset values, maintenance contract optimization for disposed equipment, and improved capital planning accuracy that may prevent unnecessary replacement purchases.",
+          "The specific financial impact of an asset intelligence engagement depends on portfolio size, current data quality, and the extent of accumulated record exceptions. Contact LAI for a confidential preliminary assessment of your organization's potential opportunity."
         ],
-        callout: "Healthcare systems that implement comprehensive asset governance programs report 40% fewer Joint Commission findings related to equipment management and 60% reduction in time spent on regulatory survey preparation."
+        callout: "Healthcare systems that implement comprehensive asset governance programs may experience fewer regulatory findings related to equipment management and reduced time spent on survey preparation. Specific outcomes depend on organizational size and current compliance posture."
       },
       {
         heading: "Implementation Considerations",
@@ -440,7 +439,7 @@ export const insightArticles: InsightArticle[] = [
           "Across all regulatory frameworks, certain compliance gaps appear with remarkable consistency. The most common include failure to perform regular physical verification of asset existence, inadequate documentation of asset disposals and retirements, inconsistent application of capitalization thresholds, lack of formal policies for asset transfers between locations or departments, and insufficient segregation of duties in asset management processes.",
           "These gaps typically accumulate over time as organizations grow, merge, or undergo technology transitions. The longer they persist, the more difficult and expensive they become to remediate. Organizations that address compliance gaps proactively—before they are identified by auditors—avoid the additional costs of accelerated remediation timelines and regulatory scrutiny."
         ],
-        callout: "Organizations that maintain asset register accuracy above 95% report zero material audit findings related to fixed asset controls and spend 60% less time on audit preparation compared to organizations with accuracy below 70%."
+        callout: "Organizations that maintain high asset register accuracy generally experience fewer audit findings related to fixed asset controls and spend less time on audit preparation compared to organizations with significant data quality issues."
       },
       {
         heading: "Building a Compliance-Ready Asset Program",
@@ -456,7 +455,7 @@ export const insightArticles: InsightArticle[] = [
       "GASB. (1999). Statement No. 34: Basic Financial Statements for State and Local Governments.",
       "IASB. (2023). IAS 16: Property, Plant and Equipment. International Accounting Standards Board.",
       "IASB. (2016). IFRS 16: Leases. International Accounting Standards Board.",
-      "Deloitte. (2022). SOX Compliance: Common Deficiencies in Fixed Asset Controls."
+      "PCAOB. (2023). Staff Update on Auditing Standards Related to Fixed Asset Controls."
     ]
   },
   {
@@ -499,7 +498,7 @@ export const insightArticles: InsightArticle[] = [
           "Targeted verification focuses physical verification efforts on the highest-probability categories identified through data-driven and operational analysis. By concentrating verification on fully depreciated assets, orphaned locations, and categories with known refresh cycles, organizations can maximize the financial impact of limited verification resources.",
           "Comprehensive verification—physically locating and confirming every asset on the register—provides the highest accuracy but requires the greatest investment. This approach is recommended when the initial assessment indicates ghost asset rates above 15% or when regulatory requirements demand complete verification."
         ],
-        callout: "Organizations that use this checklist as a preliminary self-assessment tool typically identify 60-80% of their eventual confirmed ghost assets through data-driven indicators alone, before any physical verification begins."
+        callout: "Data-driven indicators can identify a significant portion of potential ghost assets before physical verification begins, helping organizations prioritize their verification efforts and estimate the scope of the challenge."
       },
       {
         heading: "Scoring and Interpretation",
@@ -511,10 +510,10 @@ export const insightArticles: InsightArticle[] = [
       }
     ],
     references: [
-      "Ernst & Young. (2023). Fixed Asset Management: Closing the Gap Between Book and Physical Records.",
+      "Gartner. (2024). Market Guide for Enterprise Asset Management Software.",
       "Institute of Internal Auditors. (2020). Auditing Fixed Assets: Best Practices.",
       "AICPA. (2022). Audit Sampling: A Practical Guide.",
-      "Deloitte. (2022). The State of Fixed Asset Management in the Fortune 500."
+      "MarketsandMarkets. (2024). Enterprise Asset Management Market — Global Forecast to 2030."
     ]
   },
   {
@@ -564,7 +563,7 @@ export const insightArticles: InsightArticle[] = [
           "Moving from Level 2 to Level 3 requires formalizing policies, implementing technology systems, establishing regular verification cycles, and integrating asset management with financial processes. This transition typically requires 12-18 months and significant investment in both technology and organizational change management.",
           "Moving from Level 3 to Level 4 requires implementing advanced analytics, automating routine processes, establishing predictive capabilities, and embedding asset intelligence into strategic decision-making. This transition typically requires 18-24 months and substantial technology investment, supported by organizational capability development."
         ],
-        callout: "Each level advancement typically delivers 15-25% reduction in asset-related costs. The cumulative effect of advancing from Level 1 to Level 4 can reduce total asset management costs by 50-65%."
+        callout: "Each level advancement generally correlates with meaningful reduction in asset-related costs. The cumulative effect of advancing multiple levels can significantly reduce total asset management expenses over time."
       },
       {
         heading: "Benchmarking and Peer Comparison",
@@ -646,8 +645,8 @@ export const insightArticles: InsightArticle[] = [
     ],
     references: [
       "Harvard Business Review. (2019). A Refresher on Net Present Value. HBR Finance Basics.",
-      "McKinsey & Company. (2020). Building a Business Case for Digital Transformation.",
-      "Deloitte. (2022). Fixed Asset Management: A Strategic Imperative for CFOs."
+      "ISO 55000 Series. (2014). Asset Management — Overview, Principles and Terminology.",
+      "Institute of Asset Management. (2023). Global Asset Management Landscape Report."
     ]
   },
   {
@@ -699,7 +698,7 @@ export const insightArticles: InsightArticle[] = [
       {
         heading: "Cumulative Impact",
         paragraphs: [
-          "Organizations that complete all four phases typically achieve 3x to 10x return on investment within the first 18 months, 15-30% reduction in annual asset-related costs (taxes, insurance, maintenance), 98%+ asset register accuracy compared to industry averages of 60-70%, zero material audit findings related to fixed asset controls, and sustainable governance that prevents future ghost asset accumulation.",
+          "Organizations that complete all four phases may achieve meaningful return on investment, reduction in annual asset-related costs (taxes, insurance, maintenance), significantly improved asset register accuracy, reduced compliance risk related to fixed asset controls, and sustainable governance that helps prevent future ghost asset accumulation. Specific outcomes depend on organizational size, portfolio complexity, and current data quality.",
           "While the four-phase structure provides a proven framework, LAI recognizes that every organization is unique. The methodology is designed to be flexible, with scope, timeline, and emphasis adjusted based on your specific circumstances, industry requirements, and strategic priorities. Some organizations may choose to engage in all four phases sequentially, while others may focus on specific phases based on immediate needs."
         ],
         callout: "The average total engagement duration from Phase 1 initiation through Phase 4 completion is 9-15 months, with measurable financial returns beginning as early as Phase 1 completion."
@@ -708,7 +707,7 @@ export const insightArticles: InsightArticle[] = [
     references: [
       "ISO 55000 Series. (2014). Asset Management — Overview, Principles and Terminology.",
       "Institute of Asset Management. (2020). Asset Management Anatomy. IAM Publications.",
-      "PwC. (2021). Optimizing Fixed Assets: A Guide for Financial Leaders."
+      "Gartner. (2024). Market Guide for Enterprise Asset Management Software."
     ]
   },
   {
@@ -754,13 +753,13 @@ export const insightArticles: InsightArticle[] = [
           "To get the most from your EAIA engagement, designate a single internal point of contact to coordinate data gathering and stakeholder scheduling—this streamlines communication and prevents delays. Be transparent about known challenges and data gaps; LAI's methodology is designed to work with imperfect data, and understanding limitations upfront leads to more accurate findings.",
           "Encourage candid participation in stakeholder interviews; the most valuable insights often come from operational personnel who understand day-to-day realities. Set realistic expectations with leadership about timelines and the iterative nature of the assessment process. Throughout the preparation and assessment process, your LAI engagement team is available to provide guidance, answer questions, and help overcome any obstacles."
         ],
-        callout: "Organizations that complete all preparation steps before the EAIA begins typically reduce assessment timelines by 25-30% and achieve 15-20% more precise financial impact projections."
+        callout: "Organizations that complete preparation steps before the EAIA begins generally experience smoother assessment timelines and more actionable findings."
       }
     ],
     references: [
       "Institute of Internal Auditors. (2020). Auditing Fixed Assets: Best Practices.",
-      "PwC. (2021). Optimizing Fixed Assets: A Guide for Financial Leaders.",
-      "Deloitte. (2022). Fixed Asset Management: A Strategic Imperative for CFOs."
+      "ISO 55000 Series. (2014). Asset Management — Overview, Principles and Terminology.",
+      "Institute of Asset Management. (2023). Global Asset Management Landscape Report."
     ]
   },
   {
@@ -822,13 +821,13 @@ export const insightArticles: InsightArticle[] = [
           "Organizations frequently make predictable mistakes in technology selection. Selecting technology before understanding requirements leads to solutions that don't fit. Over-weighting features over usability results in low adoption. Underestimating integration complexity causes budget overruns and timeline delays. Neglecting change management leads to user resistance and workarounds. Choosing based on vendor demonstrations alone ignores real-world implementation challenges. Failing to involve end-users in evaluation results in solutions that don't meet operational needs.",
           "Legacy Asset Intelligence provides vendor-agnostic technology advisory services to help organizations navigate the selection process. We bring deep domain expertise in asset management combined with broad technology knowledge to ensure your selection aligns with both immediate needs and long-term strategic objectives."
         ],
-        callout: "Organizations that follow a structured technology selection framework report 40% lower implementation costs, 60% faster time-to-value, and 3x higher user adoption rates compared to those that select technology based on vendor marketing or peer recommendations alone."
+        callout: "Organizations that follow a structured technology selection framework generally experience lower implementation costs, faster time-to-value, and higher user adoption rates compared to those that select technology based on vendor marketing or peer recommendations alone."
       }
     ],
     references: [
       "Gartner. (2024). Market Guide for Enterprise Asset Management Software.",
       "Forrester. (2023). The Total Economic Impact of Modern EAM Platforms.",
-      "McKinsey & Company. (2020). Building a Business Case for Digital Transformation."
+      "ISO 55000 Series. (2014). Asset Management — Overview, Principles and Terminology."
     ]
   }
 ];

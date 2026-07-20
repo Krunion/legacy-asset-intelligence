@@ -1,6 +1,6 @@
 /**
- * Case Studies Component for Legacy Asset Intelligence
- * Showcases 3 realistic anonymized client scenarios
+ * Illustrative Financial Scenarios Component for Legacy Asset Intelligence
+ * Showcases hypothetical scenarios for educational purposes — NOT client results
  * Design: Corporate Clarity with expandable cards
  */
 
@@ -48,8 +48,8 @@ const caseStudies = [
       { name: "Maintenance Elimination", value: 120000, color: colors.amber },
     ],
     quote:
-      "We discovered we were paying maintenance contracts on equipment we didn't even own anymore. LAI's systematic approach gave us complete visibility and recovered significant capital.",
-    quoteName: "Director of Operations, Regional Healthcare Network",
+      "This scenario illustrates how a healthcare network might discover ongoing maintenance contracts on equipment no longer in service, and how systematic verification could provide complete visibility.",
+    quoteName: "Hypothetical scenario for illustration purposes",
   },
   {
     id: 2,
@@ -80,8 +80,8 @@ const caseStudies = [
       { name: "Redeployable Assets", value: 38000, color: colors.slateLight },
     ],
     quote:
-      "The cross-plant visibility LAI provided was transformational. We eliminated redundant purchases and consolidated our asset base, improving both capital efficiency and operational control.",
-    quoteName: "VP of Facilities, Manufacturing Operations",
+      "This scenario illustrates how cross-plant visibility could help a manufacturer identify redundant purchases and consolidate their asset base for improved capital efficiency.",
+    quoteName: "Hypothetical scenario for illustration purposes",
   },
   {
     id: 3,
@@ -112,8 +112,8 @@ const caseStudies = [
       { name: "Redeployable Assets", value: 9000, color: colors.slateLight },
     ],
     quote:
-      "LAI helped us right-size our asset portfolio and avoid a $200K+ warehouse lease renewal. The visibility we gained is now embedded in our operations.",
-    quoteName: "Director of Logistics, Distribution Network",
+      "This scenario illustrates how asset visibility could help a logistics operation right-size their portfolio and identify unnecessary lease renewals.",
+    quoteName: "Hypothetical scenario for illustration purposes",
   },
 ];
 
@@ -207,7 +207,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                 marginBottom: "1rem",
               }}
             >
-              Key Results
+              Scenario Assumptions
             </h4>
             <div
               style={{
@@ -269,7 +269,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                     textShadow: "0 1px 2px rgba(0,0,0,0.3)",
                   }}
                 >
-                  Ghost Assets Found
+                  Record Exceptions
                 </div>
                 <div
                   style={{
@@ -301,7 +301,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                     marginBottom: "0.5rem",
                   }}
                 >
-                  Capital Recovered
+                  Potential Opportunity
                 </div>
                 <div
                   style={{
@@ -331,7 +331,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                     marginBottom: "0.5rem",
                   }}
                 >
-                  ROI Multiple
+                  Estimated ROI
                 </div>
                 <div
                   style={{
@@ -367,7 +367,7 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                   fontSize: "0.95rem",
                 }}
               >
-                Recovery Breakdown
+                Opportunity Breakdown
               </h5>
               <ResponsiveContainer width="100%" height={200}>
                 <PieChart>
@@ -422,12 +422,12 @@ function CaseStudyCard({ study, isExpanded, onToggle }: CaseStudyProps) {
                   fontSize: "0.95rem",
                 }}
               >
-                Savings by Category
+                Potential Savings by Category
               </h5>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                 {[
                   {
-                    label: "Tax Savings",
+                    label: "Potential Tax Reduction",
                     value: study.metrics.taxSavings,
                     color: colors.slate,
                   },
@@ -607,7 +607,7 @@ export default function CaseStudies() {
             lineHeight: 1.7,
           }}
         >
-          Below are three realistic anonymized case studies showing typical recoverable capital opportunities across industries. Results are based on LAI's engagement methodology and industry benchmarks. Actual outcomes vary based on asset portfolio, condition, and organizational factors.
+          Below are three illustrative financial scenarios showing how organizations in various industries might evaluate asset-record exceptions and potential recovery opportunities. These are hypothetical examples for educational purposes — not actual client results. Values are assumptions for discussion only.
         </p>
       </div>
 
@@ -642,7 +642,7 @@ export default function CaseStudies() {
             marginBottom: "0.75rem",
           }}
         >
-          Your Organization Could Be Next
+          Disclaimer
         </h4>
         <p
           style={{
@@ -652,7 +652,7 @@ export default function CaseStudies() {
             margin: 0,
           }}
         >
-          Every organization has hidden capital waiting to be recovered. Use our ROI calculator to estimate your potential savings, or contact us to discuss your specific situation.
+          Illustrative scenario — not a client result. These examples show how a hypothetical organization might evaluate asset-record exceptions and potential opportunities. Values are assumptions for discussion only. Actual engagement outcomes depend on organization-specific factors including asset portfolio size, condition, record quality, and operational complexity. Contact us to discuss your specific situation.
         </p>
       </div>
     </div>
