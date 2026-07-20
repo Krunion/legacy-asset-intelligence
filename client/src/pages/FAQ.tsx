@@ -42,7 +42,7 @@ export default function FAQ() {
         },
         {
           question: "What's the difference between a ghost asset and a zombie asset?",
-          answer: "A ghost asset exists only on paper — it's completely missing physically. A zombie asset exists physically but has been fully depreciated and removed from records, meaning it operates without proper tracking, maintenance scheduling, or insurance coverage. Both represent governance failures, but zombie assets carry additional liability risk since they're in active use without proper oversight."
+          answer: "A ghost asset is an item recorded on the Fixed Asset Register (FAR) that no longer physically exists at the reported location — it may have been disposed of, lost, stolen, or never existed in the first place. A zombie asset is a physical asset still in use but no longer tracked on the books — typically because it was written off, fully depreciated and removed, or never capitalized. Ghost assets inflate financial records and tax/insurance costs; zombie assets create untracked liability and maintenance gaps. Both indicate governance breakdowns that a physical verification program can identify."
         }
       ]
     },

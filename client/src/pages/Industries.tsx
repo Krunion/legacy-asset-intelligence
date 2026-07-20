@@ -37,10 +37,10 @@ const industries = [
     id: "healthcare",
     name: "Healthcare",
     headline: "Strengthening Financial Accountability in Healthcare Asset Management",
-    challenge: "Healthcare organizations manage thousands of high-value clinical, diagnostic, and support assets across multiple facilities. Equipment moves between departments, gets retired without proper documentation, and accumulates on financial records long after it has been disposed of. The result is inflated insurance premiums, inaccurate depreciation schedules, compliance exposure, and millions in recoverable capital that remains hidden.",
+    challenge: "Healthcare organizations manage thousands of high-value clinical, diagnostic, and support assets across multiple facilities. Equipment moves between departments, gets retired without proper documentation, and accumulates on financial records long after it has been disposed of. The result is inflated insurance premiums, inaccurate depreciation schedules, compliance exposure, and potential capital recovery opportunities that remain unidentified.",
     impacts: ["Ghost assets inflating property tax and insurance costs", "Untracked equipment creating compliance and audit exposure", "Capital budget decisions based on inaccurate asset data", "Duplicate purchases due to poor visibility into existing inventory", "Maintenance contracts on equipment no longer in service"],
     approach: "Our healthcare engagements are designed around the unique operational requirements of clinical environments — working around patient care schedules, maintaining infection control protocols, and coordinating with department leadership to minimize disruption while delivering comprehensive asset intelligence.",
-    outcomes: ["Recoverable capital identification from ghost assets", "Accurate fixed asset register for financial reporting", "Insurance and property tax reduction documentation", "Capital planning intelligence for equipment lifecycle management", "Governance framework for ongoing asset accountability"],
+    outcomes: ["Recoverable capital identification from ghost assets", "Accurate fixed asset register for financial reporting", "Insurance and property tax review documentation", "Capital planning intelligence for equipment lifecycle management", "Governance framework for ongoing asset accountability"],
   },
   {
     id: "manufacturing",
@@ -49,7 +49,7 @@ const industries = [
     challenge: "Manufacturing facilities contain dense concentrations of production equipment, tooling, support systems, and infrastructure assets that change constantly through upgrades, replacements, and retooling. Financial records often lag behind physical reality by years, creating significant discrepancies between what the organization believes it owns and what actually exists on the production floor.",
     impacts: ["Production equipment on books that was scrapped or replaced years ago", "Tooling and fixtures never properly capitalized or tracked", "Insurance coverage based on inaccurate asset valuations", "Capital expenditure decisions without accurate baseline data", "Maintenance spending on equipment that no longer exists"],
     approach: "Manufacturing engagements require deep understanding of production environments, equipment classifications, and the relationship between asset condition and operational capability. Our field teams are experienced in navigating complex production floors while maintaining safety protocols and minimizing operational disruption.",
-    outcomes: ["Complete production asset inventory with condition assessments", "Floor-to-book reconciliation identifying financial discrepancies", "Equipment utilization analysis for capital planning", "Governance framework for tracking asset changes in real-time", "Insurance and tax documentation for immediate cost reduction"],
+    outcomes: ["Complete production asset inventory with condition assessments", "Floor-to-book reconciliation identifying financial discrepancies", "Equipment utilization analysis for capital planning", "Governance framework for tracking asset changes in real-time", "Insurance and tax documentation supporting potential cost adjustments"],
   },
   {
     id: "education",
@@ -58,7 +58,7 @@ const industries = [
     challenge: "Educational institutions — from K-12 districts to major universities — manage vast portfolios of technology, furniture, laboratory equipment, athletic facilities, and infrastructure assets across multiple buildings and campuses. Decentralized purchasing, high staff turnover, and limited tracking systems create environments where assets disappear, duplicate purchases occur, and financial records become increasingly unreliable over time.",
     impacts: ["Technology assets purchased but never properly tracked or inventoried", "Furniture and equipment moved between buildings without documentation", "Grant-funded assets requiring specific tracking and reporting", "Bond-funded capital improvements with inadequate accountability", "Insurance premiums based on outdated or inflated asset schedules"],
     approach: "Educational engagements are structured around academic calendars, working during breaks and low-activity periods to minimize disruption to learning environments. We understand the unique challenges of grant compliance, bond accountability, and the decentralized nature of educational asset management.",
-    outcomes: ["Complete campus-wide asset inventory across all facilities", "Grant and bond compliance documentation", "Technology refresh planning based on accurate lifecycle data", "Insurance and property tax reduction through ghost asset removal", "Sustainable governance framework for ongoing accountability"],
+    outcomes: ["Complete campus-wide asset inventory across all facilities", "Grant and bond compliance documentation", "Technology refresh planning based on accurate lifecycle data", "Insurance and property tax review through ghost asset identification", "Sustainable governance framework for ongoing accountability"],
   },
   {
     id: "utilities",
@@ -67,7 +67,7 @@ const industries = [
     challenge: "Utility companies manage extensive networks of generation, transmission, distribution, and support assets that span geographic regions. The combination of long asset lifecycles, regulatory reporting requirements, and the critical nature of infrastructure creates environments where accurate asset information is essential for both financial performance and operational reliability.",
     impacts: ["Regulatory reporting based on inaccurate asset records", "Rate case filings with unsupported asset valuations", "Infrastructure assets retired but never removed from financial records", "Capital planning without accurate condition assessment data", "Maintenance programs based on incomplete asset inventories"],
     approach: "Utility engagements require understanding of regulatory frameworks, rate case implications, and the critical nature of infrastructure assets. Our methodology addresses both the financial reporting requirements and the operational intelligence needs of utility organizations.",
-    outcomes: ["Regulatory-ready asset documentation and reporting", "Rate case support through accurate asset valuation", "Infrastructure condition assessment for capital planning", "Ghost asset identification for immediate financial benefit", "Long-term governance framework for regulatory compliance"],
+    outcomes: ["Regulatory-ready asset documentation and reporting", "Rate case support through accurate asset valuation", "Infrastructure condition assessment for capital planning", "Ghost asset identification for potential financial benefit", "Long-term governance framework for regulatory compliance"],
   },
   {
     id: "logistics",
@@ -76,7 +76,7 @@ const industries = [
     challenge: "Logistics and distribution organizations manage fleets, warehouse equipment, material handling systems, and technology assets across multiple facilities and geographic regions. The high-velocity nature of distribution operations means assets are constantly moving, being replaced, and changing condition — creating significant challenges for maintaining accurate financial records.",
     impacts: ["Fleet and equipment assets on books after disposal or trade-in", "Warehouse equipment replaced without proper financial documentation", "Technology assets deployed across facilities without centralized tracking", "Insurance coverage based on inaccurate fleet and equipment valuations", "Capital planning without accurate condition and utilization data"],
     approach: "Distribution engagements are designed to work within the 24/7 operational demands of logistics environments, coordinating with facility management to conduct verification during optimal windows while maintaining complete coverage across all asset categories.",
-    outcomes: ["Complete fleet and equipment inventory with condition data", "Multi-facility asset reconciliation and standardization", "Insurance and tax optimization through accurate valuations", "Capital planning intelligence for equipment lifecycle management", "Governance framework for tracking assets across locations"],
+    outcomes: ["Complete fleet and equipment inventory with condition data", "Multi-facility asset reconciliation and standardization", "Insurance and tax review support through accurate valuations", "Capital planning intelligence for equipment lifecycle management", "Governance framework for tracking assets across locations"],
   },
   {
     id: "construction",

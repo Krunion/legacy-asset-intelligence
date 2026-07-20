@@ -80,12 +80,12 @@ export default function Career() {
   ];
 
   const benefits = [
-    { title: "Competitive Compensation", description: "Industry-leading salaries with performance bonuses" },
-    { title: "Health Benefits", description: "Comprehensive medical, dental, and vision coverage" },
-    { title: "Professional Development", description: "Tuition reimbursement and certification programs" },
-    { title: "Flexible Work", description: "Remote options and flexible schedules" },
-    { title: "Career Growth", description: "Clear advancement paths and mentorship programs" },
-    { title: "Meaningful Impact", description: "Help enterprises recover millions in hidden capital" }
+    { title: "Competitive Compensation", description: "Market-aligned pay with performance-based incentives" },
+    { title: "Benefits Package", description: "Health and wellness benefits (details discussed during interview)" },
+    { title: "Professional Development", description: "Support for certifications and continuing education" },
+    { title: "Flexible Work", description: "Remote options and flexible scheduling where role permits" },
+    { title: "Career Growth", description: "Advancement opportunities as the company scales" },
+    { title: "Meaningful Impact", description: "Help organizations strengthen financial accountability" }
   ];
 
   const handleApply = (jobTitle: string) => {
@@ -97,7 +97,7 @@ export default function Career() {
   return (
     <PageLayout
       heroTitle="Join Our Team"
-      heroSubtitle="Help enterprises recover millions in hidden capital and build sustainable asset governance"
+      heroSubtitle="Help organizations strengthen financial accountability and build sustainable asset governance"
       ctaTitle="Ready to Make an Impact?"
       ctaDescription="Send your resume to careers@legacyassetintelligence.com"
       ctaButtonText="Contact Us"
