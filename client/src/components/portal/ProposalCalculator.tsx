@@ -498,12 +498,18 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
       industry: INDUSTRY_INDEX_TO_KEY[inputs.industry] || "other",
       facilityCount: inputs.locations,
       estimatedAssetCount: inputs.assets,
-      approximateReplacementValue: 0, // Let model estimate from asset count
+      approximateAssetValue: 0, // Let model estimate from asset count
+      valueType: "replacement",
       annualCapex: 0,
       annualMaintenanceBudget: 0,
       annualInsurancePremiums: 0,
       assetManagementSystem: RECORD_QUALITY_TO_SYSTEM[inputs.recordQuality] || "basic_system",
       lastPhysicalInventoryDate: LAST_INVENTORY_TO_RECENCY[inputs.lastInventory] || "3_5_years",
+      subjectToPropertyTax: "unknown",
+      orgType: "for_profit",
+      knownPropertyTaxRate: null,
+      recentTaxFiling: false,
+      investmentEstimate: "mid",
     };
     return calculatePublicEstimate(estimatorInput);
   }, [inputs.industry, inputs.locations, inputs.assets, inputs.recordQuality, inputs.lastInventory]);
@@ -536,17 +542,17 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
     // Estimated mode
     if (!roiEstimate) return null;
     return {
-      ghostAssetValue: roiEstimate.estimatedGhostAssetValue,
-      unrecordedValue: roiEstimate.estimatedUnrecordedValue,
-      maintenanceWaste: roiEstimate.maintenanceWaste,
-      insuranceOptimization: roiEstimate.insuranceOptimization,
-      propertyTaxReduction: roiEstimate.propertyTaxReduction,
-      procurementWaste: roiEstimate.procurementWaste,
-      totalOpportunity: roiEstimate.totalFinancialOpportunity,
+      ghostAssetValue: roiEstimate.estimatedGhostAssetExposure,
+      unrecordedValue: roiEstimate.estimatedUnrecordedAssetValue,
+      maintenanceWaste: roiEstimate.maintenanceSavings,
+      insuranceOptimization: roiEstimate.insurancePremiumReduction,
+      propertyTaxReduction: roiEstimate.prospectivePropertyTaxReduction,
+      procurementWaste: roiEstimate.duplicatePurchaseAvoidance,
+      totalOpportunity: roiEstimate.firstYearBenefit,
       firstYearBenefit: roiEstimate.firstYearBenefit,
       fiveYearBenefit: roiEstimate.fiveYearBenefit,
-      netROI: roiEstimate.netROI,
-      paybackMonths: roiEstimate.estimatedPaybackPeriodMonths,
+      netROI: roiEstimate.firstYearNetROI,
+      paybackMonths: roiEstimate.paybackPeriodMonths ?? 0,
       mode: "estimated" as const,
     };
   }, [inputs.roiMode, inputs.verifiedGhostAssetValue, inputs.verifiedUnrecordedValue, inputs.verifiedMaintenanceWaste, inputs.verifiedInsuranceOptimization, inputs.verifiedPropertyTaxReduction, inputs.verifiedProcurementWaste, roiEstimate, result.totalInitialInvestment]);

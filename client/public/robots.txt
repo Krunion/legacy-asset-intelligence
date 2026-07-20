@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /employee-portal
+Disallow: /api/
 
 Sitemap: https://legacyassetintelligence.com/sitemap.xml

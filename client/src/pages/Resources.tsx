@@ -54,7 +54,11 @@ export default function Resources() {
   ];
 
   const videos = [
-    { title: "Introduction to Ghost Assets", duration: "2:05", desc: "Overview of what ghost assets are, why they matter, and how organizations can begin addressing them.", status: "Available" },
+    { title: "Introduction to Ghost Assets", id: "1rpOJFl52nQ", duration: "2:05", desc: "Overview of what ghost assets are, why they matter, and how organizations can begin addressing them." },
+    { title: "Fixed Assets Audit Made Simple", id: "KfFMzLuUz6g", duration: "15:42", desc: "Step-by-step guide through the entire fixed asset lifecycle from acquisition and capitalization to depreciation, revaluation, and disposal." },
+    { title: "The Fixed Asset Register Explained", id: "f4BBYjivdNg", duration: "12:18", desc: "Learn the basics of the fixed asset register, including templates and best practices for maintaining accuracy." },
+    { title: "Streamlining Fixed Asset Verification", id: "AeP2DfVOjp4", duration: "8:34", desc: "Explore the challenges in physical verification of fixed assets and how technology-based solutions can overcome them." },
+    { title: "Enterprise Asset Management Overview", id: "MRKGsyxx_n0", duration: "11:26", desc: "A comprehensive guide to enterprise asset management and EAM software, covering key concepts and best practices." },
   ];
 
   return (
@@ -127,20 +131,25 @@ export default function Resources() {
             <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "0.5rem" }}>Video Library</p>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.6rem", fontWeight: 700, color: C.text }}>Educational Video Content</h2>
           </div>
-          <div style={{ maxWidth: 640, margin: "0 auto" }}>
-            <div style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: 8, padding: "1.5rem" }}>
-              <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: 6, marginBottom: "1rem" }}>
-                <iframe
-                  src="https://www.youtube.com/embed/1rpOJFl52nQ"
-                  title="Introduction to Ghost Assets"
-                  style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.5rem" }}>
+            {videos.map((video, i) => (
+              <div key={i} style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: 8, padding: "1.25rem" }}>
+                <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: 6, marginBottom: "1rem" }}>
+                  <iframe
+                    src={`https://www.youtube.com/embed/${video.id}`}
+                    title={video.title}
+                    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.4rem" }}>
+                  <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", fontWeight: 700, color: C.text, margin: 0 }}>{video.title}</h3>
+                  <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.7rem", color: C.gold }}>{video.duration}</span>
+                </div>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.8rem", lineHeight: 1.6, margin: 0 }}>{video.desc}</p>
               </div>
-              <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", fontWeight: 700, color: C.text, marginBottom: "0.5rem" }}>Introduction to Ghost Assets</h3>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.82rem", lineHeight: 1.6, margin: 0 }}>Overview of what ghost assets are, why they matter, and how organizations can begin addressing them.</p>
-            </div>
+            ))}
           </div>
         </div>
       </Section>

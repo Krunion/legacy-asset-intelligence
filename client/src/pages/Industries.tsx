@@ -40,7 +40,7 @@ const industries = [
     challenge: "Healthcare organizations manage thousands of high-value clinical, diagnostic, and support assets across multiple facilities. Equipment moves between departments, gets retired without proper documentation, and accumulates on financial records long after it has been disposed of. The result is inflated insurance premiums, inaccurate depreciation schedules, compliance exposure, and potential capital recovery opportunities that remain unidentified.",
     impacts: ["Ghost assets inflating property tax and insurance costs", "Untracked equipment creating compliance and audit exposure", "Capital budget decisions based on inaccurate asset data", "Duplicate purchases due to poor visibility into existing inventory", "Maintenance contracts on equipment no longer in service"],
     approach: "Our healthcare engagements are designed around the unique operational requirements of clinical environments — working around patient care schedules, maintaining infection control protocols, and coordinating with department leadership to minimize disruption while delivering comprehensive asset intelligence.",
-    outcomes: ["Recoverable capital identification from ghost assets", "Accurate fixed asset register for financial reporting", "Insurance and property tax review documentation", "Capital planning intelligence for equipment lifecycle management", "Governance framework for ongoing asset accountability"],
+    outcomes: ["Ghost asset identification and documentation for financial review", "Accurate fixed asset register for financial reporting", "Documentation supporting insurance and property tax review by qualified professionals", "Capital planning intelligence for equipment lifecycle management", "Governance framework for ongoing asset accountability"],
   },
   {
     id: "manufacturing",
@@ -65,9 +65,9 @@ const industries = [
     name: "Utilities & Energy",
     headline: "Critical Infrastructure Asset Intelligence for Utility Organizations",
     challenge: "Utility companies manage extensive networks of generation, transmission, distribution, and support assets that span geographic regions. The combination of long asset lifecycles, regulatory reporting requirements, and the critical nature of infrastructure creates environments where accurate asset information is essential for both financial performance and operational reliability.",
-    impacts: ["Regulatory reporting based on inaccurate asset records", "Rate case filings with unsupported asset valuations", "Infrastructure assets retired but never removed from financial records", "Capital planning without accurate condition assessment data", "Maintenance programs based on incomplete asset inventories"],
+    impacts: ["Financial reporting based on inaccurate asset records", "Infrastructure assets retired but never removed from financial records", "Capital planning without accurate condition assessment data", "Maintenance programs based on incomplete asset inventories", "Documentation gaps that complicate regulatory and compliance reviews"],
     approach: "Utility engagements require understanding of regulatory frameworks, rate case implications, and the critical nature of infrastructure assets. Our methodology addresses both the financial reporting requirements and the operational intelligence needs of utility organizations.",
-    outcomes: ["Regulatory-ready asset documentation and reporting", "Rate case support through accurate asset valuation", "Infrastructure condition assessment for capital planning", "Ghost asset identification for potential financial benefit", "Long-term governance framework for regulatory compliance"],
+    outcomes: ["Structured documentation that may assist the client and its qualified advisers with regulatory and audit preparation", "Accurate asset inventory supporting capital planning decisions", "Infrastructure condition assessment for lifecycle management", "Ghost asset identification for potential financial benefit review", "Long-term governance framework for ongoing asset accountability"],
   },
   {
     id: "logistics",
@@ -94,7 +94,7 @@ const industries = [
     challenge: "Government agencies and public sector organizations face unique accountability requirements — managing taxpayer-funded assets with transparency, compliance, and fiduciary responsibility. The combination of complex procurement processes, multiple funding sources, and public reporting requirements creates environments where accurate asset information is both a financial necessity and a public trust obligation.",
     impacts: ["Taxpayer-funded assets unaccounted for or improperly tracked", "GASB compliance challenges due to incomplete asset records", "Grant-funded assets requiring specific tracking and reporting", "Capital improvement bonds with inadequate asset accountability", "Public reporting based on inaccurate or outdated information"],
     approach: "Government engagements are structured around the unique requirements of public sector accountability — GASB compliance, grant reporting, bond accountability, and the transparency expectations of public stewardship. Our methodology addresses both the financial requirements and the public trust obligations of government asset management.",
-    outcomes: ["GASB-compliant asset documentation and reporting", "Grant and bond accountability documentation", "Public reporting support with accurate asset data", "Capital planning intelligence for budget development", "Governance framework meeting public sector accountability standards"],
+    outcomes: ["Documentation designed to support the client's GASB-related reporting and review processes", "Grant and bond accountability documentation", "Public reporting support with accurate asset data", "Capital planning intelligence for budget development", "Governance framework supporting public sector accountability standards"],
   },
 ];
 

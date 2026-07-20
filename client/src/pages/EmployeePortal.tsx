@@ -173,14 +173,7 @@ export default function EmployeePortal() {
       type: "Platform",
       comingSoon: true,
     },
-    {
-      id: null as ActiveTool,
-      title: "EZO Integration",
-      description: "EZO asset management platform integration and documentation",
-      icon: "🔧",
-      type: "Platform",
-      comingSoon: true,
-    },
+
   ];
 
   return (

@@ -1,4 +1,4 @@
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { useState } from "react";
 
 const navLinks = [
@@ -16,11 +16,11 @@ const navLinks = [
 ];
 
 export default function SiteNav() {
-  const [location, navigate] = useLocation();
+  const [location] = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav style={{ 
+    <nav aria-label="Main navigation" style={{ 
       background: "rgba(11, 15, 19, 0.9)",
       backdropFilter: "blur(8px)", 
       borderBottom: "1px solid rgba(168,178,189,0.08)", 
@@ -38,27 +38,23 @@ export default function SiteNav() {
         alignItems: "center" 
       }}>
         {/* Logo */}
-        <button 
-          onClick={() => navigate("/")} 
-          style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: "0.75rem" }}
-        >
+        <Link href="/" aria-label="Legacy Asset Intelligence Home" style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none" }}>
           <img 
             src="/manus-storage/pasted_file_yudYZ7_image_transparent_32d3d4e2.png" 
             alt="Legacy Asset Intelligence" 
             style={{ height: 48, width: "auto", objectFit: "contain" }}
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
-        </button>
+        </Link>
 
         {/* Desktop Nav */}
         <div style={{ display: "flex", gap: "2rem", alignItems: "center" }} className="desktop-nav">
           {navLinks.map((link) => (
-            <button
+            <Link
               key={link.path}
-              onClick={() => navigate(link.path)}
+              href={link.path}
+              aria-current={location === link.path ? "page" : undefined}
               style={{
-                background: "none",
-                border: "none",
                 color: location === link.path ? "#C9A84C" : "#A8B2BD",
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontWeight: location === link.path ? 600 : 400,
@@ -67,10 +63,11 @@ export default function SiteNav() {
                 transition: "color 0.2s",
                 padding: "0.25rem 0",
                 borderBottom: location === link.path ? "1px solid #C9A84C" : "1px solid transparent",
+                textDecoration: "none",
               }}
             >
               {link.label}
-            </button>
+            </Link>
           ))}
         </div>
 
@@ -86,6 +83,7 @@ export default function SiteNav() {
             display: "none"
           }}
           aria-label="Toggle navigation"
+          aria-expanded={mobileOpen}
         >
           {mobileOpen ? '✕' : '☰'}
         </button>
@@ -100,24 +98,25 @@ export default function SiteNav() {
           display: "none"
         }} className="mobile-nav-panel">
           {navLinks.map((link) => (
-            <button
+            <Link
               key={link.path}
-              onClick={() => { navigate(link.path); setMobileOpen(false); }}
+              href={link.path}
+              onClick={() => setMobileOpen(false)}
+              aria-current={location === link.path ? "page" : undefined}
               style={{
                 display: "block",
                 width: "100%",
                 textAlign: "left",
-                background: "none",
-                border: "none",
                 color: location === link.path ? "#C9A84C" : "#A8B2BD",
                 fontFamily: "'Source Sans 3', sans-serif",
                 fontSize: "0.9rem",
                 padding: "0.75rem 0",
                 borderBottom: "1px solid rgba(168,178,189,0.06)",
+                textDecoration: "none",
               }}
             >
               {link.label}
-            </button>
+            </Link>
           ))}
         </div>
       )}
@@ -127,6 +126,11 @@ export default function SiteNav() {
           .desktop-nav { display: none !important; }
           .mobile-nav-toggle { display: block !important; }
           .mobile-nav-panel { display: block !important; }
+        }
+        nav a:focus-visible, nav button:focus-visible {
+          outline: 2px solid #C9A84C;
+          outline-offset: 2px;
+          border-radius: 2px;
         }
       `}</style>
     </nav>

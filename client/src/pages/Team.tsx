@@ -37,8 +37,8 @@ export default function Team() {
     },
     {
       name: "Jessica Runion",
-      title: "Chief Training & Technology Officer (CTO)",
-      bio: "Training and technology leader responsible for developing LAI's training programs, technology implementation strategies, and team capability development. Jessica ensures that both internal teams and client organizations are equipped with the knowledge and tools needed for sustainable asset governance.",
+      title: "Chief Training Officer (CTO)",
+      bio: "Training leader responsible for developing LAI's training programs, certification curricula, and team capability development. Jessica ensures that both internal teams and client organizations are equipped with the knowledge and skills needed for sustainable asset governance.",
       expertise: ["Training Development", "Technology Implementation", "Capability Building"]
     },
     {

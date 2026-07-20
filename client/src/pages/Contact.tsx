@@ -34,6 +34,11 @@ export default function Contact() {
       return;
     }
 
+    if (!formData.message.trim()) {
+      setError("Message is required");
+      return;
+    }
+
     try {
       const result = await submitLeadMutation.mutateAsync({
         email: formData.email,
@@ -107,28 +112,28 @@ export default function Contact() {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
             <div>
               <label htmlFor="firstName" style={labelStyle}>First Name</label>
-              <input id="firstName" type="text" name="firstName" value={formData.firstName} onChange={handleChange} style={inputStyle} />
+              <input id="firstName" type="text" name="firstName" autoComplete="given-name" value={formData.firstName} onChange={handleChange} style={inputStyle} />
             </div>
             <div>
               <label htmlFor="lastName" style={labelStyle}>Last Name</label>
-              <input id="lastName" type="text" name="lastName" value={formData.lastName} onChange={handleChange} style={inputStyle} />
+              <input id="lastName" type="text" name="lastName" autoComplete="family-name" value={formData.lastName} onChange={handleChange} style={inputStyle} />
             </div>
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
             <div>
               <label htmlFor="email" style={labelStyle}>Email *</label>
-              <input id="email" type="email" name="email" value={formData.email} onChange={handleChange} required style={inputStyle} />
+              <input id="email" type="email" name="email" autoComplete="email" value={formData.email} onChange={handleChange} required style={inputStyle} />
             </div>
             <div>
               <label htmlFor="phone" style={labelStyle}>Phone</label>
-              <input id="phone" type="tel" name="phone" value={formData.phone} onChange={handleChange} style={inputStyle} />
+              <input id="phone" type="tel" name="phone" autoComplete="tel" value={formData.phone} onChange={handleChange} style={inputStyle} />
             </div>
           </div>
 
           <div style={{ marginBottom: "1.5rem" }}>
             <label htmlFor="company" style={labelStyle}>Company</label>
-            <input id="company" type="text" name="company" value={formData.company} onChange={handleChange} style={inputStyle} />
+            <input id="company" type="text" name="company" autoComplete="organization" value={formData.company} onChange={handleChange} style={inputStyle} />
           </div>
 
           <div style={{ marginBottom: "2rem" }}>
@@ -144,7 +149,8 @@ export default function Contact() {
           </div>
 
           <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.7rem", color: C.textMuted, lineHeight: 1.5, marginBottom: "1rem" }}>
-            By submitting this form, you consent to Legacy Asset Intelligence contacting you regarding your inquiry. Your information will not be shared with third parties.
+            By submitting this form, you consent to Legacy Asset Intelligence contacting you regarding your inquiry. Your information will be used to respond to your inquiry and may be processed by service providers acting on LAI's behalf, as described in our{" "}
+            <a href="/privacy" style={{ color: C.gold, textDecoration: "underline" }}>Privacy Policy</a>.
           </p>
 
           <button

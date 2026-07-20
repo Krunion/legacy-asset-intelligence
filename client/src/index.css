@@ -416,3 +416,28 @@
       gap: 1rem !important;
     }
   }
+
+/* Global Accessibility — Focus Visible */
+:focus-visible {
+  outline: 2px solid #C9A84C;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Skip link for keyboard users */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #C9A84C;
+  color: #0B0F13;
+  padding: 0.5rem 1rem;
+  z-index: 9999;
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+}

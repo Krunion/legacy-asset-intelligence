@@ -829,5 +829,201 @@ export const insightArticles: InsightArticle[] = [
       "Forrester. (2023). The Total Economic Impact of Modern EAM Platforms.",
       "ISO 55000 Series. (2014). Asset Management — Overview, Principles and Terminology."
     ]
+  },
+  {
+    slug: "manufacturing-ghost-asset-scenario",
+    category: "Industry Scenario",
+    title: "Ghost Assets in Manufacturing: How Unverified Registers Drain Capital",
+    readTime: "8 min read",
+    pages: "10 pages",
+    sections: [
+      {
+        heading: "The Manufacturing Challenge",
+        paragraphs: [
+          "Manufacturing environments present unique asset management challenges due to high equipment turnover, frequent line reconfigurations, and decentralized disposal authority. Production machinery, tooling, and specialized equipment are regularly replaced, relocated, or decommissioned without formal retirement from the fixed asset register.",
+          "Industry research indicates that manufacturing organizations typically carry ghost asset rates between 15% and 30% of their total fixed asset register. For a mid-size manufacturer with $50M in gross fixed assets, this can represent $7.5M to $15M in phantom book value generating unnecessary property tax, insurance, and maintenance obligations."
+        ]
+      },
+      {
+        heading: "Common Accumulation Patterns",
+        paragraphs: [
+          "In manufacturing, ghost assets accumulate through predictable patterns. Equipment trade-ins where the old asset is not retired from the register. Line reconfigurations where machinery is scrapped but records persist. Facility consolidations where duplicate records are created across merged systems. Technology upgrades where legacy controllers and PLCs are replaced without documentation.",
+          "The financial consequences compound annually. Property tax assessors rely on reported asset values, meaning ghost assets generate real tax obligations on non-existent equipment. Insurance carriers calculate premiums based on declared asset values, inflating coverage costs beyond actual exposure. Maintenance contracts may continue for equipment that no longer exists."
+        ]
+      },
+      {
+        heading: "Structured Verification Approach",
+        paragraphs: [
+          "A four-phase methodology addresses manufacturing ghost asset challenges systematically. Phase 1 (Discovery and Assessment) analyzes the fixed asset register against facility layouts and production records to identify high-probability ghost assets. Phase 2 (Physical Verification) conducts floor-level reconciliation to confirm which assets physically exist and which are phantoms.",
+          "Phase 3 (Remediation and Optimization) implements corrective actions including register cleanup, tax filing amendments, insurance policy adjustments, and maintenance contract cancellations. Phase 4 (Ongoing Governance) establishes perpetual accuracy through standardized disposal procedures, periodic verification cycles, and integration with production management systems."
+        ],
+        callout: "Manufacturing organizations that implement structured asset verification programs typically identify significant opportunities to reduce property tax obligations and insurance premiums within the first engagement cycle."
+      }
+    ],
+    references: [
+      "Cushman & Wakefield. (2023). Ghost Assets: The Hidden Cost to Business.",
+      "CPCON Group. (2024). Ghost Asset Detection: Finding Millions in Missing Assets.",
+      "Gartner. (2024). Market Guide for Enterprise Asset Management Software."
+    ]
+  },
+  {
+    slug: "ai-driven-asset-management-technology",
+    category: "Technology Brief",
+    title: "AI-Driven Asset Management: From Reactive Tracking to Predictive Intelligence",
+    readTime: "10 min read",
+    pages: "12 pages",
+    sections: [
+      {
+        heading: "The Evolution of Asset Management Technology",
+        paragraphs: [
+          "Enterprise asset management technology has evolved through distinct generations. First-generation systems focused on basic record-keeping and depreciation scheduling. Second-generation platforms introduced barcode and RFID tracking for physical verification. Third-generation solutions are now incorporating artificial intelligence and machine learning to transform asset management from a reactive compliance function into a predictive strategic capability.",
+          "According to IBM, AI asset management leverages machine learning algorithms to analyze patterns in asset performance data, predict maintenance needs before failures occur, and optimize asset lifecycle decisions. This shift from scheduled maintenance to condition-based and predictive maintenance can reduce unplanned downtime by 30% to 50% according to industry benchmarks."
+        ]
+      },
+      {
+        heading: "Predictive Maintenance and Anomaly Detection",
+        paragraphs: [
+          "AI-powered predictive maintenance analyzes sensor data, operational patterns, and historical failure records to forecast when equipment will require service. Research from Deloitte indicates that AI predictive maintenance can reduce maintenance costs by 10% to 40% while extending asset useful life by 20% to 40%. These systems achieve 85% to 97% accuracy across different asset types after sufficient training data accumulation.",
+          "Anomaly detection algorithms identify unusual patterns in asset utilization, energy consumption, or performance metrics that may indicate emerging problems, unauthorized use, or ghost asset conditions. When an asset shows zero utilization over extended periods, AI systems can flag it for physical verification, potentially identifying ghost assets in real-time rather than waiting for periodic audits."
+        ]
+      },
+      {
+        heading: "Computer Vision for Asset Verification",
+        paragraphs: [
+          "Computer vision technology is emerging as a tool for automated asset verification. Camera systems combined with image recognition can identify and catalog physical assets, compare observed equipment against register records, and flag discrepancies for investigation. This technology has particular promise for large facilities where manual physical inventory is time-consuming and expensive.",
+          "While still maturing, computer vision asset verification can reduce the time required for physical inventory by 60% to 80% compared to manual barcode scanning approaches. The technology works best in structured environments with consistent lighting and clear sightlines to equipment."
+        ]
+      },
+      {
+        heading: "LAI's Technology Vision",
+        paragraphs: [
+          "Legacy Asset Intelligence is developing a proprietary AI-driven asset management platform that combines our four-phase methodology with machine learning capabilities. The platform will integrate predictive analytics for ghost asset identification, automated anomaly detection for ongoing governance, and decision-support tools for asset lifecycle optimization.",
+          "Our approach prioritizes practical implementation over theoretical capability. The platform is designed to work with existing EAM systems, ERP platforms, and IoT infrastructure rather than requiring wholesale technology replacement. This integration-first philosophy ensures organizations can adopt AI-driven asset intelligence incrementally without disrupting current operations."
+        ],
+        callout: "AI predictive maintenance achieves 85% to 97% accuracy across different asset types, but requires 6 to 12 months of historical data to train effective models. Organizations should plan for this ramp-up period when evaluating AI asset management solutions."
+      }
+    ],
+    references: [
+      "IBM. (2026). What Is AI Asset Management? A Complete Guide.",
+      "Deloitte. (2025). Using AI in Predictive Maintenance to Forecast the Future.",
+      "AssetWatch. (2025). AI Predictive Maintenance Benefits.",
+      "OxMaint. (2025). Artificial Intelligence in Predictive Asset Management."
+    ]
+  },
+  {
+    slug: "executive-perspective-asset-governance",
+    category: "Executive Perspective",
+    title: "Why Asset Governance Belongs in the C-Suite: A Leadership Framework",
+    readTime: "7 min read",
+    pages: "9 pages",
+    sections: [
+      {
+        heading: "The Strategic Imperative",
+        paragraphs: [
+          "Asset governance has traditionally been relegated to accounting departments and facilities teams, treated as a compliance obligation rather than a strategic function. This organizational positioning creates blind spots that allow ghost assets, zombie assets, and record inaccuracies to accumulate unchecked, often for years or decades.",
+          "For organizations with $25M or more in fixed assets, the financial exposure from poor asset governance can represent 3% to 8% of total asset value annually in unnecessary taxes, inflated insurance, wasted maintenance, and duplicate purchases. At this scale, asset governance is not an accounting detail but a material financial risk requiring executive attention."
+        ]
+      },
+      {
+        heading: "The CFO's Responsibility",
+        paragraphs: [
+          "Chief Financial Officers bear direct responsibility for the accuracy of financial statements, including the fixed asset register that underpins depreciation schedules, tax filings, and insurance declarations. When ghost assets inflate reported values, the CFO is signing off on financial statements that misrepresent the organization's actual asset base.",
+          "Beyond compliance risk, CFOs who implement proactive asset governance programs often identify opportunities to redirect capital currently being wasted on phantom obligations. Property tax refunds, insurance premium reductions, and maintenance contract eliminations represent real cash flow improvements that directly impact EBITDA."
+        ]
+      },
+      {
+        heading: "Building an Asset Governance Culture",
+        paragraphs: [
+          "Effective asset governance requires more than periodic audits. It demands organizational commitment to accurate record-keeping, standardized disposal procedures, and regular verification cycles. This cultural shift starts with executive sponsorship and cascades through clear policies, defined responsibilities, and measurable accountability.",
+          "Organizations that treat asset governance as a continuous discipline rather than a periodic project typically maintain register accuracy above 95%, compared to the 70% to 85% accuracy common in organizations that rely solely on annual reconciliation. The difference represents significant financial exposure that compounds over time."
+        ],
+        callout: "Organizations with executive-sponsored asset governance programs typically maintain fixed asset register accuracy above 95%, compared to 70% to 85% for organizations relying on periodic reconciliation alone."
+      }
+    ],
+    references: [
+      "ISO 55000 Series. (2014). Asset Management Overview, Principles and Terminology.",
+      "Cushman & Wakefield. (2023). Ghost Assets: The Hidden Cost to Business.",
+      "Gartner. (2024). Predicts: The Future of IT Asset Management."
+    ]
+  },
+  {
+    slug: "strategic-asset-intelligence-competitive-advantage",
+    category: "Strategic Brief",
+    title: "Asset Intelligence as Competitive Advantage: From Cost Center to Value Driver",
+    readTime: "9 min read",
+    pages: "11 pages",
+    sections: [
+      {
+        heading: "Reframing Asset Management",
+        paragraphs: [
+          "Most organizations view asset management as a cost center, a necessary administrative function that consumes resources without generating revenue. This framing is fundamentally flawed. Organizations that reframe asset management as asset intelligence, treating their physical asset base as a source of strategic insight, unlock competitive advantages that extend far beyond compliance.",
+          "Asset intelligence means understanding not just what you own and where it is, but how effectively each asset contributes to organizational objectives, when it should be replaced or upgraded, and how your total asset portfolio compares to industry benchmarks. This intelligence informs capital allocation, operational efficiency, and strategic planning decisions."
+        ]
+      },
+      {
+        heading: "The Data Advantage",
+        paragraphs: [
+          "Organizations with accurate, comprehensive asset data make better decisions faster. When evaluating facility expansions, they know exactly what equipment exists and its condition. When negotiating insurance renewals, they can demonstrate precise asset values rather than accepting inflated estimates. When planning capital budgets, they understand actual replacement timelines rather than relying on theoretical depreciation schedules.",
+          "The enterprise asset management market is projected to grow from $5.87 billion in 2025 to $9.02 billion by 2030, reflecting increasing recognition that asset data is a strategic resource. Organizations investing in asset intelligence today are positioning themselves ahead of competitors who continue to treat asset management as a back-office function."
+        ]
+      },
+      {
+        heading: "SDVOSB and Government Contracting Advantage",
+        paragraphs: [
+          "For organizations serving government clients, Service-Disabled Veteran-Owned Small Business (SDVOSB) certification provides access to sole-source contracts up to $5 million and set-aside competitions reserved for veteran-owned firms. The federal government has a 3% procurement goal for SDVOSBs, representing billions in annual contract opportunities.",
+          "Legacy Asset Intelligence combines deep asset management expertise with SDVOSB status (application pending), creating a unique positioning for government and defense sector clients who need specialized asset intelligence services delivered by firms that meet socioeconomic contracting requirements."
+        ],
+        callout: "The enterprise asset management market is projected to grow from $5.87 billion in 2025 to $9.02 billion by 2030 at a 9% CAGR, reflecting increasing recognition of asset data as a strategic resource."
+      }
+    ],
+    references: [
+      "MarketsandMarkets. (2025). Enterprise Asset Management Market Global Forecast.",
+      "U.S. Small Business Administration. (2024). Veteran Contracting Assistance Programs.",
+      "Gartner. (2024). Market Guide for Enterprise Asset Management Software."
+    ]
+  },
+  {
+    slug: "healthcare-asset-management-compliance",
+    category: "Industry Analysis",
+    title: "Healthcare Asset Management: Balancing Compliance, Cost, and Patient Safety",
+    readTime: "9 min read",
+    pages: "11 pages",
+    sections: [
+      {
+        heading: "The Healthcare Asset Challenge",
+        paragraphs: [
+          "Healthcare organizations face unique asset management challenges that combine financial complexity with patient safety implications. Medical equipment, from MRI machines to infusion pumps, represents billions in capital investment across the U.S. healthcare system. Research from Cognosos indicates that hospitals lose or misplace approximately 10% to 20% of their mobile medical equipment at any given time, requiring costly replacements and rental equipment to maintain patient care.",
+          "Beyond mobile equipment, healthcare facilities maintain extensive fixed asset portfolios including building systems, imaging equipment, laboratory instruments, and IT infrastructure. The regulatory environment adds complexity, with Joint Commission standards, CMS requirements, and state health department regulations all imposing specific asset tracking and maintenance documentation obligations."
+        ]
+      },
+      {
+        heading: "Financial Impact of Poor Asset Visibility",
+        paragraphs: [
+          "Healthcare organizations with inadequate asset visibility experience financial losses across multiple categories. Duplicate equipment purchases occur when staff cannot locate existing assets and requisition replacements. Maintenance contracts continue for equipment that has been disposed of or replaced. Insurance premiums reflect inflated asset values rather than actual equipment in service.",
+          "Property tax obligations for healthcare facilities with large equipment portfolios can be particularly impacted by ghost assets. A hospital system with $200M in reported fixed assets carrying a 20% ghost asset rate may be paying property taxes on $40M in non-existent equipment, depending on local assessment methods and exemption structures."
+        ]
+      },
+      {
+        heading: "Regulatory Compliance Considerations",
+        paragraphs: [
+          "Joint Commission standards require healthcare organizations to maintain accurate inventories of medical equipment and demonstrate that maintenance is performed according to manufacturer specifications. CMS Conditions of Participation mandate that hospitals maintain equipment in safe operating condition. These requirements create both a compliance obligation and an opportunity to improve asset governance.",
+          "Organizations that implement comprehensive asset verification programs often discover that their compliance documentation improves as a byproduct of accurate asset records. When you know exactly what equipment exists, where it is located, and its maintenance history, regulatory surveys become significantly less stressful and findings decrease."
+        ]
+      },
+      {
+        heading: "A Structured Approach for Healthcare",
+        paragraphs: [
+          "Legacy Asset Intelligence's four-phase methodology adapts to healthcare-specific requirements. Phase 1 Discovery incorporates regulatory asset categories and compliance documentation requirements. Phase 2 Verification includes clinical engineering coordination and patient care area scheduling to minimize operational disruption. Phase 3 Remediation addresses both financial corrections and compliance documentation gaps. Phase 4 Governance integrates with clinical engineering workflows and biomedical equipment management systems.",
+          "The result is an asset governance program that simultaneously improves financial accuracy, reduces unnecessary costs, and strengthens regulatory compliance positioning."
+        ],
+        callout: "Research indicates that hospitals lose or misplace approximately 10% to 20% of their mobile medical equipment at any given time, requiring costly replacements and rental arrangements to maintain patient care continuity."
+      }
+    ],
+    references: [
+      "Cognosos. (2023). Hospital Asset Tracking Can Prevent Medical Equipment Loss.",
+      "Lowry Solutions. (2024). 10 Ways Asset Tracking Helps Hospitals Avoid Equipment Loss.",
+      "The Joint Commission. (2024). Environment of Care Standards.",
+      "CMS. (2024). Conditions of Participation for Hospitals."
+    ]
   }
 ];

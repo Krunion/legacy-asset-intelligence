@@ -114,12 +114,18 @@ export default function ExecutiveROIEstimator() {
     industry: "manufacturing",
     facilityCount: 3,
     estimatedAssetCount: 2000,
-    approximateReplacementValue: 0,
+    approximateAssetValue: 0,
+    valueType: "replacement",
     annualCapex: 0,
     annualMaintenanceBudget: 0,
     annualInsurancePremiums: 0,
     assetManagementSystem: "spreadsheets",
     lastPhysicalInventoryDate: "3_5_years",
+    subjectToPropertyTax: "unknown",
+    orgType: "for_profit",
+    knownPropertyTaxRate: null,
+    recentTaxFiling: false,
+    investmentEstimate: "mid",
   });
 
   const notifyMutation = trpc.leads.notifyCalculatorUsage.useMutation({
@@ -188,10 +194,10 @@ export default function ExecutiveROIEstimator() {
           />
         </div>
         <div>
-          <label style={labelStyle}>Approximate Total Replacement Value</label>
+          <label style={labelStyle}>Approximate Total Asset Value</label>
           <NumericInput
-            value={input.approximateReplacementValue}
-            onChange={(v) => setInput({ ...input, approximateReplacementValue: Number(v) || 0 })}
+            value={input.approximateAssetValue}
+            onChange={(v) => setInput({ ...input, approximateAssetValue: Number(v) || 0 })}
             currency
             showDollarSign
             style={inputStyle}
@@ -329,10 +335,10 @@ export default function ExecutiveROIEstimator() {
 
         {/* Key Metrics Row */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
-          <MetricCard label="Total Financial Opportunity" value={formatCurrency(results.totalFinancialOpportunity)} accent={C.gold} highlight />
-          <MetricCard label="Recoverable Capital" value={formatCurrency(results.recoverableCapital)} accent={C.teal} />
-          <MetricCard label="Annual Savings Identified" value={formatCurrency(results.maintenanceWaste + results.insuranceOptimization + results.propertyTaxReduction + results.procurementWaste)} accent={C.tealLight} />
-          <MetricCard label="Net ROI" value={`${results.netROI}%`} accent={C.gold} />
+          <MetricCard label="First-Year Financial Benefit" value={formatCurrency(results.firstYearBenefit)} accent={C.gold} highlight />
+          <MetricCard label="Asset-Record Exposure" value={formatCurrency(results.totalAssetRecordExposure)} accent={C.teal} />
+          <MetricCard label="Annual Recurring Savings" value={formatCurrency(results.totalAnnualRecurringSavings)} accent={C.tealLight} />
+          <MetricCard label="First-Year Net ROI" value={`${results.firstYearNetROI}%`} accent={C.gold} />
         </div>
 
         {/* Detailed Breakdown */}
@@ -343,12 +349,12 @@ export default function ExecutiveROIEstimator() {
               Predicted Asset Exposure
             </h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <BreakdownRow label="Ghost Assets (estimated)" value={formatCurrency(results.estimatedGhostAssetValue)} count={`~${results.estimatedGhostAssets.toLocaleString()} assets`} color={C.gold} />
-              <BreakdownRow label="Unrecorded Assets (estimated)" value={formatCurrency(results.estimatedUnrecordedValue)} count={`~${results.estimatedUnrecordedAssets.toLocaleString()} assets`} color={C.teal} />
-              <BreakdownRow label="Maintenance Waste" value={formatCurrency(results.maintenanceWaste)} count="annual" color="#C8D0D8" />
-              <BreakdownRow label="Insurance Optimization" value={formatCurrency(results.insuranceOptimization)} count="annual" color="#C8D0D8" />
-              <BreakdownRow label="Property Tax Reduction" value={formatCurrency(results.propertyTaxReduction)} count="annual" color="#C8D0D8" />
-              <BreakdownRow label="Procurement Waste" value={formatCurrency(results.procurementWaste)} count="annual" color="#C8D0D8" />
+              <BreakdownRow label="Ghost Assets (estimated)" value={formatCurrency(results.estimatedGhostAssetExposure)} count={`~${results.estimatedGhostAssets.toLocaleString()} assets`} color={C.gold} />
+              <BreakdownRow label="Unrecorded Assets (estimated)" value={formatCurrency(results.estimatedUnrecordedAssetValue)} count={`~${results.estimatedUnrecordedAssets.toLocaleString()} assets`} color={C.teal} />
+              <BreakdownRow label="Maintenance Savings" value={formatCurrency(results.maintenanceSavings)} count="annual" color="#C8D0D8" />
+              <BreakdownRow label="Insurance Premium Reduction" value={formatCurrency(results.insurancePremiumReduction)} count="annual" color="#C8D0D8" />
+              <BreakdownRow label="Property Tax Reduction" value={formatCurrency(results.prospectivePropertyTaxReduction)} count="annual" color="#C8D0D8" />
+              <BreakdownRow label="Duplicate Purchase Avoidance" value={formatCurrency(results.duplicatePurchaseAvoidance)} count="annual" color="#C8D0D8" />
             </div>
           </div>
 
@@ -365,7 +371,7 @@ export default function ExecutiveROIEstimator() {
               <div>
                 <p style={{ fontSize: "0.8rem", color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "0.3rem" }}>Projected Investment</p>
                 <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "1.1rem", fontWeight: 600, color: C.text }}>
-                  {formatCurrency(results.projectedConsultingInvestment[0])} – {formatCurrency(results.projectedConsultingInvestment[1])}
+                  {formatCurrency(results.investmentRange[0])} – {formatCurrency(results.investmentRange[1])}
                 </p>
               </div>
               <div>
@@ -379,7 +385,7 @@ export default function ExecutiveROIEstimator() {
               <div>
                 <p style={{ fontSize: "0.8rem", color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "0.3rem" }}>Estimated Payback Period</p>
                 <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "1.1rem", fontWeight: 600, color: C.gold }}>
-                  {results.estimatedPaybackPeriodMonths < 1 ? "< 1 month" : `${results.estimatedPaybackPeriodMonths.toFixed(1)} months`}
+                  {results.paybackPeriodMonths === null ? "Not Achievable Based on Current Inputs" : results.paybackPeriodMonths < 1 ? "< 1 month" : `${results.paybackPeriodMonths} months`}
                 </p>
               </div>
             </div>
@@ -423,8 +429,8 @@ export default function ExecutiveROIEstimator() {
                     assetCount: input.estimatedAssetCount,
                     locations: input.facilityCount,
                     departments: 1,
-                    estimatedRecovery: results.totalFinancialOpportunity,
-                    message: `Executive ROI Estimator — Replacement Value: $${input.approximateReplacementValue.toLocaleString()}, CapEx: $${input.annualCapex.toLocaleString()}, Maintenance: $${input.annualMaintenanceBudget.toLocaleString()}, Insurance: $${input.annualInsurancePremiums.toLocaleString()}, System: ${input.assetManagementSystem}, Last Inventory: ${input.lastPhysicalInventoryDate}, Recommended: ${results.recommendedEngagementLevel}, Net ROI: ${results.netROI}%`,
+                    estimatedRecovery: results.firstYearBenefit,
+                    message: `Executive ROI Estimator — Asset Value: $${input.approximateAssetValue.toLocaleString()}, CapEx: $${input.annualCapex.toLocaleString()}, Maintenance: $${input.annualMaintenanceBudget.toLocaleString()}, Insurance: $${input.annualInsurancePremiums.toLocaleString()}, System: ${input.assetManagementSystem}, Last Inventory: ${input.lastPhysicalInventoryDate}, Recommended: ${results.recommendedEngagementLevel}, First-Year Net ROI: ${results.firstYearNetROI}%`,
                   });
                 } catch (err) {
                   console.error("Lead submission failed:", err);
@@ -476,7 +482,7 @@ export default function ExecutiveROIEstimator() {
           <button
             onClick={() => {
               const subject = `Executive ROI Estimate - ${INDUSTRY_BENCHMARKS[input.industry]?.label || input.industry}`;
-              const body = `I completed your Executive ROI Estimator and would like to discuss my results.\n\nTotal Financial Opportunity: ${formatCurrency(results.totalFinancialOpportunity)}\nRecommended Engagement: ${results.recommendedEngagementLevel}\nNet ROI: ${results.netROI}%`;
+              const body = `I completed your Executive ROI Estimator and would like to discuss my results.\n\nFirst-Year Financial Benefit: ${formatCurrency(results.firstYearBenefit)}\nRecommended Engagement: ${results.recommendedEngagementLevel}\nFirst-Year Net ROI: ${results.firstYearNetROI}%`;
               window.location.href = `mailto:info@legacyassetintelligence.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             }}
             style={{ ...btnPrimary, flex: 1 }}

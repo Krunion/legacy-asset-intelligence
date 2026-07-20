@@ -328,3 +328,58 @@
 - [x] Create claim register document (CLAIM_REGISTER.md)
 - [x] Centralize phase definitions in shared content source — CLAIM_REGISTER.md serves as reference
 - [x] Remove "Made with Manus" branding if possible — platform-level, not removable (documented)
+
+## V2 Correction Brief Implementation (July 20, 2026)
+
+### Section 6 — FAQ Page
+- [x] Rewrite FAQ answers to remove unsupported claims and guarantee language
+- [x] Fix glossary definitions (ghost asset, zombie asset, unrecorded asset)
+- [x] Add disclaimers to ROI-related FAQ answers
+- [x] Remove fabricated statistics and research citations
+
+### Section 7 — Industries Page
+- [x] Fix utilities outcomes: remove "regulatory-ready" and "rate case support" claims
+- [x] Fix government outcomes: soften GASB compliance language
+- [x] Fix healthcare outcomes: add "by qualified professionals" qualifier
+- [x] Remove unsupported regulatory claims from all industry sections
+
+### Section 8 — Careers Page
+- [x] Reframe as "Future Opportunities" (not funded vacancies)
+- [x] Remove Fortune 500 claims
+- [x] Fix entry-level classification (Data Analyst now Mid-Level)
+- [x] Remove unsupported benefit claims
+- [x] Add "Future Role" badges to all positions
+- [x] Change "Apply Now" to "Submit Expression of Interest"
+
+### Section 9 — Contact & Legal Pages
+- [x] Update contact form consent notice with Privacy Policy link
+- [x] Add autocomplete attributes to form fields
+- [x] Add message required validation
+- [x] Create Privacy Policy page (/privacy)
+- [x] Create Terms of Use page (/terms)
+- [x] Add Privacy and Terms routes to App.tsx
+
+### Section 4 — Team Page
+- [x] Fix Jessica Runion title: Chief Training Officer (CTO)
+
+### Sections 10-11 — SEO & Technical
+- [x] Remove duplicate GA4 script from index.html (GTM already includes it)
+- [x] Update structured data (Organization, WebSite schemas)
+- [x] Fix sitemap.xml with current routes (removed stale /case-studies, /solutions, /blog)
+- [x] Update robots.txt to disallow /employee-portal and /api/
+- [x] Update page title to include descriptor
+
+### Section 12 — Accessibility & Navigation
+- [x] Replace navigation buttons with proper anchor links (SiteNav.tsx)
+- [x] Add aria-current="page" to active nav links
+- [x] Add aria-label to nav and footer landmarks
+- [x] Add aria-expanded to mobile toggle button
+- [x] Create global SiteFooter component with proper links
+- [x] Add SiteFooter to App.tsx (appears on all pages)
+- [x] Add global focus-visible styles to index.css
+- [x] Add skip-link CSS class for keyboard users
+
+### Section 13 — Quality Assurance
+- [x] TypeScript compilation: 0 errors
+- [x] Vitest: 11/11 tests passing (including fixed auth.logout test)
+- [x] Fix auth.logout cookie name bug (was hardcoded "session", now uses COOKIE_NAME constant)

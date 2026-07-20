@@ -4,16 +4,16 @@ import { COLORS } from "@shared/colors";
 const C = COLORS;
 
 export default function Career() {
-  const openings = [
+  const futureRoles = [
     {
       title: "Senior Asset Management Consultant",
       department: "Consulting",
       level: "Senior",
-      description: "Lead enterprise asset recovery engagements for Fortune 500 clients. Design governance frameworks and oversee multi-million dollar capital recovery initiatives.",
+      description: "Lead enterprise asset intelligence engagements. Design governance frameworks and oversee verification and recovery analysis initiatives.",
       requirements: [
         "10+ years in asset management, fixed assets, or enterprise consulting",
         "Experience with SAP, Oracle, or similar ERP systems",
-        "Track record of successful large-scale implementations",
+        "Experience with large-scale project implementations",
         "MBA or equivalent experience preferred"
       ]
     },
@@ -21,12 +21,12 @@ export default function Career() {
       title: "Asset Verification Specialist",
       department: "Operations",
       level: "Mid-Level",
-      description: "Conduct wall-to-wall physical asset inventories across client facilities. Lead tagging, reconciliation, and data validation activities.",
+      description: "Conduct physical asset verification across client facilities. Lead reconciliation, data validation, and documentation activities.",
       requirements: [
         "5+ years in asset verification, inventory management, or audit",
-        "Experience with RFID, barcode, or QR code systems",
+        "Experience with barcode or QR code scanning systems",
         "Strong attention to detail and project management skills",
-        "Ability to travel to client sites (25-30% travel)"
+        "Ability to travel to client sites (25-50% travel expected)"
       ]
     },
     {
@@ -45,10 +45,10 @@ export default function Career() {
       title: "Business Development Manager",
       department: "Sales & Marketing",
       level: "Mid-Level",
-      description: "Identify and pursue new enterprise client opportunities. Build relationships with C-suite executives in target industries.",
+      description: "Identify and pursue new enterprise client opportunities. Build relationships with executives in target industries.",
       requirements: [
         "7+ years in enterprise software sales or consulting sales",
-        "Proven track record of closing 6-7 figure deals",
+        "Experience in consultative selling to mid-market and enterprise organizations",
         "Experience selling to healthcare, manufacturing, or government sectors",
         "Strong executive presence and communication skills"
       ]
@@ -56,8 +56,8 @@ export default function Career() {
     {
       title: "Data Analyst",
       department: "Analytics",
-      level: "Entry-Level",
-      description: "Analyze asset portfolio data and create executive dashboards. Support capital recovery opportunity modeling and ROI calculations.",
+      level: "Mid-Level",
+      description: "Analyze asset portfolio data and create executive dashboards. Support opportunity modeling and ROI calculations.",
       requirements: [
         "3+ years in data analysis or business intelligence",
         "Proficiency in SQL, Python, and Tableau or Power BI",
@@ -84,22 +84,22 @@ export default function Career() {
     { title: "Benefits Package", description: "Health and wellness benefits (details discussed during interview)" },
     { title: "Professional Development", description: "Support for certifications and continuing education" },
     { title: "Flexible Work", description: "Remote options and flexible scheduling where role permits" },
-    { title: "Career Growth", description: "Advancement opportunities as the company scales" },
+    { title: "Career Growth", description: "Opportunities to grow as the company scales" },
     { title: "Meaningful Impact", description: "Help organizations strengthen financial accountability" }
   ];
 
-  const handleApply = (jobTitle: string) => {
-    const subject = encodeURIComponent(`Application for ${jobTitle}`);
-    const body = encodeURIComponent(`Dear Hiring Team,\n\nI am writing to express my interest in the ${jobTitle} position at Legacy Asset Intelligence.\n\n[Please attach your resume and cover letter]\n\nBest regards,`);
+  const handleExpressInterest = () => {
+    const subject = encodeURIComponent("Expression of Interest — Future Opportunities");
+    const body = encodeURIComponent(`Dear LAI Team,\n\nI am writing to express my interest in future opportunities at Legacy Asset Intelligence.\n\n[Please describe your background, area of interest, and attach your resume]\n\nBest regards,`);
     window.location.href = `mailto:careers@legacyassetintelligence.com?subject=${subject}&body=${body}`;
   };
 
   return (
     <PageLayout
-      heroTitle="Join Our Team"
+      heroTitle="Future Opportunities"
       heroSubtitle="Help organizations strengthen financial accountability and build sustainable asset governance"
-      ctaTitle="Ready to Make an Impact?"
-      ctaDescription="Send your resume to careers@legacyassetintelligence.com"
+      ctaTitle="Interested in Joining Our Team?"
+      ctaDescription="Submit a general expression of interest to careers@legacyassetintelligence.com"
       ctaButtonText="Contact Us"
     >
       {/* Why Join LAI */}
@@ -108,7 +108,7 @@ export default function Career() {
           Why Legacy Asset Intelligence?
         </h2>
         <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.textMuted, lineHeight: 1.8, marginBottom: "2rem", maxWidth: 800 }}>
-          We're solving one of the most overlooked financial problems in enterprise operations. Our team works on high-impact projects that directly affect client bottom lines. We value expertise, innovation, and a commitment to excellence.
+          We are building a team to solve one of the most overlooked financial problems in enterprise operations. As we grow, we seek professionals who value expertise, innovation, and a commitment to excellence. The roles below represent positions we anticipate filling as the company scales.
         </p>
 
         {/* Benefits Grid */}
@@ -126,14 +126,17 @@ export default function Career() {
         </div>
       </div>
 
-      {/* Open Positions */}
+      {/* Future Roles */}
       <div style={{ marginBottom: "4rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.text, marginBottom: "2rem", borderLeft: `3px solid ${C.gold}`, paddingLeft: "1rem" }}>
-          Open Positions
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.text, marginBottom: "0.75rem", borderLeft: `3px solid ${C.gold}`, paddingLeft: "1rem" }}>
+          Future Opportunities
         </h2>
+        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.textMuted, lineHeight: 1.7, marginBottom: "2rem", maxWidth: 800 }}>
+          The following roles represent positions we anticipate as LAI grows. They are not presently funded vacancies. If you are interested in any of these areas, we welcome your expression of interest.
+        </p>
 
         <div style={{ display: "grid", gap: "1rem" }}>
-          {openings.map((job, i) => (
+          {futureRoles.map((job, i) => (
             <div key={i} style={{ 
               padding: "1.5rem", 
               background: C.slate, 
@@ -150,19 +153,16 @@ export default function Career() {
                     {job.department} · {job.level}
                   </p>
                 </div>
-                <button
-                  onClick={() => handleApply(job.title)}
-                  style={{ background: C.gold, color: C.charcoal, padding: "0.4rem 0.8rem", borderRadius: 4, fontSize: "0.75rem", fontWeight: 600, whiteSpace: "nowrap", border: "none" }}
-                >
-                  Apply Now
-                </button>
+                <span style={{ background: "rgba(201,168,76,0.15)", color: C.gold, padding: "0.3rem 0.7rem", borderRadius: 4, fontSize: "0.7rem", fontWeight: 600, whiteSpace: "nowrap", border: `1px solid rgba(201,168,76,0.3)` }}>
+                  Future Role
+                </span>
               </div>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.silver, lineHeight: 1.6, marginBottom: "1rem" }}>
                 {job.description}
               </p>
               <div>
                 <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, color: C.textMuted, marginBottom: "0.5rem", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-                  Key Requirements
+                  Anticipated Requirements
                 </p>
                 <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                   {job.requirements.map((req, j) => (
@@ -177,17 +177,23 @@ export default function Career() {
         </div>
       </div>
 
-      {/* Culture Section */}
+      {/* Expression of Interest */}
       <div style={{ padding: "2.5rem", background: C.goldMuted, borderRadius: 8, border: `1px solid rgba(201,168,76,0.2)` }}>
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", fontWeight: 700, color: C.text, marginBottom: "1rem" }}>
-          Our Culture
+          Express Your Interest
         </h2>
         <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.silver, lineHeight: 1.8, marginBottom: "1rem" }}>
-          We believe in building a team of experts who are passionate about solving complex problems. Our culture emphasizes continuous learning, collaboration, and delivering exceptional results for our clients. We're committed to diversity, inclusion, and creating an environment where every team member can thrive.
+          We believe in building a team of experts who are passionate about solving complex problems. Our culture emphasizes continuous learning, collaboration, and delivering exceptional results. We are committed to diversity, inclusion, and creating an environment where every team member can thrive.
         </p>
-        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.silver, lineHeight: 1.8, margin: 0 }}>
-          Whether you're a seasoned consultant, a technical expert, or someone looking to grow your career in enterprise asset management, we'd love to hear from you.
+        <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", color: C.silver, lineHeight: 1.8, marginBottom: "1.5rem" }}>
+          Whether you are a seasoned consultant, a technical expert, or someone looking to grow your career in enterprise asset management, we welcome your expression of interest for future consideration.
         </p>
+        <button
+          onClick={handleExpressInterest}
+          style={{ background: C.gold, color: C.charcoal, padding: "0.75rem 1.5rem", borderRadius: 4, fontSize: "0.85rem", fontWeight: 600, border: "none", cursor: "pointer" }}
+        >
+          Submit Expression of Interest
+        </button>
       </div>
     </PageLayout>
   );

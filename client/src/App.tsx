@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import SiteNav from "./components/SiteNav";
+import SiteFooter from "./components/SiteFooter";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Services from "./pages/Services";
@@ -18,6 +19,8 @@ import Contact from "./pages/Contact";
 import Insights from "./pages/Insights";
 import Resources from "./pages/Resources";
 import InsightArticle from "./pages/InsightArticle";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -43,6 +46,8 @@ function Router() {
       <Route path={"/career"} component={Career} />
       <Route path={"/employee-portal"} component={EmployeePortal} />
       <Route path={"/contact"} component={Contact} />
+      <Route path={"/privacy"} component={Privacy} />
+      <Route path={"/terms"} component={Terms} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
@@ -60,6 +65,7 @@ function App() {
           <SiteNav />
           <ScrollToTop />
           <Router />
+          <SiteFooter />
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
