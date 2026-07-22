@@ -383,3 +383,9 @@
 - [x] TypeScript compilation: 0 errors
 - [x] Vitest: 11/11 tests passing (including fixed auth.logout test)
 - [x] Fix auth.logout cookie name bug (was hardcoded "session", now uses COOKIE_NAME constant)
+
+## Team Page & About Page Bio Overhaul (July 2025)
+- [x] Upload team photos (Kevin, Chris, Andrea, Jessica) via manus-upload-file
+- [x] Rewrite Team page with full bios in order: Kevin, Chris, Darryl, Andrea, Christine (placeholder), Jimmy (placeholder), Jessica
+- [x] Update About page to feature Kevin's full bio at top
+- [x] Use initials placeholders for Darryl, Jimmy, Christine (no photos yet)

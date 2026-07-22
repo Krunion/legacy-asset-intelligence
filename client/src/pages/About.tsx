@@ -104,7 +104,7 @@ export default function About() {
       </Section>
 
       {/* ═══════════════════════════════════════════════════════════════════════
-          FOUNDER SECTION
+          FOUNDER SECTION — Kevin Runion Full Bio
           ═══════════════════════════════════════════════════════════════════════ */}
       <Section id="founder">
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "5rem 2rem" }}>
@@ -115,30 +115,47 @@ export default function About() {
             </h2>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "3rem" }}>
-            {/* Founder Story */}
-            <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.95rem", lineHeight: 1.85 }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.text, marginBottom: "1.25rem" }}>
-                Kevin Runion — Founder & Chief Executive Officer
+          {/* Photo + Name Header */}
+          <div style={{ display: "flex", alignItems: "center", gap: "1.5rem", marginBottom: "2rem", flexWrap: "wrap" }}>
+            <img
+              src="/manus-storage/Kevin_d3238512.webp"
+              alt="Kevin Runion"
+              style={{ width: 140, height: 140, borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(201,168,76,0.4)", flexShrink: 0 }}
+            />
+            <div>
+              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: C.text, marginBottom: "0.3rem" }}>
+                Kevin Runion
               </h3>
-              <p style={{ marginBottom: "1.25rem" }}>
-                Legacy Asset Intelligence was founded by Kevin Runion after a career built around operational leadership, process improvement, accountability, and organizational performance. Having witnessed firsthand how executives are forced to make critical business decisions based on inaccurate, incomplete, or outdated asset information, Kevin recognized that organizations needed a fundamentally different approach to physical asset intelligence.
-              </p>
-              <p style={{ marginBottom: "1.25rem" }}>
-                Rather than simply counting assets or implementing software, Kevin envisioned a consulting methodology that integrates executive assessment, physical verification, technology enablement, and sustainable governance into a single comprehensive framework — one that delivers lasting organizational value rather than temporary project outcomes.
-              </p>
-              <p>
-                His background in healthcare operations, process improvement, and organizational accountability provides a unique perspective on the challenges executives face when managing complex physical asset portfolios across multiple facilities and departments.
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1rem", fontWeight: 600, color: C.gold, margin: 0 }}>
+                Founder & Chief Executive Officer
               </p>
             </div>
+          </div>
 
-            {/* Executive Team */}
-            {/* Full executive team available on the Team page */}
-            <div style={{ textAlign: "center", marginTop: "2rem" }}>
-              <button onClick={() => navigate("/team")} style={{ background: "none", border: `1px solid ${C.gold}`, color: C.gold, padding: "0.75rem 2rem", borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}>
-                Meet the Full Executive Team →
-              </button>
-            </div>
+          {/* Full Bio */}
+          <div style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.silver, fontSize: "0.95rem", lineHeight: 1.85 }}>
+            <p style={{ marginBottom: "1.25rem" }}>
+              Kevin Runion is a U.S. Army veteran, experienced operations leader, and the Founder and Chief Executive Officer of Legacy Asset Intelligence. His professional background combines military logistics, asset accountability, healthcare operations, process improvement, organizational leadership, and business management.
+            </p>
+            <p style={{ marginBottom: "1.25rem" }}>
+              During his 12 years of service in the United States Army, Kevin served as an M1A1 Armor Crewman and an Automated Logistics Supervisor. His military career provided extensive experience in equipment readiness, inventory control, supply-chain coordination, maintenance accountability, personnel leadership, and mission-focused operations. Working in environments where resources and equipment had to remain continuously prepared shaped his disciplined approach to accountability and operational performance.
+            </p>
+            <p style={{ marginBottom: "1.25rem" }}>
+              Following his military service, Kevin transitioned into healthcare operations management, where he has led teams and supported the improvement of complex clinical and administrative functions. His work has helped strengthen departmental productivity, expand service capabilities, improve financial processes, and create greater accountability across daily operations. This experience reinforced his ability to identify operational gaps, develop practical solutions, and guide organizations through measurable growth and improvement.
+            </p>
+            <p style={{ marginBottom: "1.25rem" }}>
+              Kevin holds a Bachelor of Science in Psychology and a Master of Science in Organizational Leadership and Applied Business Management, which he completed with a 4.0 GPA. He is currently pursuing a Doctor of Business Administration to further advance his expertise in executive leadership, organizational strategy, operational performance, and sustainable business growth.
+            </p>
+            <p style={{ marginBottom: "2rem" }}>
+              Kevin founded Legacy Asset Intelligence to help organizations close the gap between their financial records, physical assets, operational processes, and accountability systems. Drawing from his military logistics background, healthcare leadership experience, and advanced business education, he developed LAI's structured methodology to help clients uncover hidden capital, eliminate waste, strengthen governance, and transform asset data into actionable business intelligence.
+            </p>
+          </div>
+
+          {/* Link to full team */}
+          <div style={{ textAlign: "center", marginTop: "1rem" }}>
+            <button onClick={() => navigate("/team")} style={{ background: "none", border: `1px solid ${C.gold}`, color: C.gold, padding: "0.75rem 2rem", borderRadius: 6, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", fontWeight: 600, cursor: "pointer" }}>
+              Meet the Full Executive Team →
+            </button>
           </div>
         </div>
       </Section>
