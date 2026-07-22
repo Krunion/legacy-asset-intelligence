@@ -121,7 +121,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
             .header p { margin: 5px 0; color: #666; font-size: 12px; }
             .section { margin-bottom: 25px; page-break-inside: avoid; }
             .section-title { background: #1E3A5F; color: white; padding: 10px; margin-bottom: 15px; font-weight: 600; }
-            .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+            .field-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 15px; }
             .field-row.full { grid-template-columns: 1fr; }
             .field { }
             .field-label { font-weight: 600; color: #1E3A5F; font-size: 12px; margin-bottom: 5px; }
@@ -300,7 +300,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
 
         <div style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 8, padding: "2rem", marginBottom: "2rem" }}>
           <h3 style={{ color: C.slate, marginTop: 0 }}>Assessment Summary</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
             <div>
               <p style={{ fontSize: "0.85rem", color: "#64748B", margin: "0 0 0.25rem 0" }}>Client</p>
               <p style={{ fontSize: "1rem", fontWeight: 600, color: "#1E293B", margin: 0 }}>{formData.clientName}</p>
@@ -396,7 +396,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
         <div style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 8, padding: "1.5rem", marginBottom: "1.5rem" }}>
           <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", color: C.slate, marginTop: 0 }}>Client Information</h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
                 Client Name *
@@ -432,7 +432,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
                 Annual Revenue
@@ -461,7 +461,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
                 Assessment Date
@@ -495,7 +495,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
             Current Asset Management State
           </h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
                 Asset Inventory Accuracy
@@ -553,7 +553,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
             Financial Exposure Assessment
           </h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
                 Property Tax Overpayment Risk
@@ -590,7 +590,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
                 Maintenance Contract Waste
@@ -634,7 +634,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
             Technology & Governance Maturity
           </h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
                 Current Technology Platform
@@ -671,7 +671,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
                 Financial Reporting Accuracy
@@ -715,7 +715,7 @@ export default function ExecutiveAssessmentForm({ onBack }: ExecutiveAssessmentF
             Engagement Readiness
           </h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1rem" }}>
             <div>
               <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, color: C.slate, marginBottom: "0.5rem" }}>
                 Decision Maker Engagement

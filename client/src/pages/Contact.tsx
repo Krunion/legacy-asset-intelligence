@@ -109,7 +109,7 @@ export default function Contact() {
 
         {/* Contact Form */}
         <form onSubmit={handleSubmit} style={{ background: C.slate, border: `1px solid ${C.border}`, borderRadius: 8, padding: "2.5rem" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem", marginBottom: "1.5rem" }}>
             <div>
               <label htmlFor="firstName" style={labelStyle}>First Name</label>
               <input id="firstName" type="text" name="firstName" autoComplete="given-name" value={formData.firstName} onChange={handleChange} style={inputStyle} />
@@ -120,7 +120,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "1.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem", marginBottom: "1.5rem" }}>
             <div>
               <label htmlFor="email" style={labelStyle}>Email *</label>
               <input id="email" type="email" name="email" autoComplete="email" value={formData.email} onChange={handleChange} required style={inputStyle} />

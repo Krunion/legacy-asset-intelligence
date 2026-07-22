@@ -273,7 +273,7 @@ export default function InvestigativeQuestionnaire({ onBack }: { onBack: () => v
       {/* Client Info */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Client Information</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div><label style={labelStyle}>Client / Organization Name</label><input style={inputStyle} value={data.clientName} onChange={e => update("clientName", e.target.value)} placeholder="Enter client name" /></div>
           <div><label style={labelStyle}>Contact Name</label><input style={inputStyle} value={data.contactName} onChange={e => update("contactName", e.target.value)} placeholder="Primary contact" /></div>
           <div><label style={labelStyle}>Contact Title</label><input style={inputStyle} value={data.contactTitle} onChange={e => update("contactTitle", e.target.value)} placeholder="Title / Role" /></div>

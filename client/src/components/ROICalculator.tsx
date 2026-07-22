@@ -174,7 +174,7 @@ export default function ROICalculator() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
         <div>
           <label style={{ display: "block", fontWeight: 600, color: colors.text, marginBottom: "0.5rem", fontSize: "0.9rem", textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>
             Number of Locations
@@ -495,7 +495,7 @@ export default function ROICalculator() {
       </div>
 
       {/* Charts */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "2rem", marginBottom: "2rem" }}>
         {/* Recovery Breakdown Pie */}
         <div style={{ padding: "1.5rem", background: "white", border: `1px solid ${colors.border}`, borderRadius: 8 }}>
           <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 600, color: colors.slate, marginBottom: "1rem", fontSize: "0.95rem" }}>

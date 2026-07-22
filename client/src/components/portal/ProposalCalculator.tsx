@@ -788,7 +788,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
       {/* Client Info */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Client Information</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Client / Prospect Name</label>
             <input style={inputStyle} value={inputs.clientName} onChange={e => update("clientName", e.target.value)} placeholder="Enter client name" />
@@ -854,7 +854,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
       {/* Phase 1 */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Phase 1 – Executive Assessment</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Include Phase 1?</label>
             <select style={selectStyle} value={inputs.includePhase1 ? "1" : "0"} onChange={e => update("includePhase1", e.target.value === "1")}>
@@ -891,7 +891,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
       {/* Phase 2 */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Phase 2 – Physical Verification & Recovery Analysis</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Include Phase 2?</label>
             <select style={selectStyle} value={inputs.includePhase2 ? "1" : "0"} onChange={e => update("includePhase2", e.target.value === "1")}>
@@ -934,7 +934,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
       {/* Phase 3 */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Phase 3 – Governance, Technology & Implementation</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Include Phase 3?</label>
             <select style={selectStyle} value={inputs.includePhase3 ? "1" : "0"} onChange={e => update("includePhase3", e.target.value === "1")}>
@@ -1013,7 +1013,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
       {/* Premiums */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Premiums & Adjustments</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Off-Hours / Weekend Work</label>
             <select style={selectStyle} value={inputs.offHours ? "1" : "0"} onChange={e => update("offHours", e.target.value === "1")}>
@@ -1034,7 +1034,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
       {/* Recurring Governance */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Recurring Governance</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Include Recurring Governance?</label>
             <select style={selectStyle} value={inputs.includeRecurring ? "1" : "0"} onChange={e => update("includeRecurring", e.target.value === "1")}>
@@ -1077,7 +1077,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
       {/* ROI Projection Mode */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Financial Recovery & ROI Projection</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem", marginBottom: "1rem" }}>
           <div>
             <label style={labelStyle}>Data Mode</label>
             <select style={selectStyle} value={inputs.roiMode} onChange={e => update("roiMode", e.target.value)}>
@@ -1095,7 +1095,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
         {inputs.roiMode === "verified" && (
           <div style={{ padding: "1.25rem", background: "rgba(201,168,76,0.05)", border: `1px solid rgba(201,168,76,0.2)`, borderRadius: 8, marginBottom: "1rem" }}>
             <p style={{ fontSize: "0.85rem", color: C.muted, marginBottom: "1rem", fontStyle: "italic" }}>Enter verified values from Phase 2 field discovery. These override the estimation model.</p>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
               <div>
                 <label style={labelStyle}>Ghost Asset Value (Verified)</label>
                 <NumericInput style={inputStyle} value={inputs.verifiedGhostAssetValue} onChange={v => update("verifiedGhostAssetValue", v)} currency showDollarSign />

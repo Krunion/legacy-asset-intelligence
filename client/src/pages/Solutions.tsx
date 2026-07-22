@@ -75,26 +75,18 @@ export default function Solutions() {
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "2rem", fontWeight: 700, color: "#FFFFFF", marginBottom: "2rem", textAlign: "center", textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}>
           How Our Solutions Work Together
         </h2>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr auto 1fr auto 1fr", gap: "1rem", alignItems: "center", textAlign: "center" }}>
-          <div style={{ padding: "1.5rem", background: "rgba(212,175,55,0.15)", borderRadius: 6 }}>
-            <p style={{ fontWeight: 600, color: "#E8E9EB", marginBottom: "0.5rem", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>1. Assessment</p>
-            <p style={{ fontSize: "0.85rem", color: "#D1D5DB", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>Identify hidden assets</p>
-          </div>
-          <div style={{ fontSize: "1.5rem", color: C.gold }}>→</div>
-          <div style={{ padding: "1.5rem", background: "rgba(212,175,55,0.15)", borderRadius: 6 }}>
-            <p style={{ fontWeight: 600, color: "#E8E9EB", marginBottom: "0.5rem", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>2. Recovery</p>
-            <p style={{ fontSize: "0.85rem", color: "#D1D5DB", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>Recover capital</p>
-          </div>
-          <div style={{ fontSize: "1.5rem", color: C.gold }}>→</div>
-          <div style={{ padding: "1.5rem", background: "rgba(212,175,55,0.15)", borderRadius: 6 }}>
-            <p style={{ fontWeight: 600, color: "#E8E9EB", marginBottom: "0.5rem", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>3. Accountability</p>
-            <p style={{ fontSize: "0.85rem", color: "#D1D5DB", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>Establish controls</p>
-          </div>
-          <div style={{ fontSize: "1.5rem", color: C.gold }}>→</div>
-          <div style={{ padding: "1.5rem", background: "rgba(212,175,55,0.15)", borderRadius: 6 }}>
-            <p style={{ fontWeight: 600, color: "#E8E9EB", marginBottom: "0.5rem", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>4. Prevention</p>
-            <p style={{ fontSize: "0.85rem", color: "#D1D5DB", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>Prevent future loss</p>
-          </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "1rem", alignItems: "center", textAlign: "center" }}>
+          {[
+            { step: "1. Assessment", desc: "Identify hidden assets" },
+            { step: "2. Recovery", desc: "Recover capital" },
+            { step: "3. Accountability", desc: "Establish controls" },
+            { step: "4. Prevention", desc: "Prevent future loss" },
+          ].map((item, i) => (
+            <div key={i} style={{ padding: "1.5rem", background: "rgba(212,175,55,0.15)", borderRadius: 6 }}>
+              <p style={{ fontWeight: 600, color: "#E8E9EB", marginBottom: "0.5rem", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>{item.step}</p>
+              <p style={{ fontSize: "0.85rem", color: "#D1D5DB", textShadow: "0 1px 2px rgba(0,0,0,0.3)" }}>{item.desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </PageLayout>

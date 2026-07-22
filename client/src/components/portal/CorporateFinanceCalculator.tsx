@@ -172,7 +172,7 @@ const CorporateFinanceCalculator: React.FC<CorporateFinanceCalculatorProps> = ({
         </div>
 
         {/* Main Content Grid */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginBottom: "2rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "2rem", marginBottom: "2rem" }}>
           {/* Input Section */}
           <div style={{ background: "white", padding: "2rem", borderRadius: "12px", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: "#1E3A5F", marginBottom: "1.5rem" }}>

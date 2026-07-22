@@ -55,9 +55,9 @@ export default function Services() {
       {/* ═══ PHASE 1 — Discovery & Executive Assessment ═══ */}
       <Section id="phase-1">
         <div style={{ maxWidth: 1050, margin: "0 auto", padding: "4rem 2rem" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "2.5rem", alignItems: "start" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", background: C.goldMuted, border: `2px solid ${C.gold}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem", alignItems: "start" }}>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "1rem" }}>
+              <div style={{ width: 56, height: 56, borderRadius: "50%", background: C.goldMuted, border: `2px solid ${C.gold}`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.gold }}>01</span>
               </div>
               <div style={{ width: 2, height: 80, background: `linear-gradient(to bottom, ${C.gold}, transparent)`, marginTop: "0.75rem" }} />
@@ -70,7 +70,7 @@ export default function Services() {
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "1rem", lineHeight: 1.85, marginBottom: "1.5rem" }}>
                 Every engagement begins by working directly with executive leadership to understand how physical assets are currently managed, how financial information is maintained, and where opportunities for improvement exist. This phase provides strategic intelligence that supports informed executive decision-making before additional investments are made.
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
                 {["Executive stakeholder interviews", "Asset management practice evaluation", "Governance maturity assessment", "Fixed Asset Register analysis", "Recoverable capital opportunity identification", "Organizational risk assessment", "Strategic roadmap development", "Preliminary ROI modeling"].map((item, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.gold, flexShrink: 0 }} />
@@ -90,9 +90,9 @@ export default function Services() {
       {/* ═══ PHASE 2 — Physical Verification & Recovery Analysis ═══ */}
       <Section id="phase-2">
         <div style={{ maxWidth: 1050, margin: "0 auto", padding: "4rem 2rem" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "2.5rem", alignItems: "start" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(13,148,136,0.15)", border: `2px solid ${C.teal}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem", alignItems: "start" }}>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "1rem" }}>
+              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(13,148,136,0.15)", border: `2px solid ${C.teal}`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: C.teal }}>02</span>
               </div>
               <div style={{ width: 2, height: 80, background: `linear-gradient(to bottom, ${C.teal}, transparent)`, marginTop: "0.75rem" }} />
@@ -105,7 +105,7 @@ export default function Services() {
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "1rem", lineHeight: 1.85, marginBottom: "1.5rem" }}>
                 Physical verification validates organizational records, identifies discrepancies, confirms asset existence and condition, and establishes accurate information for financial reporting and future governance. Field teams verify assets, reconcile discrepancies, identify ghost assets, evaluate equipment utilization, and support capital recovery opportunities while maintaining minimal disruption to ongoing operations.
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
                 {["Wall-to-wall physical inventory", "Asset tagging & identification", "Condition assessment & documentation", "Floor-to-book reconciliation", "Ghost asset identification", "Equipment utilization evaluation", "Capital recovery analysis", "Photographic documentation"].map((item, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.teal, flexShrink: 0 }} />
@@ -125,9 +125,9 @@ export default function Services() {
       {/* ═══ PHASE 3 — Technology Enablement & Governance ═══ */}
       <Section id="phase-3">
         <div style={{ maxWidth: 1050, margin: "0 auto", padding: "4rem 2rem" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: "2.5rem", alignItems: "start" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(27,77,62,0.3)", border: `2px solid ${C.emerald}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem", alignItems: "start" }}>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "1rem" }}>
+              <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(27,77,62,0.3)", border: `2px solid ${C.emerald}`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", fontWeight: 700, color: "#2DD4A0" }}>03</span>
               </div>
               <div style={{ width: 2, height: 80, background: `linear-gradient(to bottom, ${C.emerald}, transparent)`, marginTop: "0.75rem" }} />
@@ -140,7 +140,7 @@ export default function Services() {
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "1rem", lineHeight: 1.85, marginBottom: "1.5rem" }}>
                 Technology serves as the foundation for long-term accountability. This phase transforms verified information into sustainable business processes through platform configuration, data validation, governance policy establishment, workflow development, reporting dashboard creation, and significant improvement in executive visibility.
               </p>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.5rem" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
                 {["Platform selection & configuration", "Data migration & validation", "Governance policy development", "Automated workflow creation", "Executive dashboard configuration", "ERP/financial system integration", "Staff training & certification", "Standard operating procedures"].map((item, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#2DD4A0", flexShrink: 0 }} />
@@ -170,7 +170,7 @@ export default function Services() {
                 Organizations require ongoing monitoring, periodic verification, governance assessments, executive reporting, and continuous improvement to maintain the accuracy of their asset information. Our recurring programs are executive advisory partnerships that help organizations preserve accountability while adapting to operational growth and change.
               </p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.25rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem" }}>
               {[
                 { tier: "Bronze", desc: "Annual governance review, executive reporting, and compliance verification" },
                 { tier: "Silver", desc: "Semi-annual audits, dashboard monitoring, and governance refinement" },
@@ -199,7 +199,7 @@ export default function Services() {
               Every engagement produces comprehensive reporting and strategic recommendations designed to support executive decision-making, budgeting, capital planning, governance improvements, and organizational accountability.
             </p>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.25rem" }}>
             {[
               { title: "Executive Assessment Report", desc: "Comprehensive evaluation of current asset management practices, governance maturity, and strategic recommendations for improvement." },
               { title: "Potential Recovery Analysis", desc: "Identification of record exceptions, potential duplicate expenditures, and areas where insurance and property tax exposure may be reduced." },
@@ -229,7 +229,7 @@ export default function Services() {
               What to Expect Throughout Your Engagement
             </h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.5rem" }}>
             {[
               { title: "Structured Communication", desc: "Regular executive briefings, progress reports, and milestone updates ensure leadership always understands project status without ambiguity." },
               { title: "Collaborative Planning", desc: "Every engagement begins with detailed project planning that establishes timelines, responsibilities, and expected outcomes before fieldwork begins." },

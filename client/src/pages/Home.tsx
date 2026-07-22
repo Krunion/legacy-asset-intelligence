@@ -224,7 +224,7 @@ export default function Home() {
           </div>
 
           {/* Summary stat bar */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "1rem" }}>
             {[
               { value: 5, suffix: ".87B", prefix: "$", label: "EAM Market (2025)", sub: "MarketsandMarkets" },
               { value: 9, suffix: "%+", label: "Market CAGR", sub: "projected through 2030" },
@@ -288,7 +288,7 @@ export default function Home() {
           </div>
 
           {/* Video Section */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.5rem" }}>
             <div style={{ padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, textAlign: "center" }}>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>Discovery & Assessment</p>
               <VideoModal phaseNumber={1} phaseName="Discovery & Executive Assessments" description="Understand how we conduct executive assessments and opportunity modeling." videoUrl="https://youtu.be/1rpOJFl52nQ" isYouTube={true} />
@@ -406,7 +406,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.5rem", marginBottom: "2.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.5rem", marginBottom: "2.5rem" }}>
             {[
               { type: "EXECUTIVE GUIDE", title: "The Hidden Cost of Ghost Assets: A CFO's Perspective", desc: "How ghost assets silently erode profitability and what executive leadership can do about it.", link: "/insights" },
               { type: "WHITEPAPER", title: "From Spreadsheets to Smart Governance: The Asset Maturity Journey", desc: "A five-level framework for evaluating and advancing your organization's asset management sophistication.", link: "/resources" },
@@ -557,7 +557,7 @@ export default function Home() {
           ═══════════════════════════════════════════════════════════════════════ */}
       <footer style={{ background: "rgba(11, 15, 19, 0.95)", backdropFilter: "blur(8px)", borderTop: `1px solid ${C.border}`, padding: "4rem 2rem 2rem" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: "3rem", marginBottom: "3rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "2rem", marginBottom: "3rem" }}>
             {/* Brand */}
             <div>
               <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: C.text, marginBottom: "1rem" }}>

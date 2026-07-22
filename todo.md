@@ -390,3 +390,4 @@
 - [x] Update About page to feature Kevin's full bio at top
 - [x] Use initials placeholders for Darryl, Jimmy, Christine (no photos yet)
 - [x] Replace Kevin's bio on About page with "Why Legacy Asset Intelligence Exists" section
+- [x] Fix mobile responsiveness across all pages — no horizontal scroll allowed

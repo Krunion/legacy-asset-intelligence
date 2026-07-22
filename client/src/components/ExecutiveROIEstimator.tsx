@@ -155,7 +155,7 @@ export default function ExecutiveROIEstimator() {
         Tell us about your organization. We only ask what you already know.
       </p>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.5rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem", marginBottom: "1.5rem" }}>
         <div>
           <label style={labelStyle}>Industry</label>
           <select
@@ -182,7 +182,7 @@ export default function ExecutiveROIEstimator() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.5rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem", marginBottom: "1.5rem" }}>
         <div>
           <label style={labelStyle}>Estimated Number of Fixed Assets</label>
           <NumericInput
@@ -206,7 +206,7 @@ export default function ExecutiveROIEstimator() {
         </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.5rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem", marginBottom: "1.5rem" }}>
         <div>
           <label style={labelStyle}>Current Asset Management System</label>
           <select
@@ -254,7 +254,7 @@ export default function ExecutiveROIEstimator() {
         Provide what you know — leave fields at $0 if unavailable. Our models will estimate from industry benchmarks.
       </p>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem", marginBottom: "1.5rem" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem", marginBottom: "1.5rem" }}>
         <div>
           <label style={labelStyle}>Annual Capital Expenditures</label>
           <NumericInput
@@ -342,7 +342,7 @@ export default function ExecutiveROIEstimator() {
         </div>
 
         {/* Detailed Breakdown */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginBottom: "2rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.5rem", marginBottom: "2rem" }}>
           {/* Recovery Categories */}
           <div style={{ padding: "1.5rem", background: C.slate, border: `1px solid ${C.borderLight}`, borderRadius: 8 }}>
             <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 700, color: C.text, marginBottom: "1.25rem", fontSize: "0.95rem" }}>

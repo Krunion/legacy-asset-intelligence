@@ -136,7 +136,7 @@ export default function Industries() {
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.95rem", lineHeight: 1.85, marginBottom: "1.5rem" }}>{ind.challenge}</p>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2.5rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "2rem" }}>
               <div>
                 <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.silver, marginBottom: "1rem" }}>Common Financial Impacts</h3>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
@@ -180,7 +180,7 @@ export default function Industries() {
                 Regardless of industry, organizations share common asset management challenges that our methodology is designed to address.
               </p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "1.25rem" }}>
               {[
                 { title: "Ghost Asset Elimination", desc: "Identifying and removing assets from financial records that no longer physically exist — reducing tax, insurance, and maintenance costs." },
                 { title: "Capital Recovery", desc: "Discovering hidden value in underutilized, surplus, or improperly classified assets that can be redeployed or liquidated." },

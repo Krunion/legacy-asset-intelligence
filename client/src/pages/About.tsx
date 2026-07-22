@@ -59,7 +59,7 @@ export default function About() {
           ═══════════════════════════════════════════════════════════════════════ */}
       <Section id="mission">
         <div style={{ maxWidth: 1000, margin: "0 auto", padding: "4rem 2rem" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "3rem", alignItems: "start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2rem", alignItems: "start" }}>
             <div>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "0.75rem" }}>Our Mission</p>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", fontWeight: 700, color: C.text, lineHeight: 1.2 }}>
@@ -147,7 +147,7 @@ export default function About() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1.5rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.5rem" }}>
             {[
               { label: "Traditional Inventory Firms", desc: "Focus primarily on counting assets and producing inventory reports. Limited strategic insight for executive decision-making.", vs: "We deliver executive intelligence that transforms asset data into strategic business decisions." },
               { label: "Accounting & Audit Firms", desc: "Address financial reporting compliance but rarely verify physical existence or operational condition of assets.", vs: "We reconcile physical reality with financial records, identifying hidden capital recovery opportunities." },
@@ -180,7 +180,7 @@ export default function About() {
             </h2>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1.25rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.25rem" }}>
             {[
               { title: "Integrity", desc: "We communicate honestly about findings, challenges, and recommendations — even when the truth is uncomfortable. Our clients trust us because we prioritize accuracy over convenience." },
               { title: "Accountability", desc: "We hold ourselves to the same standards of accountability we help organizations achieve. Every deliverable, timeline, and commitment is treated as a professional obligation." },
@@ -211,7 +211,7 @@ export default function About() {
               </h2>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "2rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem" }}>
               {[
                 { title: "Veteran-Owned Business", desc: "Founded and led by a United States military veteran, bringing discipline, accountability, and service-oriented leadership to every client engagement." },
                 { title: "Professional Insurance", desc: "Maintains professional liability and general business insurance coverage appropriate for consulting engagements. Certificates of insurance available upon request." },

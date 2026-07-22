@@ -328,7 +328,7 @@ export default function AssetIntelligenceAssessment({ onBack }: { onBack: () => 
       {/* Client Info */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Client Information</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div><label style={labelStyle}>Client / Organization Name</label><input style={inputStyle} value={clientName} onChange={e => setClientName(e.target.value)} placeholder="Enter client name" /></div>
           <div><label style={labelStyle}>Contact Name</label><input style={inputStyle} value={contactName} onChange={e => setContactName(e.target.value)} placeholder="Primary contact" /></div>
         </div>

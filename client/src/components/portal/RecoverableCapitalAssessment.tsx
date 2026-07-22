@@ -268,7 +268,7 @@ export default function RecoverableCapitalAssessment({ onBack }: { onBack: () =>
       {/* Client Info */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Client Information</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div><label style={labelStyle}>Client / Organization Name</label><input style={inputStyle} value={data.clientName} onChange={e => update("clientName", e.target.value)} placeholder="Enter client name" /></div>
           <div><label style={labelStyle}>Contact Name</label><input style={inputStyle} value={data.contactName} onChange={e => update("contactName", e.target.value)} placeholder="Primary contact" /></div>
           <div><label style={labelStyle}>Industry</label>
@@ -291,7 +291,7 @@ export default function RecoverableCapitalAssessment({ onBack }: { onBack: () =>
       {/* Asset Information */}
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Asset Information</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div><label style={labelStyle}>Total Asset Value ($)</label><NumericInput style={inputStyle} value={data.totalAssetValue} onChange={v => update("totalAssetValue", String(v))} stringMode placeholder="e.g., 5000000" currency showDollarSign /></div>
           <div><label style={labelStyle}>Total Asset Count</label><input style={inputStyle} value={data.totalAssetCount} onChange={e => update("totalAssetCount", e.target.value)} placeholder="e.g., 2500" /></div>
           <div><label style={labelStyle}>Years Since Last Comprehensive Audit</label>
@@ -319,7 +319,7 @@ export default function RecoverableCapitalAssessment({ onBack }: { onBack: () =>
       <div style={{ marginBottom: "2rem" }}>
         <h3 style={sectionTitleStyle}>Recovery Estimates (Adjust as needed)</h3>
         <p style={{ fontSize: "0.85rem", color: C.muted, marginBottom: "1rem" }}>These percentages represent the estimated portion of assets affected in each category. Adjust based on your assessment of the client's situation.</p>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
           <div><label style={labelStyle}>Ghost Asset Estimate (%)</label><NumericInput style={inputStyle} value={data.ghostAssetEstimate} onChange={v => update("ghostAssetEstimate", String(v))} stringMode defaultValue="15" min={0} max={50} validationMessage="Must be 0-50%" /></div>
           <div><label style={labelStyle}>Duplicate Purchase Rate (%)</label><NumericInput style={inputStyle} value={data.duplicatePurchases} onChange={v => update("duplicatePurchases", String(v))} stringMode defaultValue="5" min={0} max={30} validationMessage="Must be 0-30%" /></div>
           <div><label style={labelStyle}>Insurance Overpayment (%)</label><NumericInput style={inputStyle} value={data.insuranceOverpay} onChange={v => update("insuranceOverpay", String(v))} stringMode defaultValue="10" min={0} max={30} validationMessage="Must be 0-30%" /></div>
