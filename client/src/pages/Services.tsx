@@ -294,7 +294,7 @@ export default function Services() {
               Schedule Executive Assessment
             </button>
             <button onClick={() => navigate("/resources")} style={{ background: "transparent", color: C.gold, border: `1px solid ${C.goldBorder}`, padding: "0.9rem 2.25rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", fontWeight: 500, cursor: "pointer" }}>
-              Download Executive Guide
+              View Resources
             </button>
           </div>
         </div>

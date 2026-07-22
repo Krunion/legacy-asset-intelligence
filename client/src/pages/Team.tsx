@@ -55,20 +55,7 @@ const team: TeamMember[] = [
       "As Chief Revenue Officer of Legacy Asset Intelligence, Andrea helps guide revenue strategy, client relationship development, market growth, and customer retention. Her combination of frontline service experience, operational leadership, and healthcare revenue cycle knowledge allows her to approach growth with both financial discipline and a strong understanding of the client experience.",
     ],
   },
-  {
-    name: "Christine Smith",
-    title: "Chief Projects Officer",
-    bio: [
-      "Bio coming soon.",
-    ],
-  },
-  {
-    name: "Jimmy Smith",
-    title: "Chief Strategy Officer",
-    bio: [
-      "Bio coming soon.",
-    ],
-  },
+
   {
     name: "Jessica Runion",
     title: "Chief Training Officer",

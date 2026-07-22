@@ -547,7 +547,7 @@ export default function Home() {
                 onClick={() => navigate("/resources")}
                 style={{ background: "transparent", color: C.silver, border: `1px solid ${C.borderLight}`, padding: "0.9rem 2.5rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", fontWeight: 500, cursor: "pointer" }}
               >
-                Download Resources
+                View Resources
               </button>
             </div>
           </div>
