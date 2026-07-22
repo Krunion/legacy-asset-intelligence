@@ -389,3 +389,4 @@
 - [x] Rewrite Team page with full bios in order: Kevin, Chris, Darryl, Andrea, Christine (placeholder), Jimmy (placeholder), Jessica
 - [x] Update About page to feature Kevin's full bio at top
 - [x] Use initials placeholders for Darryl, Jimmy, Christine (no photos yet)
+- [x] Replace Kevin's bio on About page with "Why Legacy Asset Intelligence Exists" section
