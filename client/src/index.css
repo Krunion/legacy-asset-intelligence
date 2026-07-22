@@ -502,3 +502,21 @@
 .skip-link:focus {
   top: 0;
 }
+
+/* Portal Calculator Text Color Fix — Override global light text on white backgrounds */
+/* The global CSS sets p, li, span to #F5F7FA (near-white) for dark theme pages. */
+/* Portal calculators use white backgrounds, so we reset text colors to dark. */
+.portal-calculator-container,
+.portal-calculator-container p,
+.portal-calculator-container li,
+.portal-calculator-container span,
+.portal-calculator-container label,
+.portal-calculator-container td,
+.portal-calculator-container th,
+.portal-calculator-container a {
+  color: #1E293B !important;
+}
+
+.portal-calculator-container .text-muted-foreground {
+  color: #64748B !important;
+}

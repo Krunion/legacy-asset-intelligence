@@ -104,7 +104,7 @@ export default function EmployeePortal() {
   // If a tool is active, render it full-screen with white background
   if (activeTool) {
     return (
-      <div style={{ minHeight: "100vh", background: "white", color: "#1E293B" }}>
+      <div className="portal-calculator-container" style={{ minHeight: "100vh", background: "white", color: "#1E293B" }}>
         {activeTool === "proposal-calculator" && <ProposalCalculator onBack={() => setActiveTool(null)} />}
         {activeTool === "asset-intelligence" && <AssetIntelligenceAssessment onBack={() => setActiveTool(null)} />}
         {activeTool === "recoverable-capital" && <RecoverableCapitalAssessment onBack={() => setActiveTool(null)} />}

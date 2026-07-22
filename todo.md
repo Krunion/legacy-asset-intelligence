@@ -416,3 +416,12 @@
 - [x] Fix homepage duplicate footer sections
 - [x] ROI estimator: add proper labels, IDs, names for accessibility
 - [x] Christine Smith and Jimmy Smith: placeholder bios displayed (full bios pending from user)
+
+
+## Portal Calculator Color Fix (July 22, 2026)
+- [x] Audit portal calculator components for text color visibility issues
+- [x] Identify root cause: global CSS rules setting p, li, span to #F5F7FA (near-white) for dark theme pages
+- [x] Create .portal-calculator-container CSS class to reset text colors to #1E293B on white backgrounds
+- [x] Add portal-calculator-container class to EmployeePortal wrapper div
+- [x] Verify all 11 tests still pass after CSS changes
+- [x] Verify portal dashboard renders correctly with fix applied
