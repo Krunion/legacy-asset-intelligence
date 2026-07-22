@@ -1,9 +1,11 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 import PageLayout from "@/components/PageLayout";
 import { COLORS } from "@shared/colors";
 
 const C = COLORS;
 
 export default function Terms() {
+  usePageMeta({ title: "Terms of Use | Legacy Asset Intelligence", description: "Terms of Use governing your access to and use of the Legacy Asset Intelligence website and services.", canonical: "/terms" });
   const sectionStyle = {
     marginBottom: "2.5rem",
   };
@@ -31,7 +33,7 @@ export default function Terms() {
     >
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <p style={{ ...textStyle, fontStyle: "italic" }}>
-          Last updated: July 2025
+          Effective Date: January 15, 2026
         </p>
 
         <div style={sectionStyle}>
@@ -104,7 +106,7 @@ export default function Terms() {
         <div style={sectionStyle}>
           <h2 style={headingStyle}>9. Governing Law</h2>
           <p style={textStyle}>
-            These Terms of Use shall be governed by and construed in accordance with the laws of the state in which LAI is organized, without regard to conflict of law principles.
+            These Terms of Use shall be governed by and construed in accordance with the laws of the State of Tennessee, United States, without regard to conflict of law principles.
           </p>
         </div>
 

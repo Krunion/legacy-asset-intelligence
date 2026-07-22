@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 /**
  * Legacy Asset Intelligence — Services & Methodology Page
  * Section 4: Consulting methodology journey, phases, deliverables, engagement expectations
@@ -33,6 +34,7 @@ function Section({ id, children }: { id: string; children: React.ReactNode }) {
 }
 
 export default function Services() {
+  usePageMeta({ title: "Services & Methodology | Legacy Asset Intelligence", description: "Explore our four-phase methodology: Discovery & Executive Assessment, Physical Verification, Technology Enablement, and Recurring Governance.", canonical: "/services" });
   const [, navigate] = useLocation();
 
   return (
@@ -106,7 +108,7 @@ export default function Services() {
                 Physical verification validates organizational records, identifies discrepancies, confirms asset existence and condition, and establishes accurate information for financial reporting and future governance. Field teams verify assets, reconcile discrepancies, identify ghost assets, evaluate equipment utilization, and support capital recovery opportunities while maintaining minimal disruption to ongoing operations.
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
-                {["Wall-to-wall physical inventory", "Asset tagging & identification", "Condition assessment & documentation", "Floor-to-book reconciliation", "Ghost asset identification", "Equipment utilization evaluation", "Capital recovery analysis", "Photographic documentation"].map((item, i) => (
+                {["Wall-to-wall physical inventory", "Condition assessment & documentation", "Floor-to-book reconciliation", "Book-to-floor reconciliation", "Ghost asset identification", "Equipment utilization evaluation", "Capital recovery analysis", "Photographic documentation"].map((item, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     <div style={{ width: 6, height: 6, borderRadius: "50%", background: C.teal, flexShrink: 0 }} />
                     <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.silver }}>{item}</span>
@@ -141,7 +143,7 @@ export default function Services() {
                 Technology serves as the foundation for long-term accountability. This phase transforms verified information into sustainable business processes through platform configuration, data validation, governance policy establishment, workflow development, reporting dashboard creation, and significant improvement in executive visibility.
               </p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
-                {["Platform selection & configuration", "Data migration & validation", "Governance policy development", "Automated workflow creation", "Executive dashboard configuration", "ERP/financial system integration", "Staff training & certification", "Standard operating procedures"].map((item, i) => (
+                {["Optional barcode/QR tagging & identification", "Platform selection & configuration", "Data migration & validation", "Governance policy development", "Automated workflow creation", "Executive dashboard configuration", "ERP/financial system integration", "Staff training & certification"].map((item, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                     <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#2DD4A0", flexShrink: 0 }} />
                     <span style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.silver }}>{item}</span>
@@ -150,8 +152,11 @@ export default function Services() {
               </div>
               <div style={{ background: "rgba(27,77,62,0.2)", borderRadius: 6, padding: "1rem 1.25rem", borderLeft: "3px solid #2DD4A0" }}>
                 <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, color: "#2DD4A0", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.3rem" }}>Executive Deliverable</p>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.text, margin: 0 }}>Live Asset Tracking Platform, Governance Framework Documentation, Executive Dashboard, and Implementation Roadmap</p>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.text, margin: 0 }}>Configured Asset Management Platform (depending on the selected Phase 3 scope), Governance Framework Documentation, Executive Dashboard, and Implementation Roadmap</p>
               </div>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", color: C.textMuted, marginTop: "1rem", fontStyle: "italic" }}>
+                Phase 3 scope is customizable. Organizations may select full platform implementation, advisory-only, vendor-selection support, or roadmap-only engagements based on their specific needs and internal capabilities.
+              </p>
             </div>
           </div>
         </div>
@@ -162,7 +167,7 @@ export default function Services() {
         <div style={{ maxWidth: 1050, margin: "0 auto", padding: "4rem 2rem" }}>
           <div style={{ background: C.glass, backdropFilter: "blur(12px)", border: `1px solid ${C.glassBorder}`, borderRadius: 12, padding: "3rem" }}>
             <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "0.75rem" }}>Long-Term Partnership</p>
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "0.75rem" }}>Phase Four</p>
               <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.8rem", fontWeight: 700, color: C.text, lineHeight: 1.2, marginBottom: "1rem" }}>
                 Recurring Governance & Executive Advisory
               </h2>
@@ -261,7 +266,7 @@ export default function Services() {
             {[
               { title: "Audit-Supportive Documentation", desc: "Findings are documented with supporting detail designed to assist organizations and their auditors. LAI does not perform audits or provide assurance opinions; our work product supports client-directed reporting." },
               { title: "Veteran-Owned Leadership", desc: "Founded by a United States military veteran, our organization brings discipline, accountability, and service-oriented leadership to every engagement." },
-              { title: "Professional Insurance Coverage", desc: "Professional liability (E&O) and general liability coverage is maintained. Certificate of Insurance is available upon request." },
+              { title: "Professional Insurance Coverage", desc: "Professional Liability (E&O), General Liability, and Cyber Liability coverage is maintained for all client engagements. Certificate of Insurance is available upon request." },
               { title: "Technology-Enabled Verification", desc: "Enterprise-grade platforms including Asset Panda provide real-time tracking, photographic documentation, and governance automation." },
               { title: "Structured Quality Assurance", desc: "Multi-level review processes ensure every deliverable meets executive presentation standards before client delivery." },
               { title: "Continuous Methodology Refinement", desc: "Our approach evolves with every engagement, incorporating lessons learned and emerging best practices into our consulting framework." },

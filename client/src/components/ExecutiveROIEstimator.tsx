@@ -157,8 +157,9 @@ export default function ExecutiveROIEstimator() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem", marginBottom: "1.5rem" }}>
         <div>
-          <label style={labelStyle}>Industry</label>
+          <label htmlFor="roi-industry" style={labelStyle}>Industry</label>
           <select
+            id="roi-industry"
             value={input.industry}
             onChange={(e) => setInput({ ...input, industry: e.target.value })}
             style={selectStyle}
@@ -169,8 +170,9 @@ export default function ExecutiveROIEstimator() {
           </select>
         </div>
         <div>
-          <label style={labelStyle}>Number of Facilities</label>
+          <label htmlFor="roi-facilities" style={labelStyle}>Number of Facilities</label>
           <NumericInput
+            id="roi-facilities"
             value={input.facilityCount}
             onChange={(v) => setInput({ ...input, facilityCount: Number(v) || 1 })}
             defaultValue={1}
@@ -184,8 +186,9 @@ export default function ExecutiveROIEstimator() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem", marginBottom: "1.5rem" }}>
         <div>
-          <label style={labelStyle}>Estimated Number of Fixed Assets</label>
+          <label htmlFor="roi-asset-count" style={labelStyle}>Estimated Number of Fixed Assets</label>
           <NumericInput
+            id="roi-asset-count"
             value={input.estimatedAssetCount}
             onChange={(v) => setInput({ ...input, estimatedAssetCount: Number(v) || 0 })}
             defaultValue={1000}
@@ -194,8 +197,9 @@ export default function ExecutiveROIEstimator() {
           />
         </div>
         <div>
-          <label style={labelStyle}>Approximate Total Asset Value</label>
+          <label htmlFor="roi-asset-value" style={labelStyle}>Approximate Total Asset Value</label>
           <NumericInput
+            id="roi-asset-value"
             value={input.approximateAssetValue}
             onChange={(v) => setInput({ ...input, approximateAssetValue: Number(v) || 0 })}
             currency
@@ -208,8 +212,9 @@ export default function ExecutiveROIEstimator() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem", marginBottom: "1.5rem" }}>
         <div>
-          <label style={labelStyle}>Current Asset Management System</label>
+          <label htmlFor="roi-mgmt-system" style={labelStyle}>Current Asset Management System</label>
           <select
+            id="roi-mgmt-system"
             value={input.assetManagementSystem}
             onChange={(e) => setInput({ ...input, assetManagementSystem: e.target.value })}
             style={selectStyle}
@@ -220,8 +225,9 @@ export default function ExecutiveROIEstimator() {
           </select>
         </div>
         <div>
-          <label style={labelStyle}>Last Physical Inventory</label>
+          <label htmlFor="roi-last-inventory" style={labelStyle}>Last Physical Inventory</label>
           <select
+            id="roi-last-inventory"
             value={input.lastPhysicalInventoryDate}
             onChange={(e) => setInput({ ...input, lastPhysicalInventoryDate: e.target.value })}
             style={selectStyle}
@@ -256,8 +262,9 @@ export default function ExecutiveROIEstimator() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1.25rem", marginBottom: "1.5rem" }}>
         <div>
-          <label style={labelStyle}>Annual Capital Expenditures</label>
+          <label htmlFor="roi-capex" style={labelStyle}>Annual Capital Expenditures</label>
           <NumericInput
+            id="roi-capex"
             value={input.annualCapex}
             onChange={(v) => setInput({ ...input, annualCapex: Number(v) || 0 })}
             currency
@@ -266,8 +273,9 @@ export default function ExecutiveROIEstimator() {
           />
         </div>
         <div>
-          <label style={labelStyle}>Annual Maintenance Budget</label>
+          <label htmlFor="roi-maintenance" style={labelStyle}>Annual Maintenance Budget</label>
           <NumericInput
+            id="roi-maintenance"
             value={input.annualMaintenanceBudget}
             onChange={(v) => setInput({ ...input, annualMaintenanceBudget: Number(v) || 0 })}
             currency
@@ -278,8 +286,9 @@ export default function ExecutiveROIEstimator() {
       </div>
 
       <div style={{ marginBottom: "2rem" }}>
-        <label style={labelStyle}>Annual Insurance Premiums <span style={{ color: C.textMuted, fontWeight: 400 }}>(if known)</span></label>
+        <label htmlFor="roi-insurance" style={labelStyle}>Annual Insurance Premiums <span style={{ color: C.textMuted, fontWeight: 400 }}>(if known)</span></label>
         <NumericInput
+          id="roi-insurance"
           value={input.annualInsurancePremiums}
           onChange={(v) => setInput({ ...input, annualInsurancePremiums: Number(v) || 0 })}
           currency

@@ -12,6 +12,7 @@ interface NumericInputProps {
   onChange: (value: number | string) => void;
   style?: React.CSSProperties;
   className?: string;
+  id?: string;
   min?: number;
   max?: number;
   placeholder?: string;
@@ -45,6 +46,7 @@ export default function NumericInput({
   onChange,
   style,
   className,
+  id,
   min,
   max,
   placeholder,
@@ -150,6 +152,7 @@ export default function NumericInput({
     <div style={{ position: "relative" }}>
       <input
         ref={inputRef}
+        id={id}
         type="text"
         inputMode="decimal"
         value={shown}

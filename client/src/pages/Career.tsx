@@ -1,9 +1,11 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 import PageLayout from "@/components/PageLayout";
 import { COLORS } from "@shared/colors";
 
 const C = COLORS;
 
 export default function Career() {
+  usePageMeta({ title: "Careers & Opportunities | Legacy Asset Intelligence", description: "Explore future career opportunities at Legacy Asset Intelligence as we grow our team of asset management professionals.", canonical: "/careers" });
   const futureRoles = [
     {
       title: "Senior Asset Management Consultant",

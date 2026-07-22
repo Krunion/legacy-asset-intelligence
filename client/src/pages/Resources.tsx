@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 /**
  * Legacy Asset Intelligence — Executive Resources Page
  * Section 6: Whitepaper library, executive guides, video content library,
@@ -33,6 +34,7 @@ function Section({ id, children }: { id: string; children: React.ReactNode }) {
 }
 
 export default function Resources() {
+  usePageMeta({ title: "Resources & Guides | Legacy Asset Intelligence", description: "Online guides, video library, and tools including our ROI Estimator to help evaluate asset management improvement opportunities.", canonical: "/resources" });
   const [, navigate] = useLocation();
 
   const whitepapers = [
@@ -45,12 +47,12 @@ export default function Resources() {
   ];
 
   const guides = [
-    { title: "Ghost Asset Identification Checklist", desc: "A comprehensive 50-point checklist for identifying potential ghost assets across your organization's fixed asset register. Includes department-specific indicators and red flags.", format: "PDF · 12 pages", url: "/insights/ghost-asset-identification-checklist" },
-    { title: "Asset Accountability Maturity Model", desc: "Our proprietary five-level maturity framework for evaluating your organization's asset management sophistication. Includes self-assessment scoring and improvement roadmap.", format: "PDF · 18 pages", url: "/insights/asset-accountability-maturity-model" },
-    { title: "Capital Recovery Business Case Template", desc: "A ready-to-use executive presentation template for building an internal business case for asset intelligence investment. Includes ROI calculations and benchmark data.", format: "PPTX · 24 slides", url: "/insights/capital-recovery-business-case-template" },
-    { title: "The LAI Four-Phase Methodology Overview", desc: "Detailed overview of our proprietary four-phase approach to ghost asset elimination and governance implementation. Includes timelines, deliverables, and expected outcomes.", format: "PDF · 16 pages", url: "/insights/lai-four-phase-methodology" },
-    { title: "Executive Assessment Preparation Guide", desc: "How to prepare your organization for an Executive Asset Intelligence Assessment — what to gather, who to involve, and what to expect from the process.", format: "PDF · 8 pages", url: "/insights/executive-assessment-preparation" },
-    { title: "Technology Selection Framework", desc: "A structured evaluation framework for selecting asset management technology platforms, including scoring criteria, integration requirements, and implementation considerations.", format: "PDF · 14 pages", url: "/insights/technology-selection-framework" },
+    { title: "Ghost Asset Identification Checklist", desc: "A guide to identifying potential ghost assets across your organization's fixed asset register. Includes department-specific indicators and red flags.", format: "Online Guide", url: "/insights/ghost-asset-identification-checklist" },
+    { title: "Asset Accountability Maturity Model", desc: "A five-level maturity framework for evaluating your organization's asset management sophistication. Includes self-assessment scoring and improvement roadmap.", format: "Online Guide", url: "/insights/asset-accountability-maturity-model" },
+    { title: "Capital Recovery Business Case Template", desc: "A framework for building an internal business case for asset intelligence investment. Includes considerations for structuring ROI analysis and stakeholder communication.", format: "Online Guide", url: "/insights/capital-recovery-business-case-template" },
+    { title: "The LAI Four-Phase Methodology Overview", desc: "Detailed overview of our four-phase approach to asset intelligence, verification, technology enablement, and recurring governance. Includes timelines and deliverables.", format: "Online Guide", url: "/insights/lai-four-phase-methodology" },
+    { title: "Executive Assessment Preparation Guide", desc: "How to prepare your organization for a Discovery and Executive Assessment — what to gather, who to involve, and what to expect from the process.", format: "Online Guide", url: "/insights/executive-assessment-preparation" },
+    { title: "Technology Selection Framework", desc: "A structured evaluation framework for selecting asset management technology platforms, including scoring criteria, integration requirements, and implementation considerations.", format: "Online Guide", url: "/insights/technology-selection-framework" },
   ];
 
   const videos = [
@@ -71,7 +73,7 @@ export default function Resources() {
           Research, Frameworks &<br /><span style={{ color: C.gold }}>Educational Materials</span>
         </h1>
         <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1.05rem", color: C.textMuted, lineHeight: 1.8, maxWidth: 780, margin: "0 auto" }}>
-          Access our library of executive whitepapers, practical frameworks, educational videos, and downloadable tools designed to support informed decision-making about enterprise asset intelligence.
+          Access our library of executive whitepapers, practical frameworks, educational videos, and online guides designed to support informed decision-making about enterprise asset intelligence.
         </p>
       </section>
 
@@ -104,8 +106,8 @@ export default function Resources() {
       <Section id="guides">
         <div style={{ maxWidth: 1100, margin: "0 auto", padding: "3rem 2rem" }}>
           <div style={{ marginBottom: "2rem" }}>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "0.5rem" }}>Downloadable Frameworks</p>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.6rem", fontWeight: 700, color: C.text }}>Executive Guides & Tools</h2>
+            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", fontWeight: 600, letterSpacing: "0.2em", textTransform: "uppercase", color: C.gold, marginBottom: "0.5rem" }}>Online Guides</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.6rem", fontWeight: 700, color: C.text }}>Executive Guides & Frameworks</h2>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1.25rem" }}>
             {guides.map((guide, i) => (
@@ -116,7 +118,7 @@ export default function Resources() {
                 <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.95rem", fontWeight: 700, color: C.text, marginBottom: "0.6rem", lineHeight: 1.35 }}>{guide.title}</h3>
                 <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, fontSize: "0.82rem", lineHeight: 1.6, flex: 1 }}>{guide.desc}</p>
                 <button onClick={() => navigate(guide.url)} style={{ marginTop: "1rem", background: "transparent", border: `1px solid ${C.glassBorder}`, color: C.silver, padding: "0.45rem 0.9rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, cursor: "pointer", width: "fit-content" }}>
-                  Learn More
+                  Read Guide
                 </button>
               </div>
             ))}

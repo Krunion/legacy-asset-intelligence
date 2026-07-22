@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { COLORS } from "@shared/colors";
@@ -6,6 +7,7 @@ import PageLayout from "@/components/PageLayout";
 const C = COLORS;
 
 export default function Contact() {
+  usePageMeta({ title: "Contact Us | Legacy Asset Intelligence", description: "Schedule a complimentary Executive Discovery Call or reach out to discuss how Legacy Asset Intelligence can help your organization.", canonical: "/contact" });
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",

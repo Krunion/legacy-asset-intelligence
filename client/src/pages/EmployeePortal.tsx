@@ -89,7 +89,7 @@ export default function EmployeePortal() {
                 fontSize: "0.9rem",
               }}
             >
-              Sign In with Manus
+              Sign In
             </button>
           </a>
 

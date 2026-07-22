@@ -391,3 +391,28 @@
 - [x] Use initials placeholders for Darryl, Jimmy, Christine (no photos yet)
 - [x] Replace Kevin's bio on About page with "Why Legacy Asset Intelligence Exists" section
 - [x] Fix mobile responsiveness across all pages — no horizontal scroll allowed
+
+## Website Adjustment Brief (July 22, 2026)
+- [x] Fix Four-Phase Methodology resource article: replace old methodology with current Phase 1-4 structure
+- [x] Services page: remove tagging from Phase 2, add to Phase 3
+- [x] Services page: label Phase 4 explicitly as "Phase Four — Recurring Governance & Executive Advisory"
+- [x] 2025 State of EAM report: remove unsupported "respondents" language and untraced numbers
+- [x] Methodology resource: replace execution claims with documentation/analysis language
+- [x] Privacy Policy and Terms: change dates to 2026, add "Legacy Asset Intelligence, LLC"
+- [x] Terms: state Tennessee explicitly as governing law
+- [x] Resources page: rename to "Online Guides", fix format labels and buttons (not downloadable PDFs/PPTs)
+- [x] Remove unsupported projections from business-case article (3x-12x ROI, approval rates claim)
+- [x] Fix ghost asset definition conflict in checklist article
+- [x] Remove unsupported sampling/statistics claims from checklist article
+- [x] Fix homepage market figure: $5.87B is 2025 (not 2024)
+- [x] Fix "founded by military veterans" to "veteran-founded and veteran-led"
+- [x] Standardize insurance wording across all pages
+- [x] Phase/deliverable name standardization across all pages
+- [x] Phase 3: add "depending on the selected Phase 3 scope" qualifier
+- [x] Unique SEO metadata per page (title, description, social sharing)
+- [x] Fix canonical URLs on insight articles (point to own URL, not /resources)
+- [x] Add insight articles to sitemap
+- [x] Fix 404 page: added noindex/nofollow meta (SPA cannot return true HTTP 404 for client routes)
+- [x] Fix homepage duplicate footer sections
+- [x] ROI estimator: add proper labels, IDs, names for accessibility
+- [x] Christine Smith and Jimmy Smith: placeholder bios displayed (full bios pending from user)

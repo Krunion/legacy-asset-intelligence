@@ -1,9 +1,11 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 import PageLayout from "@/components/PageLayout";
 import { COLORS } from "@shared/colors";
 
 const C = COLORS;
 
 export default function Privacy() {
+  usePageMeta({ title: "Privacy Policy | Legacy Asset Intelligence", description: "Privacy Policy for Legacy Asset Intelligence, LLC — how we collect, use, and protect your information.", canonical: "/privacy" });
   const sectionStyle = {
     marginBottom: "2.5rem",
   };
@@ -31,7 +33,7 @@ export default function Privacy() {
     >
       <div style={{ maxWidth: 800, margin: "0 auto" }}>
         <p style={{ ...textStyle, fontStyle: "italic" }}>
-          Last updated: July 2025
+          Effective Date: January 15, 2026
         </p>
 
         <div style={sectionStyle}>
@@ -155,7 +157,14 @@ export default function Privacy() {
         </div>
 
         <div style={sectionStyle}>
-          <h2 style={headingStyle}>10. Contact Us</h2>
+          <h2 style={headingStyle}>10. Governing Law</h2>
+          <p style={textStyle}>
+            This Privacy Policy is governed by and construed in accordance with the laws of the State of Tennessee, United States, without regard to its conflict of law provisions.
+          </p>
+        </div>
+
+        <div style={sectionStyle}>
+          <h2 style={headingStyle}>11. Contact Us</h2>
           <p style={textStyle}>
             If you have questions about this Privacy Policy or our data practices, please contact us at:
           </p>

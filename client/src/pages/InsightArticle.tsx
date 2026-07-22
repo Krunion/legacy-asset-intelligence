@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { useLocation, useParams } from "wouter";
 import { COLORS, HERO_IMG } from "@shared/colors";
 import { insightArticles } from "@/data/insightArticles";
+import { usePageMeta } from "@/hooks/usePageMeta";
 
 const C = {
   ...COLORS,
@@ -21,6 +22,12 @@ export default function InsightArticle() {
   const slug = params.slug;
 
   const article = insightArticles.find((a) => a.slug === slug);
+
+  usePageMeta({
+    title: article ? `${article.title} | Legacy Asset Intelligence` : "Article Not Found | Legacy Asset Intelligence",
+    description: article ? `${article.category} — ${article.title}` : "The requested insight article could not be found.",
+    canonical: `/insights/${slug}`,
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -174,7 +181,7 @@ export default function InsightArticle() {
             Ready to Take Action?
           </h3>
           <p style={{ fontFamily: "'Source Sans 3', sans-serif", color: C.textMuted, marginBottom: "1.5rem", maxWidth: 500, margin: "0 auto 1.5rem" }}>
-            Schedule an Executive Discovery Meeting to discuss how Legacy Asset Intelligence can help your organization recover hidden capital and strengthen asset governance.
+            Schedule a complimentary Executive Discovery Call to discuss how Legacy Asset Intelligence can help your organization recover hidden capital and strengthen asset governance.
           </p>
           <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
             <button

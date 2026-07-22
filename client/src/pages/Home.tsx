@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect, useRef } from "react";
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useLocation } from "wouter";
 import ExecutiveROIEstimator from "@/components/ExecutiveROIEstimator";
 import CaseStudies from "@/components/CaseStudies";
@@ -89,6 +90,7 @@ function Section({ id, children, className = "" }: { id: string; children: React
 }
 
 export default function Home() {
+  usePageMeta({ title: "Legacy Asset Intelligence | Asset Verification & Capital Recovery", description: "Legacy Asset Intelligence helps organizations identify asset-record discrepancies, evaluate capital recovery opportunities, and implement sustainable governance programs.", canonical: "/" });
   const [, navigate] = useLocation();
 
   return (
@@ -261,27 +263,27 @@ export default function Home() {
           </div>
 
           {/* Phase progression visual */}
-          <div style={{ display: "flex", alignItems: "stretch", gap: 0, marginBottom: "3rem", position: "relative" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "1.5rem", marginBottom: "3rem" }}>
             {[
-              { phase: "01", title: "Executive Discovery & Assessment", accent: C.silver, desc: "Stakeholder interviews, asset management maturity review, opportunity modeling, and a strategic roadmap for capital recovery.", deliverable: "Discovery Report + Recovery Roadmap" },
+              { phase: "01", title: "Discovery & Executive Assessment", accent: C.silver, desc: "Stakeholder interviews, asset management maturity review, opportunity modeling, and a strategic roadmap for capital recovery.", deliverable: "Executive Assessment Report" },
               { phase: "02", title: "Physical Verification & Recovery Analysis", accent: C.gold, desc: "Wall-to-wall physical verification, condition assessment, floor-to-book and book-to-floor reconciliation, ghost asset identification, and recovery opportunity analysis.", deliverable: "Verified Asset Inventory + Reconciled FAR" },
-              { phase: "03", title: "Technology Implementation & Enablement", accent: C.teal, desc: "Optional barcode/QR tagging, platform selection, data migration, dashboard configuration, automated workflows, and staff training.", deliverable: "Configured Asset Management Platform" },
-              { phase: "04", title: "Recurring Intelligence & Accountability", accent: C.emerald, desc: "Quarterly rolling audits, continuous reconciliation, executive KPI dashboards, compliance reporting, and governance refinement.", deliverable: "Ongoing Governance Retainer" },
+              { phase: "03", title: "Technology Enablement & Governance Implementation", accent: C.teal, desc: "Optional barcode/QR tagging, platform selection, data migration, dashboard configuration, automated workflows, and staff training.", deliverable: "Configured Asset Management Platform (depending on the selected Phase 3 scope)" },
+              { phase: "04", title: "Recurring Governance & Executive Advisory", accent: C.emerald, desc: "Quarterly rolling audits, continuous reconciliation, executive KPI dashboards, compliance reporting, and governance refinement.", deliverable: "Ongoing Governance Retainer" },
             ].map((p, i) => (
-              <div key={i} style={{ flex: 1, background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: i === 0 ? "8px 0 0 8px" : i === 3 ? "0 8px 8px 0" : 0, padding: "2rem 1.5rem", borderRight: i < 3 ? `1px solid ${C.border}` : undefined, display: "flex", flexDirection: "column" }}>
+              <div key={i} style={{ background: C.glass, backdropFilter: "blur(8px)", border: `1px solid ${C.glassBorder}`, borderRadius: 8, padding: "2rem 1.75rem", display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
-                  <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", fontWeight: 700, color: p.accent }}>{p.phase}</span>
+                  <span style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.75rem", fontWeight: 700, color: p.accent }}>{p.phase}</span>
                   <div style={{ height: 1, flex: 1, background: `linear-gradient(to right, ${p.accent}, transparent)` }} />
                 </div>
-                <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", fontWeight: 600, color: C.text, marginBottom: "0.75rem", lineHeight: 1.3 }}>
+                <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "1.05rem", fontWeight: 600, color: C.text, marginBottom: "0.75rem", lineHeight: 1.3 }}>
                   {p.title}
                 </h3>
-                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.82rem", color: C.textMuted, lineHeight: 1.6, flex: 1, marginBottom: "1rem" }}>
+                <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.92rem", color: C.textMuted, lineHeight: 1.7, flex: 1, marginBottom: "1.25rem" }}>
                   {p.desc}
                 </p>
-                <div style={{ background: C.goldMuted, borderRadius: 4, padding: "0.6rem 0.75rem" }}>
-                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.6rem", fontWeight: 700, color: C.gold, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.15rem" }}>Deliverable</p>
-                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.text, margin: 0 }}>{p.deliverable}</p>
+                <div style={{ background: C.goldMuted, borderRadius: 6, padding: "0.75rem 1rem" }}>
+                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.7rem", fontWeight: 700, color: C.gold, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.2rem" }}>Deliverable</p>
+                  <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.text, margin: 0 }}>{p.deliverable}</p>
                 </div>
               </div>
             ))}
@@ -290,8 +292,8 @@ export default function Home() {
           {/* Video Section */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1.5rem" }}>
             <div style={{ padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, textAlign: "center" }}>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>Discovery & Assessment</p>
-              <VideoModal phaseNumber={1} phaseName="Discovery & Executive Assessments" description="Understand how we conduct executive assessments and opportunity modeling." videoUrl="https://youtu.be/1rpOJFl52nQ" isYouTube={true} />
+              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>Discovery & Executive Assessment</p>
+              <VideoModal phaseNumber={1} phaseName="Discovery & Executive Assessment" description="Understand how we conduct executive assessments and opportunity modeling." videoUrl="https://youtu.be/1rpOJFl52nQ" isYouTube={true} />
             </div>
             <div style={{ padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, textAlign: "center" }}>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>Physical Verification</p>
@@ -299,7 +301,7 @@ export default function Home() {
             </div>
             <div style={{ padding: "1.5rem", background: C.glass, backdropFilter: "blur(6px)", borderRadius: 8, border: `1px solid ${C.glassBorder}`, textAlign: "center" }}>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontWeight: 500, color: C.silver, marginBottom: "0.75rem", fontSize: "0.85rem" }}>Technology & Governance</p>
-              <VideoModal phaseNumber={3} phaseName="Technology Implementation & Enablement" description="How we implement optional barcode/QR tagging and configure asset management platforms." videoUrl="https://youtu.be/z_W3IvQCNcw" isYouTube={true} />
+              <VideoModal phaseNumber={3} phaseName="Technology Enablement & Governance Implementation" description="How we implement optional barcode/QR tagging and configure asset management platforms." videoUrl="https://youtu.be/z_W3IvQCNcw" isYouTube={true} />
             </div>
           </div>
         </div>
@@ -362,9 +364,9 @@ export default function Home() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem", marginBottom: "3rem" }}>
             {[
-              { title: "Veteran-Owned Business", desc: "Founded by military veterans who bring discipline, integrity, and mission-focused execution to every client engagement." },
+              { title: "Veteran-Founded Business", desc: "Founded by a U.S. Army veteran who brings discipline, integrity, and mission-focused execution to every client engagement." },
               { title: "SDVOSB Status", desc: "Service-Disabled Veteran-Owned Small Business certification application pending. LAI does not represent itself as SBA-certified or eligible for SDVOSB set-aside benefits unless and until certification is approved." },
-              { title: "Professional Liability Coverage", desc: "Comprehensive Professional Liability, General Liability, and Cyber Liability insurance protecting every client engagement." },
+              { title: "Professional Insurance Coverage", desc: "Professional Liability (E&O), General Liability, and Cyber Liability coverage is maintained for all client engagements. Certificate of Insurance is available upon request." },
               { title: "Asset Panda Expertise", desc: "Deep platform expertise in Asset Panda configuration, implementation, and optimization for enterprise asset tracking environments." },
               { title: "Structured Methodology", desc: "Our four-phase framework provides a repeatable, structured approach to asset intelligence — from discovery through ongoing governance." },
               { title: "Executive-Level Engagement", desc: "We work directly with CFOs, COOs, and VP-level leadership — ensuring strategic alignment and organizational commitment from day one." },
@@ -552,68 +554,7 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* ═══════════════════════════════════════════════════════════════════════
-          EXPANDED FOOTER
-          ═══════════════════════════════════════════════════════════════════════ */}
-      <footer style={{ background: "rgba(11, 15, 19, 0.95)", backdropFilter: "blur(8px)", borderTop: `1px solid ${C.border}`, padding: "4rem 2rem 2rem" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "2rem", marginBottom: "3rem" }}>
-            {/* Brand */}
-            <div>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", fontWeight: 700, color: C.text, marginBottom: "1rem" }}>
-                Legacy Asset Intelligence
-              </h3>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.textMuted, lineHeight: 1.7, marginBottom: "1rem" }}>
-                Specialized consulting firm helping organizations recover hidden capital, strengthen financial accountability, and build sustainable asset governance programs.
-              </p>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.textMuted }}>
-                Veteran-Owned Business
-              </p>
-            </div>
-            {/* Quick Links */}
-            <div>
-              <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, color: C.gold, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1rem" }}>Company</h4>
-              {[{ label: "Team", path: "/team" }, { label: "Careers", path: "/careers" }, { label: "Contact", path: "/contact" }, { label: "FAQ", path: "/faq" }].map(l => (
-                <p key={l.path} onClick={() => navigate(l.path)} style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.silver, marginBottom: "0.5rem", cursor: "pointer" }}>{l.label}</p>
-              ))}
-            </div>
-            {/* Resources */}
-            <div>
-              <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, color: C.gold, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1rem" }}>Resources</h4>
-              {[{ label: "Executive Insights", path: "/insights" }, { label: "Whitepapers & Guides", path: "/resources" }, { label: "ROI Estimator", path: "#calculator" }, { label: "FAQ", path: "/faq" }].map(l => (
-                <p key={l.label} onClick={() => l.path.startsWith("#") ? document.getElementById(l.path.slice(1))?.scrollIntoView({ behavior: "smooth" }) : navigate(l.path)} style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.silver, marginBottom: "0.5rem", cursor: "pointer" }}>{l.label}</p>
-              ))}
-            </div>
-            {/* Contact */}
-            <div>
-              <h4 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, color: C.gold, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1rem" }}>Get in Touch</h4>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.silver, marginBottom: "0.5rem" }}>info@legacyassetintelligence.com</p>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.85rem", color: C.silver, marginBottom: "1rem" }}>legacyassetintelligence.com</p>
-              <button
-                onClick={() => navigate("/contact")}
-                style={{ background: C.gold, color: C.bg, border: "none", padding: "0.5rem 1.25rem", borderRadius: 4, fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, cursor: "pointer" }}
-              >
-                Request Consultation
-              </button>
-            </div>
-          </div>
 
-          {/* Bottom bar */}
-          <div style={{ borderTop: `1px solid ${C.border}`, paddingTop: "1.5rem" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.textMuted }}>
-                &copy; {new Date().getFullYear()} Legacy Asset Intelligence. All rights reserved.
-              </p>
-              <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", color: C.textMuted }}>
-                Veteran-Owned &middot; Professionally Insured
-              </p>
-            </div>
-            <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.65rem", color: C.textMuted, lineHeight: 1.5, opacity: 0.7 }}>
-              Disclaimer: Legacy Asset Intelligence provides consulting services related to fixed asset record reconciliation and governance. All estimates, projections, and scenario analyses are for informational and planning purposes only and do not constitute financial advice, audit opinions, appraisals, or guarantees of recovery. Actual results depend on client-specific conditions. LAI is not a CPA firm and does not provide assurance or attestation services.
-            </p>
-          </div>
-        </div>
-      </footer>
 
       {/* Chatbot Widget */}
       <ChatbotWidget />

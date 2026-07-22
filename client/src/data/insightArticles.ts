@@ -85,7 +85,7 @@ export const insightArticles: InsightArticle[] = [
         paragraphs: [
           "Addressing ghost assets requires a systematic approach that combines executive sponsorship, cross-functional collaboration, and technology-enabled verification. The following framework provides a structured path from identification through sustainable governance.",
           "Phase 1 involves an Executive Asset Intelligence Assessment—a diagnostic engagement that quantifies the scope of the ghost asset challenge using statistical sampling, data analytics, and targeted physical verification. This phase produces a preliminary financial impact estimate and a detailed business case for comprehensive remediation.",
-          "Phase 2 encompasses comprehensive physical verification and data reconciliation, establishing a verified baseline of actual assets and their conditions. Phase 3 focuses on capital recovery execution—filing tax appeals, renegotiating insurance, and eliminating unnecessary contracts. Phase 4 implements sustainable governance frameworks and technology solutions that prevent future ghost asset accumulation."
+          "Phase 2 encompasses comprehensive physical verification and data reconciliation, establishing a verified baseline of actual assets and their conditions. Phase 3 focuses on technology enablement and capital recovery documentation—providing the analysis and supporting documentation that the client's tax, insurance, accounting, and legal professionals need to pursue appeals, renegotiate coverage, and eliminate unnecessary contracts. Phase 4 implements sustainable governance frameworks that prevent future ghost asset accumulation."
         ],
         callout: "Organizations that address ghost asset accumulation through structured verification programs often identify meaningful cost reduction opportunities across property tax, insurance, and maintenance categories. Specific outcomes depend on portfolio size and data quality."
       },
@@ -100,7 +100,7 @@ export const insightArticles: InsightArticle[] = [
     ],
     references: [
       "Gartner. (2024). Market Guide for Enterprise Asset Management Software.",
-      "MarketsandMarkets. (2024). Enterprise Asset Management Market — Global Forecast to 2030.",
+      "MarketsandMarkets. (2025). Enterprise Asset Management Market — Global Forecast to 2030.",
       "International Association of Assessing Officers. (2022). Personal Property Tax Assessment Best Practices.",
       "ISO 55000 Series. (2014). Asset Management — Overview, Principles and Terminology.",
       "Institute of Asset Management. (2023). Global Asset Management Landscape Report."
@@ -127,23 +127,24 @@ export const insightArticles: InsightArticle[] = [
           "However, comprehensive physical verification remains uncommon. Many organizations have not conducted a complete physical inventory in several years, allowing inaccuracies to compound over time."
         ],
         table: {
-          headers: ["Industry Sector", "Average Accuracy", "Ghost Asset Rate", "Verification Frequency"],
+          headers: ["Industry Sector", "Typical Accuracy Range", "Estimated Ghost Asset Range", "Common Verification Frequency"],
           rows: [
-            ["Manufacturing", "61%", "22%", "Every 5+ years"],
-            ["Healthcare", "58%", "26%", "Every 4-6 years"],
-            ["Education", "55%", "28%", "Every 6+ years"],
-            ["Government", "52%", "31%", "Every 7+ years"],
-            ["Utilities", "65%", "19%", "Every 3-5 years"],
-            ["Technology", "68%", "17%", "Every 2-4 years"]
+            ["Manufacturing", "55–70%", "15–25%", "Every 5+ years"],
+            ["Healthcare", "50–65%", "20–30%", "Every 4–6 years"],
+            ["Education", "50–65%", "20–30%", "Every 6+ years"],
+            ["Government", "45–60%", "25–35%", "Every 7+ years"],
+            ["Utilities", "60–75%", "15–25%", "Every 3–5 years"],
+            ["Technology", "60–75%", "10–20%", "Every 2–4 years"]
           ]
-        }
+        },
+        callout: "Note: Ranges are directional estimates based on published industry research and LAI consulting observations. Actual figures vary significantly by organization size, governance maturity, and asset portfolio complexity."
       },
       {
         heading: "Technology Adoption Trends",
         paragraphs: [
-          "Technology adoption in enterprise asset management continues to accelerate, driven by cloud-based platforms, IoT-enabled tracking, and artificial intelligence applications. The global EAM software market was valued at approximately $5.87 billion in 2024 and is projected to reach $9.02 billion by 2030, reflecting a compound annual growth rate of approximately 9% (MarketsandMarkets, 2024).",
+          "Technology adoption in enterprise asset management continues to accelerate, driven by cloud-based platforms, IoT-enabled tracking, and artificial intelligence applications. The global EAM software market was valued at approximately $5.87 billion in 2025 and is projected to reach $9.02 billion by 2030, reflecting a compound annual growth rate of approximately 9% (MarketsandMarkets, 2025).",
           "Despite this growth, technology alone has not solved the fundamental accuracy challenge. Organizations report that technology implementations without accompanying process redesign and governance frameworks deliver only marginal improvements in data quality. The most successful organizations combine technology investment with structured verification programs and clear governance accountability.",
-          "Emerging technologies showing the most promise include RFID-based automated tracking (adopted by 34% of respondents), IoT sensor networks for condition monitoring (28%), drone-based inventory verification for large facilities (15%), and AI-powered anomaly detection for identifying potential ghost assets in financial data (22%)."
+          "Emerging technologies showing the most promise include RFID-based automated tracking, IoT sensor networks for condition monitoring, drone-based inventory verification for large facilities, and AI-powered anomaly detection for identifying potential ghost assets in financial data. Adoption rates vary significantly by industry, organization size, and asset portfolio complexity."
         ]
       },
       {
@@ -157,8 +158,8 @@ export const insightArticles: InsightArticle[] = [
       {
         heading: "Financial Impact Benchmarks",
         paragraphs: [
-          "The financial impact of asset management deficiencies varies by industry and organizational size, but the patterns are remarkably consistent. Organizations with poor asset data accuracy (below 70%) report average annual financial leakage of 2.5-4.0% of their total fixed asset base value. For an organization with $200 million in gross fixed assets, this translates to $5-8 million in annual unnecessary costs.",
-          "The primary cost drivers remain property tax overpayment (accounting for 35-40% of total leakage), insurance premium excess (20-25%), maintenance contract waste (15-20%), and duplicate purchase activity (10-15%). The remaining 10-15% is distributed across audit remediation costs, compliance penalties, and capital planning inefficiencies."
+          "The financial impact of asset management deficiencies varies by industry and organizational size. Organizations with poor asset data accuracy generally experience meaningful financial leakage across multiple cost categories. Published research and industry observations suggest that the cumulative annual cost of inaccurate asset data can represent a material percentage of total fixed asset base value, though specific figures depend heavily on portfolio composition, jurisdictional tax rates, and governance maturity.",
+          "The primary cost drivers typically include property tax overpayment (often the largest single category), insurance premium excess, maintenance contract waste, and duplicate purchase activity. Additional costs are distributed across audit remediation, compliance penalties, and capital planning inefficiencies. The relative proportion of each category varies by organization depending on asset types, jurisdictional tax structures, and insurance portfolio composition."
         ]
       },
       {
@@ -187,7 +188,7 @@ export const insightArticles: InsightArticle[] = [
       {
         heading: "Market Overview",
         paragraphs: [
-          "The global enterprise asset management (EAM) software market was valued at approximately $5.87 billion in 2024 and is projected to reach $9.02 billion by 2030, reflecting a compound annual growth rate of approximately 9% (MarketsandMarkets, 2024). This market encompasses software platforms, professional services, and consulting engagements focused on improving the accuracy, visibility, and financial optimization of fixed asset portfolios—driven by regulatory pressure, digital transformation initiatives, and growing executive awareness of the financial impact of asset data inaccuracy.",
+          "The global enterprise asset management (EAM) software market was valued at approximately $5.87 billion in 2025 and is projected to reach $9.02 billion by 2030, reflecting a compound annual growth rate of approximately 9% (MarketsandMarkets, 2025). This market encompasses software platforms, professional services, and consulting engagements focused on improving the accuracy, visibility, and financial optimization of fixed asset portfolios—driven by regulatory pressure, digital transformation initiatives, and growing executive awareness of the financial impact of asset data inaccuracy.",
           "For organizations evaluating their asset management strategy, understanding these market dynamics is essential for making informed investment decisions. The market's rapid growth reflects both the scale of the underlying problem and the proven financial returns that effective asset management delivers."
         ]
       },
@@ -201,12 +202,11 @@ export const insightArticles: InsightArticle[] = [
         table: {
           headers: ["Year", "Market Size ($B)", "YoY Growth"],
           rows: [
-            ["2024", "$5.87B", "—"],
-            ["2025", "$6.40B", "~9%"],
-            ["2026", "$6.98B", "~9%"],
-            ["2027", "$7.61B", "~9%"],
-            ["2028", "$8.27B", "~9%"],
-            ["2029", "$8.62B", "~9%"],
+            ["2025", "$5.87B", "—"],
+            ["2026", "$6.40B", "~9%"],
+            ["2027", "$6.98B", "~9%"],
+            ["2028", "$7.61B", "~9%"],
+            ["2029", "$8.27B", "~9%"],
             ["2030", "$9.02B", "~9%"]
           ]
         }
@@ -238,10 +238,10 @@ export const insightArticles: InsightArticle[] = [
     ],
     references: [
       "Grand View Research. (2024). Enterprise Asset Management Market Size, Share & Trends Analysis Report.",
-      "Markets and Markets. (2024). Asset Management System Market — Global Forecast to 2030.",
+      "Markets and Markets. (2025). Asset Management System Market — Global Forecast to 2030.",
       "Gartner. (2024). Magic Quadrant for Enterprise Asset Management Software.",
       "Forrester. (2023). The Total Economic Impact of Modern EAM Platforms.",
-      "MarketsandMarkets. (2024). Enterprise Asset Management Market — Global Forecast to 2030."
+      "MarketsandMarkets. (2025). Enterprise Asset Management Market — Global Forecast to 2030."
     ]
   },
   {
@@ -463,12 +463,12 @@ export const insightArticles: InsightArticle[] = [
     category: "Executive Guide",
     title: "Ghost Asset Identification Checklist",
     readTime: "8 min read",
-    pages: "12 pages",
+    pages: "Online Guide",
     sections: [
       {
         heading: "Purpose of This Checklist",
         paragraphs: [
-          "This comprehensive checklist provides a structured approach to identifying potential ghost assets within your organization's fixed asset register. Ghost assets—assets recorded on the books that no longer physically exist or provide operational value—represent one of the most common and financially damaging data quality issues in enterprise asset management.",
+          "This checklist provides a structured approach to identifying potential ghost assets within your organization's fixed asset register. A ghost asset is a record on the books that cannot be matched to a physically existing asset. Ghost assets represent one of the most common and financially damaging data quality issues in enterprise asset management.",
           "The checklist is organized by identification method, progressing from data-driven indicators (which can be assessed without physical verification) through operational indicators (which require departmental input) to physical verification approaches (which confirm asset existence through direct observation). Organizations can use this checklist as a self-assessment tool to estimate the likely scope of their ghost asset challenge before engaging in a comprehensive verification program."
         ]
       },
@@ -476,7 +476,7 @@ export const insightArticles: InsightArticle[] = [
         heading: "Data-Driven Indicators",
         paragraphs: [
           "The following indicators can be identified through analysis of financial and operational data without requiring physical site visits. They represent statistical patterns that correlate strongly with ghost asset presence.",
-          "Fully depreciated assets that remain on the register represent the highest-probability ghost asset category. Assets that have reached zero net book value but remain on the books have, by definition, exceeded their originally estimated useful life. While some fully depreciated assets continue to provide operational value, a significant percentage—typically 30-50%—have been disposed of without corresponding book retirement. Review all assets with zero NBV and acquisition dates more than two useful lives ago.",
+          "Fully depreciated assets that remain on the register represent a higher-probability ghost asset category. Assets that have reached zero net book value but remain on the books have exceeded their originally estimated useful life. While some fully depreciated assets continue to provide operational value, a portion may have been disposed of without corresponding book retirement. Review all assets with zero NBV and acquisition dates more than two useful lives ago.",
           "Assets assigned to locations that no longer exist—closed facilities, renovated spaces, decommissioned floors—are almost certainly ghost assets. Cross-reference asset location codes against current facility records to identify orphaned location assignments. Similarly, assets assigned to cost centers or departments that have been reorganized, merged, or eliminated should be flagged for verification.",
           "Assets with no maintenance activity, work orders, or operational transactions for extended periods (typically 24+ months) may indicate non-existence. While some assets legitimately require minimal maintenance, a complete absence of any operational activity is a strong indicator that the asset is no longer present or functional."
         ]
@@ -494,7 +494,7 @@ export const insightArticles: InsightArticle[] = [
         heading: "Physical Verification Approaches",
         paragraphs: [
           "Physical verification is the definitive method for confirming ghost asset status. While data-driven and operational indicators can identify high-probability candidates, only physical observation can confirm that an asset does or does not exist at its recorded location.",
-          "Statistical sampling provides a cost-effective approach to estimating overall ghost asset rates without verifying every individual asset. A properly designed sample of 200-400 assets can provide 95% confidence in the extrapolated ghost asset rate for the entire portfolio. This approach is particularly useful for initial assessments and business case development.",
+          "Statistical sampling provides a cost-effective approach to estimating overall ghost asset rates without verifying every individual asset. The required sample size depends on the total population, desired confidence level, acceptable margin of error, and sampling method. A qualified statistician or audit professional can design an appropriate sampling plan for your organization's specific portfolio.",
           "Targeted verification focuses physical verification efforts on the highest-probability categories identified through data-driven and operational analysis. By concentrating verification on fully depreciated assets, orphaned locations, and categories with known refresh cycles, organizations can maximize the financial impact of limited verification resources.",
           "Comprehensive verification—physically locating and confirming every asset on the register—provides the highest accuracy but requires the greatest investment. This approach is recommended when the initial assessment indicates ghost asset rates above 15% or when regulatory requirements demand complete verification."
         ],
@@ -503,8 +503,8 @@ export const insightArticles: InsightArticle[] = [
       {
         heading: "Scoring and Interpretation",
         paragraphs: [
-          "After completing the checklist, organizations can estimate their likely ghost asset exposure based on the number and severity of indicators identified. A high number of data-driven indicators (fully depreciated assets exceeding 25% of the register, multiple closed locations with assigned assets, significant technology refresh without retirements) suggests a ghost asset rate of 20-30% or higher.",
-          "Moderate indicator presence (fully depreciated assets of 15-25%, some location discrepancies, partial technology refresh documentation) suggests a rate of 10-20%. Low indicator presence (fully depreciated assets below 15%, current location data, documented refresh cycles) suggests a rate below 10%, though even this level represents significant financial exposure for organizations with large asset portfolios.",
+          "After completing the checklist, organizations can assess their relative ghost asset risk based on the number and severity of indicators identified. A high number of data-driven indicators (fully depreciated assets exceeding 25% of the register, multiple closed locations with assigned assets, significant technology refresh without retirements) suggests elevated ghost asset risk that warrants professional verification.",
+          "Moderate indicator presence (some location discrepancies, partial technology refresh documentation) suggests meaningful risk that should be evaluated further. Low indicator presence (current location data, documented refresh cycles) suggests lower but not negligible risk, particularly for organizations with large asset portfolios that have not been physically verified recently.",
           "Regardless of the estimated rate, any organization that has not conducted a comprehensive physical verification within the past three years should assume that material ghost asset exposure exists and evaluate the business case for professional verification services."
         ]
       }
@@ -513,7 +513,7 @@ export const insightArticles: InsightArticle[] = [
       "Gartner. (2024). Market Guide for Enterprise Asset Management Software.",
       "Institute of Internal Auditors. (2020). Auditing Fixed Assets: Best Practices.",
       "AICPA. (2022). Audit Sampling: A Practical Guide.",
-      "MarketsandMarkets. (2024). Enterprise Asset Management Market — Global Forecast to 2030."
+      "MarketsandMarkets. (2025). Enterprise Asset Management Market — Global Forecast to 2030."
     ]
   },
   {
@@ -587,7 +587,7 @@ export const insightArticles: InsightArticle[] = [
     category: "Executive Guide",
     title: "Capital Recovery Business Case Template",
     readTime: "11 min read",
-    pages: "24 slides",
+    pages: "Online Guide",
     sections: [
       {
         heading: "Building a Compelling Case for Asset Intelligence Investment",
@@ -616,14 +616,14 @@ export const insightArticles: InsightArticle[] = [
           "This is the heart of the business case. Present a detailed financial model that quantifies both one-time capital recovery opportunities and ongoing annual savings."
         ],
         table: {
-          headers: ["Category", "Conservative Estimate", "Moderate Estimate", "Aggressive Estimate"],
+          headers: ["Category", "Considerations", "Data Sources"],
           rows: [
-            ["One-Time Capital Recovery", "1.5x engagement cost", "3x engagement cost", "5x engagement cost"],
-            ["Annual Property Tax Savings", "0.5-1% of ghost asset NBV", "1-2% of ghost asset NBV", "2-4% of ghost asset NBV"],
-            ["Annual Insurance Reduction", "5-10% of current premium", "10-15% of current premium", "15-25% of current premium"],
-            ["Annual Maintenance Savings", "5-8% of maintenance budget", "8-12% of maintenance budget", "12-18% of maintenance budget"],
-            ["Payback Period", "12-18 months", "6-12 months", "3-6 months"],
-            ["5-Year ROI", "3x-5x", "5x-8x", "8x-12x"]
+            ["Capital Recovery Opportunities", "Depends on ghost asset volume and net book values", "Fixed asset register, physical verification results"],
+            ["Property Tax Exposure", "Varies by jurisdiction and assessment methodology", "County assessor records, current tax filings"],
+            ["Insurance Premium Review", "Based on insured asset values vs. verified values", "Current policy schedules, verified inventory"],
+            ["Maintenance Contract Review", "Contracts covering assets no longer in service", "Active maintenance agreements, service records"],
+            ["Payback Period", "Depends on engagement scope and recovery opportunities", "Phase 1 Discovery Report findings"],
+            ["Ongoing Savings", "Recurring reductions from corrected records", "Annual tax, insurance, and maintenance budgets"]
           ]
         }
       },
@@ -640,7 +640,7 @@ export const insightArticles: InsightArticle[] = [
           "Conclude with a clear recommendation and specific next steps. State the requested approval (budget, resources, timeline), identify the decision-makers required, and propose a timeline for moving forward. Make the ask clear and specific—ambiguity delays decisions.",
           "Present the business case in person whenever possible, allowing for questions and discussion. Lead with the financial impact—executives respond to numbers. Use conservative estimates to build credibility; it is better to under-promise and over-deliver. Include relevant benchmarks or case studies from comparable organizations to validate your projections."
         ],
-        callout: "Organizations that present business cases with specific financial projections, conservative estimates, and clear next steps achieve approval rates 3x higher than those presenting general value propositions without quantification."
+        callout: "A well-structured business case with specific financial projections, conservative estimates, and clear next steps strengthens the likelihood of executive approval compared to general value propositions without quantification."
       }
     ],
     references: [
@@ -657,51 +657,51 @@ export const insightArticles: InsightArticle[] = [
     pages: "16 pages",
     sections: [
       {
-        heading: "A Proven Framework for Recovering Hidden Capital",
+        heading: "A Structured Framework for Asset Intelligence",
         paragraphs: [
-          "Legacy Asset Intelligence has developed a proprietary, four-phase methodology designed to systematically transform how organizations manage their physical assets. This structured approach moves beyond ad-hoc asset tracking to deliver comprehensive, evidence-based asset intelligence that drives measurable financial impact. Each phase builds upon the previous one, creating a cumulative effect that maximizes capital recovery, strengthens governance, and establishes sustainable practices for long-term asset accountability.",
-          "Asset intelligence initiatives fail when they lack structure, clear milestones, and accountability. Organizations that attempt to address asset management challenges without a proven framework often experience scope creep, incomplete data, and results that cannot be sustained. LAI's methodology eliminates these risks by providing a clear roadmap with defined deliverables at each stage."
+          "Legacy Asset Intelligence has developed a structured, four-phase methodology designed to help organizations systematically improve how they manage, verify, and govern their physical assets. This approach moves beyond ad-hoc asset tracking to deliver evidence-based asset intelligence that supports better financial and operational decisions. Each phase builds upon the previous one, creating a cumulative effect that strengthens governance and establishes sustainable practices for long-term asset accountability.",
+          "Asset intelligence initiatives often struggle when they lack structure, clear milestones, and accountability. Organizations that attempt to address asset management challenges without a defined framework may experience scope creep, incomplete data, and results that cannot be sustained. LAI's methodology addresses these risks by providing a clear roadmap with defined deliverables at each stage."
         ]
       },
       {
-        heading: "Phase 1: Executive Asset Intelligence Assessment (EAIA)",
+        heading: "Phase 1: Discovery & Executive Assessment",
         paragraphs: [
-          "The engagement begins with a comprehensive assessment designed to establish a baseline understanding of your organization's asset management landscape. This phase is diagnostic in nature, combining executive interviews, data analysis, and preliminary physical sampling to quantify the scope of opportunity.",
-          "During Phase 1, LAI conducts structured interviews with key stakeholders across finance, operations, facilities, and IT. We analyze existing asset registers, depreciation schedules, property tax filings, and insurance policies to identify discrepancies and patterns. A targeted physical sample validates initial findings and provides statistical confidence in the extrapolated results.",
-          "Phase 1 Deliverables include an executive findings presentation, asset maturity assessment scorecard, preliminary financial impact quantification, risk assessment matrix, and a detailed Phase 2 scope and investment proposal. The typical timeline is 4-6 weeks depending on organizational complexity and data availability."
+          "The engagement begins with a comprehensive assessment designed to establish a baseline understanding of your organization's asset management landscape. This phase is diagnostic in nature, combining executive interviews, data analysis, and governance maturity evaluation to identify the scope of opportunity and develop a strategic roadmap.",
+          "During Phase 1, LAI conducts structured interviews with key stakeholders across finance, operations, facilities, and IT. We analyze existing asset registers, depreciation schedules, and related documentation to identify discrepancies and patterns. This phase establishes the foundation for all subsequent work and provides leadership with a clear picture of the current state.",
+          "Phase 1 Deliverables include a Discovery Report, Asset Management Maturity Scorecard, preliminary opportunity assessment, risk evaluation, and a detailed Phase 2 scope and investment proposal. The typical timeline is 2-4 weeks depending on organizational complexity and data availability."
         ]
       },
       {
-        heading: "Phase 2: Physical Verification & Data Reconciliation",
+        heading: "Phase 2: Physical Verification & Recovery Analysis",
         paragraphs: [
-          "Phase 2 represents the core operational phase of the engagement, involving comprehensive physical verification of all in-scope assets. This phase employs technology-enabled inventory processes—including barcode scanning, RFID, GPS mapping, and photographic documentation—to establish a verified, ground-truth asset record.",
-          "The physical verification results are then systematically reconciled against financial records, identifying confirmed ghost assets (assets on the books but not physically present), unrecorded assets (assets physically present but not on the books), and data discrepancies (incorrect locations, descriptions, or valuations). This reconciliation produces a clean, verified asset register that serves as the foundation for all subsequent financial analysis.",
-          "Phase 2 Deliverables include a verified physical asset inventory, comprehensive reconciliation report, confirmed ghost asset listing with financial impact, unrecorded asset register with estimated values, and data quality assessment with remediation recommendations. The typical timeline is 8-16 weeks depending on asset volume and geographic distribution."
+          "Phase 2 represents the core operational phase of the engagement, involving comprehensive physical verification of all in-scope assets. Field teams conduct wall-to-wall physical inventory, condition assessments, and photographic documentation to establish a verified, ground-truth asset record.",
+          "The physical verification results are then systematically reconciled against financial records through both floor-to-book and book-to-floor processes, identifying confirmed ghost assets (records that cannot be matched to a physically existing asset), unrecorded assets (assets physically present but not on the books), and data discrepancies (incorrect locations, descriptions, or valuations). This reconciliation produces a verified asset register that serves as the foundation for recovery analysis.",
+          "Phase 2 Deliverables include a Verified Asset Inventory, Reconciled Fixed Asset Register, Recoverable Capital Analysis, and Asset Accountability Score. The typical timeline is 4-12 weeks depending on asset volume and geographic distribution."
         ]
       },
       {
-        heading: "Phase 3: Capital Recovery & Financial Impact",
+        heading: "Phase 3: Technology Enablement & Governance Implementation",
         paragraphs: [
-          "With verified data in hand, Phase 3 focuses on translating findings into tangible financial outcomes. LAI works with your finance and tax teams to execute capital recovery strategies, including property tax appeals, insurance premium renegotiations, maintenance contract adjustments, and balance sheet corrections.",
-          "This phase also includes the development of a comprehensive financial impact report that quantifies all one-time recoveries and ongoing annual savings. The report provides the evidence base for executive reporting, board presentations, and future investment justification.",
-          "Phase 3 Deliverables include property tax appeal documentation and filings, insurance portfolio optimization recommendations, maintenance cost reduction analysis, comprehensive financial impact report with verified savings, and executive summary for board-level reporting. The typical timeline is 6-12 weeks, with some tax recovery processes extending based on jurisdictional timelines."
+          "Phase 3 transforms verified data into sustainable business processes through technology enablement. Depending on the selected Phase 3 scope, this may include optional barcode/QR tagging and identification, platform selection and configuration, data migration, governance policy development, automated workflow creation, executive dashboard configuration, and staff training.",
+          "LAI provides documentation and analysis to support the client's tax, insurance, accounting, audit, and legal professionals in pursuing recovery opportunities identified during Phase 2. This phase also establishes the technology foundation for ongoing asset accountability.",
+          "Phase 3 Deliverables include a Configured Asset Management Platform (depending on the selected scope), Governance Framework Documentation, Executive Dashboard, and Implementation Roadmap. The typical timeline is 6-10 weeks. Some organizations may select advisory-only, vendor-selection, or roadmap scopes rather than full platform implementation."
         ]
       },
       {
-        heading: "Phase 4: Governance Implementation & Technology Enablement",
+        heading: "Phase 4: Recurring Governance & Executive Advisory",
         paragraphs: [
-          "The final phase ensures that the improvements achieved in Phases 1-3 are sustainable and self-reinforcing. LAI designs and implements a governance framework tailored to your organization's structure, culture, and technology environment. This includes policies, procedures, roles and responsibilities, and technology configurations that prevent the re-accumulation of ghost assets and maintain data integrity over time.",
-          "Technology enablement may include the configuration or selection of EAM systems, integration with existing ERP and financial systems, implementation of automated tracking technologies, and the establishment of reporting dashboards for ongoing monitoring.",
-          "Phase 4 Deliverables include an asset governance policy manual, roles and responsibilities matrix, technology configuration and integration documentation, training materials and knowledge transfer sessions, ongoing monitoring dashboard, and sustainability roadmap. The typical timeline is 8-12 weeks for initial implementation, with optional ongoing advisory support."
+          "The final phase ensures that the improvements achieved in Phases 1-3 are sustainable and self-reinforcing. LAI provides ongoing governance support tailored to your organization's structure, including periodic verification, executive reporting, compliance monitoring, governance refinement, and continuous improvement recommendations.",
+          "Recurring governance programs are executive advisory partnerships that help organizations preserve accountability while adapting to operational growth and change. Program tiers range from annual governance reviews to dedicated quarterly partnerships with continuous reconciliation and executive KPI dashboards.",
+          "Phase 4 Deliverables include ongoing governance reporting, periodic verification results, executive KPI dashboards, compliance documentation, and sustainability recommendations. This phase is structured as an ongoing retainer with scope tailored to organizational needs."
         ]
       },
       {
-        heading: "Cumulative Impact",
+        heading: "Engagement Flexibility",
         paragraphs: [
-          "Organizations that complete all four phases may achieve meaningful return on investment, reduction in annual asset-related costs (taxes, insurance, maintenance), significantly improved asset register accuracy, reduced compliance risk related to fixed asset controls, and sustainable governance that helps prevent future ghost asset accumulation. Specific outcomes depend on organizational size, portfolio complexity, and current data quality.",
-          "While the four-phase structure provides a proven framework, LAI recognizes that every organization is unique. The methodology is designed to be flexible, with scope, timeline, and emphasis adjusted based on your specific circumstances, industry requirements, and strategic priorities. Some organizations may choose to engage in all four phases sequentially, while others may focus on specific phases based on immediate needs."
+          "While the four-phase structure provides a defined framework, LAI recognizes that every organization is unique. The methodology is designed to be flexible, with scope, timeline, and emphasis adjusted based on your specific circumstances, industry requirements, and strategic priorities. Some organizations may choose to engage in all four phases sequentially, while others may focus on specific phases based on immediate needs.",
+          "Specific outcomes depend on organizational size, portfolio complexity, current data quality, and the scope of engagement selected. LAI provides transparent expectations at each phase transition to support informed decision-making."
         ],
-        callout: "The average total engagement duration from Phase 1 initiation through Phase 4 completion is 9-15 months, with measurable financial returns beginning as early as Phase 1 completion."
+        callout: "Total engagement duration from Phase 1 through Phase 4 initiation is typically 9-15 months, with findings and deliverables provided at each phase completion."
       }
     ],
     references: [

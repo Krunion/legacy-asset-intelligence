@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 /**
  * Legacy Asset Intelligence — About Page
  * Section 3: Company Story, Mission, Vision, Founder, Values, Differentiators
@@ -33,6 +34,7 @@ function Section({ id, children }: { id: string; children: React.ReactNode }) {
 }
 
 export default function About() {
+  usePageMeta({ title: "About Us | Legacy Asset Intelligence", description: "Learn about Legacy Asset Intelligence — our mission, methodology, and commitment to helping organizations transform asset data into actionable business intelligence.", canonical: "/about" });
   const [, navigate] = useLocation();
 
   return (
@@ -214,7 +216,7 @@ export default function About() {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1.5rem" }}>
               {[
                 { title: "Veteran-Owned Business", desc: "Founded and led by a United States military veteran, bringing discipline, accountability, and service-oriented leadership to every client engagement." },
-                { title: "Professional Insurance", desc: "Maintains professional liability and general business insurance coverage appropriate for consulting engagements. Certificates of insurance available upon request." },
+                { title: "Professional Insurance Coverage", desc: "Professional Liability (E&O), General Liability, and Cyber Liability coverage is maintained for all client engagements. Certificate of Insurance is available upon request." },
                 { title: "Confidentiality & Ethics", desc: "We routinely handle sensitive operational, financial, and asset-related information with strict confidentiality protocols and responsible data management practices." },
               ].map((item, i) => (
                 <div key={i} style={{ textAlign: "center" }}>

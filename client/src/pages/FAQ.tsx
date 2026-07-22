@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 import { useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { COLORS } from "@shared/colors";
@@ -10,6 +11,7 @@ interface FAQCategory {
 }
 
 export default function FAQ() {
+  usePageMeta({ title: "Frequently Asked Questions | Legacy Asset Intelligence", description: "Answers to common questions about ghost assets, our methodology, engagement process, financial impact, and industry-specific considerations.", canonical: "/faq" });
   const [openIndices, setOpenIndices] = useState<Record<string, number | null>>({});
   const [openGlossary, setOpenGlossary] = useState<number | null>(null);
 
@@ -51,7 +53,7 @@ export default function FAQ() {
       questions: [
         {
           question: "What's the typical timeline for an asset intelligence engagement?",
-          answer: "Most engagements follow our four-phase methodology: Phase 1 (Discovery & Executive Assessment) takes 2-4 weeks and involves executive interviews, FAR review, governance maturity evaluation, and strategic roadmap development. Phase 2 (Physical Verification & Recovery Analysis) takes 4-12 weeks depending on asset volume and location count. Phase 3 (Technology Implementation & Enablement) takes 6-10 weeks. Phase 4 (Recurring Governance & Executive Advisory) is ongoing. Total time to initial findings is typically 8-12 weeks."
+          answer: "Most engagements follow our four-phase methodology: Phase 1 (Discovery & Executive Assessment) takes 2-4 weeks and involves executive interviews, FAR review, governance maturity evaluation, and strategic roadmap development. Phase 2 (Physical Verification & Recovery Analysis) takes 4-12 weeks depending on asset volume and location count. Phase 3 (Technology Enablement & Governance Implementation) takes 6-10 weeks. Phase 4 (Recurring Governance & Executive Advisory) is ongoing. Total time to initial findings is typically 8-12 weeks."
         },
         {
           question: "How do you conduct physical verification while minimizing operational disruption?",

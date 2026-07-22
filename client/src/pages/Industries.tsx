@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 /**
  * Legacy Asset Intelligence — Industries Page
  * Section 5: Dedicated industry content for Healthcare, Manufacturing, Education,
@@ -99,6 +100,7 @@ const industries = [
 ];
 
 export default function Industries() {
+  usePageMeta({ title: "Industries We Serve | Legacy Asset Intelligence", description: "Asset verification and governance solutions for manufacturing, healthcare, IT, government, education, and utilities organizations.", canonical: "/industries" });
   const [, navigate] = useLocation();
 
   return (

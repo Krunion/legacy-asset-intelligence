@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 import PageLayout from "@/components/PageLayout";
 import { COLORS } from "@shared/colors";
 
@@ -37,6 +38,7 @@ const team: TeamMember[] = [
   {
     name: "Darryl Fedric",
     title: "Chief Experience Officer",
+    photo: "/manus-storage/Darryl_dbe48163.png",
     bio: [
       "Darryl Fedric brings more than 14 years of experience in emergency services, safety compliance, project management, operational risk assessment, and investigations. His career includes service as a firefighter and paramedic lieutenant, flight paramedic, critical care paramedic, and emergency room technician. These demanding roles required sound judgment, effective communication, attention to detail, and the ability to make critical decisions in highly regulated and rapidly changing environments.",
       "Darryl later served as a Chief Safety Officer and Project Manager, providing safety and operational oversight for more than 400 personnel across multiple worksites. His responsibilities included conducting safety inspections and job hazard analyses, leading safety briefings, enforcing OSHA- and CDC-aligned standards, supporting workforce accountability, and identifying risks before they disrupted operations. He holds an OSHA 30 certification, a Construction Project Management Certificate from Columbia University, and multiple advanced emergency medical credentials.",
@@ -103,6 +105,7 @@ function InitialsCircle({ name }: { name: string }) {
 }
 
 export default function Team() {
+  usePageMeta({ title: "Leadership Team | Legacy Asset Intelligence", description: "Meet the Legacy Asset Intelligence leadership team — experienced professionals in asset management, operations, and organizational strategy.", canonical: "/team" });
   return (
     <PageLayout
       heroTitle="Leadership"

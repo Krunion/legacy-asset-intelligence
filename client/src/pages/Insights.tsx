@@ -1,3 +1,4 @@
+import { usePageMeta } from "@/hooks/usePageMeta";
 /**
  * Legacy Asset Intelligence — Executive Insights Page
  * Section 6: Thought leadership, industry analysis, executive perspectives,
@@ -48,6 +49,7 @@ const insights = [
 ];
 
 export default function Insights() {
+  usePageMeta({ title: "Insights & Research | Legacy Asset Intelligence", description: "Executive insights, research reports, and strategic briefs on asset management, ghost assets, capital recovery, and governance best practices.", canonical: "/insights" });
   const [, navigate] = useLocation();
   const [filter, setFilter] = useState<string>("All");
 
