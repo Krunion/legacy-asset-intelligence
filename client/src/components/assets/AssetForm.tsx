@@ -4,6 +4,47 @@ import { COLORS } from "@shared/colors";
 
 const C = COLORS;
 
+// ─── Predefined Categories ──────────────────────────────────────────────────
+const PREDEFINED_CATEGORIES = [
+  "Buildings & Real Estate",
+  "Furniture & Fixtures",
+  "Computers & IT Equipment",
+  "Telecommunications Equipment",
+  "Machinery & Production Equipment",
+  "Tools & Portable Equipment",
+  "Vehicles & Mobile Equipment",
+  "Medical & Laboratory Equipment",
+  "Electrical, HVAC & Utility Equipment",
+  "Safety, Security & Emergency Equipment",
+  "Office & Administrative Equipment",
+  "Educational & Audio-Visual Equipment",
+  "Warehouse & Material-Handling Equipment",
+  "Specialized Operational Equipment",
+  "Other — Describe",
+];
+
+// ─── Barcode Types ──────────────────────────────────────────────────────────
+const BARCODE_TYPES = [
+  { value: "code128", label: "Code 128 — Standard linear barcode" },
+  { value: "code39", label: "Code 39 — Alphanumeric barcode" },
+  { value: "qr", label: "QR Code — 2D square code" },
+  { value: "datamatrix", label: "Data Matrix — Compact code for small equipment" },
+  { value: "upca", label: "UPC-A — Common retail product barcode" },
+  { value: "ean13", label: "EAN-13 — International retail product barcode" },
+  { value: "pdf417", label: "PDF417 — High-capacity rectangular barcode" },
+  { value: "other_unknown", label: "Other / Unknown" },
+  { value: "no_barcode", label: "No Barcode Present" },
+  { value: "barcode_damaged", label: "Barcode Damaged or Unreadable" },
+];
+
+// ─── Unit of Measure ────────────────────────────────────────────────────────
+const UNITS_OF_MEASURE = [
+  "Each", "Unit", "Item", "Piece", "Pair", "Set", "Kit", "Lot", "Batch",
+  "Pack", "Box", "Case", "Carton", "Bundle", "Pallet", "Roll", "Spool",
+  "Sheet", "Bag", "Bottle", "Can", "Container", "Bin", "Drum", "Barrel",
+  "Cylinder", "Tank", "Room", "Other",
+];
+
 interface Props {
   assetId?: number;
   onSuccess: () => void;
@@ -19,8 +60,6 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
     { enabled: isEdit }
   );
 
-  const { data: categories } = trpc.assets.listCategories.useQuery();
-
   const createMutation = trpc.assets.create.useMutation({
     onSuccess: () => { utils.assets.list.invalidate(); utils.assets.stats.invalidate(); onSuccess(); },
   });
@@ -32,12 +71,14 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
   const [form, setForm] = useState({
     name: "",
     description: "",
-    categoryId: "",
+    category: "",
+    categoryOther: "",
     status: "active",
     condition: "good",
     manufacturer: "",
     model: "",
     serialNumber: "",
+    barcodeType: "code128",
     location: "",
     building: "",
     floor: "",
@@ -45,6 +86,11 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
     department: "",
     assignedTo: "",
     custodian: "",
+    addressStreet: "",
+    addressCity: "",
+    addressState: "",
+    addressZip: "",
+    parentAssetTag: "",
     acquisitionDate: "",
     acquisitionCost: "",
     currentValue: "",
@@ -52,8 +98,8 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
     usefulLifeYears: "",
     warrantyExpiration: "",
     quantity: "1",
-    unitOfMeasure: "each",
-    barcodeType: "code128",
+    unitOfMeasure: "Each",
+    unitOfMeasureOther: "",
     notes: "",
   });
 
@@ -62,12 +108,14 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
       setForm({
         name: existingAsset.name || "",
         description: existingAsset.description || "",
-        categoryId: existingAsset.categoryId?.toString() || "",
+        category: existingAsset.categoryId?.toString() || "",
+        categoryOther: "",
         status: existingAsset.status || "active",
         condition: existingAsset.condition || "good",
         manufacturer: existingAsset.manufacturer || "",
         model: existingAsset.model || "",
         serialNumber: existingAsset.serialNumber || "",
+        barcodeType: existingAsset.barcodeType || "code128",
         location: existingAsset.location || "",
         building: existingAsset.building || "",
         floor: existingAsset.floor || "",
@@ -75,6 +123,11 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
         department: existingAsset.department || "",
         assignedTo: existingAsset.assignedTo || "",
         custodian: existingAsset.custodian || "",
+        addressStreet: (existingAsset as any).addressStreet || "",
+        addressCity: (existingAsset as any).addressCity || "",
+        addressState: (existingAsset as any).addressState || "",
+        addressZip: (existingAsset as any).addressZip || "",
+        parentAssetTag: (existingAsset as any).parentAssetTag || "",
         acquisitionDate: existingAsset.acquisitionDate ? new Date(existingAsset.acquisitionDate).toISOString().slice(0, 10) : "",
         acquisitionCost: existingAsset.acquisitionCost || "",
         currentValue: existingAsset.currentValue || "",
@@ -82,8 +135,8 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
         usefulLifeYears: existingAsset.usefulLifeYears?.toString() || "",
         warrantyExpiration: existingAsset.warrantyExpiration ? new Date(existingAsset.warrantyExpiration).toISOString().slice(0, 10) : "",
         quantity: existingAsset.quantity?.toString() || "1",
-        unitOfMeasure: existingAsset.unitOfMeasure || "each",
-        barcodeType: existingAsset.barcodeType || "code128",
+        unitOfMeasure: existingAsset.unitOfMeasure || "Each",
+        unitOfMeasureOther: "",
         notes: existingAsset.notes || "",
       });
     }
@@ -91,15 +144,17 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const resolvedUnit = form.unitOfMeasure === "Other" ? form.unitOfMeasureOther : form.unitOfMeasure;
     const payload = {
       name: form.name,
       description: form.description || undefined,
-      categoryId: form.categoryId ? parseInt(form.categoryId) : undefined,
+      categoryId: form.category ? parseInt(form.category) : undefined,
       status: form.status as any,
       condition: form.condition as any,
       manufacturer: form.manufacturer || undefined,
       model: form.model || undefined,
       serialNumber: form.serialNumber || undefined,
+      barcodeType: form.barcodeType,
       location: form.location || undefined,
       building: form.building || undefined,
       floor: form.floor || undefined,
@@ -107,6 +162,11 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
       department: form.department || undefined,
       assignedTo: form.assignedTo || undefined,
       custodian: form.custodian || undefined,
+      addressStreet: form.addressStreet || undefined,
+      addressCity: form.addressCity || undefined,
+      addressState: form.addressState || undefined,
+      addressZip: form.addressZip || undefined,
+      parentAssetTag: form.parentAssetTag || undefined,
       acquisitionDate: form.acquisitionDate || undefined,
       acquisitionCost: form.acquisitionCost || undefined,
       currentValue: form.currentValue || undefined,
@@ -114,8 +174,7 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
       usefulLifeYears: form.usefulLifeYears ? parseInt(form.usefulLifeYears) : undefined,
       warrantyExpiration: form.warrantyExpiration || undefined,
       quantity: parseInt(form.quantity) || 1,
-      unitOfMeasure: form.unitOfMeasure,
-      barcodeType: form.barcodeType as any,
+      unitOfMeasure: resolvedUnit || "Each",
       notes: form.notes || undefined,
     };
 
@@ -126,7 +185,7 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
     }
   };
 
-  const inputStyle = {
+  const inputStyle: React.CSSProperties = {
     width: "100%",
     padding: "0.6rem 0.75rem",
     background: C.navy,
@@ -137,21 +196,27 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
     outline: "none",
   };
 
-  const labelStyle = {
+  const labelStyle: React.CSSProperties = {
     display: "block",
     color: C.textMuted,
     fontSize: "0.8rem",
-    fontWeight: 600 as const,
+    fontWeight: 600,
     marginBottom: "0.3rem",
     fontFamily: "'Source Sans 3', sans-serif",
   };
 
-  const sectionStyle = {
+  const sectionStyle: React.CSSProperties = {
     marginBottom: "1.5rem",
     padding: "1.25rem",
     background: C.slate,
     borderRadius: 10,
     border: `1px solid ${C.border}`,
+  };
+
+  const gridStyle: React.CSSProperties = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "1rem",
   };
 
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
@@ -168,22 +233,32 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
       </div>
 
       <form onSubmit={handleSubmit}>
-        {/* Core Info */}
+        {/* ─── Core Information ─────────────────────────────────────────── */}
         <div style={sectionStyle}>
           <h3 style={{ color: C.gold, fontSize: "0.9rem", fontWeight: 600, marginBottom: "1rem", fontFamily: "'Source Sans 3', sans-serif" }}>Core Information</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1rem" }}>
+          <div style={gridStyle}>
             <div>
               <label style={labelStyle}>Asset Name *</label>
               <input type="text" required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} style={inputStyle} placeholder="e.g., Dell OptiPlex 7090" />
             </div>
             <div>
               <label style={labelStyle}>Category</label>
-              <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })} style={inputStyle}>
+              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} style={inputStyle}>
                 <option value="">— Select Category —</option>
-                {categories?.map((cat) => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                {PREDEFINED_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
+              {form.category === "Other — Describe" && (
+                <input
+                  type="text"
+                  value={form.categoryOther}
+                  onChange={(e) => setForm({ ...form, categoryOther: e.target.value })}
+                  style={{ ...inputStyle, marginTop: "0.5rem" }}
+                  placeholder="Describe the category..."
+                  autoFocus
+                />
+              )}
             </div>
             <div>
               <label style={labelStyle}>Status</label>
@@ -194,6 +269,8 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
                 <option value="disposed">Disposed</option>
                 <option value="lost">Lost</option>
                 <option value="transferred">Transferred</option>
+                <option value="dam_op">Dam Op</option>
+                <option value="dam_inop">Dam Inop</option>
               </select>
             </div>
             <div>
@@ -214,10 +291,10 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
           </div>
         </div>
 
-        {/* Manufacturer & Identification */}
+        {/* ─── Manufacturer & Identification ────────────────────────────── */}
         <div style={sectionStyle}>
           <h3 style={{ color: C.gold, fontSize: "0.9rem", fontWeight: 600, marginBottom: "1rem", fontFamily: "'Source Sans 3', sans-serif" }}>Manufacturer & Identification</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1rem" }}>
+          <div style={gridStyle}>
             <div>
               <label style={labelStyle}>Manufacturer</label>
               <input type="text" value={form.manufacturer} onChange={(e) => setForm({ ...form, manufacturer: e.target.value })} style={inputStyle} placeholder="e.g., Dell, HP, Cisco" />
@@ -233,21 +310,21 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
             <div>
               <label style={labelStyle}>Barcode Type</label>
               <select value={form.barcodeType} onChange={(e) => setForm({ ...form, barcodeType: e.target.value })} style={inputStyle}>
-                <option value="code128">Code 128</option>
-                <option value="code39">Code 39</option>
-                <option value="qr">QR Code</option>
+                {BARCODE_TYPES.map((bt) => (
+                  <option key={bt.value} value={bt.value}>{bt.label}</option>
+                ))}
               </select>
             </div>
           </div>
         </div>
 
-        {/* Location */}
+        {/* ─── Location & Assignment ───────────────────────────────────── */}
         <div style={sectionStyle}>
           <h3 style={{ color: C.gold, fontSize: "0.9rem", fontWeight: 600, marginBottom: "1rem", fontFamily: "'Source Sans 3', sans-serif" }}>Location & Assignment</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+          <div style={gridStyle}>
             <div>
-              <label style={labelStyle}>Location</label>
-              <input type="text" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} style={inputStyle} placeholder="Site or campus" />
+              <label style={labelStyle}>Location / Site</label>
+              <input type="text" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} style={inputStyle} placeholder="Site or campus name" />
             </div>
             <div>
               <label style={labelStyle}>Building</label>
@@ -274,12 +351,47 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
               <input type="text" value={form.custodian} onChange={(e) => setForm({ ...form, custodian: e.target.value })} style={inputStyle} />
             </div>
           </div>
+
+          {/* Address Block */}
+          <div style={{ marginTop: "1.25rem", padding: "1rem", background: C.navy, borderRadius: 8, border: `1px solid ${C.border}` }}>
+            <h4 style={{ color: C.silver, fontSize: "0.8rem", fontWeight: 600, marginBottom: "0.75rem", fontFamily: "'Source Sans 3', sans-serif" }}>Physical Address</h4>
+            <div style={gridStyle}>
+              <div style={{ gridColumn: "1 / -1" }}>
+                <label style={labelStyle}>Street Address</label>
+                <input type="text" value={form.addressStreet} onChange={(e) => setForm({ ...form, addressStreet: e.target.value })} style={inputStyle} placeholder="123 Main Street" />
+              </div>
+              <div>
+                <label style={labelStyle}>City</label>
+                <input type="text" value={form.addressCity} onChange={(e) => setForm({ ...form, addressCity: e.target.value })} style={inputStyle} placeholder="City" />
+              </div>
+              <div>
+                <label style={labelStyle}>State</label>
+                <input type="text" value={form.addressState} onChange={(e) => setForm({ ...form, addressState: e.target.value })} style={inputStyle} placeholder="State" />
+              </div>
+              <div>
+                <label style={labelStyle}>ZIP Code</label>
+                <input type="text" value={form.addressZip} onChange={(e) => setForm({ ...form, addressZip: e.target.value })} style={inputStyle} placeholder="ZIP" />
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Financial */}
+        {/* ─── Room Bundling ───────────────────────────────────────────── */}
+        <div style={sectionStyle}>
+          <h3 style={{ color: C.gold, fontSize: "0.9rem", fontWeight: 600, marginBottom: "0.5rem", fontFamily: "'Source Sans 3', sans-serif" }}>Room / Bundle Grouping</h3>
+          <p style={{ color: C.textMuted, fontSize: "0.8rem", marginBottom: "1rem" }}>
+            Optionally assign this asset to a parent asset tag (e.g., a "Room" asset) to group multiple items under one location tag.
+          </p>
+          <div>
+            <label style={labelStyle}>Parent Asset Tag</label>
+            <input type="text" value={form.parentAssetTag} onChange={(e) => setForm({ ...form, parentAssetTag: e.target.value })} style={inputStyle} placeholder="e.g., LAI-ROOM01 (leave blank if standalone)" />
+          </div>
+        </div>
+
+        {/* ─── Financial & Quantity ────────────────────────────────────── */}
         <div style={sectionStyle}>
           <h3 style={{ color: C.gold, fontSize: "0.9rem", fontWeight: 600, marginBottom: "1rem", fontFamily: "'Source Sans 3', sans-serif" }}>Financial & Quantity</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
+          <div style={gridStyle}>
             <div>
               <label style={labelStyle}>Acquisition Date</label>
               <input type="date" value={form.acquisitionDate} onChange={(e) => setForm({ ...form, acquisitionDate: e.target.value })} style={inputStyle} />
@@ -310,18 +422,32 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
             </div>
             <div>
               <label style={labelStyle}>Unit of Measure</label>
-              <input type="text" value={form.unitOfMeasure} onChange={(e) => setForm({ ...form, unitOfMeasure: e.target.value })} style={inputStyle} placeholder="each, box, pallet" />
+              <select value={form.unitOfMeasure} onChange={(e) => setForm({ ...form, unitOfMeasure: e.target.value })} style={inputStyle}>
+                {UNITS_OF_MEASURE.map((u) => (
+                  <option key={u} value={u}>{u}</option>
+                ))}
+              </select>
+              {form.unitOfMeasure === "Other" && (
+                <input
+                  type="text"
+                  value={form.unitOfMeasureOther}
+                  onChange={(e) => setForm({ ...form, unitOfMeasureOther: e.target.value })}
+                  style={{ ...inputStyle, marginTop: "0.5rem" }}
+                  placeholder="Specify unit of measure..."
+                  autoFocus
+                />
+              )}
             </div>
           </div>
         </div>
 
-        {/* Notes */}
+        {/* ─── Notes ──────────────────────────────────────────────────── */}
         <div style={sectionStyle}>
           <h3 style={{ color: C.gold, fontSize: "0.9rem", fontWeight: 600, marginBottom: "1rem", fontFamily: "'Source Sans 3', sans-serif" }}>Notes</h3>
           <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} style={{ ...inputStyle, minHeight: 100, resize: "vertical" }} placeholder="Additional notes..." />
         </div>
 
-        {/* Submit */}
+        {/* ─── Submit ─────────────────────────────────────────────────── */}
         <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
           <button type="button" onClick={onCancel} style={{ padding: "0.75rem 1.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 8, color: C.silver, cursor: "pointer", fontSize: "0.9rem" }}>
             Cancel

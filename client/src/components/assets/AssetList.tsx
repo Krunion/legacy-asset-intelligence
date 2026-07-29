@@ -19,6 +19,8 @@ const STATUS_COLORS: Record<string, string> = {
   in_repair: "#F59E0B",
   lost: "#DC2626",
   transferred: "#8B5CF6",
+  dam_op: "#F97316",
+  dam_inop: "#B91C1C",
 };
 
 const CONDITION_LABELS: Record<string, string> = {
@@ -35,6 +37,11 @@ export default function AssetList({ onView, onEdit, onAdd, searchQuery, onSearch
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [sortBy, setSortBy] = useState<"createdAt" | "name" | "assetTag" | "manufacturer" | "location">("createdAt");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const utils = trpc.useUtils();
+
+  const deleteMutation = trpc.assets.delete.useMutation({
+    onSuccess: () => { utils.assets.list.invalidate(); utils.assets.stats.invalidate(); },
+  });
 
   const { data, isLoading } = trpc.assets.list.useQuery({
     page,
@@ -100,6 +107,8 @@ export default function AssetList({ onView, onEdit, onAdd, searchQuery, onSearch
           <option value="disposed">Disposed</option>
           <option value="lost">Lost</option>
           <option value="transferred">Transferred</option>
+          <option value="dam_op">Dam Op</option>
+          <option value="dam_inop">Dam Inop</option>
         </select>
       </div>
 
@@ -170,12 +179,20 @@ export default function AssetList({ onView, onEdit, onAdd, searchQuery, onSearch
                     <td style={{ padding: "0.65rem 1rem", color: C.textMuted }}>{CONDITION_LABELS[asset.condition] || asset.condition}</td>
                     <td style={{ padding: "0.65rem 1rem", color: C.text, fontFamily: "'JetBrains Mono', monospace" }}>{asset.quantity}</td>
                     <td style={{ padding: "0.65rem 1rem" }}>
-                      <button
-                        onClick={(e) => { e.stopPropagation(); onEdit(asset.id); }}
-                        style={{ padding: "0.3rem 0.6rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.silver, cursor: "pointer", fontSize: "0.75rem" }}
-                      >
-                        Edit
-                      </button>
+                      <div style={{ display: "flex", gap: "0.3rem" }}>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); onEdit(asset.id); }}
+                          style={{ padding: "0.3rem 0.6rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.silver, cursor: "pointer", fontSize: "0.75rem" }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); if (confirm(`Delete "${asset.name}"?`)) deleteMutation.mutate({ id: asset.id }); }}
+                          style={{ padding: "0.3rem 0.6rem", background: "#DC262615", border: `1px solid #DC262640`, borderRadius: 4, color: "#EF4444", cursor: "pointer", fontSize: "0.75rem" }}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

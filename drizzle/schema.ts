@@ -72,7 +72,7 @@ export const assets = mysqlTable("assets", {
   description: text("description"),
   // Classification
   categoryId: int("categoryId"),
-  status: mysqlEnum("status", ["active", "inactive", "disposed", "in_repair", "lost", "transferred"]).default("active").notNull(),
+  status: mysqlEnum("status", ["active", "inactive", "disposed", "in_repair", "lost", "transferred", "dam_op", "dam_inop"]).default("active").notNull(),
   condition: mysqlEnum("condition", ["new", "excellent", "good", "fair", "poor", "salvage"]).default("good").notNull(),
   // Manufacturer & Model
   manufacturer: varchar("manufacturer", { length: 255 }),
@@ -86,6 +86,13 @@ export const assets = mysqlTable("assets", {
   department: varchar("department", { length: 255 }),
   assignedTo: varchar("assignedTo", { length: 255 }),
   custodian: varchar("custodian", { length: 255 }),
+  // Address block
+  addressStreet: varchar("addressStreet", { length: 500 }),
+  addressCity: varchar("addressCity", { length: 255 }),
+  addressState: varchar("addressState", { length: 100 }),
+  addressZip: varchar("addressZip", { length: 20 }),
+  // Room bundling — parent asset tag this asset belongs to
+  parentAssetTag: varchar("parentAssetTag", { length: 100 }),
   // Financial
   acquisitionDate: timestamp("acquisitionDate"),
   acquisitionCost: decimal("acquisitionCost", { precision: 12, scale: 2 }),
@@ -101,7 +108,7 @@ export const assets = mysqlTable("assets", {
   quantity: int("quantity").default(1).notNull(),
   unitOfMeasure: varchar("unitOfMeasure", { length: 50 }).default("each"),
   // Barcode
-  barcodeType: mysqlEnum("barcodeType", ["code128", "code39", "qr"]).default("code128"),
+  barcodeType: varchar("barcodeType", { length: 50 }).default("code128"), // code128, code39, qr, datamatrix, upca, ean13, pdf417, other_unknown, no_barcode, barcode_damaged
   barcodeValue: varchar("barcodeValue", { length: 255 }), // defaults to assetTag if not set
   // Custom fields (JSON for flexibility)
   customFields: json("customFields"),

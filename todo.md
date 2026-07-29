@@ -441,4 +441,16 @@
 - [x] Frontend: Bulk export to CSV (Asset Panda compatible format)
 - [x] Frontend: Bulk import from CSV
 - [x] Routing: Add /assets route with full navigation
-- [ ] Deploy and deliver working URL (pending checkpoint)
+- [x] Deploy and deliver working URL — checkpoint 0e4ec471, live at legacyassetintelligence.com/assets
+
+## Asset Management Improvements (July 29, 2026)
+- [x] Categories dropdown: 15 predefined categories + "Other — Describe" with text input
+- [x] Status: Add "Dam Op" and "Dam Inop" options
+- [x] Barcode types: Add Data Matrix, UPC-A, EAN-13, PDF417, Other/Unknown, No Barcode Present, Barcode Damaged/Unreadable
+- [x] Location section: Add fillable address block (street, city, state, zip)
+- [x] Unit of measure: Full dropdown (Each, Unit, Item, Piece, Pair, Set, Kit, Lot, Batch, Pack, Box, Case, Carton, Bundle, Pallet, Roll, Spool, Sheet, Bag, Bottle, Can, Container, Bin, Drum, Barrel, Cylinder, Tank, Room, Other)
+- [x] Room bundling: Assets can be bundled under a parent "Room" asset tag
+- [x] Label printing: Show serial number and location/dept without interfering with barcode
+- [x] Label printing: Auto-scale labels for any printer type
+- [x] Label printing: Sheet printing mode (all barcodes on one page for large printers)
+- [x] Asset Register: Add delete button and clear button per asset row

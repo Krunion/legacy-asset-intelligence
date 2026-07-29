@@ -20,22 +20,25 @@ interface LabelPrinterProps {
   onClose: () => void;
 }
 
-type LabelSize = "dymo_30252" | "dymo_30336" | "zebra_2x1" | "avery_5160" | "custom";
+type LabelSize = "dymo_30252" | "dymo_30336" | "zebra_2x1" | "avery_5160" | "sheet_letter" | "custom";
+type PrintMode = "individual" | "sheet";
 
 const LABEL_SIZES: Record<string, { width: number; height: number; name: string; description: string }> = {
-  dymo_30252: { width: 252, height: 79, name: "DYMO 30252", description: "1-1/8\" x 3-1/2\" Address" },
-  dymo_30336: { width: 180, height: 36, name: "DYMO 30336", description: "1\" x 2-1/8\" Small" },
-  zebra_2x1: { width: 192, height: 96, name: "Zebra 2x1", description: "2\" x 1\" Standard" },
-  avery_5160: { width: 189, height: 72, name: "Avery 5160", description: "1\" x 2-5/8\" Labels" },
-  custom: { width: 200, height: 80, name: "Custom", description: "Custom size" },
+  dymo_30252: { width: 336, height: 108, name: "DYMO 30252", description: '1-1/8" x 3-1/2" Address' },
+  dymo_30336: { width: 204, height: 96, name: "DYMO 30336", description: '1" x 2-1/8" Small' },
+  zebra_2x1: { width: 192, height: 96, name: "Zebra 2x1", description: '2" x 1" Standard' },
+  avery_5160: { width: 252, height: 96, name: "Avery 5160", description: '1" x 2-5/8" (30/sheet)' },
+  sheet_letter: { width: 252, height: 96, name: "Letter Sheet", description: '8.5" x 11" (30 labels/page)' },
+  custom: { width: 288, height: 108, name: "Custom", description: "Custom size" },
 };
 
 export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
   const [labelSize, setLabelSize] = useState<LabelSize>("dymo_30252");
   const [showName, setShowName] = useState(true);
   const [showSerial, setShowSerial] = useState(true);
-  const [showLocation, setShowLocation] = useState(false);
+  const [showLocation, setShowLocation] = useState(true);
   const [copies, setCopies] = useState(1);
+  const [printMode, setPrintMode] = useState<PrintMode>("individual");
   const previewRef = useRef<HTMLDivElement>(null);
 
   const currentSize = LABEL_SIZES[labelSize];
@@ -47,6 +50,10 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
     const printWindow = window.open("", "_blank");
     if (!printWindow) return;
 
+    const isSheet = printMode === "sheet";
+    const labelsPerRow = 3;
+    const labelsPerPage = 30; // 10 rows x 3 cols for Avery 5160 / letter sheet
+
     printWindow.document.write(`
       <html>
         <head>
@@ -55,30 +62,71 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body { font-family: 'Arial', sans-serif; }
             @media print {
+              ${isSheet ? `
+              @page { 
+                size: letter;
+                margin: 0.5in 0.19in;
+              }
+              .sheet-grid {
+                display: grid;
+                grid-template-columns: repeat(${labelsPerRow}, 1fr);
+                gap: 0;
+                width: 100%;
+              }
+              .label {
+                width: 2.625in;
+                height: 1in;
+                padding: 0.05in 0.1in;
+                display: flex;
+                align-items: center;
+                gap: 0.08in;
+                overflow: hidden;
+                border: none;
+              }
+              .page-break { page-break-after: always; }
+              ` : `
               @page { 
                 size: ${currentSize.width * 0.75}pt ${currentSize.height * 0.75}pt;
                 margin: 0;
               }
               .label { 
                 page-break-after: always;
-                width: ${currentSize.width}px;
-                height: ${currentSize.height}px;
+                width: 100%;
+                height: 100%;
+                padding: 4px 6px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                overflow: hidden;
               }
               .label:last-child { page-break-after: avoid; }
+              `}
+              .barcode-area { flex-shrink: 0; display: flex; align-items: center; }
+              .barcode-area img, .barcode-area svg { max-height: 100%; width: auto; }
+              .info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+              .info .tag { font-weight: bold; font-size: 9px; letter-spacing: 0.5px; }
+              .info .name { font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+              .info .detail { font-size: 7px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+            }
+            /* Screen preview styles */
+            .sheet-grid {
+              display: grid;
+              grid-template-columns: repeat(${labelsPerRow}, 1fr);
+              gap: 2px;
+              width: 100%;
             }
             .label {
-              width: ${currentSize.width}px;
-              height: ${currentSize.height}px;
+              width: ${isSheet ? "2.625in" : currentSize.width + "px"};
+              height: ${isSheet ? "1in" : currentSize.height + "px"};
               border: 1px dashed #ccc;
-              padding: 4px;
+              padding: 4px 6px;
               display: flex;
               align-items: center;
               gap: 6px;
-              margin-bottom: 4px;
               overflow: hidden;
             }
-            .barcode-area { flex-shrink: 0; }
-            .barcode-area img, .barcode-area canvas, .barcode-area svg { max-height: ${currentSize.height - 12}px; }
+            .barcode-area { flex-shrink: 0; display: flex; align-items: center; }
+            .barcode-area img, .barcode-area svg { max-height: ${isSheet ? "0.85in" : (currentSize.height - 16) + "px"}; width: auto; }
             .info { flex: 1; min-width: 0; }
             .info .tag { font-weight: bold; font-size: 9px; letter-spacing: 0.5px; }
             .info .name { font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -94,18 +142,48 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
     setTimeout(() => {
       printWindow.print();
       printWindow.close();
-    }, 500);
+    }, 600);
   };
+
+  // Build label list with copies
+  const allLabels = assets.flatMap((asset) =>
+    Array.from({ length: copies }, (_, i) => ({ ...asset, _copyIdx: i }))
+  );
+
+  // For sheet mode, chunk into pages
+  const labelsPerPage = 30;
+  const pages: typeof allLabels[] = [];
+  if (printMode === "sheet") {
+    for (let i = 0; i < allLabels.length; i += labelsPerPage) {
+      pages.push(allLabels.slice(i, i + labelsPerPage));
+    }
+  }
 
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.8)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
-      <div style={{ background: "#1a2332", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, maxWidth: 800, width: "100%", maxHeight: "90vh", overflow: "auto", padding: "1.5rem" }}>
+      <div style={{ background: "#1a2332", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 12, maxWidth: 900, width: "100%", maxHeight: "90vh", overflow: "auto", padding: "1.5rem" }}>
         {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
           <h2 style={{ fontSize: "1.3rem", fontWeight: 700, color: "#F5F7FA" }}>
             Print Labels ({assets.length} asset{assets.length !== 1 ? "s" : ""})
           </h2>
           <button onClick={onClose} style={{ background: "none", border: "none", color: "#94A3B8", fontSize: "1.5rem", cursor: "pointer" }}>×</button>
+        </div>
+
+        {/* Print Mode Toggle */}
+        <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+          <button
+            onClick={() => setPrintMode("individual")}
+            style={{ padding: "0.5rem 1rem", background: printMode === "individual" ? "#0D9488" : "rgba(100,116,139,0.2)", color: printMode === "individual" ? "white" : "#94A3B8", border: "none", borderRadius: 6, cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}
+          >
+            Individual Labels
+          </button>
+          <button
+            onClick={() => setPrintMode("sheet")}
+            style={{ padding: "0.5rem 1rem", background: printMode === "sheet" ? "#0D9488" : "rgba(100,116,139,0.2)", color: printMode === "sheet" ? "white" : "#94A3B8", border: "none", borderRadius: 6, cursor: "pointer", fontSize: "0.8rem", fontWeight: 600 }}
+          >
+            Full Sheet (All on One Page)
+          </button>
         </div>
 
         {/* Settings */}
@@ -135,7 +213,7 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
           </div>
         </div>
 
-        {/* Options */}
+        {/* Display Options */}
         <div style={{ display: "flex", gap: "1rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
           <label style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.85rem", color: "#C8D0D8", cursor: "pointer" }}>
             <input type="checkbox" checked={showName} onChange={(e) => setShowName(e.target.checked)} />
@@ -147,22 +225,41 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
           </label>
           <label style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.85rem", color: "#C8D0D8", cursor: "pointer" }}>
             <input type="checkbox" checked={showLocation} onChange={(e) => setShowLocation(e.target.checked)} />
-            Show Location
+            Show Location / Dept
           </label>
         </div>
 
         {/* Preview */}
-        <div style={{ background: "white", borderRadius: 8, padding: "1rem", marginBottom: "1.5rem", maxHeight: 400, overflow: "auto" }}>
+        <div style={{ background: "white", borderRadius: 8, padding: "1rem", marginBottom: "1.5rem", maxHeight: 450, overflow: "auto" }}>
           <div ref={previewRef}>
-            {assets.flatMap((asset) =>
-              Array.from({ length: copies }, (_, copyIdx) => (
+            {printMode === "sheet" ? (
+              pages.map((page, pageIdx) => (
+                <div key={pageIdx} className={pageIdx < pages.length - 1 ? "page-break" : ""}>
+                  <div className="sheet-grid">
+                    {page.map((asset, idx) => (
+                      <LabelPreview
+                        key={`${asset.id}-${asset._copyIdx}-${idx}`}
+                        asset={asset}
+                        size={currentSize}
+                        showName={showName}
+                        showSerial={showSerial}
+                        showLocation={showLocation}
+                        isSheet={true}
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))
+            ) : (
+              allLabels.map((asset, idx) => (
                 <LabelPreview
-                  key={`${asset.id}-${copyIdx}`}
+                  key={`${asset.id}-${asset._copyIdx}-${idx}`}
                   asset={asset}
                   size={currentSize}
                   showName={showName}
                   showSerial={showSerial}
                   showLocation={showLocation}
+                  isSheet={false}
                 />
               ))
             )}
@@ -181,7 +278,7 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
             onClick={handlePrint}
             style={{ padding: "0.6rem 1.2rem", background: "#0D9488", color: "white", border: "none", borderRadius: 6, cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}
           >
-            🖨️ Print Labels
+            Print Labels
           </button>
         </div>
       </div>
@@ -189,53 +286,97 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
   );
 }
 
-function LabelPreview({ asset, size, showName, showSerial, showLocation }: {
+function LabelPreview({ asset, size, showName, showSerial, showLocation, isSheet }: {
   asset: Asset;
   size: { width: number; height: number };
   showName: boolean;
   showSerial: boolean;
   showLocation: boolean;
+  isSheet: boolean;
 }) {
   const barcodeRef = useRef<SVGSVGElement>(null);
   const [qrDataUrl, setQrDataUrl] = useState<string>("");
   const barcodeValue = asset.barcodeValue || asset.assetTag;
   const barcodeType = asset.barcodeType || "code128";
 
+  // Calculate barcode height to fit within label while leaving room for text
+  const barcodeHeight = isSheet ? 60 : Math.min(size.height - 20, 70);
+
   useEffect(() => {
-    if (barcodeType === "qr") {
-      QRCode.toDataURL(barcodeValue, { width: size.height - 12, margin: 1 })
+    if (barcodeType === "qr" || barcodeType === "datamatrix") {
+      QRCode.toDataURL(barcodeValue, { width: barcodeHeight, margin: 1 })
         .then(setQrDataUrl)
         .catch(() => {});
-    } else if (barcodeRef.current) {
+    } else if (barcodeRef.current && barcodeType !== "no_barcode" && barcodeType !== "barcode_damaged" && barcodeType !== "other_unknown") {
       try {
+        // Auto-select JsBarcode format based on barcodeType
+        let format = "CODE128";
+        if (barcodeType === "code39") format = "CODE39";
+        else if (barcodeType === "upca") format = "UPC";
+        else if (barcodeType === "ean13") format = "EAN13";
+        else if (barcodeType === "pdf417") format = "CODE128"; // PDF417 not supported by JsBarcode, fallback to Code128
+
         JsBarcode(barcodeRef.current, barcodeValue, {
-          format: barcodeType === "code39" ? "CODE39" : "CODE128",
+          format,
           width: 1.2,
-          height: size.height - 30,
-          displayValue: true,
-          fontSize: 8,
-          margin: 2,
+          height: barcodeHeight - 14,
+          displayValue: false, // We show the value separately below
+          margin: 1,
         });
-      } catch (e) {
-        // fallback
+      } catch (_e) {
+        // Fallback to CODE128 if format fails
+        try {
+          JsBarcode(barcodeRef.current, barcodeValue, {
+            format: "CODE128",
+            width: 1.2,
+            height: barcodeHeight - 14,
+            displayValue: false,
+            margin: 1,
+          });
+        } catch (_e2) { /* ignore */ }
       }
     }
-  }, [barcodeValue, barcodeType, size.height]);
+  }, [barcodeValue, barcodeType, barcodeHeight]);
+
+  const isNoBarcode = barcodeType === "no_barcode" || barcodeType === "barcode_damaged" || barcodeType === "other_unknown";
 
   return (
-    <div className="label" style={{ width: size.width, height: size.height, border: "1px dashed #ccc", padding: 4, display: "flex", alignItems: "center", gap: 6, marginBottom: 4, overflow: "hidden" }}>
-      <div className="barcode-area">
-        {barcodeType === "qr" ? (
-          qrDataUrl ? <img src={qrDataUrl} alt="QR" style={{ height: size.height - 12 }} /> : null
-        ) : (
-          <svg ref={barcodeRef} />
+    <div className="label" style={{
+      width: isSheet ? "100%" : size.width,
+      height: isSheet ? "1in" : size.height,
+      border: "1px dashed #ccc",
+      padding: "3px 6px",
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      marginBottom: isSheet ? 0 : 4,
+      overflow: "hidden",
+    }}>
+      {/* Barcode Area — takes left side, never overlaps text */}
+      {!isNoBarcode && (
+        <div className="barcode-area" style={{ flexShrink: 0, display: "flex", alignItems: "center", maxWidth: "45%" }}>
+          {(barcodeType === "qr" || barcodeType === "datamatrix") ? (
+            qrDataUrl ? <img src={qrDataUrl} alt="QR" style={{ height: barcodeHeight, width: barcodeHeight }} /> : null
+          ) : (
+            <svg ref={barcodeRef} style={{ maxHeight: barcodeHeight }} />
+          )}
+        </div>
+      )}
+
+      {/* Info Area — right side, never overlaps barcode */}
+      <div className="info" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 1 }}>
+        <div className="tag" style={{ fontWeight: "bold", fontSize: 9, letterSpacing: "0.5px", lineHeight: 1.2 }}>{asset.assetTag}</div>
+        {showName && <div className="name" style={{ fontSize: 8, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: 1.2 }}>{asset.name}</div>}
+        {showSerial && asset.serialNumber && (
+          <div className="detail" style={{ fontSize: 7, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: 1.2 }}>
+            SN: {asset.serialNumber}
+          </div>
         )}
-      </div>
-      <div className="info" style={{ flex: 1, minWidth: 0 }}>
-        <div className="tag" style={{ fontWeight: "bold", fontSize: 9, letterSpacing: "0.5px" }}>{asset.assetTag}</div>
-        {showName && <div className="name" style={{ fontSize: 8, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{asset.name}</div>}
-        {showSerial && asset.serialNumber && <div className="detail" style={{ fontSize: 7, color: "#555" }}>SN: {asset.serialNumber}</div>}
-        {showLocation && asset.location && <div className="detail" style={{ fontSize: 7, color: "#555" }}>{asset.location}</div>}
+        {showLocation && (asset.location || asset.department) && (
+          <div className="detail" style={{ fontSize: 7, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: 1.2 }}>
+            {[asset.department, asset.location].filter(Boolean).join(" | ")}
+          </div>
+        )}
       </div>
     </div>
   );
