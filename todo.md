@@ -425,3 +425,20 @@
 - [x] Add portal-calculator-container class to EmployeePortal wrapper div
 - [x] Verify all 11 tests still pass after CSS changes
 - [x] Verify portal dashboard renders correctly with fix applied
+
+## Asset Management System (July 29, 2026)
+- [x] Database schema: assets, asset_categories, asset_photos tables
+- [x] Backend: asset CRUD procedures (create, read, update, delete, list with pagination/search)
+- [x] Backend: asset photo upload to S3 storage
+- [x] Backend: bulk CSV import/export
+- [x] Frontend: Asset Register page with table view, search, filters
+- [x] Frontend: Asset Detail page with all fields, photos, barcode/QR display
+- [x] Frontend: Add/Edit Asset form with all fields
+- [x] Frontend: Barcode (Code 128) and QR code generation per asset
+- [x] Frontend: Camera-based barcode/QR scanning (mobile)
+- [x] Frontend: Photo capture and upload (mobile camera + file upload)
+- [x] Frontend: Label printing (DYMO/Zebra/Avery templates)
+- [x] Frontend: Bulk export to CSV (Asset Panda compatible format)
+- [x] Frontend: Bulk import from CSV
+- [x] Routing: Add /assets route with full navigation
+- [ ] Deploy and deliver working URL (pending checkpoint)

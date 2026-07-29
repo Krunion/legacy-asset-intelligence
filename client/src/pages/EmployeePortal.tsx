@@ -166,12 +166,14 @@ export default function EmployeePortal() {
       action: "Open Calculator",
     },
     {
-      id: null as ActiveTool,
-      title: "Asset Panda Demo",
-      description: "Access to Asset Panda platform demo for client demonstrations",
-      icon: "🐼",
+      id: "asset-management" as ActiveTool,
+      title: "Asset Management System",
+      description: "Full asset register with barcode/QR generation, photo capture, label printing, and CSV import/export",
+      icon: "📦",
       type: "Platform",
-      comingSoon: true,
+      action: "Open System",
+      comingSoon: false,
+      link: "/assets",
     },
 
   ];
@@ -222,7 +224,7 @@ export default function EmployeePortal() {
                 opacity: resource.comingSoon ? 0.6 : 1,
                 backdropFilter: "blur(10px)",
               }}
-              onClick={() => !resource.comingSoon && resource.id && setActiveTool(resource.id)}
+              onClick={() => { if (resource.comingSoon) return; if ((resource as any).link) { window.location.href = (resource as any).link; } else if (resource.id) { setActiveTool(resource.id); } }}
               onMouseEnter={(e) => {
                 if (!resource.comingSoon) {
                   (e.currentTarget as HTMLElement).style.background = "rgba(15, 20, 25, 0.5)";

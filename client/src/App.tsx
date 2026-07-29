@@ -15,6 +15,7 @@ import Team from "./pages/Team";
 import FAQ from "./pages/FAQ";
 import Career from "./pages/Career";
 import EmployeePortal from "./pages/EmployeePortal";
+import AssetManagement from "./pages/AssetManagement";
 import Contact from "./pages/Contact";
 import Insights from "./pages/Insights";
 import Resources from "./pages/Resources";
@@ -45,6 +46,7 @@ function Router() {
       <Route path={"/careers"} component={Career} />
       <Route path={"/career"} component={Career} />
       <Route path={"/employee-portal"} component={EmployeePortal} />
+      <Route path={"/assets"} component={AssetManagement} />
       <Route path={"/contact"} component={Contact} />
       <Route path={"/privacy"} component={Privacy} />
       <Route path={"/terms"} component={Terms} />
