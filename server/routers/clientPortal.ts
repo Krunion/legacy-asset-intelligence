@@ -812,11 +812,20 @@ export const clientPortalRouter = router({
       itemType: z.enum(["invoice", "payment", "change_order", "credit"]),
       description: z.string(),
       amount: z.string(),
-      status: z.enum(["pending", "sent", "paid", "overdue", "cancelled", "approved", "rejected"]).default("pending"),
+      amountPaid: z.string().optional(),
+      remainingBalance: z.string().optional(),
+      status: z.enum(["draft", "upcoming", "due", "sent", "partially_paid", "paid", "past_due", "overdue", "cancelled", "disputed", "pending", "approved", "rejected"]).default("draft"),
       invoiceNumber: z.string().optional(),
+      billingPeriod: z.string().optional(),
+      invoiceDate: z.string().optional(),
       dueDate: z.string().optional(),
       paidDate: z.string().optional(),
+      paymentReceivedDate: z.string().optional(),
+      nextPaymentDate: z.string().optional(),
+      nextPaymentAmount: z.string().optional(),
+      pastDueAmount: z.string().optional(),
       notes: z.string().optional(),
+      isClientVisible: z.number().default(1),
     }))
     .mutation(async ({ input, ctx }) => {
       if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
@@ -824,8 +833,12 @@ export const clientPortalRouter = router({
       if (!db) throw new Error("Database not available");
       const result = await db.insert(projectBilling).values({
         ...input,
+        invoiceDate: input.invoiceDate ? new Date(input.invoiceDate) : null,
         dueDate: input.dueDate ? new Date(input.dueDate) : null,
         paidDate: input.paidDate ? new Date(input.paidDate) : null,
+        paymentReceivedDate: input.paymentReceivedDate ? new Date(input.paymentReceivedDate) : null,
+        nextPaymentDate: input.nextPaymentDate ? new Date(input.nextPaymentDate) : null,
+        createdBy: ctx.user?.id || null,
       });
       return { id: result[0].insertId };
     }),
@@ -951,22 +964,34 @@ export const clientPortalRouter = router({
   updateBillingItem: protectedProcedure
     .input(z.object({
       id: z.number(),
-      status: z.enum(["pending", "sent", "paid", "overdue", "cancelled", "approved", "rejected"]).optional(),
+      status: z.enum(["draft", "upcoming", "due", "sent", "partially_paid", "paid", "past_due", "overdue", "cancelled", "disputed", "pending", "approved", "rejected"]).optional(),
       amount: z.string().optional(),
+      amountPaid: z.string().optional(),
+      remainingBalance: z.string().optional(),
       description: z.string().optional(),
       invoiceNumber: z.string().optional(),
+      billingPeriod: z.string().optional(),
+      invoiceDate: z.string().optional(),
       dueDate: z.string().optional(),
       paidDate: z.string().optional(),
+      paymentReceivedDate: z.string().optional(),
+      nextPaymentDate: z.string().optional(),
+      nextPaymentAmount: z.string().optional(),
+      pastDueAmount: z.string().optional(),
       notes: z.string().optional(),
+      isClientVisible: z.number().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      const { id, dueDate, paidDate, ...data } = input;
-      const updateData: any = { ...data };
+      const { id, dueDate, paidDate, invoiceDate, paymentReceivedDate, nextPaymentDate, ...data } = input;
+      const updateData: any = { ...data, updatedBy: ctx.user?.id || null };
       if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
       if (paidDate !== undefined) updateData.paidDate = paidDate ? new Date(paidDate) : null;
+      if (invoiceDate !== undefined) updateData.invoiceDate = invoiceDate ? new Date(invoiceDate) : null;
+      if (paymentReceivedDate !== undefined) updateData.paymentReceivedDate = paymentReceivedDate ? new Date(paymentReceivedDate) : null;
+      if (nextPaymentDate !== undefined) updateData.nextPaymentDate = nextPaymentDate ? new Date(nextPaymentDate) : null;
       await db.update(projectBilling).set(updateData).where(eq(projectBilling.id, id));
       return { success: true };
     }),

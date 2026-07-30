@@ -727,16 +727,100 @@ function MeetingsPanel({ projectId }: { projectId: number }) {
 // ─── PANEL: Billing & Invoicing ───────────────────────────────────────────────
 function BillingPanel({ projectId }: { projectId: number }) {
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ itemType: "invoice", description: "", amount: "", status: "pending", invoiceNumber: "", dueDate: "", notes: "" });
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [form, setForm] = useState({
+    itemType: "invoice", description: "", amount: "", amountPaid: "",
+    remainingBalance: "", status: "draft", invoiceNumber: "",
+    billingPeriod: "", invoiceDate: "", dueDate: "", paidDate: "",
+    paymentReceivedDate: "", nextPaymentDate: "", nextPaymentAmount: "",
+    pastDueAmount: "", notes: "", isClientVisible: 1,
+  });
 
   const utils = trpc.useUtils();
   const { data: items, isLoading } = trpc.clientPortal.listBillingItems.useQuery({ projectId });
-  const createMutation = trpc.clientPortal.createBillingItem.useMutation({ onSuccess: () => { utils.clientPortal.listBillingItems.invalidate({ projectId }); setShowForm(false); setForm({ itemType: "invoice", description: "", amount: "", status: "pending", invoiceNumber: "", dueDate: "", notes: "" }); } });
+  const resetForm = () => setForm({
+    itemType: "invoice", description: "", amount: "", amountPaid: "",
+    remainingBalance: "", status: "draft", invoiceNumber: "",
+    billingPeriod: "", invoiceDate: "", dueDate: "", paidDate: "",
+    paymentReceivedDate: "", nextPaymentDate: "", nextPaymentAmount: "",
+    pastDueAmount: "", notes: "", isClientVisible: 1,
+  });
+  const createMutation = trpc.clientPortal.createBillingItem.useMutation({ onSuccess: () => { utils.clientPortal.listBillingItems.invalidate({ projectId }); setShowForm(false); setEditingId(null); resetForm(); } });
   const deleteMutation = trpc.clientPortal.deleteBillingItem.useMutation({ onSuccess: () => { utils.clientPortal.listBillingItems.invalidate({ projectId }); } });
   const updateMutation = trpc.clientPortal.updateBillingItem.useMutation({ onSuccess: () => { utils.clientPortal.listBillingItems.invalidate({ projectId }); } });
 
   const itemTypeLabels: Record<string, string> = { invoice: "Invoice", payment: "Payment", change_order: "Change Order", credit: "Credit" };
-  const statusColors: Record<string, string> = { pending: "#F59E0B", sent: "#3B82F6", paid: "#10B981", overdue: "#EF4444", cancelled: "#6B7280", approved: "#059669", rejected: "#DC2626" };
+  const statusColors: Record<string, string> = {
+    draft: "#6B7280", upcoming: "#8B5CF6", due: "#F59E0B", sent: "#3B82F6",
+    partially_paid: "#06B6D4", paid: "#10B981", past_due: "#EF4444",
+    overdue: "#DC2626", cancelled: "#6B7280", disputed: "#EC4899",
+    pending: "#F59E0B", approved: "#059669", rejected: "#DC2626",
+  };
+  const allStatuses = ["draft", "upcoming", "due", "sent", "partially_paid", "paid", "past_due", "overdue", "cancelled", "disputed", "pending", "approved", "rejected"];
+
+  function startEdit(item: any) {
+    setEditingId(item.id);
+    setForm({
+      itemType: item.itemType, description: item.description, amount: String(item.amount || ""),
+      amountPaid: String(item.amountPaid || ""), remainingBalance: String(item.remainingBalance || ""),
+      status: item.status, invoiceNumber: item.invoiceNumber || "",
+      billingPeriod: item.billingPeriod || "",
+      invoiceDate: item.invoiceDate ? new Date(item.invoiceDate).toISOString().split("T")[0] : "",
+      dueDate: item.dueDate ? new Date(item.dueDate).toISOString().split("T")[0] : "",
+      paidDate: item.paidDate ? new Date(item.paidDate).toISOString().split("T")[0] : "",
+      paymentReceivedDate: item.paymentReceivedDate ? new Date(item.paymentReceivedDate).toISOString().split("T")[0] : "",
+      nextPaymentDate: item.nextPaymentDate ? new Date(item.nextPaymentDate).toISOString().split("T")[0] : "",
+      nextPaymentAmount: String(item.nextPaymentAmount || ""),
+      pastDueAmount: String(item.pastDueAmount || ""),
+      notes: item.notes || "", isClientVisible: item.isClientVisible ?? 1,
+    });
+    setShowForm(true);
+  }
+
+  function handleSave() {
+    if (editingId) {
+      updateMutation.mutate({
+        id: editingId,
+        description: form.description || undefined,
+        amount: form.amount || undefined,
+        amountPaid: form.amountPaid || undefined,
+        remainingBalance: form.remainingBalance || undefined,
+        status: form.status as any,
+        invoiceNumber: form.invoiceNumber || undefined,
+        billingPeriod: form.billingPeriod || undefined,
+        invoiceDate: form.invoiceDate || undefined,
+        dueDate: form.dueDate || undefined,
+        paidDate: form.paidDate || undefined,
+        paymentReceivedDate: form.paymentReceivedDate || undefined,
+        nextPaymentDate: form.nextPaymentDate || undefined,
+        nextPaymentAmount: form.nextPaymentAmount || undefined,
+        pastDueAmount: form.pastDueAmount || undefined,
+        notes: form.notes || undefined,
+        isClientVisible: form.isClientVisible,
+      });
+    } else {
+      createMutation.mutate({
+        projectId,
+        itemType: form.itemType as any,
+        description: form.description,
+        amount: form.amount,
+        amountPaid: form.amountPaid || undefined,
+        remainingBalance: form.remainingBalance || undefined,
+        status: form.status as any,
+        invoiceNumber: form.invoiceNumber || undefined,
+        billingPeriod: form.billingPeriod || undefined,
+        invoiceDate: form.invoiceDate || undefined,
+        dueDate: form.dueDate || undefined,
+        paidDate: form.paidDate || undefined,
+        paymentReceivedDate: form.paymentReceivedDate || undefined,
+        nextPaymentDate: form.nextPaymentDate || undefined,
+        nextPaymentAmount: form.nextPaymentAmount || undefined,
+        pastDueAmount: form.pastDueAmount || undefined,
+        notes: form.notes || undefined,
+        isClientVisible: form.isClientVisible,
+      });
+    }
+  }
 
   function printInvoice(item: any) {
     const win = window.open("", "_blank");
@@ -759,8 +843,8 @@ function BillingPanel({ projectId }: { projectId: number }) {
       .footer { text-align: center; color: #64748B; font-size: 0.8rem; margin-top: 3rem; padding-top: 1rem; border-top: 1px solid #E2E8F0; }
       .status { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 4px; font-weight: 600; font-size: 0.8rem; }
       .status-paid { background: #D1FAE5; color: #065F46; }
-      .status-pending { background: #FEF3C7; color: #92400E; }
-      .status-overdue { background: #FEE2E2; color: #991B1B; }
+      .status-pending, .status-draft { background: #FEF3C7; color: #92400E; }
+      .status-overdue, .status-past_due { background: #FEE2E2; color: #991B1B; }
       .status-sent { background: #DBEAFE; color: #1E40AF; }
       @media print { body { padding: 0; } .no-print { display: none; } }
     </style></head><body>
@@ -769,69 +853,122 @@ function BillingPanel({ projectId }: { projectId: number }) {
         <div class="invoice-title"><h1>INVOICE</h1><p>${item.invoiceNumber || "N/A"}</p></div>
       </div>
       <div class="details">
-        <div><h3>Invoice Details</h3><p><strong>Date:</strong> ${new Date(item.createdAt).toLocaleDateString()}</p><p><strong>Due Date:</strong> ${item.dueDate ? new Date(item.dueDate).toLocaleDateString() : "Upon Receipt"}</p><p><strong>Status:</strong> <span class="status status-${item.status}">${item.status.toUpperCase()}</span></p></div>
+        <div><h3>Invoice Details</h3><p><strong>Date:</strong> ${item.invoiceDate ? new Date(item.invoiceDate).toLocaleDateString() : new Date(item.createdAt).toLocaleDateString()}</p><p><strong>Due Date:</strong> ${item.dueDate ? new Date(item.dueDate).toLocaleDateString() : "Upon Receipt"}</p><p><strong>Status:</strong> <span class="status status-${item.status}">${item.status.replace("_", " ").toUpperCase()}</span></p>${item.billingPeriod ? `<p><strong>Period:</strong> ${item.billingPeriod}</p>` : ""}</div>
         <div><h3>From</h3><p><strong>Legacy Asset Intelligence</strong></p><p>Executive Asset Consulting</p><p>kevin.runion@legacyassetintelligence.com</p></div>
       </div>
       <table><thead><tr><th>Description</th><th>Type</th><th style="text-align:right">Amount</th></tr></thead><tbody>
         <tr><td>${item.description}</td><td>${itemTypeLabels[item.itemType]}</td><td style="text-align:right">$${Number(item.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td></tr>
         ${item.notes ? `<tr><td colspan="3" style="color:#64748B;font-size:0.8rem;font-style:italic">Note: ${item.notes}</td></tr>` : ""}
-      </tbody><tfoot><tr class="total-row"><td colspan="2">Total Due</td><td style="text-align:right">$${Number(item.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td></tr></tfoot></table>
+      </tbody><tfoot>
+        <tr class="total-row"><td colspan="2">Total Amount</td><td style="text-align:right">$${Number(item.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td></tr>
+        ${Number(item.amountPaid) > 0 ? `<tr><td colspan="2">Amount Paid</td><td style="text-align:right;color:#10B981">-$${Number(item.amountPaid).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td></tr>` : ""}
+        ${Number(item.remainingBalance) > 0 ? `<tr><td colspan="2"><strong>Balance Due</strong></td><td style="text-align:right"><strong>$${Number(item.remainingBalance).toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></td></tr>` : ""}
+      </tfoot></table>
       <div class="footer"><p>Thank you for your business.</p><p>Legacy Asset Intelligence — Recover Hidden Capital. Strengthen Financial Accountability.</p></div>
       <div class="no-print" style="text-align:center;margin-top:1rem"><button onclick="window.print()" style="padding:0.75rem 2rem;background:#1E3A5F;color:white;border:none;border-radius:6px;font-size:1rem;cursor:pointer">Print Invoice</button></div>
     </body></html>`);
     win.document.close();
   }
 
+  const inputStyle = { width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" as const };
+  const labelStyle = { display: "block" as const, color: C.silver, fontSize: "0.75rem", fontWeight: 600 as const, marginBottom: "0.3rem" };
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-        <p style={{ color: C.textMuted, fontSize: "0.85rem", margin: 0 }}>Invoices, payments, and billing information for this engagement.</p>
-        <button onClick={() => setShowForm(true)} style={{ padding: "0.5rem 1rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer", fontSize: "0.85rem" }}>+ Add Billing Item</button>
+        <p style={{ color: C.textMuted, fontSize: "0.85rem", margin: 0 }}>Full billing management: invoices, payments, change orders, and credits.</p>
+        <button onClick={() => { resetForm(); setEditingId(null); setShowForm(true); }} style={{ padding: "0.5rem 1rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer", fontSize: "0.85rem" }}>+ Add Billing Item</button>
       </div>
 
       {showForm && (
         <div style={{ background: C.navy, borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem", marginBottom: "1.5rem" }}>
-          <h3 style={{ color: C.text, fontSize: "1rem", fontWeight: 600, marginBottom: "1rem" }}>Add Billing Item</h3>
+          <h3 style={{ color: C.text, fontSize: "1rem", fontWeight: 600, marginBottom: "1rem" }}>{editingId ? "Edit Billing Item" : "Add Billing Item"}</h3>
+          {/* Row 1: Type, Status, Invoice#, Billing Period */}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Type *</label>
-              <select value={form.itemType} onChange={(e) => setForm({ ...form, itemType: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem" }}>
+            <div><label style={labelStyle}>Type *</label>
+              <select value={form.itemType} onChange={(e) => setForm({ ...form, itemType: e.target.value })} style={inputStyle}>
                 {Object.entries(itemTypeLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Amount ($) *</label><input type="text" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="5000.00" style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Invoice #</label><input type="text" value={form.invoiceNumber} onChange={(e) => setForm({ ...form, invoiceNumber: e.target.value })} placeholder="INV-001" style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Due Date</label><input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
+            <div><label style={labelStyle}>Status</label>
+              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} style={inputStyle}>
+                {allStatuses.map(s => <option key={s} value={s}>{s.replace(/_/g, " ").toUpperCase()}</option>)}
+              </select>
+            </div>
+            <div><label style={labelStyle}>Invoice #</label><input type="text" value={form.invoiceNumber} onChange={(e) => setForm({ ...form, invoiceNumber: e.target.value })} placeholder="INV-001" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Billing Period</label><input type="text" value={form.billingPeriod} onChange={(e) => setForm({ ...form, billingPeriod: e.target.value })} placeholder="Q1 2026" style={inputStyle} /></div>
           </div>
-          <div style={{ marginBottom: "1rem" }}><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Description *</label><input type="text" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="e.g. Phase 1 Discovery & Assessment" style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
-          <div style={{ marginBottom: "1rem" }}><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Notes</label><textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", resize: "vertical", boxSizing: "border-box" }} /></div>
-          <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
-            <button onClick={() => setShowForm(false)} style={{ padding: "0.5rem 1rem", background: "transparent", border: `1px solid ${C.border}`, borderRadius: 6, color: C.textMuted, cursor: "pointer" }}>Cancel</button>
-            <button onClick={() => createMutation.mutate({ projectId, itemType: form.itemType as any, description: form.description, amount: form.amount, status: form.status as any, invoiceNumber: form.invoiceNumber || undefined, dueDate: form.dueDate || undefined, notes: form.notes || undefined })} disabled={!form.description.trim() || !form.amount || createMutation.isPending} style={{ padding: "0.5rem 1.25rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer" }}>{createMutation.isPending ? "Saving..." : "Save"}</button>
+          {/* Row 2: Amount, Amount Paid, Remaining Balance, Past Due */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Amount ($) *</label><input type="text" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="5000.00" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Amount Paid ($)</label><input type="text" value={form.amountPaid} onChange={(e) => setForm({ ...form, amountPaid: e.target.value })} placeholder="0.00" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Remaining Balance ($)</label><input type="text" value={form.remainingBalance} onChange={(e) => setForm({ ...form, remainingBalance: e.target.value })} placeholder="5000.00" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Past Due Amount ($)</label><input type="text" value={form.pastDueAmount} onChange={(e) => setForm({ ...form, pastDueAmount: e.target.value })} placeholder="0.00" style={inputStyle} /></div>
+          </div>
+          {/* Row 3: Dates */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Invoice Date</label><input type="date" value={form.invoiceDate} onChange={(e) => setForm({ ...form, invoiceDate: e.target.value })} style={inputStyle} /></div>
+            <div><label style={labelStyle}>Due Date</label><input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} style={inputStyle} /></div>
+            <div><label style={labelStyle}>Paid Date</label><input type="date" value={form.paidDate} onChange={(e) => setForm({ ...form, paidDate: e.target.value })} style={inputStyle} /></div>
+            <div><label style={labelStyle}>Payment Received</label><input type="date" value={form.paymentReceivedDate} onChange={(e) => setForm({ ...form, paymentReceivedDate: e.target.value })} style={inputStyle} /></div>
+          </div>
+          {/* Row 4: Next Payment */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 2fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Next Payment Date</label><input type="date" value={form.nextPaymentDate} onChange={(e) => setForm({ ...form, nextPaymentDate: e.target.value })} style={inputStyle} /></div>
+            <div><label style={labelStyle}>Next Payment Amount ($)</label><input type="text" value={form.nextPaymentAmount} onChange={(e) => setForm({ ...form, nextPaymentAmount: e.target.value })} placeholder="0.00" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Description *</label><input type="text" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="e.g. Phase 1 Discovery & Assessment" style={inputStyle} /></div>
+          </div>
+          {/* Row 5: Notes + Client Visibility */}
+          <div style={{ marginBottom: "1rem" }}><label style={labelStyle}>Notes</label><textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} style={{ ...inputStyle, resize: "vertical" }} /></div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+              <input type="checkbox" checked={form.isClientVisible === 1} onChange={(e) => setForm({ ...form, isClientVisible: e.target.checked ? 1 : 0 })} style={{ width: 16, height: 16, accentColor: "#10B981" }} />
+              <span style={{ color: C.textMuted, fontSize: "0.85rem" }}>Visible to Client Portal</span>
+            </label>
+            <div style={{ display: "flex", gap: "0.75rem" }}>
+              <button onClick={() => { setShowForm(false); setEditingId(null); resetForm(); }} style={{ padding: "0.5rem 1rem", background: "transparent", border: `1px solid ${C.border}`, borderRadius: 6, color: C.textMuted, cursor: "pointer" }}>Cancel</button>
+              <button onClick={handleSave} disabled={!form.description.trim() || !form.amount || createMutation.isPending || updateMutation.isPending} style={{ padding: "0.5rem 1.25rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer" }}>{(createMutation.isPending || updateMutation.isPending) ? "Saving..." : editingId ? "Update" : "Save"}</button>
+            </div>
           </div>
         </div>
       )}
 
       {isLoading ? <div style={{ textAlign: "center", padding: "2rem", color: C.textMuted }}>Loading...</div> : !items?.length ? (
-        <div style={{ textAlign: "center", padding: "3rem", background: C.navy, borderRadius: 12, border: `1px solid ${C.border}` }}><p style={{ color: C.textMuted }}>No billing items yet.</p></div>
+        <div style={{ textAlign: "center", padding: "3rem", background: C.navy, borderRadius: 12, border: `1px solid ${C.border}` }}><p style={{ color: C.textMuted }}>No billing items yet. Add your first invoice or payment above.</p></div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
           {items.map((item: any) => (
-            <div key={item.id} style={{ background: C.navy, borderRadius: 10, border: `1px solid ${C.border}`, padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
-                  <span style={{ background: statusColors[item.status] || C.slate, color: "#fff", padding: "0.15rem 0.5rem", borderRadius: 4, fontSize: "0.65rem", fontWeight: 600 }}>{item.status}</span>
-                  <span style={{ color: C.text, fontWeight: 600, fontSize: "0.9rem" }}>{item.description}</span>
-                  {item.invoiceNumber && <span style={{ color: C.textMuted, fontSize: "0.75rem" }}>#{item.invoiceNumber}</span>}
+            <div key={item.id} style={{ background: C.navy, borderRadius: 10, border: `1px solid ${C.border}`, padding: "1rem 1.25rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem", flexWrap: "wrap" }}>
+                    <span style={{ background: statusColors[item.status] || C.slate, color: "#fff", padding: "0.15rem 0.5rem", borderRadius: 4, fontSize: "0.65rem", fontWeight: 600 }}>{item.status.replace(/_/g, " ").toUpperCase()}</span>
+                    <span style={{ color: C.text, fontWeight: 600, fontSize: "0.9rem" }}>{item.description}</span>
+                    {item.invoiceNumber && <span style={{ color: C.textMuted, fontSize: "0.75rem" }}>#{item.invoiceNumber}</span>}
+                    {item.isClientVisible ? (
+                      <span style={{ padding: "0.1rem 0.4rem", background: "rgba(16,185,129,0.15)", color: "#10B981", borderRadius: 4, fontSize: "0.6rem", fontWeight: 600 }}>CLIENT VISIBLE</span>
+                    ) : (
+                      <span style={{ padding: "0.1rem 0.4rem", background: "rgba(239,68,68,0.15)", color: "#EF4444", borderRadius: 4, fontSize: "0.6rem", fontWeight: 600 }}>INTERNAL</span>
+                    )}
+                  </div>
+                  <div style={{ display: "flex", gap: "1rem", color: C.textMuted, fontSize: "0.75rem", flexWrap: "wrap" }}>
+                    <span>{itemTypeLabels[item.itemType]}</span>
+                    {item.billingPeriod && <span>Period: {item.billingPeriod}</span>}
+                    {item.dueDate && <span>Due: {new Date(item.dueDate).toLocaleDateString()}</span>}
+                    {item.paidDate && <span>Paid: {new Date(item.paidDate).toLocaleDateString()}</span>}
+                    {item.nextPaymentDate && <span>Next: {new Date(item.nextPaymentDate).toLocaleDateString()}</span>}
+                  </div>
                 </div>
-                <p style={{ color: C.textMuted, fontSize: "0.75rem", margin: "0.25rem 0 0" }}>{itemTypeLabels[item.itemType]}{item.dueDate && ` — Due: ${new Date(item.dueDate).toLocaleDateString()}`}{item.paidDate && ` — Paid: ${new Date(item.paidDate).toLocaleDateString()}`}</p>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                <span style={{ color: C.gold, fontWeight: 700, fontSize: "1.1rem", fontFamily: "'JetBrains Mono', monospace" }}>${Number(item.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                <button onClick={() => printInvoice(item)} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.silver, cursor: "pointer", fontSize: "0.75rem" }}>🖨️ Print</button>
-                <select value={item.status} onChange={(e) => updateMutation.mutate({ id: item.id, status: e.target.value as any })} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: "0.75rem" }}>
-                  <option value="pending">Pending</option><option value="sent">Sent</option><option value="paid">Paid</option><option value="overdue">Overdue</option><option value="cancelled">Cancelled</option>
-                </select>
-                <button onClick={() => { if (confirm("Delete?")) deleteMutation.mutate({ id: item.id }); }} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 4, color: "#EF4444", cursor: "pointer", fontSize: "0.75rem" }}>✕</button>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ color: C.gold, fontWeight: 700, fontSize: "1.1rem", fontFamily: "'JetBrains Mono', monospace" }}>${Number(item.amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                    {Number(item.amountPaid) > 0 && <div style={{ color: "#10B981", fontSize: "0.7rem" }}>Paid: ${Number(item.amountPaid).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>}
+                    {Number(item.remainingBalance) > 0 && <div style={{ color: "#F59E0B", fontSize: "0.7rem" }}>Balance: ${Number(item.remainingBalance).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>}
+                  </div>
+                  <button onClick={() => startEdit(item)} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.silver, cursor: "pointer", fontSize: "0.75rem" }}>✏️ Edit</button>
+                  <button onClick={() => printInvoice(item)} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.silver, cursor: "pointer", fontSize: "0.75rem" }}>🖨️ Print</button>
+                  <button onClick={() => { if (confirm("Delete this billing item?")) deleteMutation.mutate({ id: item.id }); }} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 4, color: "#EF4444", cursor: "pointer", fontSize: "0.75rem" }}>✕</button>
+                </div>
               </div>
             </div>
           ))}

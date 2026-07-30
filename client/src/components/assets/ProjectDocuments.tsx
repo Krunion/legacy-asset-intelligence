@@ -13,11 +13,16 @@ const DOC_TYPES = [
   { value: "correspondence", label: "Correspondence" },
   { value: "legal", label: "Legal" },
   { value: "insurance", label: "Insurance" },
+  { value: "assessment", label: "Assessment" },
+  { value: "meeting_document", label: "Meeting Document" },
+  { value: "project_deliverable", label: "Project Deliverable" },
+  { value: "supporting_document", label: "Supporting Document" },
   { value: "other", label: "Other" },
 ];
 
 const ADMIN_EMAILS = [
   "kevin.runion@legacyassetintelligence.com",
+  "krunion84@gmail.com",
   "chris.haynes@legacyassetintelligence.com",
 ];
 
@@ -74,6 +79,7 @@ export default function ProjectDocuments({ projectId }: { projectId: number }) {
   const [docType, setDocType] = useState("other");
   const [description, setDescription] = useState("");
   const [isAdminOnly, setIsAdminOnly] = useState(true);
+  const [isClientVisible, setIsClientVisible] = useState(false);
 
   const utils = trpc.useUtils();
   const { data: documents, isLoading } = trpc.assets.listProjectDocuments.useQuery({ projectId });
@@ -119,6 +125,7 @@ export default function ProjectDocuments({ projectId }: { projectId: number }) {
         documentType: docType as any,
         description: description.trim() || undefined,
         isAdminOnly,
+        isClientVisible: isClientVisible ? 1 : 0,
       });
     };
     reader.readAsDataURL(file);
@@ -191,15 +198,26 @@ export default function ProjectDocuments({ projectId }: { projectId: number }) {
           </div>
 
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
-              <input
-                type="checkbox"
-                checked={isAdminOnly}
-                onChange={(e) => setIsAdminOnly(e.target.checked)}
-                style={{ width: 16, height: 16, accentColor: C.gold }}
-              />
-              <span style={{ color: C.textMuted, fontSize: "0.85rem" }}>Admin-only (hidden from team members)</span>
-            </label>
+            <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
+              <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={isAdminOnly}
+                  onChange={(e) => setIsAdminOnly(e.target.checked)}
+                  style={{ width: 16, height: 16, accentColor: C.gold }}
+                />
+                <span style={{ color: C.textMuted, fontSize: "0.85rem" }}>Admin-only (hidden from team members)</span>
+              </label>
+              <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
+                <input
+                  type="checkbox"
+                  checked={isClientVisible}
+                  onChange={(e) => setIsClientVisible(e.target.checked)}
+                  style={{ width: 16, height: 16, accentColor: "#10B981" }}
+                />
+                <span style={{ color: C.textMuted, fontSize: "0.85rem" }}>Visible to Client Portal</span>
+              </label>
+            </div>
 
             <label style={{ padding: "0.6rem 1.25rem", background: uploading ? C.textMuted : C.gold, border: "none", borderRadius: 8, color: C.charcoal, fontWeight: 600, cursor: uploading ? "not-allowed" : "pointer", fontSize: "0.9rem" }}>
               {uploading ? "Uploading..." : "Choose File & Upload"}
@@ -240,6 +258,11 @@ export default function ProjectDocuments({ projectId }: { projectId: number }) {
                     {doc.isAdminOnly ? (
                       <span style={{ padding: "0.1rem 0.4rem", background: "rgba(239,68,68,0.15)", color: "#EF4444", borderRadius: 4, fontSize: "0.65rem", fontWeight: 600, whiteSpace: "nowrap" }}>
                         ADMIN ONLY
+                      </span>
+                    ) : null}
+                    {(doc as any).isClientVisible ? (
+                      <span style={{ padding: "0.1rem 0.4rem", background: "rgba(16,185,129,0.15)", color: "#10B981", borderRadius: 4, fontSize: "0.65rem", fontWeight: 600, whiteSpace: "nowrap" }}>
+                        CLIENT VISIBLE
                       </span>
                     ) : null}
                   </div>

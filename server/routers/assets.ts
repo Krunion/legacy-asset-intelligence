@@ -907,12 +907,8 @@ export const assetsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      const ADMIN_EMAILS = [
-        "kevin.runion@legacyassetintelligence.com",
-        "chris.haynes@legacyassetintelligence.com",
-      ];
       const userEmail = ctx.user?.email?.toLowerCase() || "";
-      const isAdminUser = ADMIN_EMAILS.includes(userEmail);
+      const isAdminUser = PROJECT_ADMIN_EMAILS.includes(userEmail);
 
       // Non-admin users cannot see admin-only documents
       const conditions = isAdminUser
@@ -934,9 +930,10 @@ export const assetsRouter = router({
         mimeType: z.string(),
         fileSize: z.number(),
         fileData: z.string(), // base64
-        documentType: z.enum(["contract", "proposal", "report", "invoice", "correspondence", "legal", "insurance", "other"]).default("other"),
+        documentType: z.enum(["contract", "proposal", "report", "invoice", "correspondence", "legal", "insurance", "assessment", "meeting_document", "project_deliverable", "supporting_document", "other"]).default("other"),
         description: z.string().optional(),
         isAdminOnly: z.boolean().default(true),
+        isClientVisible: z.number().default(0),
       })
     )
     .mutation(async ({ input, ctx }) => {
@@ -945,12 +942,8 @@ export const assetsRouter = router({
 
       // If marking as admin-only, verify user is admin
       if (input.isAdminOnly) {
-        const ADMIN_EMAILS = [
-          "kevin.runion@legacyassetintelligence.com",
-          "chris.haynes@legacyassetintelligence.com",
-        ];
         const userEmail = ctx.user?.email?.toLowerCase() || "";
-        if (!ADMIN_EMAILS.includes(userEmail)) {
+        if (!PROJECT_ADMIN_EMAILS.includes(userEmail)) {
           throw new Error("Only admin staff can upload admin-only documents");
         }
       }
@@ -971,6 +964,7 @@ export const assetsRouter = router({
         documentType: input.documentType,
         description: input.description || null,
         isAdminOnly: input.isAdminOnly ? 1 : 0,
+        isClientVisible: input.isClientVisible || 0,
         uploadedBy: ctx.user?.id || 0,
         uploadedByName: ctx.user?.name || "Unknown",
       });
@@ -985,12 +979,8 @@ export const assetsRouter = router({
       if (!db) throw new Error("Database not available");
 
       // Only admins can delete
-      const ADMIN_EMAILS = [
-        "kevin.runion@legacyassetintelligence.com",
-        "chris.haynes@legacyassetintelligence.com",
-      ];
       const userEmail = ctx.user?.email?.toLowerCase() || "";
-      if (!ADMIN_EMAILS.includes(userEmail)) {
+      if (!PROJECT_ADMIN_EMAILS.includes(userEmail)) {
         throw new Error("Only admin staff can delete project documents");
       }
 
