@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { clientPortalAccounts, assetProjects, assets, assetCategories } from "../../drizzle/schema";
+import { clientPortalAccounts, assetProjects, assets, assetCategories, projectPhases, projectKpis, financialRecovery, riskExceptions, clientActionItems, projectReports, projectMeetings, projectBilling } from "../../drizzle/schema";
 import { eq, and, desc, sql, count } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -357,7 +357,27 @@ export const clientPortalRouter = router({
         .where(eq(assets.projectId, input.projectId))
         .groupBy(assets.condition);
 
-      // Get recent assets (last 10)
+      // Get location breakdown
+      const locationBreakdown = await db
+        .select({
+          location: assets.location,
+          count: count(),
+        })
+        .from(assets)
+        .where(eq(assets.projectId, input.projectId))
+        .groupBy(assets.location);
+
+      // Get department breakdown
+      const departmentBreakdown = await db
+        .select({
+          department: assets.department,
+          count: count(),
+        })
+        .from(assets)
+        .where(eq(assets.projectId, input.projectId))
+        .groupBy(assets.department);
+
+      // Get recent assets (last 20)
       const recentAssets = await db
         .select({
           id: assets.id,
@@ -373,7 +393,68 @@ export const clientPortalRouter = router({
         .from(assets)
         .where(eq(assets.projectId, input.projectId))
         .orderBy(desc(assets.createdAt))
-        .limit(10);
+        .limit(20);
+
+      // Get project phases
+      const phases = await db
+        .select()
+        .from(projectPhases)
+        .where(eq(projectPhases.projectId, input.projectId))
+        .orderBy(projectPhases.phaseNumber);
+
+      // Get KPIs
+      const [kpis] = await db
+        .select()
+        .from(projectKpis)
+        .where(eq(projectKpis.projectId, input.projectId))
+        .limit(1);
+
+      // Get financial recovery items
+      const recoveryItems = await db
+        .select()
+        .from(financialRecovery)
+        .where(eq(financialRecovery.projectId, input.projectId))
+        .orderBy(desc(financialRecovery.amount));
+
+      // Get risk exceptions
+      const risks = await db
+        .select()
+        .from(riskExceptions)
+        .where(eq(riskExceptions.projectId, input.projectId))
+        .orderBy(riskExceptions.riskLevel);
+
+      // Get action items
+      const actionItems = await db
+        .select()
+        .from(clientActionItems)
+        .where(eq(clientActionItems.projectId, input.projectId))
+        .orderBy(desc(clientActionItems.createdAt));
+
+      // Get reports
+      const reports = await db
+        .select()
+        .from(projectReports)
+        .where(eq(projectReports.projectId, input.projectId))
+        .orderBy(desc(projectReports.createdAt));
+
+      // Get meetings
+      const meetings = await db
+        .select()
+        .from(projectMeetings)
+        .where(eq(projectMeetings.projectId, input.projectId))
+        .orderBy(desc(projectMeetings.scheduledDate));
+
+      // Get billing (NEVER show internal costs)
+      const billing = await db
+        .select()
+        .from(projectBilling)
+        .where(eq(projectBilling.projectId, input.projectId))
+        .orderBy(desc(projectBilling.createdAt));
+
+      // Calculate financial totals
+      const totalRecovery = recoveryItems.reduce((sum, item) => sum + parseFloat(item.amount || "0"), 0);
+      const realizedRecovery = recoveryItems.filter(i => i.status === "realized").reduce((sum, item) => sum + parseFloat(item.amount || "0"), 0);
+      const pendingRecovery = recoveryItems.filter(i => ["identified", "under_investigation", "awaiting_validation", "approved", "in_progress"].includes(i.status)).reduce((sum, item) => sum + parseFloat(item.amount || "0"), 0);
 
       return {
         project: {
@@ -384,6 +465,8 @@ export const clientPortalRouter = router({
           endDate: project.endDate,
           location: project.location,
           industry: project.industry,
+          projectManager: project.projectManager,
+          estimatedBudget: project.estimatedBudget,
         },
         stats: {
           totalAssets: totalResult?.total ?? 0,
@@ -393,7 +476,22 @@ export const clientPortalRouter = router({
         categoryBreakdown,
         statusBreakdown,
         conditionBreakdown,
+        locationBreakdown,
+        departmentBreakdown,
         recentAssets,
+        phases,
+        kpis: kpis || null,
+        financialRecovery: {
+          items: recoveryItems,
+          totalRecovery,
+          realizedRecovery,
+          pendingRecovery,
+        },
+        risks,
+        actionItems,
+        reports,
+        meetings,
+        billing,
       };
     }),
 
@@ -408,7 +506,6 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      // Get the client portal account for this project
       const [account] = await db
         .select()
         .from(clientPortalAccounts)
@@ -418,5 +515,293 @@ export const clientPortalRouter = router({
       return account
         ? { ...account, passwordHash: undefined }
         : null;
+    }),
+
+  // ─── Manage Project Phases (admin) ────────────────────────────────────────────
+  upsertPhase: protectedProcedure
+    .input(z.object({
+      id: z.number().optional(),
+      projectId: z.number(),
+      phaseNumber: z.number().min(1).max(4),
+      phaseName: z.string(),
+      status: z.enum(["not_started", "in_progress", "completed", "on_hold"]).default("not_started"),
+      completionPercent: z.number().min(0).max(100).default(0),
+      startDate: z.string().optional(),
+      targetEndDate: z.string().optional(),
+      actualEndDate: z.string().optional(),
+      activities: z.array(z.string()).optional(),
+      milestones: z.array(z.object({ name: z.string(), status: z.string(), date: z.string().optional() })).optional(),
+      deliverables: z.array(z.string()).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const data: any = {
+        projectId: input.projectId,
+        phaseNumber: input.phaseNumber,
+        phaseName: input.phaseName,
+        status: input.status,
+        completionPercent: input.completionPercent,
+        startDate: input.startDate ? new Date(input.startDate) : null,
+        targetEndDate: input.targetEndDate ? new Date(input.targetEndDate) : null,
+        actualEndDate: input.actualEndDate ? new Date(input.actualEndDate) : null,
+        activities: input.activities || null,
+        milestones: input.milestones || null,
+        deliverables: input.deliverables || null,
+      };
+
+      if (input.id) {
+        await db.update(projectPhases).set(data).where(eq(projectPhases.id, input.id));
+        return { id: input.id };
+      } else {
+        const result = await db.insert(projectPhases).values(data);
+        return { id: result[0].insertId };
+      }
+    }),
+
+  // ─── Manage KPIs (admin) ──────────────────────────────────────────────────────
+  upsertKpis: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      totalAssetsInFar: z.number().optional(),
+      assetsReviewed: z.number().optional(),
+      assetsPhysicallyVerified: z.number().optional(),
+      assetsRemaining: z.number().optional(),
+      assetsMatchedToFar: z.number().optional(),
+      assetsNotFound: z.number().optional(),
+      assetsFoundNotRecorded: z.number().optional(),
+      duplicateRecords: z.number().optional(),
+      assetsRequiringInvestigation: z.number().optional(),
+      estimatedHiddenCapital: z.string().optional(),
+      verifiedRecoveryOpportunities: z.string().optional(),
+      potentialAnnualSavings: z.string().optional(),
+      openHighRiskExceptions: z.number().optional(),
+      financialStatus: z.enum(["preliminary_estimate", "under_review", "client_validated", "approved_for_action", "actual_realized"]).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const [existing] = await db.select().from(projectKpis).where(eq(projectKpis.projectId, input.projectId)).limit(1);
+
+      const data: any = { ...input };
+      delete data.projectId;
+
+      if (existing) {
+        await db.update(projectKpis).set(data).where(eq(projectKpis.id, existing.id));
+        return { id: existing.id };
+      } else {
+        const result = await db.insert(projectKpis).values({ projectId: input.projectId, ...data });
+        return { id: result[0].insertId };
+      }
+    }),
+
+  // ─── Manage Financial Recovery (admin) ────────────────────────────────────────
+  createRecoveryItem: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      category: z.enum(["avoided_replacement", "sale_disposal", "insurance_tax_exposure", "maintenance_elimination", "licensing_elimination", "idle_capital", "redeployment", "disposal_recommendation", "other"]),
+      description: z.string().optional(),
+      amount: z.string(),
+      status: z.enum(["identified", "under_investigation", "awaiting_validation", "approved", "in_progress", "realized", "rejected", "closed"]).default("identified"),
+      assetId: z.number().optional(),
+      responsibleParty: z.string().optional(),
+      dueDate: z.string().optional(),
+      notes: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const result = await db.insert(financialRecovery).values({
+        ...input,
+        dueDate: input.dueDate ? new Date(input.dueDate) : null,
+      });
+      return { id: result[0].insertId };
+    }),
+
+  updateRecoveryItem: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.enum(["identified", "under_investigation", "awaiting_validation", "approved", "in_progress", "realized", "rejected", "closed"]).optional(),
+      amount: z.string().optional(),
+      notes: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, ...data } = input;
+      await db.update(financialRecovery).set(data).where(eq(financialRecovery.id, id));
+      return { success: true };
+    }),
+
+  // ─── Manage Risk Exceptions (admin) ───────────────────────────────────────────
+  createRisk: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      riskType: z.enum(["high_value_missing", "no_custodian", "uninsured", "no_documentation", "unauthorized_location", "duplicate_purchase", "obsolete_equipment", "cybersecurity", "compliance", "pending_decision", "other"]),
+      riskLevel: z.enum(["critical", "high", "medium", "low"]).default("medium"),
+      assetId: z.number().optional(),
+      assetTag: z.string().optional(),
+      location: z.string().optional(),
+      financialExposure: z.string().optional(),
+      description: z.string().optional(),
+      recommendedAction: z.string().optional(),
+      responsibleParty: z.string().optional(),
+      dueDate: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const result = await db.insert(riskExceptions).values({
+        ...input,
+        dueDate: input.dueDate ? new Date(input.dueDate) : null,
+      });
+      return { id: result[0].insertId };
+    }),
+
+  updateRisk: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.enum(["open", "in_progress", "resolved", "accepted", "escalated"]).optional(),
+      riskLevel: z.enum(["critical", "high", "medium", "low"]).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, ...data } = input;
+      await db.update(riskExceptions).set(data).where(eq(riskExceptions.id, id));
+      return { success: true };
+    }),
+
+  // ─── Manage Action Items (admin creates, client responds) ─────────────────────
+  createActionItem: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      actionType: z.enum(["document_approval", "question", "asset_clarification", "milestone_acceptance", "change_order", "meeting_confirmation", "corrective_action", "upload_document", "other"]),
+      title: z.string(),
+      description: z.string().optional(),
+      priority: z.enum(["urgent", "high", "normal", "low"]).default("normal"),
+      assignedTo: z.string().optional(),
+      dueDate: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const result = await db.insert(clientActionItems).values({
+        ...input,
+        dueDate: input.dueDate ? new Date(input.dueDate) : null,
+      });
+      return { id: result[0].insertId };
+    }),
+
+  // Client responds to action item
+  respondToAction: publicProcedure
+    .input(z.object({
+      actionId: z.number(),
+      accessToken: z.string(),
+      response: z.string(),
+      status: z.enum(["approved", "rejected", "completed"]),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Verify token
+      const [action] = await db.select().from(clientActionItems).where(eq(clientActionItems.id, input.actionId)).limit(1);
+      if (!action) throw new Error("Action item not found");
+
+      const [account] = await db.select().from(clientPortalAccounts)
+        .where(and(eq(clientPortalAccounts.projectId, action.projectId), eq(clientPortalAccounts.accessToken, input.accessToken), eq(clientPortalAccounts.isActive, 1)))
+        .limit(1);
+      if (!account) throw new Error("Access denied");
+
+      await db.update(clientActionItems).set({
+        response: input.response,
+        status: input.status,
+        completedAt: new Date(),
+      }).where(eq(clientActionItems.id, input.actionId));
+
+      return { success: true };
+    }),
+
+  // ─── Manage Reports (admin) ───────────────────────────────────────────────────
+  createReport: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      reportType: z.enum(["executive_assessment", "verification_analysis", "reconciled_far", "discrepancy_matrix", "inventory_master_log", "recovery_register", "governance_scorecard", "risk_exception_report", "location_report", "asset_photographs", "meeting_summary", "final_presentation", "technology_plan", "quarterly_report", "other"]),
+      title: z.string(),
+      version: z.string().optional(),
+      status: z.enum(["draft", "in_review", "final", "superseded"]).default("draft"),
+      storageKey: z.string().optional(),
+      storageUrl: z.string().optional(),
+      fileName: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const result = await db.insert(projectReports).values(input);
+      return { id: result[0].insertId };
+    }),
+
+  // ─── Manage Meetings (admin) ──────────────────────────────────────────────────
+  createMeeting: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      meetingType: z.enum(["kickoff", "status_update", "review", "qbr", "ad_hoc", "final"]).default("status_update"),
+      title: z.string(),
+      scheduledDate: z.string().optional(),
+      duration: z.number().optional(),
+      location: z.string().optional(),
+      attendees: z.array(z.string()).optional(),
+      agenda: z.string().optional(),
+      summary: z.string().optional(),
+      decisions: z.array(z.string()).optional(),
+      actionItems: z.array(z.string()).optional(),
+      status: z.enum(["scheduled", "completed", "cancelled", "rescheduled"]).default("scheduled"),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const result = await db.insert(projectMeetings).values({
+        ...input,
+        scheduledDate: input.scheduledDate ? new Date(input.scheduledDate) : null,
+      });
+      return { id: result[0].insertId };
+    }),
+
+  // ─── Manage Billing (admin) ───────────────────────────────────────────────────
+  createBillingItem: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      itemType: z.enum(["invoice", "payment", "change_order", "credit"]),
+      description: z.string(),
+      amount: z.string(),
+      status: z.enum(["pending", "sent", "paid", "overdue", "cancelled", "approved", "rejected"]).default("pending"),
+      invoiceNumber: z.string().optional(),
+      dueDate: z.string().optional(),
+      paidDate: z.string().optional(),
+      notes: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const result = await db.insert(projectBilling).values({
+        ...input,
+        dueDate: input.dueDate ? new Date(input.dueDate) : null,
+        paidDate: input.paidDate ? new Date(input.paidDate) : null,
+      });
+      return { id: result[0].insertId };
     }),
 });
