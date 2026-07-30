@@ -192,6 +192,9 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
+      const MAX_ATTEMPTS = 5;
+      const LOCKOUT_MINUTES = 15;
+
       const [account] = await db
         .select()
         .from(clientPortalAccounts)
@@ -202,13 +205,35 @@ export const clientPortalRouter = router({
         throw new Error("Invalid username or password");
       }
 
-      const valid = await bcrypt.compare(input.password, account.passwordHash);
-      if (!valid) {
-        throw new Error("Invalid username or password");
+      // Check if account is locked
+      if (account.lockedUntil && new Date(account.lockedUntil) > new Date()) {
+        const remainingMinutes = Math.ceil((new Date(account.lockedUntil).getTime() - Date.now()) / 60000);
+        throw new Error(`Account locked. Try again in ${remainingMinutes} minute${remainingMinutes !== 1 ? "s" : ""}.`);
       }
 
-      // Update last login
-      await db.update(clientPortalAccounts).set({ lastLogin: new Date() }).where(eq(clientPortalAccounts.id, account.id));
+      const valid = await bcrypt.compare(input.password, account.passwordHash);
+      if (!valid) {
+        const newAttempts = (account.failedLoginAttempts || 0) + 1;
+        const updateData: any = { failedLoginAttempts: newAttempts };
+
+        // Lock account after MAX_ATTEMPTS failed attempts
+        if (newAttempts >= MAX_ATTEMPTS) {
+          updateData.lockedUntil = new Date(Date.now() + LOCKOUT_MINUTES * 60 * 1000);
+          await db.update(clientPortalAccounts).set(updateData).where(eq(clientPortalAccounts.id, account.id));
+          throw new Error(`Too many failed attempts. Account locked for ${LOCKOUT_MINUTES} minutes.`);
+        }
+
+        await db.update(clientPortalAccounts).set(updateData).where(eq(clientPortalAccounts.id, account.id));
+        const remaining = MAX_ATTEMPTS - newAttempts;
+        throw new Error(`Invalid username or password. ${remaining} attempt${remaining !== 1 ? "s" : ""} remaining.`);
+      }
+
+      // Successful login - reset failed attempts and lockout
+      await db.update(clientPortalAccounts).set({
+        lastLogin: new Date(),
+        failedLoginAttempts: 0,
+        lockedUntil: null,
+      }).where(eq(clientPortalAccounts.id, account.id));
 
       return {
         success: true,
@@ -863,18 +888,41 @@ export const clientPortalRouter = router({
       pastDueAmount: z.string().optional(),
       notes: z.string().optional(),
       isClientVisible: z.number().default(1),
+      fileData: z.string().optional(), // base64 encoded file
+      fileName: z.string().optional(),
+      fileMimeType: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
+
+      // Handle invoice file upload if provided
+      let storageKey: string | null = null;
+      let storageUrl: string | null = null;
+      let fileName: string | null = null;
+      if (input.fileData && input.fileName) {
+        const { storagePut } = await import("../storage");
+        const sanitizedName = input.fileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const fileKey = `billing/${input.projectId}/${Date.now()}-${sanitizedName}`;
+        const buffer = Buffer.from(input.fileData, "base64");
+        const result = await storagePut(fileKey, buffer, input.fileMimeType || "application/octet-stream");
+        storageKey = result.key;
+        storageUrl = result.url;
+        fileName = input.fileName;
+      }
+
+      const { fileData: _fd, fileName: _fn, fileMimeType: _fmt, ...billingData } = input;
       const result = await db.insert(projectBilling).values({
-        ...input,
-        invoiceDate: input.invoiceDate ? new Date(input.invoiceDate) : null,
-        dueDate: input.dueDate ? new Date(input.dueDate) : null,
-        paidDate: input.paidDate ? new Date(input.paidDate) : null,
-        paymentReceivedDate: input.paymentReceivedDate ? new Date(input.paymentReceivedDate) : null,
-        nextPaymentDate: input.nextPaymentDate ? new Date(input.nextPaymentDate) : null,
+        ...billingData,
+        storageKey,
+        storageUrl,
+        fileName,
+        invoiceDate: billingData.invoiceDate ? new Date(billingData.invoiceDate) : null,
+        dueDate: billingData.dueDate ? new Date(billingData.dueDate) : null,
+        paidDate: billingData.paidDate ? new Date(billingData.paidDate) : null,
+        paymentReceivedDate: billingData.paymentReceivedDate ? new Date(billingData.paymentReceivedDate) : null,
+        nextPaymentDate: billingData.nextPaymentDate ? new Date(billingData.nextPaymentDate) : null,
         createdBy: ctx.user?.id || null,
       });
       const newId = result[0].insertId;
@@ -1037,18 +1085,36 @@ export const clientPortalRouter = router({
       pastDueAmount: z.string().optional(),
       notes: z.string().optional(),
       isClientVisible: z.number().optional(),
+      fileData: z.string().optional(), // base64 encoded file
+      fileName: z.string().optional(),
+      fileMimeType: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      const { id, dueDate, paidDate, invoiceDate, paymentReceivedDate, nextPaymentDate, ...data } = input;
+      const { id, dueDate, paidDate, invoiceDate, paymentReceivedDate, nextPaymentDate, fileData, fileName: inputFileName, fileMimeType, ...data } = input;
       const updateData: any = { ...data, updatedBy: ctx.user?.id || null };
       if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
       if (paidDate !== undefined) updateData.paidDate = paidDate ? new Date(paidDate) : null;
       if (invoiceDate !== undefined) updateData.invoiceDate = invoiceDate ? new Date(invoiceDate) : null;
       if (paymentReceivedDate !== undefined) updateData.paymentReceivedDate = paymentReceivedDate ? new Date(paymentReceivedDate) : null;
       if (nextPaymentDate !== undefined) updateData.nextPaymentDate = nextPaymentDate ? new Date(nextPaymentDate) : null;
+
+      // Handle invoice file upload if provided
+      if (fileData && inputFileName) {
+        const { storagePut } = await import("../storage");
+        const sanitizedName = inputFileName.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const existingItem = await db.select().from(projectBilling).where(eq(projectBilling.id, id)).limit(1);
+        const projectId = existingItem[0]?.projectId || 0;
+        const fileKey = `billing/${projectId}/${Date.now()}-${sanitizedName}`;
+        const buffer = Buffer.from(fileData, "base64");
+        const result = await storagePut(fileKey, buffer, fileMimeType || "application/octet-stream");
+        updateData.storageKey = result.key;
+        updateData.storageUrl = result.url;
+        updateData.fileName = inputFileName;
+      }
+
       await db.update(projectBilling).set(updateData).where(eq(projectBilling.id, id));
       return { success: true };
     }),
@@ -1115,6 +1181,26 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       return db.select().from(projectPhases).where(eq(projectPhases.projectId, input.projectId)).orderBy(projectPhases.phaseNumber);
+    }),
+
+  // ─── Invoice File Download ──────────────────────────────────────────────────
+  getInvoiceDownloadUrl: protectedProcedure
+    .input(z.object({ billingId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const items = await db.select().from(projectBilling).where(eq(projectBilling.id, input.billingId)).limit(1);
+      const item = items[0];
+      if (!item || !item.storageKey) throw new Error("Invoice file not found");
+
+      // If client user (not admin), check that item is client-visible
+      if (!isAdminUser(ctx.user) && !item.isClientVisible) {
+        throw new Error("Access denied");
+      }
+
+      const { storageGetSignedUrl } = await import("../storage");
+      const url = await storageGetSignedUrl(item.storageKey);
+      return { url, fileName: item.fileName || "invoice.pdf" };
     }),
 
   // ─── Audit History ────────────────────────────────────────────────────────────

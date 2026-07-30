@@ -1023,6 +1023,7 @@ function BillingSection({ billing }: { billing: any[] }) {
                   <th style={{ padding: "0.6rem", textAlign: "right", color: C.textMuted }}>Balance</th>
                   <th style={{ padding: "0.6rem", textAlign: "center", color: C.textMuted }}>Status</th>
                   <th style={{ padding: "0.6rem", textAlign: "left", color: C.textMuted }}>Due Date</th>
+                  <th style={{ padding: "0.6rem", textAlign: "center", color: C.textMuted }}>File</th>
                 </tr>
               </thead>
               <tbody>
@@ -1039,6 +1040,26 @@ function BillingSection({ billing }: { billing: any[] }) {
                     <td style={{ padding: "0.5rem 0.6rem", color: parseFloat(item.remainingBalance || "0") > 0 ? "#F59E0B" : C.textMuted, textAlign: "right", fontFamily: "'JetBrains Mono', monospace" }}>{parseFloat(item.remainingBalance || "0") > 0 ? `$${parseFloat(item.remainingBalance).toLocaleString()}` : "—"}</td>
                     <td style={{ padding: "0.5rem 0.6rem", textAlign: "center" }}><StatusBadge status={item.status} /></td>
                     <td style={{ padding: "0.5rem 0.6rem", color: C.textMuted }}>{item.dueDate ? new Date(item.dueDate).toLocaleDateString() : "—"}</td>
+                    <td style={{ padding: "0.5rem 0.6rem", textAlign: "center" }}>
+                      {item.storageKey ? (
+                        <button
+                          onClick={async () => {
+                            try {
+                              const resp = await fetch(`/api/trpc/clientPortal.getInvoiceDownloadUrl?input=${encodeURIComponent(JSON.stringify({ billingId: item.id }))}`, { credentials: "include" });
+                              const json = await resp.json();
+                              const url = json?.result?.data?.url;
+                              if (url) window.open(url, "_blank");
+                              else alert("Unable to get download link");
+                            } catch { alert("Download failed"); }
+                          }}
+                          style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", borderRadius: 4, padding: "0.2rem 0.5rem", color: "#10B981", cursor: "pointer", fontSize: "0.7rem" }}
+                        >
+                          📄 Download
+                        </button>
+                      ) : (
+                        <span style={{ color: C.textMuted }}>—</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

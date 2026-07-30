@@ -813,6 +813,7 @@ function MeetingsPanel({ projectId }: { projectId: number }) {
 function BillingPanel({ projectId }: { projectId: number }) {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [invoiceFile, setInvoiceFile] = useState<{ data: string; name: string; type: string } | null>(null);
   const [form, setForm] = useState({
     itemType: "invoice", description: "", amount: "", amountPaid: "",
     remainingBalance: "", status: "draft", invoiceNumber: "",
@@ -830,7 +831,7 @@ function BillingPanel({ projectId }: { projectId: number }) {
     paymentReceivedDate: "", nextPaymentDate: "", nextPaymentAmount: "",
     pastDueAmount: "", notes: "", isClientVisible: 1,
   });
-  const createMutation = trpc.clientPortal.createBillingItem.useMutation({ onSuccess: () => { utils.clientPortal.listBillingItems.invalidate({ projectId }); setShowForm(false); setEditingId(null); resetForm(); } });
+  const createMutation = trpc.clientPortal.createBillingItem.useMutation({ onSuccess: () => { utils.clientPortal.listBillingItems.invalidate({ projectId }); setShowForm(false); setEditingId(null); resetForm(); setInvoiceFile(null); } });
   const deleteMutation = trpc.clientPortal.deleteBillingItem.useMutation({ onSuccess: () => { utils.clientPortal.listBillingItems.invalidate({ projectId }); } });
   const updateMutation = trpc.clientPortal.updateBillingItem.useMutation({ onSuccess: () => { utils.clientPortal.listBillingItems.invalidate({ projectId }); } });
 
@@ -862,7 +863,20 @@ function BillingPanel({ projectId }: { projectId: number }) {
     setShowForm(true);
   }
 
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { alert("File too large (max 10MB)"); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = (reader.result as string).split(",")[1];
+      setInvoiceFile({ data: base64, name: file.name, type: file.type });
+    };
+    reader.readAsDataURL(file);
+  }
+
   function handleSave() {
+    const filePayload = invoiceFile ? { fileData: invoiceFile.data, fileName: invoiceFile.name, fileMimeType: invoiceFile.type } : {};
     if (editingId) {
       updateMutation.mutate({
         id: editingId,
@@ -882,6 +896,7 @@ function BillingPanel({ projectId }: { projectId: number }) {
         pastDueAmount: form.pastDueAmount || undefined,
         notes: form.notes || undefined,
         isClientVisible: form.isClientVisible,
+        ...filePayload,
       });
     } else {
       createMutation.mutate({
@@ -903,6 +918,7 @@ function BillingPanel({ projectId }: { projectId: number }) {
         pastDueAmount: form.pastDueAmount || undefined,
         notes: form.notes || undefined,
         isClientVisible: form.isClientVisible,
+        ...filePayload,
       });
     }
   }
@@ -1003,8 +1019,16 @@ function BillingPanel({ projectId }: { projectId: number }) {
             <div><label style={labelStyle}>Next Payment Amount ($)</label><input type="text" value={form.nextPaymentAmount} onChange={(e) => setForm({ ...form, nextPaymentAmount: e.target.value })} placeholder="0.00" style={inputStyle} /></div>
             <div><label style={labelStyle}>Description *</label><input type="text" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="e.g. Phase 1 Discovery & Assessment" style={inputStyle} /></div>
           </div>
-          {/* Row 5: Notes + Client Visibility */}
-          <div style={{ marginBottom: "1rem" }}><label style={labelStyle}>Notes</label><textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} style={{ ...inputStyle, resize: "vertical" }} /></div>
+          {/* Row 5: Notes + File Upload */}
+          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Notes</label><textarea rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} style={{ ...inputStyle, resize: "vertical" }} /></div>
+            <div>
+              <label style={labelStyle}>Invoice File (PDF, max 10MB)</label>
+              <input type="file" accept=".pdf,.doc,.docx,.xls,.xlsx" onChange={handleFileSelect} style={{ ...inputStyle, padding: "0.35rem", fontSize: "0.8rem" }} />
+              {invoiceFile && <p style={{ color: "#10B981", fontSize: "0.75rem", marginTop: "0.25rem" }}>✓ {invoiceFile.name}</p>}
+            </div>
+          </div>
+          {/* Client Visibility + Actions */}
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer" }}>
               <input type="checkbox" checked={form.isClientVisible === 1} onChange={(e) => setForm({ ...form, isClientVisible: e.target.checked ? 1 : 0 })} style={{ width: 16, height: 16, accentColor: "#10B981" }} />
@@ -1050,6 +1074,7 @@ function BillingPanel({ projectId }: { projectId: number }) {
                     {Number(item.amountPaid) > 0 && <div style={{ color: "#10B981", fontSize: "0.7rem" }}>Paid: ${Number(item.amountPaid).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>}
                     {Number(item.remainingBalance) > 0 && <div style={{ color: "#F59E0B", fontSize: "0.7rem" }}>Balance: ${Number(item.remainingBalance).toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>}
                   </div>
+                  {item.storageKey && <button onClick={async () => { try { const res = await utils.clientPortal.getInvoiceDownloadUrl.fetch({ billingId: item.id }); window.open(res.url, "_blank"); } catch { alert("Failed to get download URL"); } }} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: "#10B981", cursor: "pointer", fontSize: "0.75rem" }}>📄 File</button>}
                   <button onClick={() => startEdit(item)} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.silver, cursor: "pointer", fontSize: "0.75rem" }}>✏️ Edit</button>
                   <button onClick={() => printInvoice(item)} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.silver, cursor: "pointer", fontSize: "0.75rem" }}>🖨️ Print</button>
                   <button onClick={() => { if (confirm("Delete this billing item?")) deleteMutation.mutate({ id: item.id }); }} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 4, color: "#EF4444", cursor: "pointer", fontSize: "0.75rem" }}>✕</button>

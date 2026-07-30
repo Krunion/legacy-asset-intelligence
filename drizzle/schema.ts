@@ -263,6 +263,9 @@ export const clientPortalAccounts = mysqlTable("clientPortalAccounts", {
   isActive: int("isActive").default(1).notNull(),
   accessToken: varchar("accessToken", { length: 255 }), // unique link token
   lastLogin: timestamp("lastLogin"),
+  // Account lockout
+  failedLoginAttempts: int("failedLoginAttempts").default(0).notNull(),
+  lockedUntil: timestamp("lockedUntil"),
   // Metadata
   createdBy: int("createdBy").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
