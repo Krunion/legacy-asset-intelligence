@@ -1,0 +1,21 @@
+ALTER TABLE `assetProjects` ADD `clientEmail` varchar(320);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `clientPhone` varchar(50);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `facilityType` varchar(255);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `industry` varchar(255);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `squareFootage` int;--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `numberOfFloors` int;--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `numberOfBuildings` int;--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `yearBuilt` int;--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `address` varchar(500);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `city` varchar(255);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `state` varchar(100);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `zipCode` varchar(20);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `country` varchar(100);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `projectScope` text;--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `startDate` timestamp;--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `endDate` timestamp;--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `estimatedBudget` decimal(14,2);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `actualBudget` decimal(14,2);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `notes` text;--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `projectManager` varchar(255);--> statement-breakpoint
+ALTER TABLE `assetProjects` ADD `teamSize` int;

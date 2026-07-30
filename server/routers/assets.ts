@@ -4,6 +4,13 @@ import { getDb } from "../db";
 import { assets, assetPhotos, assetDocuments, assetCategories, assetProjects } from "../../drizzle/schema";
 import { eq, like, or, and, desc, asc, sql, count } from "drizzle-orm";
 import { storagePut } from "../storage";
+import bcrypt from "bcryptjs";
+
+// Admin emails that can set/change project passwords
+const PROJECT_ADMIN_EMAILS = [
+  "kevin.runion@legacyassetintelligence.com",
+  "chris.haynes@legacyassetintelligence.com",
+];
 
 // Generate a unique asset tag: LAI-XXXXXX
 function generateAssetTag(): string {
@@ -44,21 +51,78 @@ export const assetsRouter = router({
       z.object({
         name: z.string().min(1).max(500),
         description: z.string().optional(),
+        // Client Information
         clientName: z.string().optional(),
         clientContact: z.string().optional(),
+        clientEmail: z.string().optional(),
+        clientPhone: z.string().optional(),
+        // Facility / Site Demographics
+        facilityType: z.string().optional(),
+        industry: z.string().optional(),
+        squareFootage: z.number().optional(),
+        numberOfFloors: z.number().optional(),
+        numberOfBuildings: z.number().optional(),
+        yearBuilt: z.number().optional(),
+        // Location / Address
         location: z.string().optional(),
+        address: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
+        zipCode: z.string().optional(),
+        country: z.string().optional(),
+        // Project Scope & Timeline
+        projectScope: z.string().optional(),
+        startDate: z.string().optional(),
+        endDate: z.string().optional(),
+        estimatedBudget: z.number().optional(),
+        // Additional Info
+        notes: z.string().optional(),
+        projectManager: z.string().optional(),
+        teamSize: z.number().optional(),
+        // Password (admin only)
+        password: z.string().optional(),
       })
     )
     .mutation(async ({ input, ctx }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
+      let passwordHash: string | null = null;
+      if (input.password) {
+        const userEmail = ctx.user?.email?.toLowerCase() || "";
+        if (!PROJECT_ADMIN_EMAILS.includes(userEmail)) {
+          throw new Error("Only authorized administrators can set project passwords");
+        }
+        passwordHash = await bcrypt.hash(input.password, 10);
+      }
+
       const result = await db.insert(assetProjects).values({
         name: input.name,
         description: input.description || null,
         clientName: input.clientName || null,
         clientContact: input.clientContact || null,
+        clientEmail: input.clientEmail || null,
+        clientPhone: input.clientPhone || null,
+        facilityType: input.facilityType || null,
+        industry: input.industry || null,
+        squareFootage: input.squareFootage || null,
+        numberOfFloors: input.numberOfFloors || null,
+        numberOfBuildings: input.numberOfBuildings || null,
+        yearBuilt: input.yearBuilt || null,
         location: input.location || null,
+        address: input.address || null,
+        city: input.city || null,
+        state: input.state || null,
+        zipCode: input.zipCode || null,
+        country: input.country || null,
+        projectScope: input.projectScope || null,
+        startDate: input.startDate ? new Date(input.startDate) : null,
+        endDate: input.endDate ? new Date(input.endDate) : null,
+        estimatedBudget: input.estimatedBudget?.toString() || null,
+        notes: input.notes || null,
+        projectManager: input.projectManager || null,
+        teamSize: input.teamSize || null,
+        passwordHash,
         createdBy: ctx.user?.id ?? 0,
       });
 
@@ -74,7 +138,28 @@ export const assetsRouter = router({
         description: z.string().nullable().optional(),
         clientName: z.string().nullable().optional(),
         clientContact: z.string().nullable().optional(),
+        clientEmail: z.string().nullable().optional(),
+        clientPhone: z.string().nullable().optional(),
+        facilityType: z.string().nullable().optional(),
+        industry: z.string().nullable().optional(),
+        squareFootage: z.number().nullable().optional(),
+        numberOfFloors: z.number().nullable().optional(),
+        numberOfBuildings: z.number().nullable().optional(),
+        yearBuilt: z.number().nullable().optional(),
         location: z.string().nullable().optional(),
+        address: z.string().nullable().optional(),
+        city: z.string().nullable().optional(),
+        state: z.string().nullable().optional(),
+        zipCode: z.string().nullable().optional(),
+        country: z.string().nullable().optional(),
+        projectScope: z.string().nullable().optional(),
+        startDate: z.string().nullable().optional(),
+        endDate: z.string().nullable().optional(),
+        estimatedBudget: z.number().nullable().optional(),
+        actualBudget: z.number().nullable().optional(),
+        notes: z.string().nullable().optional(),
+        projectManager: z.string().nullable().optional(),
+        teamSize: z.number().nullable().optional(),
         status: z.enum(["active", "completed", "archived", "on_hold"]).optional(),
       })
     )
@@ -84,7 +169,15 @@ export const assetsRouter = router({
       const { id, ...updateData } = input;
       const updateSet: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(updateData)) {
-        if (value !== undefined) updateSet[key] = value;
+        if (value !== undefined) {
+          if ((key === "startDate" || key === "endDate") && value) {
+            updateSet[key] = new Date(value as string);
+          } else if ((key === "estimatedBudget" || key === "actualBudget") && value !== null) {
+            updateSet[key] = String(value);
+          } else {
+            updateSet[key] = value;
+          }
+        }
       }
       if (Object.keys(updateSet).length > 0) {
         await db.update(assetProjects).set(updateSet).where(eq(assetProjects.id, id));
@@ -115,6 +208,83 @@ export const assetsRouter = router({
 
       return { success: true };
     }),
+
+  // ─── Set/Change project password (admin only: Kevin & Chris) ─────────────
+  setProjectPassword: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      password: z.string().min(1).max(100),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Only Kevin and Chris can set/change passwords
+      const userEmail = ctx.user?.email?.toLowerCase() || "";
+      if (!PROJECT_ADMIN_EMAILS.includes(userEmail)) {
+        throw new Error("Only authorized administrators can set project passwords");
+      }
+
+      const hash = await bcrypt.hash(input.password, 10);
+      await db.update(assetProjects).set({ passwordHash: hash }).where(eq(assetProjects.id, input.projectId));
+      return { success: true };
+    }),
+
+  // ─── Remove project password (admin only) ───────────────────────────────
+  removeProjectPassword: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const userEmail = ctx.user?.email?.toLowerCase() || "";
+      if (!PROJECT_ADMIN_EMAILS.includes(userEmail)) {
+        throw new Error("Only authorized administrators can remove project passwords");
+      }
+
+      await db.update(assetProjects).set({ passwordHash: null }).where(eq(assetProjects.id, input.projectId));
+      return { success: true };
+    }),
+
+  // ─── Verify project password ───────────────────────────────────────────
+  verifyProjectPassword: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      password: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const [project] = await db.select().from(assetProjects).where(eq(assetProjects.id, input.projectId)).limit(1);
+      if (!project) throw new Error("Project not found");
+
+      if (!project.passwordHash) {
+        return { valid: true }; // No password set, allow access
+      }
+
+      const valid = await bcrypt.compare(input.password, project.passwordHash);
+      if (!valid) throw new Error("Incorrect project password");
+      return { valid: true };
+    }),
+
+  // ─── Check if project has a password (for UI to decide whether to prompt) ───
+  checkProjectHasPassword: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const [project] = await db.select({ passwordHash: assetProjects.passwordHash }).from(assetProjects).where(eq(assetProjects.id, input.projectId)).limit(1);
+      if (!project) throw new Error("Project not found");
+      return { hasPassword: !!project.passwordHash };
+    }),
+
+  // ─── Check if current user is a project admin (can set passwords) ────────
+  isProjectAdmin: protectedProcedure.query(async ({ ctx }) => {
+    const userEmail = ctx.user?.email?.toLowerCase() || "";
+    return { isAdmin: PROJECT_ADMIN_EMAILS.includes(userEmail) };
+  }),
 
   // ═══════════════════════════════════════════════════════════════════════════════
   // ASSETS (all scoped by projectId)

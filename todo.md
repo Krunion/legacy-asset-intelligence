@@ -469,3 +469,10 @@
 - [x] Fix categoryId: NaN on asset creation — fetch categories from DB, use numeric IDs as option values
 - [x] Validate categoryId is a valid integer before submission
 - [x] Handle "Other" category properly (create or use existing "Other" category in DB)
+
+## Project Password Protection (July 30, 2026)
+- [ ] Add password column to asset_projects table (hashed)
+- [ ] Only Kevin and Chris can set/change project passwords (admin check by email)
+- [ ] Prompt non-admin users to enter password when selecting a project
+- [ ] Backend: verify password before granting project access
+- [ ] Frontend: password prompt modal on project selection for non-admins

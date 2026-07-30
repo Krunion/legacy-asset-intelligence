@@ -1,0 +1,1 @@
+ALTER TABLE `assetProjects` ADD `passwordHash` varchar(255);
