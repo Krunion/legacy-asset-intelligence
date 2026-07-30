@@ -9,6 +9,7 @@ import bcrypt from "bcryptjs";
 // Admin emails that can set/change project passwords
 const PROJECT_ADMIN_EMAILS = [
   "kevin.runion@legacyassetintelligence.com",
+  "krunion84@gmail.com",
   "chris.haynes@legacyassetintelligence.com",
 ];
 

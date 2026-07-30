@@ -554,3 +554,95 @@
 - [x] Updated ProjectDocuments component to use direct signed URL download (bypasses proxy completely)
 - [x] Simplified storageProxy to use 307 redirect (matching production behavior)
 - [x] All 24 tests passing
+
+## Portal Repair & Full Connection (July 30, 2026)
+
+### Phase 1: Database Schema Updates
+- [ ] Expand projectBilling schema (invoiceDate, amountPaid, remainingBalance, nextPaymentDate, nextPaymentAmount, pastDueAmount, paymentReceivedDate, storageKey/Url, isClientVisible, billingPeriod)
+- [ ] Add isClientVisible to projectDocuments (replace isAdminOnly logic)
+- [ ] Add document categories (Invoice, Report, Assessment, Meeting Document, Project Deliverable, Supporting Document, Other)
+- [ ] Expand riskExceptions schema (title, severity, owner, targetResolutionDate, resolutionNotes, isClientVisible)
+- [ ] Expand projectMeetings schema (followUpAction, dueDate, attachment, isClientVisible, messageType)
+- [ ] Expand financialRecovery schema (title, estimatedValue, verifiedValue, realizedValue, owner, dateIdentified, targetCompletionDate, isClientVisible)
+- [ ] Add audit_history table (entityType, entityId, action, changedBy, changedAt, previousValues, newValues)
+- [ ] Add user roles table or expand users schema (system_admin, project_admin, employee, client_user)
+- [ ] Run pnpm db:push to apply all schema changes
+
+### Phase 2: Project Dropdown & Synchronization
+- [ ] Create reusable ProjectSelector component showing client name + project name
+- [ ] Wire to existing assetProjects table (same project list as Asset Management)
+- [ ] Display project database ID, load existing info on selection
+- [ ] Handle empty state when no projects exist
+
+### Phase 3: Document Controls with Client Visibility
+- [ ] Add Visible to Client toggle to document upload form
+- [ ] Add Visible to Client toggle to document edit/list view
+- [ ] Store visibility in database (isClientVisible column)
+- [ ] Filter client portal documents by isClientVisible=true
+- [ ] Add document categories to upload form
+- [ ] Secure download routes (only authorized users can access)
+
+### Phase 4: Employee Portal Billing Management
+- [ ] Build Billing Management section with ProjectSelector
+- [ ] Full invoice CRUD (create, edit, archive, delete with confirmation)
+- [ ] All required fields (invoice number, description, period, dates, amounts, status, notes, file, visibility)
+- [ ] Payment status options (Draft, Upcoming, Due, Partially Paid, Paid, Past Due, Cancelled, Disputed)
+- [ ] Auto-calculate remaining balance (original - paid)
+- [ ] Auto-mark past due after due date
+- [ ] Invoice file upload with client visibility toggle
+- [ ] Multiple invoices per project, preserve history
+
+### Phase 5: Client Portal Billing Page & Dashboard Cards
+- [ ] Connect Billing menu item to real billing records
+- [ ] Show: current due, past-due, next payment, total invoiced, total paid, total remaining
+- [ ] Invoice history table with all fields
+- [ ] Secure View/Download for client-visible invoice files
+- [ ] Dashboard cards: Current Amount Due, Past Due, Next Payment, Open Risks, Pending Actions, Recovery Identified, New Documents, Upcoming Meeting
+- [ ] All cards pull live data, show empty states when no data
+
+### Phase 6: Employee Portal Project Info Management
+- [ ] Risks & Assessments CRUD with all fields and client-visible toggle
+- [ ] Meetings & Messages CRUD with all fields and client-visible toggle
+- [ ] Reports & Documents using document controls from Phase 3
+- [ ] Recovery Opportunities CRUD with all fields and client-visible toggle
+- [ ] All forms use ProjectSelector, save under correct project/client
+- [ ] Client-visible items populate correct Client Portal sections
+
+### Phase 7: Role-Based Access Control
+- [ ] Implement roles: System Administrator, Project Administrator, Employee, Client User
+- [ ] Kevin Runion and Chris Haynes as System Administrators
+- [ ] Only System Admins can create/manage client access
+- [ ] Employees access only allowed functions
+- [ ] Client users see only assigned projects
+- [ ] Enforce at database/API level (not just frontend hiding)
+- [ ] Secure password hashing, no plain-text storage
+- [ ] Account lockout/rate limiting for failed logins
+- [ ] Audit log for access changes
+
+### Phase 8: Asset Photo Upload Repair
+- [ ] Diagnose current photo upload/storage/retrieval issues
+- [ ] Fix upload workflow (Take Photo, Upload from Gallery, Desktop file selection)
+- [ ] Support JPG, JPEG, PNG, WEBP formats
+- [ ] Multiple photos per asset with thumbnail display
+- [ ] Full-size preview, navigation between photos
+- [ ] Photo caption, upload date, uploader, primary photo setting
+- [ ] Delete with confirmation, replace failed uploads
+- [ ] Validate MIME type and file size
+- [ ] Handle missing images with placeholder
+- [ ] Test on desktop and mobile
+
+### Phase 9: Data Integrity & Audit
+- [ ] All records include clientId, projectId, createdAt, createdBy, updatedAt, updatedBy
+- [ ] Audit history for billing, visibility, risks, assessments, recovery, documents, access, photos
+- [ ] No erasure of financial/audit history on edit
+- [ ] Data separation enforced at database level (not just frontend)
+
+### Phase 10: Testing & Verification
+- [ ] Test with multiple clients and projects
+- [ ] Verify data isolation between clients
+- [ ] Verify client-visible vs internal document separation
+- [ ] Verify billing calculations and status updates
+- [ ] Verify photo upload/display/delete workflow
+- [ ] Verify role-based access enforcement
+- [ ] Verify dashboard cards show live data
+- [ ] Mobile responsive testing

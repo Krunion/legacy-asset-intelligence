@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, json, bigint } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -231,12 +231,14 @@ export const projectDocuments = mysqlTable("projectDocuments", {
   fileName: varchar("fileName", { length: 255 }).notNull(),
   mimeType: varchar("mimeType", { length: 100 }),
   fileSize: int("fileSize"),
-  documentType: mysqlEnum("documentType", ["contract", "proposal", "report", "invoice", "correspondence", "legal", "insurance", "other"]).default("other"),
+  documentType: mysqlEnum("documentType", ["contract", "proposal", "report", "invoice", "correspondence", "legal", "insurance", "assessment", "meeting_document", "project_deliverable", "supporting_document", "other"]).default("other"),
   description: text("description"),
   isAdminOnly: int("isAdminOnly").default(1).notNull(), // 1 = only admin can see
+  isClientVisible: int("isClientVisible").default(0).notNull(), // 1 = visible to client in their portal
   uploadedBy: int("uploadedBy").notNull(),
   uploadedByName: varchar("uploadedByName", { length: 255 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type ProjectDocument = typeof projectDocuments.$inferSelect;
@@ -323,6 +325,7 @@ export type InsertProjectKpi = typeof projectKpis.$inferInsert;
 export const financialRecovery = mysqlTable("financialRecovery", {
   id: int("id").autoincrement().primaryKey(),
   projectId: int("projectId").notNull(),
+  title: varchar("title", { length: 500 }),
   category: mysqlEnum("category", [
     "avoided_replacement", "sale_disposal", "insurance_tax_exposure",
     "maintenance_elimination", "licensing_elimination", "idle_capital",
@@ -330,14 +333,24 @@ export const financialRecovery = mysqlTable("financialRecovery", {
   ]).notNull(),
   description: text("description"),
   amount: decimal("amount", { precision: 14, scale: 2 }).notNull(),
+  estimatedValue: decimal("estimatedValue", { precision: 14, scale: 2 }),
+  verifiedValue: decimal("verifiedValue", { precision: 14, scale: 2 }),
+  realizedValue: decimal("realizedValue", { precision: 14, scale: 2 }),
   status: mysqlEnum("status", [
-    "identified", "under_investigation", "awaiting_validation",
+    "identified", "under_review", "verified", "client_decision_required",
     "approved", "in_progress", "realized", "rejected", "closed"
   ]).default("identified").notNull(),
-  assetId: int("assetId"), // optional link to specific asset
+  assetId: int("assetId"),
   responsibleParty: varchar("responsibleParty", { length: 255 }),
+  owner: varchar("owner", { length: 255 }),
   dueDate: timestamp("dueDate"),
+  dateIdentified: timestamp("dateIdentified"),
+  targetCompletionDate: timestamp("targetCompletionDate"),
+  recommendedAction: text("recommendedAction"),
   notes: text("notes"),
+  isClientVisible: int("isClientVisible").default(0).notNull(),
+  createdBy: int("createdBy"),
+  updatedBy: int("updatedBy"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -348,12 +361,14 @@ export type InsertFinancialRecovery = typeof financialRecovery.$inferInsert;
 export const riskExceptions = mysqlTable("riskExceptions", {
   id: int("id").autoincrement().primaryKey(),
   projectId: int("projectId").notNull(),
+  title: varchar("title", { length: 500 }),
   riskType: mysqlEnum("riskType", [
     "high_value_missing", "no_custodian", "uninsured", "no_documentation",
     "unauthorized_location", "duplicate_purchase", "obsolete_equipment",
-    "cybersecurity", "compliance", "pending_decision", "other"
+    "cybersecurity", "compliance", "pending_decision", "risk", "exception", "assessment", "finding", "other"
   ]).notNull(),
   riskLevel: mysqlEnum("riskLevel", ["critical", "high", "medium", "low"]).default("medium").notNull(),
+  severity: mysqlEnum("severity", ["critical", "high", "moderate", "low"]).default("moderate"),
   assetId: int("assetId"),
   assetTag: varchar("assetTag", { length: 255 }),
   location: varchar("location", { length: 500 }),
@@ -361,8 +376,15 @@ export const riskExceptions = mysqlTable("riskExceptions", {
   description: text("description"),
   recommendedAction: text("recommendedAction"),
   responsibleParty: varchar("responsibleParty", { length: 255 }),
+  owner: varchar("owner", { length: 255 }),
   dueDate: timestamp("dueDate"),
-  status: mysqlEnum("status", ["open", "in_progress", "resolved", "accepted", "escalated"]).default("open").notNull(),
+  identifiedDate: timestamp("identifiedDate"),
+  targetResolutionDate: timestamp("targetResolutionDate"),
+  resolutionNotes: text("resolutionNotes"),
+  status: mysqlEnum("status", ["open", "under_review", "mitigation_in_progress", "in_progress", "resolved", "closed", "accepted", "escalated"]).default("open").notNull(),
+  isClientVisible: int("isClientVisible").default(0).notNull(),
+  createdBy: int("createdBy"),
+  updatedBy: int("updatedBy"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -421,7 +443,7 @@ export type InsertProjectReport = typeof projectReports.$inferInsert;
 export const projectMeetings = mysqlTable("projectMeetings", {
   id: int("id").autoincrement().primaryKey(),
   projectId: int("projectId").notNull(),
-  meetingType: mysqlEnum("meetingType", ["kickoff", "status_update", "review", "qbr", "ad_hoc", "final"]).default("status_update").notNull(),
+  meetingType: mysqlEnum("meetingType", ["kickoff", "status_update", "review", "qbr", "ad_hoc", "final", "message"]).default("status_update").notNull(),
   title: varchar("title", { length: 500 }).notNull(),
   scheduledDate: timestamp("scheduledDate"),
   duration: int("duration"), // minutes
@@ -431,7 +453,15 @@ export const projectMeetings = mysqlTable("projectMeetings", {
   summary: text("summary"),
   decisions: json("decisions"), // JSON array of decision strings
   actionItems: json("actionItems"), // JSON array of action item strings
+  followUpAction: text("followUpAction"),
+  followUpDueDate: timestamp("followUpDueDate"),
+  attachmentStorageKey: varchar("attachmentStorageKey", { length: 500 }),
+  attachmentStorageUrl: varchar("attachmentStorageUrl", { length: 1000 }),
+  attachmentFileName: varchar("attachmentFileName", { length: 255 }),
   status: mysqlEnum("status", ["scheduled", "completed", "cancelled", "rescheduled"]).default("scheduled").notNull(),
+  isClientVisible: int("isClientVisible").default(0).notNull(),
+  createdBy: int("createdBy"),
+  updatedBy: int("updatedBy"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
@@ -445,14 +475,50 @@ export const projectBilling = mysqlTable("projectBilling", {
   itemType: mysqlEnum("itemType", ["invoice", "payment", "change_order", "credit"]).notNull(),
   description: varchar("description", { length: 500 }).notNull(),
   amount: decimal("amount", { precision: 14, scale: 2 }).notNull(),
-  status: mysqlEnum("status", ["pending", "sent", "paid", "overdue", "cancelled", "approved", "rejected"]).default("pending").notNull(),
+  amountPaid: decimal("amountPaid", { precision: 14, scale: 2 }).default("0.00"),
+  remainingBalance: decimal("remainingBalance", { precision: 14, scale: 2 }),
+  status: mysqlEnum("status", ["draft", "upcoming", "due", "sent", "partially_paid", "paid", "past_due", "overdue", "cancelled", "disputed", "pending", "approved", "rejected"]).default("draft").notNull(),
   invoiceNumber: varchar("invoiceNumber", { length: 100 }),
+  billingPeriod: varchar("billingPeriod", { length: 255 }),
+  invoiceDate: timestamp("invoiceDate"),
   dueDate: timestamp("dueDate"),
   paidDate: timestamp("paidDate"),
+  paymentReceivedDate: timestamp("paymentReceivedDate"),
+  nextPaymentDate: timestamp("nextPaymentDate"),
+  nextPaymentAmount: decimal("nextPaymentAmount", { precision: 14, scale: 2 }),
+  pastDueAmount: decimal("pastDueAmount", { precision: 14, scale: 2 }),
+  storageKey: varchar("storageKey", { length: 500 }),
+  storageUrl: varchar("storageUrl", { length: 1000 }),
+  fileName: varchar("fileName", { length: 255 }),
   notes: text("notes"),
+  isClientVisible: int("isClientVisible").default(1).notNull(), // billing items visible to client by default
+  createdBy: int("createdBy"),
+  updatedBy: int("updatedBy"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type ProjectBilling = typeof projectBilling.$inferSelect;
 export type InsertProjectBilling = typeof projectBilling.$inferInsert;
+
+// ─── Audit History ────────────────────────────────────────────────────────────
+
+export const auditHistory = mysqlTable("auditHistory", {
+  id: int("id").autoincrement().primaryKey(),
+  entityType: mysqlEnum("entityType", [
+    "billing", "document", "risk", "recovery", "meeting", "report",
+    "action_item", "asset", "photo", "project", "client_access", "user"
+  ]).notNull(),
+  entityId: int("entityId").notNull(),
+  projectId: int("projectId"),
+  action: mysqlEnum("action", ["create", "update", "delete", "archive", "restore", "visibility_change", "status_change", "access_grant", "access_revoke"]).notNull(),
+  changedBy: int("changedBy"),
+  changedByName: varchar("changedByName", { length: 255 }),
+  previousValues: json("previousValues"), // JSON snapshot of changed fields before
+  newValues: json("newValues"), // JSON snapshot of changed fields after
+  description: text("description"), // Human-readable description of the change
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AuditHistory = typeof auditHistory.$inferSelect;
+export type InsertAuditHistory = typeof auditHistory.$inferInsert;

@@ -9,12 +9,17 @@ import crypto from "crypto";
 // Admin emails that can always view client dashboards
 const ADMIN_EMAILS = [
   "kevin.runion@legacyassetintelligence.com",
+  "krunion84@gmail.com",
   "chris.haynes@legacyassetintelligence.com",
 ];
-
 function isAdmin(email: string | null | undefined): boolean {
   if (!email) return false;
   return ADMIN_EMAILS.includes(email.toLowerCase());
+}
+function isAdminUser(user: { email?: string | null; role?: string | null } | null | undefined): boolean {
+  if (!user) return false;
+  if (user.role === 'admin') return true;
+  return isAdmin(user.email);
 }
 
 // Generate a random password
@@ -606,10 +611,19 @@ export const clientPortalRouter = router({
       category: z.enum(["avoided_replacement", "sale_disposal", "insurance_tax_exposure", "maintenance_elimination", "licensing_elimination", "idle_capital", "redeployment", "disposal_recommendation", "other"]),
       description: z.string().optional(),
       amount: z.string(),
-      status: z.enum(["identified", "under_investigation", "awaiting_validation", "approved", "in_progress", "realized", "rejected", "closed"]).default("identified"),
+      status: z.enum(["identified", "under_review", "verified", "client_decision_required", "approved", "in_progress", "realized", "rejected", "closed"]).default("identified"),
       assetId: z.number().optional(),
       responsibleParty: z.string().optional(),
+      owner: z.string().optional(),
       dueDate: z.string().optional(),
+      dateIdentified: z.string().optional(),
+      targetCompletionDate: z.string().optional(),
+      title: z.string().optional(),
+      estimatedValue: z.string().optional(),
+      verifiedValue: z.string().optional(),
+      realizedValue: z.string().optional(),
+      recommendedAction: z.string().optional(),
+      isClientVisible: z.number().optional(),
       notes: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
@@ -620,6 +634,8 @@ export const clientPortalRouter = router({
       const result = await db.insert(financialRecovery).values({
         ...input,
         dueDate: input.dueDate ? new Date(input.dueDate) : null,
+        dateIdentified: input.dateIdentified ? new Date(input.dateIdentified) : null,
+        targetCompletionDate: input.targetCompletionDate ? new Date(input.targetCompletionDate) : null,
       });
       return { id: result[0].insertId };
     }),
@@ -627,8 +643,17 @@ export const clientPortalRouter = router({
   updateRecoveryItem: protectedProcedure
     .input(z.object({
       id: z.number(),
-      status: z.enum(["identified", "under_investigation", "awaiting_validation", "approved", "in_progress", "realized", "rejected", "closed"]).optional(),
+      status: z.enum(["identified", "under_review", "verified", "client_decision_required", "approved", "in_progress", "realized", "rejected", "closed"]).optional(),
       amount: z.string().optional(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      estimatedValue: z.string().optional(),
+      verifiedValue: z.string().optional(),
+      realizedValue: z.string().optional(),
+      owner: z.string().optional(),
+      responsibleParty: z.string().optional(),
+      recommendedAction: z.string().optional(),
+      isClientVisible: z.number().optional(),
       notes: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
