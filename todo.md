@@ -456,11 +456,16 @@
 - [x] Asset Register: Add delete button and clear button per asset row
 
 ## Asset Management — Project-Based Restructure (July 29, 2026)
-- [ ] Add asset_projects table (id, name, description, client, status, createdBy, createdAt, updatedAt)
-- [ ] Add projectId foreign key to assets table
-- [ ] Update backend: all asset queries scoped by projectId
-- [ ] Build Projects landing page (list of projects with stats)
-- [ ] Build Create New Project form (name, client, description)
-- [ ] Update Asset Management to require project selection first
-- [ ] Admin-only project deletion (with download confirmation)
-- [ ] Project isolation: each project's assets/categories/photos completely separate
+- [x] Add asset_projects table (id, name, description, client, status, createdBy, createdAt, updatedAt)
+- [x] Add projectId foreign key to assets table
+- [x] Update backend: all asset queries scoped by projectId
+- [x] Build Projects landing page (list of projects with stats)
+- [x] Build Create New Project form (name, client, description)
+- [x] Update Asset Management to require project selection first
+- [x] Admin-only project deletion (with download confirmation)
+- [x] Project isolation: each project's assets/categories/photos completely separate
+
+## Bug Fix — Category Dropdown (July 30, 2026)
+- [x] Fix categoryId: NaN on asset creation — fetch categories from DB, use numeric IDs as option values
+- [x] Validate categoryId is a valid integer before submission
+- [x] Handle "Other" category properly (create or use existing "Other" category in DB)

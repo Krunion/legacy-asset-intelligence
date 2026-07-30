@@ -4,7 +4,7 @@ import { COLORS } from "@shared/colors";
 
 const C = COLORS;
 
-// ─── Predefined Categories ──────────────────────────────────────────────────
+// ─── Predefined Categories (used for seeding if DB is empty) ────────────────
 const PREDEFINED_CATEGORIES = [
   "Buildings & Real Estate",
   "Furniture & Fixtures",
@@ -143,13 +143,45 @@ export default function AssetForm({ projectId, assetId, onSuccess, onCancel }: P
     }
   }, [existingAsset, isEdit]);
 
+  // Fetch categories from the database
+  const { data: dbCategories } = trpc.assets.listCategories.useQuery();
+
+  // Seed categories if DB is empty
+  const createCategoryMutation = trpc.assets.createCategory.useMutation({
+    onSuccess: () => { utils.assets.listCategories.invalidate(); },
+  });
+
+  useEffect(() => {
+    if (dbCategories && dbCategories.length === 0) {
+      // Seed the predefined categories into the database
+      PREDEFINED_CATEGORIES.forEach((catName) => {
+        createCategoryMutation.mutate({ name: catName });
+      });
+    }
+  }, [dbCategories]);
+
+  const [formError, setFormError] = useState("");
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setFormError("");
+
+    // Validate categoryId
+    let categoryId: number | undefined = undefined;
+    if (form.category && form.category !== "") {
+      const parsed = Number(form.category);
+      if (!Number.isInteger(parsed) || parsed <= 0) {
+        setFormError("Please select a valid asset category.");
+        return;
+      }
+      categoryId = parsed;
+    }
+
     const resolvedUnit = form.unitOfMeasure === "Other" ? form.unitOfMeasureOther : form.unitOfMeasure;
     const payload = {
       name: form.name,
       description: form.description || undefined,
-      categoryId: form.category ? parseInt(form.category) : undefined,
+      categoryId,
       status: form.status as any,
       condition: form.condition as any,
       manufacturer: form.manufacturer || undefined,
@@ -246,11 +278,12 @@ export default function AssetForm({ projectId, assetId, onSuccess, onCancel }: P
               <label style={labelStyle}>Category</label>
               <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} style={inputStyle}>
                 <option value="">— Select Category —</option>
-                {PREDEFINED_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                {dbCategories && dbCategories.map((cat) => (
+                  <option key={cat.id} value={String(cat.id)}>{cat.name}</option>
                 ))}
               </select>
-              {form.category === "Other — Describe" && (
+              {formError && <p style={{ color: "#ef4444", fontSize: "0.8rem", marginTop: "0.3rem" }}>{formError}</p>}
+              {dbCategories && dbCategories.find(c => c.id === Number(form.category))?.name === "Other — Describe" && (
                 <input
                   type="text"
                   value={form.categoryOther}
