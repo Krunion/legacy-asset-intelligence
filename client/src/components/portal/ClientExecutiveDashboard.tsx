@@ -928,22 +928,40 @@ function MeetingsSection({ meetings }: { meetings: any[] }) {
 
 // ─── SECTION: Billing ─────────────────────────────────────────────────────────
 function BillingSection({ billing }: { billing: any[] }) {
-  const invoices = billing.filter(b => b.itemType === "invoice");
-  const payments = billing.filter(b => b.itemType === "payment");
+  const invoices = billing.filter(b => b.itemType === "invoice" || b.itemType === "change_order");
+  const payments = billing.filter(b => b.itemType === "payment" || b.itemType === "credit");
   const totalInvoiced = invoices.reduce((sum, b) => sum + parseFloat(b.amount || "0"), 0);
-  const totalPaid = payments.reduce((sum, b) => sum + parseFloat(b.amount || "0"), 0);
-  const outstanding = totalInvoiced - totalPaid;
+  const totalPaid = billing.reduce((sum, b) => sum + parseFloat(b.amountPaid || "0"), 0);
+  const totalRemaining = billing.reduce((sum, b) => sum + parseFloat(b.remainingBalance || "0"), 0);
+  const outstanding = totalRemaining > 0 ? totalRemaining : (totalInvoiced - totalPaid);
+  const pastDue = billing.filter(b => ["past_due", "overdue"].includes(b.status)).reduce((sum, b) => sum + parseFloat(b.pastDueAmount || b.remainingBalance || b.amount || "0"), 0);
+  const nextPayment = billing.find(b => b.nextPaymentDate && ["due", "upcoming", "sent", "partially_paid"].includes(b.status));
 
   return (
     <div style={{ maxWidth: 1000 }}>
       <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", color: C.text, marginBottom: "1.5rem" }}>Billing & Engagement</h2>
 
-      {/* Summary */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
+      {/* Summary Cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
         <MetricCard label="Total Invoiced" value={`$${totalInvoiced.toLocaleString()}`} color={C.silver} />
         <MetricCard label="Amount Paid" value={`$${totalPaid.toLocaleString()}`} color="#10B981" />
-        <MetricCard label="Outstanding" value={`$${outstanding.toLocaleString()}`} color={outstanding > 0 ? "#F59E0B" : "#10B981"} />
+        <MetricCard label="Outstanding Balance" value={`$${outstanding.toLocaleString()}`} color={outstanding > 0 ? "#F59E0B" : "#10B981"} />
+        <MetricCard label="Past Due" value={`$${pastDue.toLocaleString()}`} color={pastDue > 0 ? "#EF4444" : "#10B981"} />
       </div>
+
+      {/* Next Payment Alert */}
+      {nextPayment && (
+        <div style={{ background: "rgba(245,158,11,0.08)", border: `1px solid rgba(245,158,11,0.3)`, borderRadius: 10, padding: "1rem 1.25rem", marginBottom: "1.5rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <p style={{ color: C.text, fontWeight: 600, fontSize: "0.9rem", margin: 0 }}>Next Payment Due</p>
+            <p style={{ color: C.textMuted, fontSize: "0.8rem", margin: "0.25rem 0 0" }}>{nextPayment.description}{nextPayment.billingPeriod && ` — ${nextPayment.billingPeriod}`}</p>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <p style={{ color: C.gold, fontWeight: 700, fontSize: "1.1rem", fontFamily: "'JetBrains Mono', monospace", margin: 0 }}>${parseFloat(nextPayment.nextPaymentAmount || nextPayment.remainingBalance || nextPayment.amount).toLocaleString()}</p>
+            <p style={{ color: C.textMuted, fontSize: "0.75rem", margin: "0.15rem 0 0" }}>Due: {new Date(nextPayment.nextPaymentDate || nextPayment.dueDate).toLocaleDateString()}</p>
+          </div>
+        </div>
+      )}
 
       <Card title="Billing History">
         {billing.length === 0 ? (
@@ -957,6 +975,8 @@ function BillingSection({ billing }: { billing: any[] }) {
                   <th style={{ padding: "0.6rem", textAlign: "left", color: C.textMuted }}>Description</th>
                   <th style={{ padding: "0.6rem", textAlign: "left", color: C.textMuted }}>Invoice #</th>
                   <th style={{ padding: "0.6rem", textAlign: "right", color: C.textMuted }}>Amount</th>
+                  <th style={{ padding: "0.6rem", textAlign: "right", color: C.textMuted }}>Paid</th>
+                  <th style={{ padding: "0.6rem", textAlign: "right", color: C.textMuted }}>Balance</th>
                   <th style={{ padding: "0.6rem", textAlign: "center", color: C.textMuted }}>Status</th>
                   <th style={{ padding: "0.6rem", textAlign: "left", color: C.textMuted }}>Due Date</th>
                 </tr>
@@ -965,9 +985,14 @@ function BillingSection({ billing }: { billing: any[] }) {
                 {billing.map((item) => (
                   <tr key={item.id} style={{ borderBottom: `1px solid ${C.border}` }}>
                     <td style={{ padding: "0.5rem 0.6rem", color: C.silver, textTransform: "capitalize" }}>{item.itemType.replace(/_/g, " ")}</td>
-                    <td style={{ padding: "0.5rem 0.6rem", color: C.text }}>{item.description}</td>
+                    <td style={{ padding: "0.5rem 0.6rem", color: C.text }}>
+                      {item.description}
+                      {item.billingPeriod && <span style={{ display: "block", color: C.textMuted, fontSize: "0.7rem" }}>{item.billingPeriod}</span>}
+                    </td>
                     <td style={{ padding: "0.5rem 0.6rem", color: C.textMuted, fontFamily: "'JetBrains Mono', monospace" }}>{item.invoiceNumber || "—"}</td>
                     <td style={{ padding: "0.5rem 0.6rem", color: C.gold, textAlign: "right", fontFamily: "'JetBrains Mono', monospace" }}>${parseFloat(item.amount).toLocaleString()}</td>
+                    <td style={{ padding: "0.5rem 0.6rem", color: "#10B981", textAlign: "right", fontFamily: "'JetBrains Mono', monospace" }}>{parseFloat(item.amountPaid || "0") > 0 ? `$${parseFloat(item.amountPaid).toLocaleString()}` : "—"}</td>
+                    <td style={{ padding: "0.5rem 0.6rem", color: parseFloat(item.remainingBalance || "0") > 0 ? "#F59E0B" : C.textMuted, textAlign: "right", fontFamily: "'JetBrains Mono', monospace" }}>{parseFloat(item.remainingBalance || "0") > 0 ? `$${parseFloat(item.remainingBalance).toLocaleString()}` : "—"}</td>
                     <td style={{ padding: "0.5rem 0.6rem", textAlign: "center" }}><StatusBadge status={item.status} /></td>
                     <td style={{ padding: "0.5rem 0.6rem", color: C.textMuted }}>{item.dueDate ? new Date(item.dueDate).toLocaleDateString() : "—"}</td>
                   </tr>
@@ -977,6 +1002,20 @@ function BillingSection({ billing }: { billing: any[] }) {
           </div>
         )}
       </Card>
+
+      {/* Payment Notes */}
+      {billing.some(b => b.notes) && (
+        <Card title="Notes">
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            {billing.filter(b => b.notes).map(item => (
+              <div key={item.id} style={{ padding: "0.5rem 0.75rem", borderLeft: `3px solid ${C.gold}`, background: "rgba(245,158,11,0.05)", borderRadius: "0 6px 6px 0" }}>
+                <p style={{ color: C.text, fontSize: "0.8rem", margin: 0 }}>{item.notes}</p>
+                <p style={{ color: C.textMuted, fontSize: "0.7rem", margin: "0.2rem 0 0" }}>{item.description} — {item.invoiceNumber || ""}</p>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
     </div>
   );
 }

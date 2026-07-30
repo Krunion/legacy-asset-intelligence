@@ -414,19 +414,21 @@ export const clientPortalRouter = router({
         .where(eq(projectKpis.projectId, input.projectId))
         .limit(1);
 
-      // Get financial recovery items
-      const recoveryItems = await db
+      // Get financial recovery items (only client-visible)
+      const allRecoveryItems = await db
         .select()
         .from(financialRecovery)
         .where(eq(financialRecovery.projectId, input.projectId))
         .orderBy(desc(financialRecovery.amount));
+      const recoveryItems = allRecoveryItems.filter(r => r.isClientVisible === 1);
 
-      // Get risk exceptions
-      const risks = await db
+      // Get risk exceptions (only client-visible)
+      const allRisks = await db
         .select()
         .from(riskExceptions)
         .where(eq(riskExceptions.projectId, input.projectId))
         .orderBy(riskExceptions.riskLevel);
+      const risks = allRisks.filter(r => r.isClientVisible === 1);
 
       // Get action items
       const actionItems = await db
@@ -442,19 +444,21 @@ export const clientPortalRouter = router({
         .where(eq(projectReports.projectId, input.projectId))
         .orderBy(desc(projectReports.createdAt));
 
-      // Get meetings
-      const meetings = await db
+      // Get meetings (only client-visible)
+      const allMeetings = await db
         .select()
         .from(projectMeetings)
         .where(eq(projectMeetings.projectId, input.projectId))
         .orderBy(desc(projectMeetings.scheduledDate));
+      const meetings = allMeetings.filter(m => m.isClientVisible === 1);
 
-      // Get billing (NEVER show internal costs)
-      const billing = await db
+      // Get billing (ONLY show client-visible items)
+      const allBilling = await db
         .select()
         .from(projectBilling)
         .where(eq(projectBilling.projectId, input.projectId))
         .orderBy(desc(projectBilling.createdAt));
+      const billing = allBilling.filter(b => b.isClientVisible === 1);
 
       // Calculate financial totals
       const totalRecovery = recoveryItems.reduce((sum, item) => sum + parseFloat(item.amount || "0"), 0);
@@ -671,6 +675,9 @@ export const clientPortalRouter = router({
       projectId: z.number(),
       riskType: z.enum(["high_value_missing", "no_custodian", "uninsured", "no_documentation", "unauthorized_location", "duplicate_purchase", "obsolete_equipment", "cybersecurity", "compliance", "pending_decision", "other"]),
       riskLevel: z.enum(["critical", "high", "medium", "low"]).default("medium"),
+      title: z.string().optional(),
+      severity: z.enum(["critical", "high", "moderate", "low"]).optional(),
+      owner: z.string().optional(),
       assetId: z.number().optional(),
       assetTag: z.string().optional(),
       location: z.string().optional(),
@@ -679,6 +686,9 @@ export const clientPortalRouter = router({
       recommendedAction: z.string().optional(),
       responsibleParty: z.string().optional(),
       dueDate: z.string().optional(),
+      targetResolutionDate: z.string().optional(),
+      resolutionNotes: z.string().optional(),
+      isClientVisible: z.number().default(1),
     }))
     .mutation(async ({ input, ctx }) => {
       if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
@@ -687,6 +697,7 @@ export const clientPortalRouter = router({
       const result = await db.insert(riskExceptions).values({
         ...input,
         dueDate: input.dueDate ? new Date(input.dueDate) : null,
+        targetResolutionDate: input.targetResolutionDate ? new Date(input.targetResolutionDate) : null,
       });
       return { id: result[0].insertId };
     }),
@@ -696,13 +707,25 @@ export const clientPortalRouter = router({
       id: z.number(),
       status: z.enum(["open", "in_progress", "resolved", "accepted", "escalated"]).optional(),
       riskLevel: z.enum(["critical", "high", "medium", "low"]).optional(),
+      title: z.string().optional(),
+      severity: z.enum(["critical", "high", "moderate", "low"]).optional(),
+      owner: z.string().optional(),
+      description: z.string().optional(),
+      financialExposure: z.string().optional(),
+      recommendedAction: z.string().optional(),
+      responsibleParty: z.string().optional(),
+      targetResolutionDate: z.string().optional(),
+      resolutionNotes: z.string().optional(),
+      isClientVisible: z.number().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      const { id, ...data } = input;
-      await db.update(riskExceptions).set(data).where(eq(riskExceptions.id, id));
+      const { id, targetResolutionDate, ...data } = input;
+      const updateData: any = { ...data };
+      if (targetResolutionDate !== undefined) updateData.targetResolutionDate = targetResolutionDate ? new Date(targetResolutionDate) : null;
+      await db.update(riskExceptions).set(updateData).where(eq(riskExceptions.id, id));
       return { success: true };
     }),
 
@@ -783,6 +806,7 @@ export const clientPortalRouter = router({
     .input(z.object({
       projectId: z.number(),
       meetingType: z.enum(["kickoff", "status_update", "review", "qbr", "ad_hoc", "final"]).default("status_update"),
+      messageType: z.enum(["meeting", "message", "note"]).default("meeting"),
       title: z.string(),
       scheduledDate: z.string().optional(),
       duration: z.number().optional(),
@@ -792,15 +816,20 @@ export const clientPortalRouter = router({
       summary: z.string().optional(),
       decisions: z.array(z.string()).optional(),
       actionItems: z.array(z.string()).optional(),
+      followUpAction: z.string().optional(),
+      dueDate: z.string().optional(),
+      isClientVisible: z.number().default(1),
       status: z.enum(["scheduled", "completed", "cancelled", "rescheduled"]).default("scheduled"),
     }))
     .mutation(async ({ input, ctx }) => {
       if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
+      const { dueDate, messageType, ...rest } = input;
       const result = await db.insert(projectMeetings).values({
-        ...input,
-        scheduledDate: input.scheduledDate ? new Date(input.scheduledDate) : null,
+        ...rest,
+        scheduledDate: rest.scheduledDate ? new Date(rest.scheduledDate) : null,
+        followUpDueDate: dueDate ? new Date(dueDate) : null,
       });
       return { id: result[0].insertId };
     }),
@@ -939,14 +968,18 @@ export const clientPortalRouter = router({
       scheduledDate: z.string().optional(),
       decisions: z.array(z.string()).optional(),
       actionItems: z.array(z.string()).optional(),
+      followUpAction: z.string().optional(),
+      dueDate: z.string().optional(),
+      isClientVisible: z.number().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      const { id, scheduledDate, ...data } = input;
+      const { id, scheduledDate, dueDate, ...data } = input;
       const updateData: any = { ...data };
       if (scheduledDate !== undefined) updateData.scheduledDate = scheduledDate ? new Date(scheduledDate) : null;
+      if (dueDate !== undefined) updateData.followUpDueDate = dueDate ? new Date(dueDate) : null;
       await db.update(projectMeetings).set(updateData).where(eq(projectMeetings.id, id));
       return { success: true };
     }),

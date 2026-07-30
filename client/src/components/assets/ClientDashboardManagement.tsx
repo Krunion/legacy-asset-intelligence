@@ -330,17 +330,21 @@ function ProgressPanel({ projectId }: { projectId: number }) {
 
 // ─── PANEL: Recovery Opportunities ────────────────────────────────────────────
 function RecoveryPanel({ projectId }: { projectId: number }) {
+  const emptyForm = { category: "avoided_replacement", title: "", description: "", amount: "", estimatedValue: "", verifiedValue: "", realizedValue: "", status: "identified", owner: "", responsibleParty: "", dueDate: "", dateIdentified: "", targetCompletionDate: "", notes: "", isClientVisible: 1 };
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ category: "avoided_replacement", description: "", amount: "", status: "identified", responsibleParty: "", dueDate: "", notes: "" });
+  const [form, setForm] = useState(emptyForm);
 
   const utils = trpc.useUtils();
   const { data: items, isLoading } = trpc.clientPortal.listRecoveryItems.useQuery({ projectId });
-  const createMutation = trpc.clientPortal.createRecoveryItem.useMutation({ onSuccess: () => { utils.clientPortal.listRecoveryItems.invalidate({ projectId }); setShowForm(false); setForm({ category: "avoided_replacement", description: "", amount: "", status: "identified", responsibleParty: "", dueDate: "", notes: "" }); } });
+  const createMutation = trpc.clientPortal.createRecoveryItem.useMutation({ onSuccess: () => { utils.clientPortal.listRecoveryItems.invalidate({ projectId }); setShowForm(false); setForm(emptyForm); } });
   const deleteMutation = trpc.clientPortal.deleteRecoveryItem.useMutation({ onSuccess: () => { utils.clientPortal.listRecoveryItems.invalidate({ projectId }); } });
   const updateMutation = trpc.clientPortal.updateRecoveryItem.useMutation({ onSuccess: () => { utils.clientPortal.listRecoveryItems.invalidate({ projectId }); } });
 
   const categoryLabels: Record<string, string> = { avoided_replacement: "Avoided Replacement", sale_disposal: "Sale/Disposal", insurance_tax_exposure: "Insurance/Tax Exposure", maintenance_elimination: "Maintenance Elimination", licensing_elimination: "Licensing Elimination", idle_capital: "Idle Capital", redeployment: "Redeployment", disposal_recommendation: "Disposal Recommendation", other: "Other" };
-  const statusColors: Record<string, string> = { identified: "#94A3B8", under_investigation: "#3B82F6", awaiting_validation: "#F59E0B", approved: "#10B981", in_progress: "#8B5CF6", realized: "#059669", rejected: "#EF4444", closed: "#6B7280" };
+  const statusColors: Record<string, string> = { identified: "#94A3B8", under_review: "#3B82F6", verified: "#10B981", client_decision_required: "#F59E0B", approved: "#10B981", in_progress: "#8B5CF6", realized: "#059669", rejected: "#EF4444", closed: "#6B7280" };
+
+  const inputStyle = { width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" as const };
+  const labelStyle = { display: "block" as const, color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" };
 
   return (
     <div>
@@ -352,19 +356,35 @@ function RecoveryPanel({ projectId }: { projectId: number }) {
       {showForm && (
         <div style={{ background: C.navy, borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem", marginBottom: "1.5rem" }}>
           <h3 style={{ color: C.text, fontSize: "1rem", fontWeight: 600, marginBottom: "1rem" }}>Add Recovery Opportunity</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Category *</label>
-              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Title</label><input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Unused Server Farm Disposal" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Category *</label>
+              <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} style={inputStyle}>
                 {Object.entries(categoryLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Amount ($) *</label><input type="text" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="50000" style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Responsible Party</label><input type="text" value={form.responsibleParty} onChange={(e) => setForm({ ...form, responsibleParty: e.target.value })} placeholder="Name" style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
           </div>
-          <div style={{ marginBottom: "1rem" }}><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Description</label><textarea rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", resize: "vertical", boxSizing: "border-box" }} /></div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Total Amount ($) *</label><input type="text" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="50000" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Estimated Value ($)</label><input type="text" value={form.estimatedValue} onChange={(e) => setForm({ ...form, estimatedValue: e.target.value })} placeholder="50000" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Verified Value ($)</label><input type="text" value={form.verifiedValue} onChange={(e) => setForm({ ...form, verifiedValue: e.target.value })} placeholder="45000" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Realized Value ($)</label><input type="text" value={form.realizedValue} onChange={(e) => setForm({ ...form, realizedValue: e.target.value })} placeholder="42000" style={inputStyle} /></div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Owner</label><input type="text" value={form.owner} onChange={(e) => setForm({ ...form, owner: e.target.value })} placeholder="Kevin Runion" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Date Identified</label><input type="date" value={form.dateIdentified} onChange={(e) => setForm({ ...form, dateIdentified: e.target.value })} style={inputStyle} /></div>
+            <div><label style={labelStyle}>Target Completion</label><input type="date" value={form.targetCompletionDate} onChange={(e) => setForm({ ...form, targetCompletionDate: e.target.value })} style={inputStyle} /></div>
+          </div>
+          <div style={{ marginBottom: "1rem" }}><label style={labelStyle}>Description</label><textarea rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} style={{ ...inputStyle, resize: "vertical" }} /></div>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: C.silver, fontSize: "0.8rem", cursor: "pointer" }}>
+              <input type="checkbox" checked={form.isClientVisible === 1} onChange={(e) => setForm({ ...form, isClientVisible: e.target.checked ? 1 : 0 })} />
+              Visible to Client
+            </label>
+          </div>
           <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
             <button onClick={() => setShowForm(false)} style={{ padding: "0.5rem 1rem", background: "transparent", border: `1px solid ${C.border}`, borderRadius: 6, color: C.textMuted, cursor: "pointer" }}>Cancel</button>
-            <button onClick={() => createMutation.mutate({ projectId, category: form.category as any, amount: form.amount, description: form.description || undefined, responsibleParty: form.responsibleParty || undefined, dueDate: form.dueDate || undefined, notes: form.notes || undefined })} disabled={!form.amount || createMutation.isPending} style={{ padding: "0.5rem 1.25rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer" }}>{createMutation.isPending ? "Saving..." : "Save"}</button>
+            <button onClick={() => createMutation.mutate({ projectId, category: form.category as any, amount: form.amount, title: form.title || undefined, description: form.description || undefined, estimatedValue: form.estimatedValue || undefined, verifiedValue: form.verifiedValue || undefined, realizedValue: form.realizedValue || undefined, owner: form.owner || undefined, responsibleParty: form.responsibleParty || undefined, dateIdentified: form.dateIdentified || undefined, targetCompletionDate: form.targetCompletionDate || undefined, notes: form.notes || undefined, isClientVisible: form.isClientVisible })} disabled={!form.amount || createMutation.isPending} style={{ padding: "0.5rem 1.25rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer" }}>{createMutation.isPending ? "Saving..." : "Save"}</button>
           </div>
         </div>
       )}
@@ -374,20 +394,31 @@ function RecoveryPanel({ projectId }: { projectId: number }) {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
           {items.map((item: any) => (
-            <div key={item.id} style={{ background: C.navy, borderRadius: 10, border: `1px solid ${C.border}`, padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
-                  <span style={{ background: statusColors[item.status] || C.slate, color: "#fff", padding: "0.15rem 0.5rem", borderRadius: 4, fontSize: "0.65rem", fontWeight: 600 }}>{item.status.replace(/_/g, " ")}</span>
-                  <span style={{ color: C.text, fontWeight: 600, fontSize: "0.9rem" }}>{categoryLabels[item.category] || item.category}</span>
+            <div key={item.id} style={{ background: C.navy, borderRadius: 10, border: `1px solid ${C.border}`, padding: "1rem" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem", flexWrap: "wrap" }}>
+                    <span style={{ background: statusColors[item.status] || C.slate, color: "#fff", padding: "0.15rem 0.5rem", borderRadius: 4, fontSize: "0.65rem", fontWeight: 600 }}>{item.status.replace(/_/g, " ")}</span>
+                    <span style={{ color: C.text, fontWeight: 600, fontSize: "0.9rem" }}>{item.title || categoryLabels[item.category] || item.category}</span>
+                    {item.isClientVisible === 1 && <span style={{ background: "rgba(16,185,129,0.15)", color: "#10B981", padding: "0.1rem 0.4rem", borderRadius: 4, fontSize: "0.6rem" }}>Client Visible</span>}
+                    {item.isClientVisible === 0 && <span style={{ background: "rgba(148,163,184,0.15)", color: "#94A3B8", padding: "0.1rem 0.4rem", borderRadius: 4, fontSize: "0.6rem" }}>Internal Only</span>}
+                  </div>
+                  {item.description && <p style={{ color: C.textMuted, fontSize: "0.8rem", margin: "0.25rem 0 0" }}>{item.description}</p>}
+                  {item.owner && <p style={{ color: C.silver, fontSize: "0.75rem", margin: "0.2rem 0 0" }}>Owner: {item.owner}</p>}
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "0.4rem", flexWrap: "wrap" }}>
+                    {item.estimatedValue && <span style={{ color: C.textMuted, fontSize: "0.7rem" }}>Est: ${Number(item.estimatedValue).toLocaleString()}</span>}
+                    {item.verifiedValue && <span style={{ color: "#3B82F6", fontSize: "0.7rem" }}>Verified: ${Number(item.verifiedValue).toLocaleString()}</span>}
+                    {item.realizedValue && <span style={{ color: "#10B981", fontSize: "0.7rem" }}>Realized: ${Number(item.realizedValue).toLocaleString()}</span>}
+                  </div>
                 </div>
-                {item.description && <p style={{ color: C.textMuted, fontSize: "0.8rem", margin: "0.25rem 0 0" }}>{item.description}</p>}
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                <span style={{ color: C.gold, fontWeight: 700, fontSize: "1.1rem", fontFamily: "'JetBrains Mono', monospace" }}>${Number(item.amount).toLocaleString()}</span>
-                <select value={item.status} onChange={(e) => updateMutation.mutate({ id: item.id, status: e.target.value as any })} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: "0.75rem" }}>
-                  <option value="identified">Identified</option><option value="under_investigation">Under Investigation</option><option value="awaiting_validation">Awaiting Validation</option><option value="approved">Approved</option><option value="in_progress">In Progress</option><option value="realized">Realized</option><option value="rejected">Rejected</option><option value="closed">Closed</option>
-                </select>
-                <button onClick={() => { if (confirm("Delete?")) deleteMutation.mutate({ id: item.id }); }} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 4, color: "#EF4444", cursor: "pointer", fontSize: "0.75rem" }}>✕</button>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}>
+                  <span style={{ color: C.gold, fontWeight: 700, fontSize: "1.1rem", fontFamily: "'JetBrains Mono', monospace" }}>${Number(item.amount).toLocaleString()}</span>
+                  <select value={item.status} onChange={(e) => updateMutation.mutate({ id: item.id, status: e.target.value as any })} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: "0.75rem" }}>
+                    <option value="identified">Identified</option><option value="under_review">Under Review</option><option value="verified">Verified</option><option value="client_decision_required">Client Decision</option><option value="approved">Approved</option><option value="in_progress">In Progress</option><option value="realized">Realized</option><option value="rejected">Rejected</option><option value="closed">Closed</option>
+                  </select>
+                  <button onClick={() => updateMutation.mutate({ id: item.id, isClientVisible: item.isClientVisible === 1 ? 0 : 1 })} title={item.isClientVisible === 1 ? "Hide from client" : "Show to client"} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: `1px solid ${item.isClientVisible === 1 ? "rgba(16,185,129,0.3)" : C.border}`, borderRadius: 4, color: item.isClientVisible === 1 ? "#10B981" : C.textMuted, cursor: "pointer", fontSize: "0.7rem" }}>{item.isClientVisible === 1 ? "👁" : "👁‍🗨"}</button>
+                  <button onClick={() => { if (confirm("Delete?")) deleteMutation.mutate({ id: item.id }); }} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 4, color: "#EF4444", cursor: "pointer", fontSize: "0.75rem" }}>✕</button>
+                </div>
               </div>
             </div>
           ))}
@@ -399,17 +430,20 @@ function RecoveryPanel({ projectId }: { projectId: number }) {
 
 // ─── PANEL: Risks & Exceptions ────────────────────────────────────────────────
 function RisksPanel({ projectId }: { projectId: number }) {
+  const emptyForm = { riskType: "high_value_missing", riskLevel: "medium", title: "", severity: "moderate", owner: "", description: "", location: "", financialExposure: "", recommendedAction: "", responsibleParty: "", dueDate: "", targetResolutionDate: "", resolutionNotes: "", isClientVisible: 1 };
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ riskType: "high_value_missing", riskLevel: "medium", description: "", location: "", financialExposure: "", recommendedAction: "", responsibleParty: "", dueDate: "" });
+  const [form, setForm] = useState(emptyForm);
 
   const utils = trpc.useUtils();
   const { data: items, isLoading } = trpc.clientPortal.listRisks.useQuery({ projectId });
-  const createMutation = trpc.clientPortal.createRisk.useMutation({ onSuccess: () => { utils.clientPortal.listRisks.invalidate({ projectId }); setShowForm(false); } });
+  const createMutation = trpc.clientPortal.createRisk.useMutation({ onSuccess: () => { utils.clientPortal.listRisks.invalidate({ projectId }); setShowForm(false); setForm(emptyForm); } });
   const deleteMutation = trpc.clientPortal.deleteRisk.useMutation({ onSuccess: () => { utils.clientPortal.listRisks.invalidate({ projectId }); } });
   const updateMutation = trpc.clientPortal.updateRisk.useMutation({ onSuccess: () => { utils.clientPortal.listRisks.invalidate({ projectId }); } });
 
   const riskTypeLabels: Record<string, string> = { high_value_missing: "High-Value Missing", no_custodian: "No Custodian", uninsured: "Uninsured", no_documentation: "No Documentation", unauthorized_location: "Unauthorized Location", duplicate_purchase: "Duplicate Purchase", obsolete_equipment: "Obsolete Equipment", cybersecurity: "Cybersecurity", compliance: "Compliance", pending_decision: "Pending Decision", other: "Other" };
   const levelColors: Record<string, string> = { critical: "#EF4444", high: "#F97316", medium: "#F59E0B", low: "#10B981" };
+  const inputStyle = { width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" as const };
+  const labelStyle = { display: "block" as const, color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" };
 
   return (
     <div>
@@ -421,26 +455,45 @@ function RisksPanel({ projectId }: { projectId: number }) {
       {showForm && (
         <div style={{ background: C.navy, borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem", marginBottom: "1.5rem" }}>
           <h3 style={{ color: C.text, fontSize: "1rem", fontWeight: 600, marginBottom: "1rem" }}>Add Risk / Exception</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Risk Type *</label>
-              <select value={form.riskType} onChange={(e) => setForm({ ...form, riskType: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Title</label><input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Missing Server Equipment" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Owner</label><input type="text" value={form.owner} onChange={(e) => setForm({ ...form, owner: e.target.value })} placeholder="Kevin Runion" style={inputStyle} /></div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Risk Type *</label>
+              <select value={form.riskType} onChange={(e) => setForm({ ...form, riskType: e.target.value })} style={inputStyle}>
                 {Object.entries(riskTypeLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Risk Level *</label>
-              <select value={form.riskLevel} onChange={(e) => setForm({ ...form, riskLevel: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem" }}>
+            <div><label style={labelStyle}>Risk Level *</label>
+              <select value={form.riskLevel} onChange={(e) => setForm({ ...form, riskLevel: e.target.value })} style={inputStyle}>
                 <option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option>
               </select>
             </div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Financial Exposure ($)</label><input type="text" value={form.financialExposure} onChange={(e) => setForm({ ...form, financialExposure: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
+            <div><label style={labelStyle}>Severity</label>
+              <select value={form.severity} onChange={(e) => setForm({ ...form, severity: e.target.value })} style={inputStyle}>
+                <option value="critical">Critical</option><option value="high">High</option><option value="moderate">Moderate</option><option value="low">Low</option>
+              </select>
+            </div>
+            <div><label style={labelStyle}>Financial Exposure ($)</label><input type="text" value={form.financialExposure} onChange={(e) => setForm({ ...form, financialExposure: e.target.value })} placeholder="25000" style={inputStyle} /></div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Description</label><textarea rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", resize: "vertical", boxSizing: "border-box" }} /></div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Recommended Action</label><textarea rows={2} value={form.recommendedAction} onChange={(e) => setForm({ ...form, recommendedAction: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", resize: "vertical", boxSizing: "border-box" }} /></div>
+            <div><label style={labelStyle}>Description</label><textarea rows={2} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} style={{ ...inputStyle, resize: "vertical" }} /></div>
+            <div><label style={labelStyle}>Recommended Action</label><textarea rows={2} value={form.recommendedAction} onChange={(e) => setForm({ ...form, recommendedAction: e.target.value })} style={{ ...inputStyle, resize: "vertical" }} /></div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Target Resolution Date</label><input type="date" value={form.targetResolutionDate} onChange={(e) => setForm({ ...form, targetResolutionDate: e.target.value })} style={inputStyle} /></div>
+            <div><label style={labelStyle}>Resolution Notes</label><input type="text" value={form.resolutionNotes} onChange={(e) => setForm({ ...form, resolutionNotes: e.target.value })} placeholder="Steps taken or planned" style={inputStyle} /></div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: C.silver, fontSize: "0.8rem", cursor: "pointer" }}>
+              <input type="checkbox" checked={form.isClientVisible === 1} onChange={(e) => setForm({ ...form, isClientVisible: e.target.checked ? 1 : 0 })} />
+              Visible to Client
+            </label>
           </div>
           <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
             <button onClick={() => setShowForm(false)} style={{ padding: "0.5rem 1rem", background: "transparent", border: `1px solid ${C.border}`, borderRadius: 6, color: C.textMuted, cursor: "pointer" }}>Cancel</button>
-            <button onClick={() => createMutation.mutate({ projectId, riskType: form.riskType as any, riskLevel: form.riskLevel as any, description: form.description || undefined, location: form.location || undefined, financialExposure: form.financialExposure || undefined, recommendedAction: form.recommendedAction || undefined, responsibleParty: form.responsibleParty || undefined, dueDate: form.dueDate || undefined })} disabled={createMutation.isPending} style={{ padding: "0.5rem 1.25rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer" }}>{createMutation.isPending ? "Saving..." : "Save"}</button>
+            <button onClick={() => createMutation.mutate({ projectId, riskType: form.riskType as any, riskLevel: form.riskLevel as any, title: form.title || undefined, severity: form.severity as any || undefined, owner: form.owner || undefined, description: form.description || undefined, location: form.location || undefined, financialExposure: form.financialExposure || undefined, recommendedAction: form.recommendedAction || undefined, responsibleParty: form.responsibleParty || undefined, dueDate: form.dueDate || undefined, targetResolutionDate: form.targetResolutionDate || undefined, resolutionNotes: form.resolutionNotes || undefined, isClientVisible: form.isClientVisible })} disabled={createMutation.isPending} style={{ padding: "0.5rem 1.25rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer" }}>{createMutation.isPending ? "Saving..." : "Save"}</button>
           </div>
         </div>
       )}
@@ -452,18 +505,26 @@ function RisksPanel({ projectId }: { projectId: number }) {
           {items.map((item: any) => (
             <div key={item.id} style={{ background: C.navy, borderRadius: 10, border: `1px solid ${C.border}`, padding: "1rem", borderLeft: `4px solid ${levelColors[item.riskLevel]}` }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem", flexWrap: "wrap" }}>
                     <span style={{ background: levelColors[item.riskLevel], color: "#fff", padding: "0.15rem 0.5rem", borderRadius: 4, fontSize: "0.65rem", fontWeight: 600, textTransform: "uppercase" }}>{item.riskLevel}</span>
-                    <span style={{ color: C.text, fontWeight: 600, fontSize: "0.9rem" }}>{riskTypeLabels[item.riskType] || item.riskType}</span>
+                    <span style={{ color: C.text, fontWeight: 600, fontSize: "0.9rem" }}>{item.title || riskTypeLabels[item.riskType] || item.riskType}</span>
+                    {item.isClientVisible === 1 && <span style={{ background: "rgba(16,185,129,0.15)", color: "#10B981", padding: "0.1rem 0.4rem", borderRadius: 4, fontSize: "0.6rem" }}>Client Visible</span>}
+                    {item.isClientVisible === 0 && <span style={{ background: "rgba(148,163,184,0.15)", color: "#94A3B8", padding: "0.1rem 0.4rem", borderRadius: 4, fontSize: "0.6rem" }}>Internal Only</span>}
                   </div>
                   {item.description && <p style={{ color: C.textMuted, fontSize: "0.8rem", margin: "0.25rem 0 0" }}>{item.description}</p>}
-                  {item.financialExposure && <p style={{ color: "#F59E0B", fontSize: "0.8rem", margin: "0.25rem 0 0" }}>Exposure: ${Number(item.financialExposure).toLocaleString()}</p>}
+                  {item.owner && <p style={{ color: C.silver, fontSize: "0.75rem", margin: "0.2rem 0 0" }}>Owner: {item.owner}</p>}
+                  <div style={{ display: "flex", gap: "1rem", marginTop: "0.3rem", flexWrap: "wrap" }}>
+                    {item.financialExposure && <span style={{ color: "#F59E0B", fontSize: "0.75rem" }}>Exposure: ${Number(item.financialExposure).toLocaleString()}</span>}
+                    {item.targetResolutionDate && <span style={{ color: C.textMuted, fontSize: "0.7rem" }}>Target: {new Date(item.targetResolutionDate).toLocaleDateString()}</span>}
+                  </div>
+                  {item.resolutionNotes && <p style={{ color: C.silver, fontSize: "0.7rem", margin: "0.2rem 0 0", fontStyle: "italic" }}>Resolution: {item.resolutionNotes}</p>}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
                   <select value={item.status} onChange={(e) => updateMutation.mutate({ id: item.id, status: e.target.value as any })} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: "0.75rem" }}>
                     <option value="open">Open</option><option value="in_progress">In Progress</option><option value="resolved">Resolved</option><option value="accepted">Accepted</option><option value="escalated">Escalated</option>
                   </select>
+                  <button onClick={() => updateMutation.mutate({ id: item.id, isClientVisible: item.isClientVisible === 1 ? 0 : 1 })} title={item.isClientVisible === 1 ? "Hide from client" : "Show to client"} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: `1px solid ${item.isClientVisible === 1 ? "rgba(16,185,129,0.3)" : C.border}`, borderRadius: 4, color: item.isClientVisible === 1 ? "#10B981" : C.textMuted, cursor: "pointer", fontSize: "0.7rem" }}>{item.isClientVisible === 1 ? "👁" : "👁‍🗨"}</button>
                   <button onClick={() => { if (confirm("Delete?")) deleteMutation.mutate({ id: item.id }); }} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 4, color: "#EF4444", cursor: "pointer", fontSize: "0.75rem" }}>✕</button>
                 </div>
               </div>
@@ -649,17 +710,20 @@ function ReportsPanel({ projectId }: { projectId: number }) {
 
 // ─── PANEL: Meetings & Messages ───────────────────────────────────────────────
 function MeetingsPanel({ projectId }: { projectId: number }) {
+  const emptyForm = { meetingType: "status_update", messageType: "meeting", title: "", scheduledDate: "", duration: "60", location: "", agenda: "", attendees: "", followUpAction: "", dueDate: "", isClientVisible: 1 };
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ meetingType: "status_update", title: "", scheduledDate: "", duration: "60", location: "", agenda: "", attendees: "" });
+  const [form, setForm] = useState(emptyForm);
 
   const utils = trpc.useUtils();
   const { data: items, isLoading } = trpc.clientPortal.listMeetings.useQuery({ projectId });
-  const createMutation = trpc.clientPortal.createMeeting.useMutation({ onSuccess: () => { utils.clientPortal.listMeetings.invalidate({ projectId }); setShowForm(false); setForm({ meetingType: "status_update", title: "", scheduledDate: "", duration: "60", location: "", agenda: "", attendees: "" }); } });
+  const createMutation = trpc.clientPortal.createMeeting.useMutation({ onSuccess: () => { utils.clientPortal.listMeetings.invalidate({ projectId }); setShowForm(false); setForm(emptyForm); } });
   const deleteMutation = trpc.clientPortal.deleteMeeting.useMutation({ onSuccess: () => { utils.clientPortal.listMeetings.invalidate({ projectId }); } });
   const updateMutation = trpc.clientPortal.updateMeeting.useMutation({ onSuccess: () => { utils.clientPortal.listMeetings.invalidate({ projectId }); } });
 
   const meetingTypeLabels: Record<string, string> = { kickoff: "Kickoff", status_update: "Status Update", review: "Review", qbr: "QBR", ad_hoc: "Ad Hoc", final: "Final" };
   const statusColors: Record<string, string> = { scheduled: "#3B82F6", completed: "#10B981", cancelled: "#EF4444", rescheduled: "#F59E0B" };
+  const inputStyle = { width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" as const };
+  const labelStyle = { display: "block" as const, color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" };
 
   return (
     <div>
@@ -670,25 +734,40 @@ function MeetingsPanel({ projectId }: { projectId: number }) {
 
       {showForm && (
         <div style={{ background: C.navy, borderRadius: 12, border: `1px solid ${C.border}`, padding: "1.5rem", marginBottom: "1.5rem" }}>
-          <h3 style={{ color: C.text, fontSize: "1rem", fontWeight: 600, marginBottom: "1rem" }}>Schedule Meeting</h3>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Type</label>
-              <select value={form.meetingType} onChange={(e) => setForm({ ...form, meetingType: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem" }}>
+          <h3 style={{ color: C.text, fontSize: "1rem", fontWeight: 600, marginBottom: "1rem" }}>Schedule Meeting / Message</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Entry Type</label>
+              <select value={form.messageType} onChange={(e) => setForm({ ...form, messageType: e.target.value })} style={inputStyle}>
+                <option value="meeting">Meeting</option><option value="message">Message</option><option value="note">Note</option>
+              </select>
+            </div>
+            <div><label style={labelStyle}>Meeting Type</label>
+              <select value={form.meetingType} onChange={(e) => setForm({ ...form, meetingType: e.target.value })} style={inputStyle}>
                 {Object.entries(meetingTypeLabels).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Date & Time</label><input type="datetime-local" value={form.scheduledDate} onChange={(e) => setForm({ ...form, scheduledDate: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Duration (min)</label><input type="number" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
+            <div><label style={labelStyle}>Date & Time</label><input type="datetime-local" value={form.scheduledDate} onChange={(e) => setForm({ ...form, scheduledDate: e.target.value })} style={inputStyle} /></div>
+            <div><label style={labelStyle}>Duration (min)</label><input type="number" value={form.duration} onChange={(e) => setForm({ ...form, duration: e.target.value })} style={inputStyle} /></div>
           </div>
-          <div style={{ marginBottom: "1rem" }}><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Title *</label><input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Weekly Status Update" style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
+          <div style={{ marginBottom: "1rem" }}><label style={labelStyle}>Title *</label><input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Weekly Status Update" style={inputStyle} /></div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Location / Link</label><input type="text" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Teams link or address" style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
-            <div><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Attendees (comma-separated)</label><input type="text" value={form.attendees} onChange={(e) => setForm({ ...form, attendees: e.target.value })} placeholder="John, Jane, Kevin" style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", boxSizing: "border-box" }} /></div>
+            <div><label style={labelStyle}>Location / Link</label><input type="text" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Teams link or address" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Attendees (comma-separated)</label><input type="text" value={form.attendees} onChange={(e) => setForm({ ...form, attendees: e.target.value })} placeholder="John, Jane, Kevin" style={inputStyle} /></div>
           </div>
-          <div style={{ marginBottom: "1rem" }}><label style={{ display: "block", color: C.silver, fontSize: "0.75rem", fontWeight: 600, marginBottom: "0.3rem" }}>Agenda</label><textarea rows={3} value={form.agenda} onChange={(e) => setForm({ ...form, agenda: e.target.value })} style={{ width: "100%", padding: "0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem", resize: "vertical", boxSizing: "border-box" }} /></div>
+          <div style={{ marginBottom: "1rem" }}><label style={labelStyle}>Agenda</label><textarea rows={2} value={form.agenda} onChange={(e) => setForm({ ...form, agenda: e.target.value })} style={{ ...inputStyle, resize: "vertical" }} /></div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1rem" }}>
+            <div><label style={labelStyle}>Follow-Up Action</label><input type="text" value={form.followUpAction} onChange={(e) => setForm({ ...form, followUpAction: e.target.value })} placeholder="Action required after meeting" style={inputStyle} /></div>
+            <div><label style={labelStyle}>Follow-Up Due Date</label><input type="date" value={form.dueDate} onChange={(e) => setForm({ ...form, dueDate: e.target.value })} style={inputStyle} /></div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1rem" }}>
+            <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: C.silver, fontSize: "0.8rem", cursor: "pointer" }}>
+              <input type="checkbox" checked={form.isClientVisible === 1} onChange={(e) => setForm({ ...form, isClientVisible: e.target.checked ? 1 : 0 })} />
+              Visible to Client
+            </label>
+          </div>
           <div style={{ display: "flex", gap: "0.75rem", justifyContent: "flex-end" }}>
             <button onClick={() => setShowForm(false)} style={{ padding: "0.5rem 1rem", background: "transparent", border: `1px solid ${C.border}`, borderRadius: 6, color: C.textMuted, cursor: "pointer" }}>Cancel</button>
-            <button onClick={() => createMutation.mutate({ projectId, meetingType: form.meetingType as any, title: form.title, scheduledDate: form.scheduledDate || undefined, duration: +form.duration || undefined, location: form.location || undefined, attendees: form.attendees ? form.attendees.split(",").map((s) => s.trim()) : undefined, agenda: form.agenda || undefined })} disabled={!form.title.trim() || createMutation.isPending} style={{ padding: "0.5rem 1.25rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer" }}>{createMutation.isPending ? "Saving..." : "Schedule"}</button>
+            <button onClick={() => createMutation.mutate({ projectId, meetingType: form.meetingType as any, messageType: form.messageType as any, title: form.title, scheduledDate: form.scheduledDate || undefined, duration: +form.duration || undefined, location: form.location || undefined, attendees: form.attendees ? form.attendees.split(",").map((s) => s.trim()) : undefined, agenda: form.agenda || undefined, followUpAction: form.followUpAction || undefined, dueDate: form.dueDate || undefined, isClientVisible: form.isClientVisible })} disabled={!form.title.trim() || createMutation.isPending} style={{ padding: "0.5rem 1.25rem", background: C.gold, border: "none", borderRadius: 6, color: C.charcoal, fontWeight: 600, cursor: "pointer" }}>{createMutation.isPending ? "Saving..." : "Schedule"}</button>
           </div>
         </div>
       )}
@@ -700,19 +779,23 @@ function MeetingsPanel({ projectId }: { projectId: number }) {
           {items.map((item: any) => (
             <div key={item.id} style={{ background: C.navy, borderRadius: 10, border: `1px solid ${C.border}`, padding: "1rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem", flexWrap: "wrap" }}>
                     <span style={{ background: statusColors[item.status] || C.slate, color: "#fff", padding: "0.15rem 0.5rem", borderRadius: 4, fontSize: "0.65rem", fontWeight: 600 }}>{item.status}</span>
                     <span style={{ color: C.text, fontWeight: 600, fontSize: "0.9rem" }}>{item.title}</span>
+                    {item.isClientVisible === 1 && <span style={{ background: "rgba(16,185,129,0.15)", color: "#10B981", padding: "0.1rem 0.4rem", borderRadius: 4, fontSize: "0.6rem" }}>Client Visible</span>}
+                    {item.isClientVisible === 0 && <span style={{ background: "rgba(148,163,184,0.15)", color: "#94A3B8", padding: "0.1rem 0.4rem", borderRadius: 4, fontSize: "0.6rem" }}>Internal Only</span>}
                   </div>
                   <p style={{ color: C.textMuted, fontSize: "0.75rem", margin: "0.25rem 0 0" }}>
                     {meetingTypeLabels[item.meetingType]} — {item.scheduledDate ? new Date(item.scheduledDate).toLocaleString() : "TBD"}{item.duration && ` (${item.duration} min)`}{item.location && ` — ${item.location}`}
                   </p>
+                  {item.followUpAction && <p style={{ color: C.silver, fontSize: "0.75rem", margin: "0.3rem 0 0" }}>Follow-up: {item.followUpAction}{item.followUpDueDate && ` (due ${new Date(item.followUpDueDate).toLocaleDateString()})`}</p>}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexShrink: 0 }}>
                   <select value={item.status} onChange={(e) => updateMutation.mutate({ id: item.id, status: e.target.value as any })} style={{ padding: "0.3rem 0.5rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 4, color: C.text, fontSize: "0.75rem" }}>
                     <option value="scheduled">Scheduled</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option><option value="rescheduled">Rescheduled</option>
                   </select>
+                  <button onClick={() => updateMutation.mutate({ id: item.id, isClientVisible: item.isClientVisible === 1 ? 0 : 1 })} title={item.isClientVisible === 1 ? "Hide from client" : "Show to client"} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: `1px solid ${item.isClientVisible === 1 ? "rgba(16,185,129,0.3)" : C.border}`, borderRadius: 4, color: item.isClientVisible === 1 ? "#10B981" : C.textMuted, cursor: "pointer", fontSize: "0.7rem" }}>{item.isClientVisible === 1 ? "👁" : "👁‍🗨"}</button>
                   <button onClick={() => { if (confirm("Delete?")) deleteMutation.mutate({ id: item.id }); }} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 4, color: "#EF4444", cursor: "pointer", fontSize: "0.75rem" }}>✕</button>
                 </div>
               </div>
