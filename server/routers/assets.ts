@@ -3,7 +3,7 @@ import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { assets, assetPhotos, assetDocuments, assetCategories, assetProjects, projectNotes, projectDocuments } from "../../drizzle/schema";
 import { eq, like, or, and, desc, asc, sql, count } from "drizzle-orm";
-import { storagePut } from "../storage";
+import { storagePut, storageGetSignedUrl } from "../storage";
 import bcrypt from "bcryptjs";
 
 // Admin emails that can set/change project passwords
@@ -995,5 +995,37 @@ export const assetsRouter = router({
 
       await db.delete(projectDocuments).where(eq(projectDocuments.id, input.id));
       return { success: true };
+    }),
+
+  // Get a direct download URL for a project document (bypasses proxy completely)
+  getDocumentDownloadUrl: protectedProcedure
+    .input(z.object({ documentId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const docs = await db
+        .select()
+        .from(projectDocuments)
+        .where(eq(projectDocuments.id, input.documentId))
+        .limit(1);
+
+      if (!docs.length) {
+        throw new Error("Document not found");
+      }
+
+      const doc = docs[0];
+      // Extract the actual storage key from the storageUrl
+      // storageUrl is like "/manus-storage/project-docs/1/filename_hash.pdf"
+      const storageKey = doc.storageUrl.replace(/^\/manus-storage\//, "");
+
+      // Get a fresh signed CloudFront URL directly
+      const signedUrl = await storageGetSignedUrl(storageKey);
+
+      return {
+        url: signedUrl,
+        fileName: doc.fileName,
+        mimeType: doc.mimeType,
+      };
     }),
 });

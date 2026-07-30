@@ -547,3 +547,10 @@
 - [x] Build Billing management panel (create invoices, track payments, print invoices)
 - [x] Invoice printing capability with professional formatting
 - [x] All panels accessible from Employee Portal project management view
+
+## Document Download Fix (July 30, 2026)
+- [x] Fix document download "Not Found" error - replaced proxy-based download with direct signed URL via tRPC procedure
+- [x] Created getDocumentDownloadUrl tRPC procedure that returns fresh signed CloudFront URLs directly
+- [x] Updated ProjectDocuments component to use direct signed URL download (bypasses proxy completely)
+- [x] Simplified storageProxy to use 307 redirect (matching production behavior)
+- [x] All 24 tests passing

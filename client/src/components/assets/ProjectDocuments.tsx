@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { trpc } from "@/lib/trpc";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { COLORS } from "@shared/colors";
@@ -20,6 +20,50 @@ const ADMIN_EMAILS = [
   "kevin.runion@legacyassetintelligence.com",
   "chris.haynes@legacyassetintelligence.com",
 ];
+
+// Component that fetches a direct signed URL for document download
+function DocumentActionButtons({ docId }: { docId: number }) {
+  const [loading, setLoading] = useState(false);
+  const utils = trpc.useUtils();
+
+  const handleDownload = useCallback(async () => {
+    setLoading(true);
+    try {
+      const result = await utils.assets.getDocumentDownloadUrl.fetch({ documentId: docId });
+      if (result?.url) {
+        // Open the signed CloudFront URL directly in a new tab
+        window.open(result.url, "_blank", "noopener,noreferrer");
+      } else {
+        alert("Could not get download URL. Please try again.");
+      }
+    } catch (err: any) {
+      console.error("Download error:", err);
+      alert("Download failed: " + (err?.message || "Unknown error"));
+    } finally {
+      setLoading(false);
+    }
+  }, [docId, utils]);
+
+  return (
+    <button
+      onClick={handleDownload}
+      disabled={loading}
+      style={{
+        padding: "0.4rem 0.75rem",
+        background: COLORS.teal,
+        border: "none",
+        borderRadius: 6,
+        color: "#fff",
+        fontSize: "0.8rem",
+        cursor: loading ? "wait" : "pointer",
+        opacity: loading ? 0.7 : 1,
+        fontWeight: 600,
+      }}
+    >
+      {loading ? "Loading..." : "Download"}
+    </button>
+  );
+}
 
 export default function ProjectDocuments({ projectId }: { projectId: number }) {
   const { user } = useAuth();
@@ -211,29 +255,7 @@ export default function ProjectDocuments({ projectId }: { projectId: number }) {
                 </div>
               </div>
               <div style={{ display: "flex", gap: "0.5rem", marginLeft: "1rem" }}>
-                <button
-                  onClick={() => {
-                    // Open the storage URL in a new window — the server returns a 307 redirect to a signed CloudFront URL
-                    window.open(doc.storageUrl, "_blank", "noopener,noreferrer");
-                  }}
-                  style={{ padding: "0.4rem 0.75rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.silver, fontSize: "0.8rem", cursor: "pointer" }}
-                >
-                  View
-                </button>
-                <button
-                  onClick={() => {
-                    // Download the file
-                    const link = document.createElement("a");
-                    link.href = doc.storageUrl;
-                    link.download = doc.fileName;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                  }}
-                  style={{ padding: "0.4rem 0.75rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.gold, fontSize: "0.8rem", cursor: "pointer" }}
-                >
-                  Download
-                </button>
+                <DocumentActionButtons docId={doc.id} />
                 {isAdmin && (
                   <button
                     onClick={() => handleDelete(doc.id)}
