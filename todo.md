@@ -646,3 +646,15 @@
 - [x] Verify role-based access enforcement (admin email + DB role check)
 - [x] Verify dashboard cards show live data (billing, risks, recovery, meetings)
 - [x] Mobile responsive testing (verified via screenshots)
+
+## Proposal Calculator Formula Fix (July 30, 2026 - Accuracy Correction)
+- [x] Re-read all Excel formulas directly from LAI_Total_Engagement_Billing_Calculator.xlsx
+- [x] Fix Progressive Asset Fee: use exact Excel formula (MIN/MAX band calculation)
+- [x] Fix Recoverable Capital Fee: use exact Excel progressive bracket formula
+- [x] Fix Geographic Adjustment: C4*(G5-1) formula exactly
+- [x] Fix Project Staffing: use exact B61 formula with geo factor, location factor, and timeframe denominator
+- [x] Fix staffing sub-positions: FAM=B61/20, DataRecon=B61/4, Recovery=Assets/75000, QA=B61/6, PM=B61/12
+- [x] Fix Total Staff: SUM(B63:B68) only — does NOT include B61
+- [x] Fix 3-Year ROI: always uses (RC + RC*B58*2) regardless of Phase 4 selection
+- [x] Fix Timeframe field: used in weeks for staffing denominator (not months)
+- [x] Verified test case matches Excel: 200k assets/National/15 locations/$2.5M → $1,395,062.50 total
