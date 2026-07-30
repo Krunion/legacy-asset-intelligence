@@ -489,3 +489,11 @@
 - [x] Print: Internal Feasibility and Proposal Summary on separate pages
 - [x] Build Item Depreciation Calculator (8 methods: Straight-Line, DDB, 150% DB, SYD, Units of Production, MACRS, Section 179, Bonus Depreciation)
 - [x] Build Item Salvage Value Calculator with estimated Useful Life (Years) — 6 methods: Percentage of Cost, Straight-Line Residual, Market/Appraisal, IRS Table-Based, Condition-Adjusted, Industry Benchmark
+
+## Asset Management Enhancements — Photo, Client Tag, Barcode Scanner (July 30, 2026)
+- [x] Add "Reusable Client Tag" checkbox at top of asset creation form
+- [x] Add internal barcode scanner button that auto-populates asset fields from scanned barcode
+- [x] Add mobile photo capture button per asset (camera access on mobile devices)
+- [x] Store captured photos in S3 storage
+- [x] Auto-link photo URL to the asset record in the registry
+- [x] Verify TypeScript compilation and tests pass

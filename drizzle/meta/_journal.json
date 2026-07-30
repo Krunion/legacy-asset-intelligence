@@ -57,6 +57,13 @@
       "when": 1785373813561,
       "tag": "0007_adorable_radioactive_man",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1785409371714,
+      "tag": "0008_bumpy_beast",
+      "breakpoints": true
     }
   ]
 }

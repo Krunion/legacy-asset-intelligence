@@ -445,6 +445,8 @@ export const assetsRouter = router({
         quantity: z.number().min(1).default(1),
         unitOfMeasure: z.string().default("each"),
         barcodeType: z.string().default("code128"),
+        isReusableClientTag: z.boolean().default(false),
+        clientBarcodeValue: z.string().optional(),
         customFields: z.record(z.string(), z.string()).optional(),
         notes: z.string().optional(),
       })
@@ -460,6 +462,11 @@ export const assetsRouter = router({
         if (existing.length === 0) break;
         assetTag = generateAssetTag();
       }
+
+      // If reusable client tag, use the scanned barcode value as the barcodeValue
+      const barcodeValue = input.isReusableClientTag && input.clientBarcodeValue
+        ? input.clientBarcodeValue
+        : assetTag;
 
       const result = await db.insert(assets).values({
         assetTag,
@@ -493,7 +500,9 @@ export const assetsRouter = router({
         quantity: input.quantity,
         unitOfMeasure: input.unitOfMeasure,
         barcodeType: input.barcodeType,
-        barcodeValue: assetTag,
+        barcodeValue,
+        isReusableClientTag: input.isReusableClientTag ? 1 : 0,
+        clientBarcodeValue: input.clientBarcodeValue || null,
         customFields: input.customFields || null,
         notes: input.notes || null,
         createdBy: ctx.user?.id || null,
@@ -542,6 +551,8 @@ export const assetsRouter = router({
         quantity: z.number().min(1).optional(),
         unitOfMeasure: z.string().optional(),
         barcodeType: z.string().optional(),
+        isReusableClientTag: z.boolean().optional(),
+        clientBarcodeValue: z.string().nullable().optional(),
         customFields: z.record(z.string(), z.string()).nullable().optional(),
         notes: z.string().nullable().optional(),
       })
@@ -557,6 +568,8 @@ export const assetsRouter = router({
         if (value !== undefined) {
           if ((key === "acquisitionDate" || key === "warrantyExpiration") && value) {
             updateSet[key] = new Date(value as string);
+          } else if (key === "isReusableClientTag") {
+            updateSet[key] = value ? 1 : 0;
           } else {
             updateSet[key] = value;
           }

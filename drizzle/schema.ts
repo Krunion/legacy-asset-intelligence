@@ -156,6 +156,8 @@ export const assets = mysqlTable("assets", {
   // Barcode
   barcodeType: varchar("barcodeType", { length: 50 }).default("code128"), // code128, code39, qr, datamatrix, upca, ean13, pdf417, other_unknown, no_barcode, barcode_damaged
   barcodeValue: varchar("barcodeValue", { length: 255 }), // defaults to assetTag if not set
+  isReusableClientTag: int("isReusableClientTag").default(0).notNull(), // 1 = keeping client's existing tag
+  clientBarcodeValue: varchar("clientBarcodeValue", { length: 500 }), // original barcode value scanned from client's existing tag
   // Custom fields (JSON for flexibility)
   customFields: json("customFields"),
   // Notes
