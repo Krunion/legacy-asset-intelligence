@@ -109,6 +109,7 @@ export default function ClientExecutiveDashboard({ data, accessToken, clientName
   const reports = data.reports || [];
   const meetings = data.meetings || [];
   const billing = data.billing || [];
+  const documents = data.documents || [];
   const locationBreakdown = data.locationBreakdown || [];
   const departmentBreakdown = data.departmentBreakdown || [];
 
@@ -229,7 +230,7 @@ export default function ClientExecutiveDashboard({ data, accessToken, clientName
         {activeSection === "risks" && <RisksSection risks={risks} />}
         {activeSection === "locations" && <LocationsSection locationBreakdown={locationBreakdown} departmentBreakdown={departmentBreakdown} stats={stats} />}
         {activeSection === "actions" && <ActionsSection actionItems={actionItems} accessToken={accessToken} onRespond={onRespondToAction} />}
-        {activeSection === "reports" && <ReportsSection reports={reports} />}
+        {activeSection === "reports" && <ReportsSection reports={reports} documents={documents} />}
         {activeSection === "meetings" && <MeetingsSection meetings={meetings} />}
         {activeSection === "billing" && <BillingSection billing={billing} />}
         {activeSection === "settings" && <SettingsSection onChangePassword={onChangePassword} />}
@@ -791,7 +792,7 @@ function ActionsSection({ actionItems, accessToken, onRespond }: { actionItems: 
 }
 
 // ─── SECTION: Reports & Documents ─────────────────────────────────────────────
-function ReportsSection({ reports }: { reports: any[] }) {
+function ReportsSection({ reports, documents }: { reports: any[]; documents: any[] }) {
   const reportTypeLabels: Record<string, string> = {
     executive_assessment: "Executive Assessment", verification_analysis: "Verification & Recovery Analysis",
     reconciled_far: "Reconciled Fixed Asset Register", discrepancy_matrix: "FAR Discrepancy Matrix",
@@ -800,6 +801,12 @@ function ReportsSection({ reports }: { reports: any[] }) {
     location_report: "Location Completion Report", asset_photographs: "Asset Photographs",
     meeting_summary: "Meeting Summary", final_presentation: "Final Presentation",
     technology_plan: "Technology Implementation Plan", quarterly_report: "Quarterly Governance Report", other: "Other",
+  };
+  const docTypeLabels: Record<string, string> = {
+    proposal: "Proposal", contract: "Contract", sow: "Statement of Work", invoice: "Invoice",
+    report: "Report", correspondence: "Correspondence", insurance: "Insurance", legal: "Legal",
+    compliance: "Compliance", photo_evidence: "Photo Evidence", spreadsheet: "Spreadsheet",
+    presentation: "Presentation", policy: "Policy", procedure: "Procedure", other: "Other",
   };
 
   return (
@@ -844,6 +851,43 @@ function ReportsSection({ reports }: { reports: any[] }) {
           </div>
         )}
       </Card>
+
+      {/* Project Documents Section */}
+      {documents.length > 0 && (
+        <>
+          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.3rem", color: C.text, margin: "2rem 0 1.5rem" }}>Project Documents</h2>
+          <Card>
+            <div style={{ overflowX: "auto" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.8rem" }}>
+                <thead>
+                  <tr style={{ borderBottom: `1px solid ${C.border}` }}>
+                    <th style={{ padding: "0.6rem", textAlign: "left", color: C.textMuted }}>Document</th>
+                    <th style={{ padding: "0.6rem", textAlign: "left", color: C.textMuted }}>Category</th>
+                    <th style={{ padding: "0.6rem", textAlign: "left", color: C.textMuted }}>Date</th>
+                    <th style={{ padding: "0.6rem", textAlign: "center", color: C.textMuted }}>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {documents.map((doc: any) => (
+                    <tr key={doc.id} style={{ borderBottom: `1px solid ${C.border}` }}>
+                      <td style={{ padding: "0.5rem 0.6rem", color: C.text, fontWeight: 500 }}>{doc.fileName}</td>
+                      <td style={{ padding: "0.5rem 0.6rem", color: C.textMuted }}>{docTypeLabels[doc.documentType] || doc.documentType}</td>
+                      <td style={{ padding: "0.5rem 0.6rem", color: C.textMuted }}>{new Date(doc.createdAt).toLocaleDateString()}</td>
+                      <td style={{ padding: "0.5rem 0.6rem", textAlign: "center" }}>
+                        {doc.storageUrl ? (
+                          <a href={doc.storageUrl} target="_blank" rel="noopener noreferrer" style={{ color: C.gold, fontSize: "0.75rem", textDecoration: "none" }}>Download</a>
+                        ) : (
+                          <span style={{ color: C.textMuted, fontSize: "0.75rem" }}>—</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </>
+      )}
     </div>
   );
 }

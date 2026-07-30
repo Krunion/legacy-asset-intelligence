@@ -284,7 +284,8 @@ export const assetsRouter = router({
   // ─── Check if current user is a project admin (can set passwords) ────────
   isProjectAdmin: protectedProcedure.query(async ({ ctx }) => {
     const userEmail = ctx.user?.email?.toLowerCase() || "";
-    return { isAdmin: PROJECT_ADMIN_EMAILS.includes(userEmail) };
+    const isAdmin = PROJECT_ADMIN_EMAILS.includes(userEmail) || ctx.user?.role === "admin";
+    return { isAdmin, role: ctx.user?.role || "user" };
   }),
 
   // ═══════════════════════════════════════════════════════════════════════════════

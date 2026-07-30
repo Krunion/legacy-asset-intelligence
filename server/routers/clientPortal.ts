@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { clientPortalAccounts, assetProjects, assets, assetCategories, projectPhases, projectKpis, financialRecovery, riskExceptions, clientActionItems, projectReports, projectMeetings, projectBilling } from "../../drizzle/schema";
+import { clientPortalAccounts, assetProjects, assets, assetCategories, projectPhases, projectKpis, financialRecovery, riskExceptions, clientActionItems, projectReports, projectMeetings, projectBilling, projectDocuments } from "../../drizzle/schema";
 import { eq, and, desc, sql, count } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -51,7 +51,7 @@ export const clientPortalRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) {
+      if (!isAdminUser(ctx.user)) {
         throw new Error("Only admin staff can create client dashboards");
       }
 
@@ -101,7 +101,7 @@ export const clientPortalRouter = router({
   listDashboards: protectedProcedure
     .input(z.object({ projectId: z.number().optional() }))
     .query(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) {
+      if (!isAdminUser(ctx.user)) {
         throw new Error("Only admin staff can view all client dashboards");
       }
 
@@ -138,7 +138,7 @@ export const clientPortalRouter = router({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) {
+      if (!isAdminUser(ctx.user)) {
         throw new Error("Only admin staff can update client dashboards");
       }
 
@@ -164,7 +164,7 @@ export const clientPortalRouter = router({
   resetPassword: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) {
+      if (!isAdminUser(ctx.user)) {
         throw new Error("Only admin staff can reset client passwords");
       }
 
@@ -285,11 +285,10 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      // Admin override: Kevin and Chris can always view
-      const userEmail = ctx.user?.email;
-      const isAdminUser = isAdmin(userEmail);
+      // Admin override: admins can always view
+      const isAdminAccess = isAdmin(ctx.user?.email) || ctx.user?.role === "admin";
 
-      if (!isAdminUser) {
+      if (!isAdminAccess) {
         // Verify access token
         if (!input.accessToken) throw new Error("Access denied");
         const [account] = await db
@@ -459,6 +458,13 @@ export const clientPortalRouter = router({
         .where(eq(projectBilling.projectId, input.projectId))
         .orderBy(desc(projectBilling.createdAt));
       const billing = allBilling.filter(b => b.isClientVisible === 1);
+      // Get client-visible project documents
+      const allDocuments = await db
+        .select()
+        .from(projectDocuments)
+        .where(eq(projectDocuments.projectId, input.projectId))
+        .orderBy(desc(projectDocuments.createdAt));
+      const documents = allDocuments.filter(d => d.isClientVisible === 1);
 
       // Calculate financial totals
       const totalRecovery = recoveryItems.reduce((sum, item) => sum + parseFloat(item.amount || "0"), 0);
@@ -501,6 +507,7 @@ export const clientPortalRouter = router({
         reports,
         meetings,
         billing,
+        documents,
       };
     }),
 
@@ -508,7 +515,7 @@ export const clientPortalRouter = router({
   adminViewDashboard: protectedProcedure
     .input(z.object({ projectId: z.number() }))
     .query(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) {
+      if (!isAdminUser(ctx.user)) {
         throw new Error("Admin access required");
       }
 
@@ -543,7 +550,7 @@ export const clientPortalRouter = router({
       deliverables: z.array(z.string()).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
@@ -590,7 +597,7 @@ export const clientPortalRouter = router({
       financialStatus: z.enum(["preliminary_estimate", "under_review", "client_validated", "approved_for_action", "actual_realized"]).optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
@@ -631,7 +638,7 @@ export const clientPortalRouter = router({
       notes: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
@@ -661,7 +668,7 @@ export const clientPortalRouter = router({
       notes: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { id, ...data } = input;
@@ -691,7 +698,7 @@ export const clientPortalRouter = router({
       isClientVisible: z.number().default(1),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const result = await db.insert(riskExceptions).values({
@@ -719,7 +726,7 @@ export const clientPortalRouter = router({
       isClientVisible: z.number().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { id, targetResolutionDate, ...data } = input;
@@ -741,7 +748,7 @@ export const clientPortalRouter = router({
       dueDate: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const result = await db.insert(clientActionItems).values({
@@ -794,7 +801,7 @@ export const clientPortalRouter = router({
       fileName: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const result = await db.insert(projectReports).values(input);
@@ -822,7 +829,7 @@ export const clientPortalRouter = router({
       status: z.enum(["scheduled", "completed", "cancelled", "rescheduled"]).default("scheduled"),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { dueDate, messageType, ...rest } = input;
@@ -857,7 +864,7 @@ export const clientPortalRouter = router({
       isClientVisible: z.number().default(1),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const result = await db.insert(projectBilling).values({
@@ -876,7 +883,7 @@ export const clientPortalRouter = router({
   deleteRecoveryItem: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(financialRecovery).where(eq(financialRecovery.id, input.id));
@@ -886,7 +893,7 @@ export const clientPortalRouter = router({
   deleteRisk: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(riskExceptions).where(eq(riskExceptions.id, input.id));
@@ -896,7 +903,7 @@ export const clientPortalRouter = router({
   deleteActionItem: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(clientActionItems).where(eq(clientActionItems.id, input.id));
@@ -913,7 +920,7 @@ export const clientPortalRouter = router({
       dueDate: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { id, dueDate, ...data } = input;
@@ -926,7 +933,7 @@ export const clientPortalRouter = router({
   deleteReport: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(projectReports).where(eq(projectReports.id, input.id));
@@ -941,7 +948,7 @@ export const clientPortalRouter = router({
       version: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { id, ...data } = input;
@@ -952,7 +959,7 @@ export const clientPortalRouter = router({
   deleteMeeting: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(projectMeetings).where(eq(projectMeetings.id, input.id));
@@ -973,7 +980,7 @@ export const clientPortalRouter = router({
       isClientVisible: z.number().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { id, scheduledDate, dueDate, ...data } = input;
@@ -987,7 +994,7 @@ export const clientPortalRouter = router({
   deleteBillingItem: protectedProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(projectBilling).where(eq(projectBilling.id, input.id));
@@ -1015,7 +1022,7 @@ export const clientPortalRouter = router({
       isClientVisible: z.number().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       const { id, dueDate, paidDate, invoiceDate, paymentReceivedDate, nextPaymentDate, ...data } = input;
@@ -1033,7 +1040,7 @@ export const clientPortalRouter = router({
   listRecoveryItems: protectedProcedure
     .input(z.object({ projectId: z.number() }))
     .query(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       return db.select().from(financialRecovery).where(eq(financialRecovery.projectId, input.projectId)).orderBy(desc(financialRecovery.createdAt));
@@ -1042,7 +1049,7 @@ export const clientPortalRouter = router({
   listRisks: protectedProcedure
     .input(z.object({ projectId: z.number() }))
     .query(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       return db.select().from(riskExceptions).where(eq(riskExceptions.projectId, input.projectId)).orderBy(desc(riskExceptions.createdAt));
@@ -1051,7 +1058,7 @@ export const clientPortalRouter = router({
   listActionItems: protectedProcedure
     .input(z.object({ projectId: z.number() }))
     .query(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       return db.select().from(clientActionItems).where(eq(clientActionItems.projectId, input.projectId)).orderBy(desc(clientActionItems.createdAt));
@@ -1060,7 +1067,7 @@ export const clientPortalRouter = router({
   listReports: protectedProcedure
     .input(z.object({ projectId: z.number() }))
     .query(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       return db.select().from(projectReports).where(eq(projectReports.projectId, input.projectId)).orderBy(desc(projectReports.createdAt));
@@ -1069,7 +1076,7 @@ export const clientPortalRouter = router({
   listMeetings: protectedProcedure
     .input(z.object({ projectId: z.number() }))
     .query(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       return db.select().from(projectMeetings).where(eq(projectMeetings.projectId, input.projectId)).orderBy(desc(projectMeetings.scheduledDate));
@@ -1078,7 +1085,7 @@ export const clientPortalRouter = router({
   listBillingItems: protectedProcedure
     .input(z.object({ projectId: z.number() }))
     .query(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       return db.select().from(projectBilling).where(eq(projectBilling.projectId, input.projectId)).orderBy(desc(projectBilling.createdAt));
@@ -1087,7 +1094,7 @@ export const clientPortalRouter = router({
   listPhases: protectedProcedure
     .input(z.object({ projectId: z.number() }))
     .query(async ({ input, ctx }) => {
-      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       return db.select().from(projectPhases).where(eq(projectPhases.projectId, input.projectId)).orderBy(projectPhases.phaseNumber);
