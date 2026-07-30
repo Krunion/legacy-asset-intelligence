@@ -3,12 +3,13 @@ import { trpc } from "@/lib/trpc";
 import Papa from "papaparse";
 
 interface AssetExportProps {
+  projectId: number;
   onClose: () => void;
 }
 
 type ExportFormat = "csv" | "asset_panda" | "json";
 
-export default function AssetExport({ onClose }: AssetExportProps) {
+export default function AssetExport({ projectId, onClose }: AssetExportProps) {
   const [format, setFormat] = useState<ExportFormat>("csv");
   const [includePhotos, setIncludePhotos] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -16,6 +17,7 @@ export default function AssetExport({ onClose }: AssetExportProps) {
 
   // Fetch all assets (no pagination for export)
   const { data } = trpc.assets.list.useQuery({
+    projectId,
     page: 1,
     pageSize: 100,
     status: statusFilter !== "all" ? statusFilter as any : undefined,

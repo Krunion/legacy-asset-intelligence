@@ -454,3 +454,13 @@
 - [x] Label printing: Auto-scale labels for any printer type
 - [x] Label printing: Sheet printing mode (all barcodes on one page for large printers)
 - [x] Asset Register: Add delete button and clear button per asset row
+
+## Asset Management — Project-Based Restructure (July 29, 2026)
+- [ ] Add asset_projects table (id, name, description, client, status, createdBy, createdAt, updatedAt)
+- [ ] Add projectId foreign key to assets table
+- [ ] Update backend: all asset queries scoped by projectId
+- [ ] Build Projects landing page (list of projects with stats)
+- [ ] Build Create New Project form (name, client, description)
+- [ ] Update Asset Management to require project selection first
+- [ ] Admin-only project deletion (with download confirmation)
+- [ ] Project isolation: each project's assets/categories/photos completely separate

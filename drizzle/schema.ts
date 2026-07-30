@@ -52,6 +52,24 @@ export type InsertVideo = typeof videos.$inferInsert;
 
 // ─── Asset Management System ────────────────────────────────────────────────
 
+export const assetProjects = mysqlTable("assetProjects", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 500 }).notNull(),
+  description: text("description"),
+  clientName: varchar("clientName", { length: 255 }),
+  clientContact: varchar("clientContact", { length: 255 }),
+  location: varchar("location", { length: 500 }),
+  status: mysqlEnum("status", ["active", "completed", "archived", "on_hold"]).default("active").notNull(),
+  assetCount: int("assetCount").default(0).notNull(),
+  totalValue: decimal("totalValue", { precision: 14, scale: 2 }).default("0"),
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type AssetProject = typeof assetProjects.$inferSelect;
+export type InsertAssetProject = typeof assetProjects.$inferInsert;
+
 export const assetCategories = mysqlTable("assetCategories", {
   id: int("id").autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
@@ -68,6 +86,7 @@ export const assets = mysqlTable("assets", {
   id: int("id").autoincrement().primaryKey(),
   // Core identification
   assetTag: varchar("assetTag", { length: 100 }).notNull().unique(), // LAI-generated unique tag
+  projectId: int("projectId").notNull(), // links asset to a project
   name: varchar("name", { length: 500 }).notNull(),
   description: text("description"),
   // Classification

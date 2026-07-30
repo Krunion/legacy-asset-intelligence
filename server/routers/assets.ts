@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { assets, assetPhotos, assetDocuments, assetCategories } from "../../drizzle/schema";
+import { assets, assetPhotos, assetDocuments, assetCategories, assetProjects } from "../../drizzle/schema";
 import { eq, like, or, and, desc, asc, sql, count } from "drizzle-orm";
 import { storagePut } from "../storage";
 
@@ -16,10 +16,115 @@ function generateAssetTag(): string {
 }
 
 export const assetsRouter = router({
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // PROJECTS
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  // ─── List all projects ─────────────────────────────────────────────────────
+  listProjects: protectedProcedure.query(async () => {
+    const db = await getDb();
+    if (!db) throw new Error("Database not available");
+    return db.select().from(assetProjects).orderBy(desc(assetProjects.updatedAt));
+  }),
+
+  // ─── Get single project ────────────────────────────────────────────────────
+  getProject: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const [project] = await db.select().from(assetProjects).where(eq(assetProjects.id, input.id)).limit(1);
+      if (!project) throw new Error("Project not found");
+      return project;
+    }),
+
+  // ─── Create project ────────────────────────────────────────────────────────
+  createProject: protectedProcedure
+    .input(
+      z.object({
+        name: z.string().min(1).max(500),
+        description: z.string().optional(),
+        clientName: z.string().optional(),
+        clientContact: z.string().optional(),
+        location: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const result = await db.insert(assetProjects).values({
+        name: input.name,
+        description: input.description || null,
+        clientName: input.clientName || null,
+        clientContact: input.clientContact || null,
+        location: input.location || null,
+        createdBy: ctx.user?.id ?? 0,
+      });
+
+      return { id: result[0].insertId };
+    }),
+
+  // ─── Update project ────────────────────────────────────────────────────────
+  updateProject: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string().min(1).max(500).optional(),
+        description: z.string().nullable().optional(),
+        clientName: z.string().nullable().optional(),
+        clientContact: z.string().nullable().optional(),
+        location: z.string().nullable().optional(),
+        status: z.enum(["active", "completed", "archived", "on_hold"]).optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, ...updateData } = input;
+      const updateSet: Record<string, unknown> = {};
+      for (const [key, value] of Object.entries(updateData)) {
+        if (value !== undefined) updateSet[key] = value;
+      }
+      if (Object.keys(updateSet).length > 0) {
+        await db.update(assetProjects).set(updateSet).where(eq(assetProjects.id, id));
+      }
+      return { success: true };
+    }),
+
+  // ─── Delete project (admin only) ──────────────────────────────────────────
+  deleteProject: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Only admins can delete projects
+      if (ctx.user?.role !== "admin") {
+        throw new Error("Only system administrators can delete projects");
+      }
+
+      // Delete all assets, photos, documents in this project
+      const projectAssets = await db.select({ id: assets.id }).from(assets).where(eq(assets.projectId, input.id));
+      for (const a of projectAssets) {
+        await db.delete(assetPhotos).where(eq(assetPhotos.assetId, a.id));
+        await db.delete(assetDocuments).where(eq(assetDocuments.assetId, a.id));
+      }
+      await db.delete(assets).where(eq(assets.projectId, input.id));
+      await db.delete(assetProjects).where(eq(assetProjects.id, input.id));
+
+      return { success: true };
+    }),
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // ASSETS (all scoped by projectId)
+  // ═══════════════════════════════════════════════════════════════════════════════
+
   // ─── List assets with pagination, search, and filters ───────────────────────
   list: protectedProcedure
     .input(
       z.object({
+        projectId: z.number(),
         page: z.number().min(1).default(1),
         pageSize: z.number().min(1).max(100).default(25),
         search: z.string().optional(),
@@ -33,11 +138,11 @@ export const assetsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
-      const { page, pageSize, search, status, categoryId, sortBy, sortOrder } = input;
+      const { projectId, page, pageSize, search, status, categoryId, sortBy, sortOrder } = input;
       const offset = (page - 1) * pageSize;
 
-      // Build conditions
-      const conditions = [];
+      // Build conditions — always filter by projectId
+      const conditions = [eq(assets.projectId, projectId)];
       if (search) {
         conditions.push(
           or(
@@ -47,7 +152,7 @@ export const assetsRouter = router({
             like(assets.manufacturer, `%${search}%`),
             like(assets.location, `%${search}%`),
             like(assets.department, `%${search}%`)
-          )
+          )!
         );
       }
       if (status) {
@@ -57,7 +162,7 @@ export const assetsRouter = router({
         conditions.push(eq(assets.categoryId, categoryId));
       }
 
-      const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+      const whereClause = and(...conditions);
 
       // Sort
       const sortColumn = {
@@ -112,15 +217,22 @@ export const assetsRouter = router({
 
   // ─── Get asset by barcode/tag scan ──────────────────────────────────────────
   getByTag: protectedProcedure
-    .input(z.object({ tag: z.string() }))
+    .input(z.object({ tag: z.string(), projectId: z.number().optional() }))
     .query(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
+      const conditions = [
+        or(eq(assets.assetTag, input.tag), eq(assets.barcodeValue, input.tag), eq(assets.serialNumber, input.tag))!,
+      ];
+      if (input.projectId) {
+        conditions.push(eq(assets.projectId, input.projectId));
+      }
+
       const [asset] = await db
         .select()
         .from(assets)
-        .where(or(eq(assets.assetTag, input.tag), eq(assets.barcodeValue, input.tag), eq(assets.serialNumber, input.tag)))
+        .where(and(...conditions))
         .limit(1);
 
       if (!asset) return null;
@@ -133,6 +245,7 @@ export const assetsRouter = router({
   create: protectedProcedure
     .input(
       z.object({
+        projectId: z.number(),
         name: z.string().min(1).max(500),
         description: z.string().optional(),
         categoryId: z.number().optional(),
@@ -172,7 +285,6 @@ export const assetsRouter = router({
 
       // Generate unique asset tag
       let assetTag = generateAssetTag();
-      // Check uniqueness (retry up to 5 times)
       for (let i = 0; i < 5; i++) {
         const existing = await db.select({ id: assets.id }).from(assets).where(eq(assets.assetTag, assetTag)).limit(1);
         if (existing.length === 0) break;
@@ -181,6 +293,7 @@ export const assetsRouter = router({
 
       const result = await db.insert(assets).values({
         assetTag,
+        projectId: input.projectId,
         name: input.name,
         description: input.description || null,
         categoryId: input.categoryId || null,
@@ -210,12 +323,17 @@ export const assetsRouter = router({
         quantity: input.quantity,
         unitOfMeasure: input.unitOfMeasure,
         barcodeType: input.barcodeType,
-        barcodeValue: assetTag, // default barcode value is the asset tag
+        barcodeValue: assetTag,
         customFields: input.customFields || null,
         notes: input.notes || null,
         createdBy: ctx.user?.id || null,
         updatedBy: ctx.user?.id || null,
       });
+
+      // Update project asset count
+      await db.update(assetProjects).set({
+        assetCount: sql`${assetProjects.assetCount} + 1`,
+      }).where(eq(assetProjects.id, input.projectId));
 
       return { id: result[0].insertId, assetTag };
     }),
@@ -286,10 +404,21 @@ export const assetsRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
 
+      // Get the asset to find its projectId
+      const [asset] = await db.select({ projectId: assets.projectId }).from(assets).where(eq(assets.id, input.id)).limit(1);
+
       // Delete photos and documents first
       await db.delete(assetPhotos).where(eq(assetPhotos.assetId, input.id));
       await db.delete(assetDocuments).where(eq(assetDocuments.assetId, input.id));
       await db.delete(assets).where(eq(assets.id, input.id));
+
+      // Update project asset count
+      if (asset) {
+        await db.update(assetProjects).set({
+          assetCount: sql`GREATEST(${assetProjects.assetCount} - 1, 0)`,
+        }).where(eq(assetProjects.id, asset.projectId));
+      }
+
       return { success: true };
     }),
 
@@ -300,7 +429,7 @@ export const assetsRouter = router({
         assetId: z.number(),
         fileName: z.string(),
         mimeType: z.string(),
-        base64Data: z.string(), // base64 encoded file data
+        base64Data: z.string(),
         caption: z.string().optional(),
         isPrimary: z.boolean().default(false),
       })
@@ -313,7 +442,6 @@ export const assetsRouter = router({
       const key = `assets/${input.assetId}/photos/${input.fileName}`;
       const { key: storageKey, url: storageUrl } = await storagePut(key, buffer, input.mimeType);
 
-      // If setting as primary, unset other primaries
       if (input.isPrimary) {
         await db.update(assetPhotos).set({ isPrimary: 0 }).where(eq(assetPhotos.assetId, input.assetId));
       }
@@ -407,7 +535,6 @@ export const assetsRouter = router({
     .mutation(async ({ input }) => {
       const db = await getDb();
       if (!db) throw new Error("Database not available");
-      // Set assets in this category to null
       await db.update(assets).set({ categoryId: null }).where(eq(assets.categoryId, input.id));
       await db.delete(assetCategories).where(eq(assetCategories.id, input.id));
       return { success: true };
@@ -417,6 +544,7 @@ export const assetsRouter = router({
   bulkImport: protectedProcedure
     .input(
       z.object({
+        projectId: z.number(),
         assets: z.array(
           z.object({
             name: z.string(),
@@ -444,12 +572,12 @@ export const assetsRouter = router({
       for (const item of input.assets) {
         try {
           let assetTag = generateAssetTag();
-          // Quick uniqueness check
           const existing = await db.select({ id: assets.id }).from(assets).where(eq(assets.assetTag, assetTag)).limit(1);
           if (existing.length > 0) assetTag = generateAssetTag();
 
           await db.insert(assets).values({
             assetTag,
+            projectId: input.projectId,
             name: item.name,
             manufacturer: item.manufacturer || null,
             model: item.model || null,
@@ -471,29 +599,39 @@ export const assetsRouter = router({
         }
       }
 
+      // Update project asset count
+      if (imported > 0) {
+        await db.update(assetProjects).set({
+          assetCount: sql`${assetProjects.assetCount} + ${imported}`,
+        }).where(eq(assetProjects.id, input.projectId));
+      }
+
       return { imported, errors, total: input.assets.length };
     }),
 
-  // ─── Stats for dashboard ───────────────────────────────────────────────────
-  stats: protectedProcedure.query(async () => {
-    const db = await getDb();
-    if (!db) throw new Error("Database not available");
+  // ─── Stats for dashboard (scoped by project) ─────────────────────────────
+  stats: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
 
-    const [totalResult] = await db.select({ total: count() }).from(assets);
-    const [activeResult] = await db.select({ total: count() }).from(assets).where(eq(assets.status, "active"));
-    const [categoryResult] = await db.select({ total: count() }).from(assetCategories);
+      const projectCondition = eq(assets.projectId, input.projectId);
 
-    // Total acquisition cost
-    const [costResult] = await db
-      .select({ total: sql<string>`COALESCE(SUM(acquisitionCost), 0)` })
-      .from(assets)
-      .where(eq(assets.status, "active"));
+      const [totalResult] = await db.select({ total: count() }).from(assets).where(projectCondition);
+      const [activeResult] = await db.select({ total: count() }).from(assets).where(and(projectCondition, eq(assets.status, "active")));
+      const [categoryResult] = await db.select({ total: count() }).from(assetCategories);
 
-    return {
-      totalAssets: totalResult?.total ?? 0,
-      activeAssets: activeResult?.total ?? 0,
-      categories: categoryResult?.total ?? 0,
-      totalValue: parseFloat(costResult?.total || "0"),
-    };
-  }),
+      const [costResult] = await db
+        .select({ total: sql<string>`COALESCE(SUM(acquisitionCost), 0)` })
+        .from(assets)
+        .where(and(projectCondition, eq(assets.status, "active")));
+
+      return {
+        totalAssets: totalResult?.total ?? 0,
+        activeAssets: activeResult?.total ?? 0,
+        categories: categoryResult?.total ?? 0,
+        totalValue: parseFloat(costResult?.total || "0"),
+      };
+    }),
 });

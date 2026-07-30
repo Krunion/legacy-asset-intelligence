@@ -5,6 +5,7 @@ import { COLORS } from "@shared/colors";
 const C = COLORS;
 
 interface Props {
+  projectId: number;
   onView: (id: number) => void;
   onEdit: (id: number) => void;
   onAdd: () => void;
@@ -32,7 +33,7 @@ const CONDITION_LABELS: Record<string, string> = {
   salvage: "Salvage",
 };
 
-export default function AssetList({ onView, onEdit, onAdd, searchQuery, onSearchChange }: Props) {
+export default function AssetList({ projectId, onView, onEdit, onAdd, searchQuery, onSearchChange }: Props) {
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [sortBy, setSortBy] = useState<"createdAt" | "name" | "assetTag" | "manufacturer" | "location">("createdAt");
@@ -44,6 +45,7 @@ export default function AssetList({ onView, onEdit, onAdd, searchQuery, onSearch
   });
 
   const { data, isLoading } = trpc.assets.list.useQuery({
+    projectId,
     page,
     pageSize: 25,
     search: searchQuery || undefined,

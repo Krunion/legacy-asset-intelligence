@@ -5,10 +5,11 @@ import { COLORS } from "@shared/colors";
 const C = COLORS;
 
 interface Props {
+  projectId: number;
   onAssetFound: (id: number) => void;
 }
 
-export default function AssetScanner({ onAssetFound }: Props) {
+export default function AssetScanner({ projectId, onAssetFound }: Props) {
   const [scanMode, setScanMode] = useState<"camera" | "manual">("manual");
   const [manualInput, setManualInput] = useState("");
   const [scanning, setScanning] = useState(false);

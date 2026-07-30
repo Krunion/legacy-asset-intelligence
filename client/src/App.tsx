@@ -15,6 +15,7 @@ import Team from "./pages/Team";
 import FAQ from "./pages/FAQ";
 import Career from "./pages/Career";
 import EmployeePortal from "./pages/EmployeePortal";
+import AssetProjects from "./pages/AssetProjects";
 import AssetManagement from "./pages/AssetManagement";
 import Contact from "./pages/Contact";
 import Insights from "./pages/Insights";
@@ -46,7 +47,8 @@ function Router() {
       <Route path={"/careers"} component={Career} />
       <Route path={"/career"} component={Career} />
       <Route path={"/employee-portal"} component={EmployeePortal} />
-      <Route path={"/assets"} component={AssetManagement} />
+      <Route path={"/assets"} component={AssetProjects} />
+      <Route path={"/assets/:projectId"} component={AssetManagement} />
       <Route path={"/contact"} component={Contact} />
       <Route path={"/privacy"} component={Privacy} />
       <Route path={"/terms"} component={Terms} />
@@ -57,6 +59,11 @@ function Router() {
 }
 
 function App() {
+  const [location] = useLocation();
+  const isAssetPage = location.startsWith("/assets");
+  const isEmployeePortal = location === "/employee-portal";
+  const hideChrome = isAssetPage || isEmployeePortal;
+
   return (
     <ErrorBoundary>
       <ThemeProvider
@@ -64,10 +71,10 @@ function App() {
       >
         <TooltipProvider>
           <Toaster />
-          <SiteNav />
+          {!hideChrome && <SiteNav />}
           <ScrollToTop />
           <Router />
-          <SiteFooter />
+          {!hideChrome && <SiteFooter />}
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>

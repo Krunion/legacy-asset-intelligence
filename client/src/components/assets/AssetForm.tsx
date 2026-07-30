@@ -46,12 +46,13 @@ const UNITS_OF_MEASURE = [
 ];
 
 interface Props {
+  projectId: number;
   assetId?: number;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
-export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
+export default function AssetForm({ projectId, assetId, onSuccess, onCancel }: Props) {
   const isEdit = !!assetId;
   const utils = trpc.useUtils();
 
@@ -181,7 +182,7 @@ export default function AssetForm({ assetId, onSuccess, onCancel }: Props) {
     if (isEdit) {
       updateMutation.mutate({ id: assetId!, ...payload });
     } else {
-      createMutation.mutate(payload);
+      createMutation.mutate({ ...payload, projectId });
     }
   };
 

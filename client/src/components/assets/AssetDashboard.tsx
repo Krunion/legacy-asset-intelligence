@@ -4,11 +4,12 @@ import { COLORS } from "@shared/colors";
 const C = COLORS;
 
 interface Props {
+  projectId: number;
   onNavigate: (view: string) => void;
 }
 
-export default function AssetDashboard({ onNavigate }: Props) {
-  const { data: stats, isLoading } = trpc.assets.stats.useQuery();
+export default function AssetDashboard({ projectId, onNavigate }: Props) {
+  const { data: stats, isLoading } = trpc.assets.stats.useQuery({ projectId });
 
   const statCards = [
     { label: "Total Assets", value: stats?.totalAssets ?? 0, icon: "▦", color: C.gold },

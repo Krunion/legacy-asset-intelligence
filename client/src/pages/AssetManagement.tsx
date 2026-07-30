@@ -3,6 +3,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { COLORS } from "@shared/colors";
+import { useParams, useLocation } from "wouter";
 import AssetList from "@/components/assets/AssetList";
 import AssetDetail from "@/components/assets/AssetDetail";
 import AssetForm from "@/components/assets/AssetForm";
@@ -16,8 +17,8 @@ const C = COLORS;
 
 type View = "dashboard" | "list" | "detail" | "add" | "edit" | "scan" | "import" | "export" | "labels";
 
-function PrintLabelsView({ onPrint }: { onPrint: (assets: any[]) => void }) {
-  const { data, isLoading } = trpc.assets.list.useQuery({ page: 1, pageSize: 100 });
+function PrintLabelsView({ projectId, onPrint }: { projectId: number; onPrint: (assets: any[]) => void }) {
+  const { data, isLoading } = trpc.assets.list.useQuery({ projectId, page: 1, pageSize: 100 });
   const [selected, setSelected] = useState<Set<number>>(new Set());
 
   const toggleSelect = (id: number) => {
@@ -54,7 +55,7 @@ function PrintLabelsView({ onPrint }: { onPrint: (assets: any[]) => void }) {
             disabled={selected.size === 0}
             style={{ padding: "0.5rem 1rem", background: selected.size > 0 ? C.gold : "rgba(100,116,139,0.2)", border: "none", borderRadius: 6, color: selected.size > 0 ? C.charcoal : C.textMuted, cursor: selected.size > 0 ? "pointer" : "not-allowed", fontWeight: 600, fontSize: "0.85rem" }}
           >
-            🖨️ Print {selected.size} Label{selected.size !== 1 ? "s" : ""}
+            Print {selected.size} Label{selected.size !== 1 ? "s" : ""}
           </button>
         </div>
       </div>
@@ -96,12 +97,18 @@ function PrintLabelsView({ onPrint }: { onPrint: (assets: any[]) => void }) {
 
 export default function AssetManagement() {
   const { user, loading, isAuthenticated } = useAuth();
+  const params = useParams<{ projectId: string }>();
+  const [, navigate] = useLocation();
+  const projectId = parseInt(params.projectId || "0", 10);
+
   const [view, setView] = useState<View>("dashboard");
   const [selectedAssetId, setSelectedAssetId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [showExport, setShowExport] = useState(false);
   const [showLabels, setShowLabels] = useState(false);
   const [labelAssets, setLabelAssets] = useState<any[]>([]);
+
+  // Fetch project info
+  const projectQuery = trpc.assets.getProject.useQuery({ id: projectId }, { enabled: projectId > 0 });
 
   if (loading) {
     return (
@@ -133,6 +140,11 @@ export default function AssetManagement() {
     );
   }
 
+  if (!projectId || projectId <= 0) {
+    navigate("/assets");
+    return null;
+  }
+
   const handleViewAsset = (id: number) => {
     setSelectedAssetId(id);
     setView("detail");
@@ -148,14 +160,28 @@ export default function AssetManagement() {
     setSelectedAssetId(null);
   };
 
+  const projectName = projectQuery.data?.name || "Project";
+
   return (
     <div style={{ minHeight: "100vh", background: C.charcoal }}>
       {/* Top Navigation Bar */}
       <header style={{ background: C.navy, borderBottom: `1px solid ${C.border}`, padding: "0.75rem 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", color: C.text, margin: 0 }}>
-            LAI <span style={{ color: C.gold }}>Asset Management</span>
-          </h1>
+          <button
+            onClick={() => navigate("/assets")}
+            style={{ background: "none", border: "none", color: C.textMuted, cursor: "pointer", padding: "0.25rem", display: "flex", alignItems: "center" }}
+            title="Back to Projects"
+          >
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <div>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.2rem", color: C.text, margin: 0 }}>
+              <span style={{ color: C.gold }}>{projectName}</span>
+            </h1>
+            <p style={{ fontSize: "0.75rem", color: C.textMuted, margin: 0 }}>Asset Management</p>
+          </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
           <span style={{ color: C.textMuted, fontSize: "0.85rem" }}>{user?.name || user?.email}</span>
@@ -198,9 +224,10 @@ export default function AssetManagement() {
 
       {/* Main Content */}
       <main style={{ padding: "1.5rem", maxWidth: 1400, margin: "0 auto" }}>
-        {view === "dashboard" && <AssetDashboard onNavigate={(v: string) => setView(v as View)} />}
+        {view === "dashboard" && <AssetDashboard projectId={projectId} onNavigate={(v: string) => setView(v as View)} />}
         {view === "list" && (
           <AssetList
+            projectId={projectId}
             onView={handleViewAsset}
             onEdit={handleEditAsset}
             onAdd={() => setView("add")}
@@ -215,14 +242,14 @@ export default function AssetManagement() {
             onEdit={() => handleEditAsset(selectedAssetId)}
           />
         )}
-        {view === "add" && <AssetForm onSuccess={handleBack} onCancel={handleBack} />}
+        {view === "add" && <AssetForm projectId={projectId} onSuccess={handleBack} onCancel={handleBack} />}
         {view === "edit" && selectedAssetId && (
-          <AssetForm assetId={selectedAssetId} onSuccess={handleBack} onCancel={handleBack} />
+          <AssetForm projectId={projectId} assetId={selectedAssetId} onSuccess={handleBack} onCancel={handleBack} />
         )}
-        {view === "scan" && <AssetScanner onAssetFound={handleViewAsset} />}
-        {view === "import" && <AssetImport onComplete={() => setView("list")} />}
-        {view === "export" && <AssetExport onClose={() => setView("list")} />}
-        {view === "labels" && <PrintLabelsView onPrint={(assets) => { setLabelAssets(assets); setShowLabels(true); }} />}
+        {view === "scan" && <AssetScanner projectId={projectId} onAssetFound={handleViewAsset} />}
+        {view === "import" && <AssetImport projectId={projectId} onComplete={() => setView("list")} />}
+        {view === "export" && <AssetExport projectId={projectId} onClose={() => setView("list")} />}
+        {view === "labels" && <PrintLabelsView projectId={projectId} onPrint={(assets) => { setLabelAssets(assets); setShowLabels(true); }} />}
       </main>
 
       {/* Modals */}

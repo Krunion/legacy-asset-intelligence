@@ -6,6 +6,7 @@ import Papa from "papaparse";
 const C = COLORS;
 
 interface Props {
+  projectId: number;
   onComplete: () => void;
 }
 
@@ -28,7 +29,7 @@ const EXPECTED_COLUMNS = [
   "department", "quantity", "condition", "acquisitionDate", "acquisitionCost", "notes",
 ];
 
-export default function AssetImport({ onComplete }: Props) {
+export default function AssetImport({ projectId, onComplete }: Props) {
   const [parsedData, setParsedData] = useState<ParsedRow[]>([]);
   const [parseError, setParseError] = useState("");
   const [importing, setImporting] = useState(false);
@@ -102,7 +103,7 @@ export default function AssetImport({ onComplete }: Props) {
   const handleImport = () => {
     if (parsedData.length === 0) return;
     setImporting(true);
-    bulkImportMutation.mutate({ assets: parsedData });
+    bulkImportMutation.mutate({ projectId, assets: parsedData });
   };
 
   const handleDownloadTemplate = () => {
