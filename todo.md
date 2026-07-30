@@ -497,3 +497,10 @@
 - [x] Store captured photos in S3 storage
 - [x] Auto-link photo URL to the asset record in the registry
 - [x] Verify TypeScript compilation and tests pass
+
+## Barcode Scanner Fix & Auto-Asset Creation (July 30, 2026)
+- [x] Fix camera barcode scanner — not reading barcodes/QR codes reliably
+- [x] Improve ZXing configuration for better barcode detection (hints, formats, resolution)
+- [x] After successful scan with no duplicate: auto-create new asset with scanned tag number
+- [x] Extract all possible info from barcode data and pre-populate asset fields
+- [x] Show duplicate warning if scanned barcode already exists in system

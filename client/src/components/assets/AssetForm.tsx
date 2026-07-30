@@ -174,6 +174,8 @@ export default function AssetForm({ projectId, assetId, onSuccess, onCancel }: P
   };
 
   // ─── Camera Scanner Logic ──────────────────────────────────────────────────
+  const controlsRef = useRef<any>(null);
+
   useEffect(() => {
     if (!showScanner) {
       stopCamera();
@@ -182,45 +184,88 @@ export default function AssetForm({ projectId, assetId, onSuccess, onCancel }: P
 
     let cancelled = false;
 
-    const startCamera = async () => {
+    const startScanning = async () => {
       try {
         setScanError("");
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
-        });
-        if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
-        streamRef.current = stream;
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-        }
-        setScannerActive(true);
-        startDecoding();
-      } catch (err: any) {
-        setScanError("Camera access denied. Check permissions or use manual input.");
-      }
-    };
 
-    const startDecoding = async () => {
-      try {
+        // Import ZXing modules
         const { BrowserMultiFormatReader } = await import("@zxing/browser");
-        const reader = new BrowserMultiFormatReader();
-        await reader.decodeFromVideoDevice(undefined, videoRef.current!, (result, _err, controls) => {
-          if (cancelled) { controls.stop(); return; }
-          if (result) {
-            controls.stop();
-            const scannedValue = result.getText();
-            setScanResult(scannedValue);
-            handleScanResult(scannedValue);
-            setShowScanner(false);
-          }
+        const { DecodeHintType, BarcodeFormat } = await import("@zxing/library");
+
+        // Configure hints for better detection
+        const hints = new Map();
+        hints.set(DecodeHintType.TRY_HARDER, true);
+        hints.set(DecodeHintType.POSSIBLE_FORMATS, [
+          BarcodeFormat.QR_CODE,
+          BarcodeFormat.CODE_128,
+          BarcodeFormat.CODE_39,
+          BarcodeFormat.EAN_13,
+          BarcodeFormat.EAN_8,
+          BarcodeFormat.UPC_A,
+          BarcodeFormat.UPC_E,
+          BarcodeFormat.DATA_MATRIX,
+          BarcodeFormat.PDF_417,
+          BarcodeFormat.ITF,
+          BarcodeFormat.CODABAR,
+          BarcodeFormat.AZTEC,
+        ]);
+
+        // Create reader with hints and fast scan interval
+        const reader = new BrowserMultiFormatReader(hints, {
+          delayBetweenScanAttempts: 100,
+          delayBetweenScanSuccess: 500,
         });
-      } catch {
-        setScanError("Barcode scanning not available on this device.");
+
+        if (cancelled) return;
+
+        // Use decodeFromConstraints which properly manages the video stream
+        const constraints: MediaStreamConstraints = {
+          video: {
+            facingMode: "environment",
+            width: { min: 640, ideal: 1280, max: 1920 },
+            height: { min: 480, ideal: 720, max: 1080 },
+          },
+          audio: false,
+        };
+
+        setScannerActive(true);
+
+        const controls = await reader.decodeFromConstraints(
+          constraints,
+          videoRef.current!,
+          (result, _err) => {
+            if (cancelled) return;
+            if (result) {
+              const scannedValue = result.getText();
+              if (scannedValue && scannedValue.trim().length > 0) {
+                controls.stop();
+                controlsRef.current = null;
+                setScanResult(scannedValue.trim());
+                handleScanResult(scannedValue.trim());
+                setShowScanner(false);
+              }
+            }
+          }
+        );
+
+        controlsRef.current = controls;
+
+      } catch (err: any) {
+        if (!cancelled) {
+          if (err.name === "NotAllowedError" || err.message?.includes("denied")) {
+            setScanError("Camera access denied. Please allow camera permissions in your browser settings.");
+          } else if (err.name === "NotFoundError") {
+            setScanError("No camera found on this device. Use manual input instead.");
+          } else if (err.name === "NotReadableError") {
+            setScanError("Camera is in use by another application. Close other apps and try again.");
+          } else {
+            setScanError(`Scanner error: ${err.message || "Unknown error"}. Try manual input.`);
+          }
+        }
       }
     };
 
-    startCamera();
+    startScanning();
 
     return () => {
       cancelled = true;
@@ -229,6 +274,10 @@ export default function AssetForm({ projectId, assetId, onSuccess, onCancel }: P
   }, [showScanner]);
 
   const stopCamera = () => {
+    if (controlsRef.current) {
+      try { controlsRef.current.stop(); } catch {}
+      controlsRef.current = null;
+    }
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop());
       streamRef.current = null;

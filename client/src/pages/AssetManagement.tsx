@@ -246,7 +246,7 @@ export default function AssetManagement() {
         {view === "edit" && selectedAssetId && (
           <AssetForm projectId={projectId} assetId={selectedAssetId} onSuccess={handleBack} onCancel={handleBack} />
         )}
-        {view === "scan" && <AssetScanner projectId={projectId} onAssetFound={handleViewAsset} />}
+        {view === "scan" && <AssetScanner projectId={projectId} onAssetFound={handleViewAsset} onAssetCreated={handleViewAsset} />}
         {view === "import" && <AssetImport projectId={projectId} onComplete={() => setView("list")} />}
         {view === "export" && <AssetExport projectId={projectId} onClose={() => setView("list")} />}
         {view === "labels" && <PrintLabelsView projectId={projectId} onPrint={(assets) => { setLabelAssets(assets); setShowLabels(true); }} />}
