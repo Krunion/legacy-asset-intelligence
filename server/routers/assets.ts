@@ -955,7 +955,9 @@ export const assetsRouter = router({
       }
 
       const buffer = Buffer.from(input.fileData, "base64");
-      const fileKey = `project-docs/${input.projectId}/${Date.now()}-${input.fileName}`;
+      // Sanitize filename: replace spaces and special chars to prevent CloudFront signed URL issues
+      const sanitizedName = input.fileName.replace(/[\s]+/g, "-").replace(/[^a-zA-Z0-9._-]/g, "");
+      const fileKey = `project-docs/${input.projectId}/${Date.now()}-${sanitizedName}`;
       const { url } = await storagePut(fileKey, buffer, input.mimeType);
 
       const result = await db.insert(projectDocuments).values({

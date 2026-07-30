@@ -130,7 +130,17 @@ export default function ClientPortal() {
   // ─── LOGIN VIEW ────────────────────────────────────────────────────────────
   if (view === "login") {
     return (
-      <div style={{ minHeight: "100vh", background: C.charcoal, display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem" }}>
+      <div style={{ minHeight: "100vh", background: C.charcoal, display: "flex", alignItems: "center", justifyContent: "center", padding: "2rem", position: "relative" }}>
+        {/* Back to main site */}
+        <a
+          href="/"
+          style={{ position: "absolute", top: "1.5rem", left: "1.5rem", display: "flex", alignItems: "center", gap: "0.4rem", color: C.silver, textDecoration: "none", fontSize: "0.85rem", opacity: 0.8, transition: "opacity 0.2s" }}
+          onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+          onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.8")}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+          Back to Main Site
+        </a>
         <div style={{ width: "100%", maxWidth: 420, background: C.navy, borderRadius: 16, border: `1px solid ${C.border}`, padding: "2.5rem", boxShadow: "0 20px 60px rgba(0,0,0,0.4)" }}>
           {/* Logo */}
           <div style={{ textAlign: "center", marginBottom: "2rem" }}>
@@ -245,6 +255,10 @@ export default function ClientPortal() {
       {/* Header */}
       <header style={{ background: C.navy, borderBottom: `1px solid ${C.border}`, padding: "1rem 2rem", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <a href="/" style={{ display: "flex", alignItems: "center", gap: "0.5rem", color: C.silver, textDecoration: "none", fontSize: "0.8rem", padding: "0.3rem 0.6rem", background: C.slate, borderRadius: 6, border: `1px solid ${C.border}` }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+            Main Site
+          </a>
           <img src={LOGO_IMG} alt="LAI" style={{ height: 36 }} />
           <div>
             <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: C.text, margin: 0 }}>

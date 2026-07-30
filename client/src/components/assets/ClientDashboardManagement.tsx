@@ -22,7 +22,9 @@ export default function ClientDashboardManagement({ projectId, projectName }: { 
   const createMutation = trpc.clientPortal.createDashboard.useMutation({
     onSuccess: (data) => {
       utils.clientPortal.listDashboards.invalidate({ projectId });
-      setCreatedLink(data.portalLink);
+      // Build full URL using the production domain
+      const origin = window.location.origin;
+      setCreatedLink(`${origin}${data.portalLink}`);
       setCreatedPassword(data.password);
       setShowCreate(false);
       setForm({ clientName: "", clientEmail: "", dashboardTitle: "" });
@@ -88,7 +90,7 @@ export default function ClientDashboardManagement({ projectId, projectName }: { 
 
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-              <label style={{ color: C.textMuted, fontSize: "0.8rem", fontWeight: 600, minWidth: 80 }}>Link:</label>
+              <label style={{ color: C.textMuted, fontSize: "0.8rem", fontWeight: 600, minWidth: 80 }}>Client Portal:</label>
               <code style={{ flex: 1, padding: "0.5rem 0.75rem", background: C.slate, borderRadius: 6, color: C.gold, fontSize: "0.8rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {createdLink}
               </code>
@@ -197,7 +199,7 @@ export default function ClientDashboardManagement({ projectId, projectName }: { 
                     Created {new Date(dash.createdAt).toLocaleDateString()} — Last login: {dash.lastLogin ? new Date(dash.lastLogin).toLocaleString() : "Never"}
                   </p>
                 </div>
-                <div style={{ display: "flex", gap: "0.5rem" }}>
+                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
                   <a
                     href={`/client-portal?token=${dash.accessToken}`}
                     target="_blank"
@@ -206,6 +208,16 @@ export default function ClientDashboardManagement({ projectId, projectName }: { 
                   >
                     View Dashboard
                   </a>
+                  <button
+                    onClick={() => {
+                      const fullLink = `${window.location.origin}/client-portal?token=${dash.accessToken}`;
+                      navigator.clipboard.writeText(fullLink);
+                      alert(`Client Portal link copied:\n${fullLink}`);
+                    }}
+                    style={{ padding: "0.4rem 0.75rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.gold, cursor: "pointer", fontSize: "0.8rem" }}
+                  >
+                    Copy Link
+                  </button>
                   <button
                     onClick={() => handleResetPassword(dash.id)}
                     style={{ padding: "0.4rem 0.75rem", background: "transparent", border: `1px solid rgba(245,158,11,0.3)`, borderRadius: 6, color: "#F59E0B", cursor: "pointer", fontSize: "0.8rem" }}

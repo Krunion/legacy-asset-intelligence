@@ -88,7 +88,7 @@ export const clientPortalRouter = router({
         username: input.username,
         password: plainPassword, // Return plain password once for sharing
         accessToken,
-        portalLink: `/client-portal?token=${accessToken}`,
+        portalLink: `/client-portal?token=${accessToken}`, // Frontend will prepend origin
       };
     }),
 

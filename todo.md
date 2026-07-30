@@ -515,3 +515,24 @@
 - [x] Client Portal: shareable link with generic password that client can change
 - [x] Admin Override: Kevin and Chris can always view any client dashboard regardless of password
 - [x] Database schema: project_notes, project_documents, client_portal_accounts tables
+
+## Client Portal Fixes & Executive Dashboard Build (July 30, 2026)
+- [ ] Fix: Add back button to Client Portal page to return to main website
+- [ ] Fix: Document upload returning 404 "Not Found" when clicking uploaded documents
+- [ ] Fix: Client Portal link generation — use real domain-based links, not fake paths
+- [ ] Build comprehensive Client Executive Dashboard with 14 sections per specification
+- [ ] Section 1: Executive Overview (org name, phase, status, completion %, dates, PM)
+- [ ] Section 2: KPIs (total assets, verified, matched, ghost, duplicates, recovery, savings)
+- [ ] Section 3: Project Phase Tracker (4 LAI phases with milestones)
+- [ ] Section 4: Asset Verification Summary with filters
+- [ ] Section 5: Financial Recovery Dashboard (recovery values, ROI, 3-year projection)
+- [ ] Section 6: Risk & Exception Management (prioritized issues)
+- [ ] Section 7: Locations & Departments (interactive summary)
+- [ ] Section 8: Action Center (items waiting on client)
+- [ ] Section 9: Reports & Deliverables (controlled document access)
+- [ ] Section 10: Meetings & Communications
+- [ ] Section 11: Phase 3 Implementation Info
+- [ ] Section 12: Phase 4 Governance Info
+- [ ] Section 13: Billing & Engagement Info
+- [ ] Section 14: User Permissions (role-based access)
+- [ ] Dashboard navigation sidebar with all menu items

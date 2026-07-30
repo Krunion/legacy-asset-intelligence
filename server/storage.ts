@@ -21,6 +21,21 @@ function normalizeKey(relKey: string): string {
   return relKey.replace(/^\/+/, "");
 }
 
+/**
+ * Sanitize the filename portion of a key to avoid spaces and special chars
+ * that break S3/CloudFront signed URL handling.
+ */
+function sanitizeKey(key: string): string {
+  const parts = key.split("/");
+  const filename = parts.pop() || "file";
+  // Replace whitespace with hyphens, remove other problematic chars
+  const sanitized = filename
+    .replace(/[\s]+/g, "-")
+    .replace(/[^a-zA-Z0-9._-]/g, "");
+  parts.push(sanitized || "file");
+  return parts.join("/");
+}
+
 function appendHashSuffix(relKey: string): string {
   const hash = crypto.randomUUID().replace(/-/g, "").slice(0, 8);
   const lastDot = relKey.lastIndexOf(".");
@@ -34,7 +49,7 @@ export async function storagePut(
   contentType = "application/octet-stream",
 ): Promise<{ key: string; url: string }> {
   const { forgeUrl, forgeKey } = getForgeConfig();
-  const key = appendHashSuffix(normalizeKey(relKey));
+  const key = appendHashSuffix(sanitizeKey(normalizeKey(relKey)));
 
   // 1. Get presigned PUT URL from Forge
   const presignUrl = new URL("v1/storage/presign/put", forgeUrl + "/");

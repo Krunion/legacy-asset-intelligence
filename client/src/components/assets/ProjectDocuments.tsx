@@ -211,14 +211,29 @@ export default function ProjectDocuments({ projectId }: { projectId: number }) {
                 </div>
               </div>
               <div style={{ display: "flex", gap: "0.5rem", marginLeft: "1rem" }}>
-                <a
-                  href={doc.storageUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ padding: "0.4rem 0.75rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.silver, textDecoration: "none", fontSize: "0.8rem", cursor: "pointer" }}
+                <button
+                  onClick={() => {
+                    // Open the storage URL in a new window — the server returns a 307 redirect to a signed CloudFront URL
+                    window.open(doc.storageUrl, "_blank", "noopener,noreferrer");
+                  }}
+                  style={{ padding: "0.4rem 0.75rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.silver, fontSize: "0.8rem", cursor: "pointer" }}
                 >
                   View
-                </a>
+                </button>
+                <button
+                  onClick={() => {
+                    // Download the file
+                    const link = document.createElement("a");
+                    link.href = doc.storageUrl;
+                    link.download = doc.fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  style={{ padding: "0.4rem 0.75rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.gold, fontSize: "0.8rem", cursor: "pointer" }}
+                >
+                  Download
+                </button>
                 {isAdmin && (
                   <button
                     onClick={() => handleDelete(doc.id)}

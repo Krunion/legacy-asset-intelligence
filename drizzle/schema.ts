@@ -269,3 +269,190 @@ export const clientPortalAccounts = mysqlTable("clientPortalAccounts", {
 
 export type ClientPortalAccount = typeof clientPortalAccounts.$inferSelect;
 export type InsertClientPortalAccount = typeof clientPortalAccounts.$inferInsert;
+
+// ─── Client Executive Dashboard Tables ────────────────────────────────────────
+
+export const projectPhases = mysqlTable("projectPhases", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  phaseNumber: int("phaseNumber").notNull(), // 1-4
+  phaseName: varchar("phaseName", { length: 255 }).notNull(),
+  status: mysqlEnum("status", ["not_started", "in_progress", "completed", "on_hold"]).default("not_started").notNull(),
+  completionPercent: int("completionPercent").default(0).notNull(),
+  startDate: timestamp("startDate"),
+  targetEndDate: timestamp("targetEndDate"),
+  actualEndDate: timestamp("actualEndDate"),
+  activities: json("activities"), // JSON array of activity strings
+  milestones: json("milestones"), // JSON array of milestone objects
+  deliverables: json("deliverables"), // JSON array of deliverable strings
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectPhase = typeof projectPhases.$inferSelect;
+export type InsertProjectPhase = typeof projectPhases.$inferInsert;
+
+export const projectKpis = mysqlTable("projectKpis", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  // Asset verification KPIs
+  totalAssetsInFar: int("totalAssetsInFar").default(0),
+  assetsReviewed: int("assetsReviewed").default(0),
+  assetsPhysicallyVerified: int("assetsPhysicallyVerified").default(0),
+  assetsRemaining: int("assetsRemaining").default(0),
+  assetsMatchedToFar: int("assetsMatchedToFar").default(0),
+  assetsNotFound: int("assetsNotFound").default(0),
+  assetsFoundNotRecorded: int("assetsFoundNotRecorded").default(0),
+  duplicateRecords: int("duplicateRecords").default(0),
+  assetsRequiringInvestigation: int("assetsRequiringInvestigation").default(0),
+  // Financial KPIs
+  estimatedHiddenCapital: decimal("estimatedHiddenCapital", { precision: 14, scale: 2 }),
+  verifiedRecoveryOpportunities: decimal("verifiedRecoveryOpportunities", { precision: 14, scale: 2 }),
+  potentialAnnualSavings: decimal("potentialAnnualSavings", { precision: 14, scale: 2 }),
+  openHighRiskExceptions: int("openHighRiskExceptions").default(0),
+  // Financial status
+  financialStatus: mysqlEnum("financialStatus", ["preliminary_estimate", "under_review", "client_validated", "approved_for_action", "actual_realized"]).default("preliminary_estimate"),
+  // Metadata
+  lastUpdated: timestamp("lastUpdated").defaultNow().onUpdateNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProjectKpi = typeof projectKpis.$inferSelect;
+export type InsertProjectKpi = typeof projectKpis.$inferInsert;
+
+export const financialRecovery = mysqlTable("financialRecovery", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  category: mysqlEnum("category", [
+    "avoided_replacement", "sale_disposal", "insurance_tax_exposure",
+    "maintenance_elimination", "licensing_elimination", "idle_capital",
+    "redeployment", "disposal_recommendation", "other"
+  ]).notNull(),
+  description: text("description"),
+  amount: decimal("amount", { precision: 14, scale: 2 }).notNull(),
+  status: mysqlEnum("status", [
+    "identified", "under_investigation", "awaiting_validation",
+    "approved", "in_progress", "realized", "rejected", "closed"
+  ]).default("identified").notNull(),
+  assetId: int("assetId"), // optional link to specific asset
+  responsibleParty: varchar("responsibleParty", { length: 255 }),
+  dueDate: timestamp("dueDate"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type FinancialRecovery = typeof financialRecovery.$inferSelect;
+export type InsertFinancialRecovery = typeof financialRecovery.$inferInsert;
+
+export const riskExceptions = mysqlTable("riskExceptions", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  riskType: mysqlEnum("riskType", [
+    "high_value_missing", "no_custodian", "uninsured", "no_documentation",
+    "unauthorized_location", "duplicate_purchase", "obsolete_equipment",
+    "cybersecurity", "compliance", "pending_decision", "other"
+  ]).notNull(),
+  riskLevel: mysqlEnum("riskLevel", ["critical", "high", "medium", "low"]).default("medium").notNull(),
+  assetId: int("assetId"),
+  assetTag: varchar("assetTag", { length: 255 }),
+  location: varchar("location", { length: 500 }),
+  financialExposure: decimal("financialExposure", { precision: 14, scale: 2 }),
+  description: text("description"),
+  recommendedAction: text("recommendedAction"),
+  responsibleParty: varchar("responsibleParty", { length: 255 }),
+  dueDate: timestamp("dueDate"),
+  status: mysqlEnum("status", ["open", "in_progress", "resolved", "accepted", "escalated"]).default("open").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type RiskException = typeof riskExceptions.$inferSelect;
+export type InsertRiskException = typeof riskExceptions.$inferInsert;
+
+export const clientActionItems = mysqlTable("clientActionItems", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  actionType: mysqlEnum("actionType", [
+    "document_approval", "question", "asset_clarification",
+    "milestone_acceptance", "change_order", "meeting_confirmation",
+    "corrective_action", "upload_document", "other"
+  ]).notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  description: text("description"),
+  priority: mysqlEnum("priority", ["urgent", "high", "normal", "low"]).default("normal").notNull(),
+  status: mysqlEnum("status", ["pending", "in_review", "approved", "rejected", "completed", "overdue"]).default("pending").notNull(),
+  assignedTo: varchar("assignedTo", { length: 255 }),
+  dueDate: timestamp("dueDate"),
+  completedAt: timestamp("completedAt"),
+  response: text("response"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ClientActionItem = typeof clientActionItems.$inferSelect;
+export type InsertClientActionItem = typeof clientActionItems.$inferInsert;
+
+export const projectReports = mysqlTable("projectReports", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  reportType: mysqlEnum("reportType", [
+    "executive_assessment", "verification_analysis", "reconciled_far",
+    "discrepancy_matrix", "inventory_master_log", "recovery_register",
+    "governance_scorecard", "risk_exception_report", "location_report",
+    "asset_photographs", "meeting_summary", "final_presentation",
+    "technology_plan", "quarterly_report", "other"
+  ]).notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  version: varchar("version", { length: 50 }).default("1.0"),
+  status: mysqlEnum("status", ["draft", "in_review", "final", "superseded"]).default("draft").notNull(),
+  storageKey: varchar("storageKey", { length: 500 }),
+  storageUrl: varchar("storageUrl", { length: 500 }),
+  fileName: varchar("fileName", { length: 500 }),
+  publishedAt: timestamp("publishedAt"),
+  approvedBy: varchar("approvedBy", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectReport = typeof projectReports.$inferSelect;
+export type InsertProjectReport = typeof projectReports.$inferInsert;
+
+export const projectMeetings = mysqlTable("projectMeetings", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  meetingType: mysqlEnum("meetingType", ["kickoff", "status_update", "review", "qbr", "ad_hoc", "final"]).default("status_update").notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  scheduledDate: timestamp("scheduledDate"),
+  duration: int("duration"), // minutes
+  location: varchar("location", { length: 500 }),
+  attendees: json("attendees"), // JSON array of attendee names/emails
+  agenda: text("agenda"),
+  summary: text("summary"),
+  decisions: json("decisions"), // JSON array of decision strings
+  actionItems: json("actionItems"), // JSON array of action item strings
+  status: mysqlEnum("status", ["scheduled", "completed", "cancelled", "rescheduled"]).default("scheduled").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectMeeting = typeof projectMeetings.$inferSelect;
+export type InsertProjectMeeting = typeof projectMeetings.$inferInsert;
+
+export const projectBilling = mysqlTable("projectBilling", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  itemType: mysqlEnum("itemType", ["invoice", "payment", "change_order", "credit"]).notNull(),
+  description: varchar("description", { length: 500 }).notNull(),
+  amount: decimal("amount", { precision: 14, scale: 2 }).notNull(),
+  status: mysqlEnum("status", ["pending", "sent", "paid", "overdue", "cancelled", "approved", "rejected"]).default("pending").notNull(),
+  invoiceNumber: varchar("invoiceNumber", { length: 100 }),
+  dueDate: timestamp("dueDate"),
+  paidDate: timestamp("paidDate"),
+  notes: text("notes"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectBilling = typeof projectBilling.$inferSelect;
+export type InsertProjectBilling = typeof projectBilling.$inferInsert;
