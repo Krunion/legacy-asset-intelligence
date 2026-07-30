@@ -804,4 +804,209 @@ export const clientPortalRouter = router({
       });
       return { id: result[0].insertId };
     }),
+
+  // ─── Delete procedures (admin) ────────────────────────────────────────────────
+  deleteRecoveryItem: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(financialRecovery).where(eq(financialRecovery.id, input.id));
+      return { success: true };
+    }),
+
+  deleteRisk: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(riskExceptions).where(eq(riskExceptions.id, input.id));
+      return { success: true };
+    }),
+
+  deleteActionItem: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(clientActionItems).where(eq(clientActionItems.id, input.id));
+      return { success: true };
+    }),
+
+  updateActionItem: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.enum(["pending", "in_review", "approved", "rejected", "completed", "overdue"]).optional(),
+      priority: z.enum(["urgent", "high", "normal", "low"]).optional(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+      dueDate: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, dueDate, ...data } = input;
+      const updateData: any = { ...data };
+      if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
+      await db.update(clientActionItems).set(updateData).where(eq(clientActionItems.id, id));
+      return { success: true };
+    }),
+
+  deleteReport: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(projectReports).where(eq(projectReports.id, input.id));
+      return { success: true };
+    }),
+
+  updateReport: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.enum(["draft", "in_review", "final", "superseded"]).optional(),
+      title: z.string().optional(),
+      version: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, ...data } = input;
+      await db.update(projectReports).set(data).where(eq(projectReports.id, id));
+      return { success: true };
+    }),
+
+  deleteMeeting: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(projectMeetings).where(eq(projectMeetings.id, input.id));
+      return { success: true };
+    }),
+
+  updateMeeting: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.enum(["scheduled", "completed", "cancelled", "rescheduled"]).optional(),
+      title: z.string().optional(),
+      summary: z.string().optional(),
+      scheduledDate: z.string().optional(),
+      decisions: z.array(z.string()).optional(),
+      actionItems: z.array(z.string()).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, scheduledDate, ...data } = input;
+      const updateData: any = { ...data };
+      if (scheduledDate !== undefined) updateData.scheduledDate = scheduledDate ? new Date(scheduledDate) : null;
+      await db.update(projectMeetings).set(updateData).where(eq(projectMeetings.id, id));
+      return { success: true };
+    }),
+
+  deleteBillingItem: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(projectBilling).where(eq(projectBilling.id, input.id));
+      return { success: true };
+    }),
+
+  updateBillingItem: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      status: z.enum(["pending", "sent", "paid", "overdue", "cancelled", "approved", "rejected"]).optional(),
+      amount: z.string().optional(),
+      description: z.string().optional(),
+      invoiceNumber: z.string().optional(),
+      dueDate: z.string().optional(),
+      paidDate: z.string().optional(),
+      notes: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, dueDate, paidDate, ...data } = input;
+      const updateData: any = { ...data };
+      if (dueDate !== undefined) updateData.dueDate = dueDate ? new Date(dueDate) : null;
+      if (paidDate !== undefined) updateData.paidDate = paidDate ? new Date(paidDate) : null;
+      await db.update(projectBilling).set(updateData).where(eq(projectBilling.id, id));
+      return { success: true };
+    }),
+
+  // ─── List procedures for admin management panels ──────────────────────────────
+  listRecoveryItems: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(financialRecovery).where(eq(financialRecovery.projectId, input.projectId)).orderBy(desc(financialRecovery.createdAt));
+    }),
+
+  listRisks: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(riskExceptions).where(eq(riskExceptions.projectId, input.projectId)).orderBy(desc(riskExceptions.createdAt));
+    }),
+
+  listActionItems: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(clientActionItems).where(eq(clientActionItems.projectId, input.projectId)).orderBy(desc(clientActionItems.createdAt));
+    }),
+
+  listReports: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(projectReports).where(eq(projectReports.projectId, input.projectId)).orderBy(desc(projectReports.createdAt));
+    }),
+
+  listMeetings: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(projectMeetings).where(eq(projectMeetings.projectId, input.projectId)).orderBy(desc(projectMeetings.scheduledDate));
+    }),
+
+  listBillingItems: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(projectBilling).where(eq(projectBilling.projectId, input.projectId)).orderBy(desc(projectBilling.createdAt));
+    }),
+
+  listPhases: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdmin(ctx.user?.email)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(projectPhases).where(eq(projectPhases.projectId, input.projectId)).orderBy(projectPhases.phaseNumber);
+    }),
 });
