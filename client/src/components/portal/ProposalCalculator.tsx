@@ -1,20 +1,17 @@
 /**
  * LAI Total Engagement Billing Calculator
- * Replaces old proposal calculator with exact pricing model from Excel spreadsheet.
- * Features:
- * - Progressive asset pricing (6 tiers)
- * - Geographic multiplier
- * - Recoverable capital fee (progressive brackets)
- * - Phase 4 governance (by asset count)
- * - Asset Panda coordination fee (include/waive)
- * - Internal Feasibility (separate print page, not client-facing)
- * - Proposal Summary (separate print page, client-facing)
+ * Rebuilt to match Excel spreadsheet exactly:
+ * - Client Tab: rows 4-14 (input fields)
+ * - Assumptions Tab: rows 40-54 & 58 (editable assumptions)
+ * - Pricing Summary (calculated)
+ * - Internal Feasibility with Project Staffing Assumptions (internal only)
+ * - Proposal Summary (client-facing)
  */
 
 import { useState, useRef } from "react";
 import { LOGO_BASE64 } from "./logoBase64";
 
-// ─── Data Tables (from spreadsheet) ─────────────────────────────────────────
+// ─── Data Tables (from spreadsheet Assumptions Tab rows 3-36) ───────────────
 
 const ASSET_TIERS = [
   { label: "Tier 1", lower: 1, upper: 10000, rate: 7.00 },
@@ -69,22 +66,9 @@ const INDUSTRIES = [
 const MINIMUM_ENGAGEMENT_FEE = 40000;
 const ASSET_PANDA_FEE = 5000;
 
-// ─── Internal Cost Assumptions ──────────────────────────────────────────────
-
-const COST_ASSUMPTIONS = {
-  fieldProductivity: 200, // assets/person/day
-  fieldContractorPay: 30, // $/hour
-  reconciliationPay: 30, // $/hour
-  qaPay: 30, // $/hour
-  pmPay: 60, // $/hour
-  workdayHours: 8, // hours/day
-  reconciliationPct: 0.30,
-  qaPct: 0.08,
-  pmPct: 0.06,
-  travelingLeaders: 2,
-  weeklyTravelPackage: 1990, // $/week per leader
-  overheadPct: 0.15,
-};
+// Fixed constants (not editable, rows 56-57)
+const WORKDAYS_PER_WEEK = 5;
+const SPECIALISTS_PER_FAM = 20;
 
 // ─── Calculation Functions ──────────────────────────────────────────────────
 
@@ -127,34 +111,6 @@ function getPhase4Fee(assetCount: number): number {
     if (assetCount >= tier.lower && assetCount <= tier.upper) return tier.fee;
   }
   return 120000;
-}
-
-function calculateInternalFeasibility(totalRevenue: number, assetCount: number, projectWeeks: number) {
-  const { fieldProductivity, fieldContractorPay, reconciliationPay, qaPay, pmPay, workdayHours, reconciliationPct, qaPct, pmPct, travelingLeaders, weeklyTravelPackage, overheadPct } = COST_ASSUMPTIONS;
-
-  const fieldHours = (assetCount / fieldProductivity) * workdayHours;
-  const fieldPayroll = fieldHours * fieldContractorPay;
-  const reconciliationPayroll = fieldHours * reconciliationPct * reconciliationPay;
-  const qaPayroll = fieldHours * qaPct * qaPay;
-  const pmPayroll = fieldHours * pmPct * pmPay;
-  const leadershipTravel = travelingLeaders * projectWeeks * weeklyTravelPackage;
-  const overhead = totalRevenue * overheadPct;
-  const totalCost = fieldPayroll + reconciliationPayroll + qaPayroll + pmPayroll + leadershipTravel + overhead;
-  const profit = totalRevenue - totalCost;
-  const margin = totalRevenue > 0 ? (profit / totalRevenue) * 100 : 0;
-
-  return {
-    fieldHours,
-    fieldPayroll,
-    reconciliationPayroll,
-    qaPayroll,
-    pmPayroll,
-    leadershipTravel,
-    overhead,
-    totalCost,
-    profit,
-    margin,
-  };
 }
 
 // ─── Formatting Helpers ─────────────────────────────────────────────────────
@@ -229,80 +185,156 @@ const sectionTitleStyle: React.CSSProperties = {
 
 // ─── Interfaces ─────────────────────────────────────────────────────────────
 
-interface CalcInputs {
-  clientName: string;
-  industry: string;
-  estimatedAssetCount: number;
-  numberOfLocations: number;
-  geoScope: number;
-  estimatedRecoverableCapital: number;
-  includeRecoverableFee: boolean;
-  includePhase4: boolean;
-  includeAssetPanda: boolean;
-  waiveAssetPanda: boolean;
-  projectWeeks: number;
-  notes: string;
+// Client Tab: rows 4-14
+interface ClientInputs {
+  clientName: string;           // Row 4
+  industry: string;             // Row 5
+  estimatedAssetCount: number;  // Row 6
+  numberOfLocations: number;    // Row 7
+  geoScope: number;             // Row 8 (index into GEO_MULTIPLIERS)
+  estimatedRecoverableCapital: number; // Row 9
+  includeRecoverableFee: string;      // Row 10 (Yes/No)
+  includePhase4: string;              // Row 11 (Yes/No)
+  includeAssetPanda: string;          // Row 12 (Yes/No)
+  waiveAssetPanda: string;            // Row 13 (Yes/No)
+  timeframeMonths: number;            // Row 14
+  notes: string;                      // Extra field for notes
+}
+
+// Assumptions Tab: rows 40-54 & 58
+interface Assumptions {
+  fieldProductivity: number;          // Row 40: assets/person/day
+  fieldContractorPay: number;         // Row 41: $/hour
+  reconciliationPay: number;          // Row 42: $/hour
+  qaPay: number;                      // Row 43: $/hour
+  pmPay: number;                      // Row 44: $/hour
+  workdayHours: number;               // Row 45: hours/day
+  reconciliationPct: number;          // Row 46: decimal (0.30 = 30%)
+  qaPct: number;                      // Row 47: decimal (0.08 = 8%)
+  pmPct: number;                      // Row 48: decimal (0.06 = 6%)
+  travelingLeaders: number;           // Row 49: people
+  averageProjectWeeks: number;        // Row 50: weeks
+  weeklyLodgingPerTraveler: number;   // Row 51: $/week
+  weeklyPerDiemPerTraveler: number;   // Row 52: $/week
+  weeklyTransportPerTraveler: number; // Row 53: $/week
+  overheadAllocation: number;         // Row 54: decimal (0.15 = 15%)
+  annualOngoingSavings: number;       // Row 58: decimal (0.10 = 10%)
 }
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
 export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
-  const [inputs, setInputs] = useState<CalcInputs>({
+  // Client Tab state (rows 4-14)
+  const [clientInputs, setClientInputs] = useState<ClientInputs>({
     clientName: "",
     industry: "Manufacturing",
     estimatedAssetCount: 10000,
     numberOfLocations: 1,
     geoScope: 0,
     estimatedRecoverableCapital: 500000,
-    includeRecoverableFee: true,
-    includePhase4: true,
-    includeAssetPanda: true,
-    waiveAssetPanda: true,
-    projectWeeks: 12,
+    includeRecoverableFee: "Yes",
+    includePhase4: "Yes",
+    includeAssetPanda: "Yes",
+    waiveAssetPanda: "Yes",
+    timeframeMonths: 3,
     notes: "",
   });
 
+  // Assumptions Tab state (rows 40-54 & 58)
+  const [assumptions, setAssumptions] = useState<Assumptions>({
+    fieldProductivity: 200,
+    fieldContractorPay: 30,
+    reconciliationPay: 30,
+    qaPay: 30,
+    pmPay: 60,
+    workdayHours: 8,
+    reconciliationPct: 0.30,
+    qaPct: 0.08,
+    pmPct: 0.06,
+    travelingLeaders: 2,
+    averageProjectWeeks: 12,
+    weeklyLodgingPerTraveler: 1050,
+    weeklyPerDiemPerTraveler: 490,
+    weeklyTransportPerTraveler: 450,
+    overheadAllocation: 0.15,
+    annualOngoingSavings: 0.10,
+  });
+
+  const [activeTab, setActiveTab] = useState<"client" | "assumptions">("client");
   const [showOutput, setShowOutput] = useState(false);
   const feasibilityRef = useRef<HTMLDivElement>(null);
   const proposalRef = useRef<HTMLDivElement>(null);
 
-  const update = (key: keyof CalcInputs, value: any) => {
-    setInputs(prev => ({ ...prev, [key]: value }));
+  const updateClient = (key: keyof ClientInputs, value: any) => {
+    setClientInputs(prev => ({ ...prev, [key]: value }));
+  };
+
+  const updateAssumptions = (key: keyof Assumptions, value: any) => {
+    setAssumptions(prev => ({ ...prev, [key]: value }));
   };
 
   // ─── Calculations ───────────────────────────────────────────────────────────
 
-  const assetFee = calculateProgressiveAssetFee(inputs.estimatedAssetCount);
-  const geoMultiplier = GEO_MULTIPLIERS[inputs.geoScope];
+  const includeRecoverableFee = clientInputs.includeRecoverableFee === "Yes";
+  const includePhase4 = clientInputs.includePhase4 === "Yes";
+  const includeAssetPanda = clientInputs.includeAssetPanda === "Yes";
+  const waiveAssetPanda = clientInputs.waiveAssetPanda === "Yes";
+
+  const assetFee = calculateProgressiveAssetFee(clientInputs.estimatedAssetCount);
+  const geoMultiplier = GEO_MULTIPLIERS[clientInputs.geoScope];
   const geoAdjustment = assetFee.total * (geoMultiplier.multiplier - 1);
   const baseWithGeo = assetFee.total + geoAdjustment;
 
-  const recoverableFee = inputs.includeRecoverableFee
-    ? calculateRecoverableCapitalFee(inputs.estimatedRecoverableCapital)
+  const recoverableFee = includeRecoverableFee
+    ? calculateRecoverableCapitalFee(clientInputs.estimatedRecoverableCapital)
     : { total: 0, effectiveRate: 0 };
 
-  const phase4Fee = inputs.includePhase4 ? getPhase4Fee(inputs.estimatedAssetCount) : 0;
-
-  const assetPandaFee = inputs.includeAssetPanda && !inputs.waiveAssetPanda ? ASSET_PANDA_FEE : 0;
+  const phase4Fee = includePhase4 ? getPhase4Fee(clientInputs.estimatedAssetCount) : 0;
+  const assetPandaFee = includeAssetPanda && !waiveAssetPanda ? ASSET_PANDA_FEE : 0;
 
   const totalBeforeMinimum = baseWithGeo + recoverableFee.total + phase4Fee + assetPandaFee;
   const totalInvestment = Math.max(totalBeforeMinimum, MINIMUM_ENGAGEMENT_FEE);
 
-  const effectiveRate = inputs.estimatedAssetCount > 0 ? totalInvestment / inputs.estimatedAssetCount : 0;
+  const effectiveRate = clientInputs.estimatedAssetCount > 0 ? totalInvestment / clientInputs.estimatedAssetCount : 0;
 
-  const feasibility = calculateInternalFeasibility(totalInvestment, inputs.estimatedAssetCount, inputs.projectWeeks);
+  // Internal Feasibility calculations using Assumptions Tab
+  const projectWeeks = assumptions.averageProjectWeeks;
+  const weeklyTravelPerLeader = assumptions.weeklyLodgingPerTraveler + assumptions.weeklyPerDiemPerTraveler + assumptions.weeklyTransportPerTraveler;
 
-  const firstYearROI = inputs.estimatedRecoverableCapital > 0
-    ? ((inputs.estimatedRecoverableCapital - totalInvestment) / totalInvestment) * 100
+  const fieldHours = (clientInputs.estimatedAssetCount / assumptions.fieldProductivity) * assumptions.workdayHours;
+  const fieldPayroll = fieldHours * assumptions.fieldContractorPay;
+  const reconciliationPayroll = fieldHours * assumptions.reconciliationPct * assumptions.reconciliationPay;
+  const qaPayroll = fieldHours * assumptions.qaPct * assumptions.qaPay;
+  const pmPayroll = fieldHours * assumptions.pmPct * assumptions.pmPay;
+  const leadershipTravel = assumptions.travelingLeaders * projectWeeks * weeklyTravelPerLeader;
+  const overhead = totalInvestment * assumptions.overheadAllocation;
+  const totalDeliveryCost = fieldPayroll + reconciliationPayroll + qaPayroll + pmPayroll + leadershipTravel + overhead;
+  const estimatedProfit = totalInvestment - totalDeliveryCost;
+  const profitMargin = totalInvestment > 0 ? (estimatedProfit / totalInvestment) * 100 : 0;
+
+  // Project Staffing Assumptions (from spreadsheet image)
+  const requiredFieldStaff = Math.ceil(clientInputs.estimatedAssetCount / assumptions.fieldProductivity / WORKDAYS_PER_WEEK / projectWeeks);
+  const fieldAssetManagers = Math.ceil(requiredFieldStaff / SPECIALISTS_PER_FAM);
+  const assetIntelligenceSpecialists = requiredFieldStaff; // same as field staff
+  const dataReconciliationSpecialists = Math.ceil(requiredFieldStaff * assumptions.reconciliationPct);
+  const assetRecoverySpecialists = Math.ceil(requiredFieldStaff * 0.15); // ~15% of field staff
+  const qaSpecialists = Math.ceil(requiredFieldStaff * assumptions.qaPct / 0.08 * 0.2); // scaled from QA %
+  const projectManagers = Math.max(2, Math.ceil(requiredFieldStaff / 10));
+  const totalStaff = requiredFieldStaff + fieldAssetManagers + assetIntelligenceSpecialists + dataReconciliationSpecialists + assetRecoverySpecialists + qaSpecialists + projectManagers;
+
+  // ROI calculations
+  const firstYearROI = clientInputs.estimatedRecoverableCapital > 0
+    ? ((clientInputs.estimatedRecoverableCapital - totalInvestment) / totalInvestment) * 100
     : 0;
-  const netBenefit = inputs.estimatedRecoverableCapital - totalInvestment;
-  const returnMultiple = totalInvestment > 0 ? inputs.estimatedRecoverableCapital / totalInvestment : 0;
+  const netBenefit = clientInputs.estimatedRecoverableCapital - totalInvestment;
+  const returnMultiple = totalInvestment > 0 ? clientInputs.estimatedRecoverableCapital / totalInvestment : 0;
 
-  // 3-year: governance saves ~15% of recoverable capital annually years 2-3
-  const year2_3Savings = inputs.includePhase4 ? inputs.estimatedRecoverableCapital * 0.15 * 2 : 0;
+  // 3-Year: uses Annual Ongoing Savings from Assumptions row 58
+  const annualSavings = clientInputs.estimatedRecoverableCapital * assumptions.annualOngoingSavings;
+  const year2_3Savings = includePhase4 ? annualSavings * 2 : 0;
   const threeYearBenefit = netBenefit + year2_3Savings;
   const threeYearROI = totalInvestment > 0 ? (threeYearBenefit / totalInvestment) * 100 : 0;
-  const threeYearMultiple = totalInvestment > 0 ? (inputs.estimatedRecoverableCapital + year2_3Savings) / totalInvestment : 0;
+  const threeYearMultiple = totalInvestment > 0 ? (clientInputs.estimatedRecoverableCapital + year2_3Savings) / totalInvestment : 0;
 
   // ─── Print Handler ──────────────────────────────────────────────────────────
 
@@ -324,7 +356,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
     printWindow.document.write(`
       <html>
         <head>
-          <title>LAI ${section === "feasibility" ? "Internal Feasibility" : section === "proposal" ? "Proposal Summary" : "Full Report"} - ${inputs.clientName || "Client"}</title>
+          <title>LAI ${section === "feasibility" ? "Internal Feasibility" : section === "proposal" ? "Proposal Summary" : "Full Report"} - ${clientInputs.clientName || "Client"}</title>
           <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
           <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -351,8 +383,8 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
 
   if (!showOutput) {
     return (
-      <div style={{ padding: "1.5rem", maxWidth: 800, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "2rem" }}>
+      <div style={{ padding: "1.5rem", maxWidth: 900, margin: "0 auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
           <button onClick={onBack} style={{ background: "none", border: "none", fontSize: "1.5rem", cursor: "pointer", color: C.slate }}>←</button>
           <div>
             <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", color: C.slate }}>
@@ -362,82 +394,234 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           </div>
         </div>
 
-        {/* Client Information */}
-        <div style={{ ...sectionTitleStyle }}>Client Information</div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
-          <div>
-            <label style={labelStyle}>Client Name</label>
-            <input style={inputStyle} value={inputs.clientName} onChange={e => update("clientName", e.target.value)} placeholder="e.g., Johnson & Johnson" />
-          </div>
-          <div>
-            <label style={labelStyle}>Industry</label>
-            <select style={selectStyle} value={inputs.industry} onChange={e => update("industry", e.target.value)}>
-              {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={labelStyle}>Estimated Asset Count</label>
-            <input style={inputStyle} type="number" value={inputs.estimatedAssetCount} onChange={e => update("estimatedAssetCount", Number(e.target.value))} min={1} />
-          </div>
-          <div>
-            <label style={labelStyle}>Number of Locations</label>
-            <input style={inputStyle} type="number" value={inputs.numberOfLocations} onChange={e => update("numberOfLocations", Number(e.target.value))} min={1} />
-          </div>
-          <div>
-            <label style={labelStyle}>Geographic Scope</label>
-            <select style={selectStyle} value={inputs.geoScope} onChange={e => update("geoScope", Number(e.target.value))}>
-              {GEO_MULTIPLIERS.map((g, i) => <option key={g.label} value={i}>{g.label} ({g.multiplier}x)</option>)}
-            </select>
-          </div>
-          <div>
-            <label style={labelStyle}>Estimated Recoverable Capital</label>
-            <input style={inputStyle} type="number" value={inputs.estimatedRecoverableCapital} onChange={e => update("estimatedRecoverableCapital", Number(e.target.value))} min={0} />
-          </div>
+        {/* Tab Navigation */}
+        <div style={{ display: "flex", gap: "0", marginBottom: "1.5rem", borderBottom: `2px solid ${C.border}` }}>
+          <button
+            onClick={() => setActiveTab("client")}
+            style={{
+              padding: "0.6rem 1.5rem",
+              background: activeTab === "client" ? C.slate : "transparent",
+              color: activeTab === "client" ? "white" : C.muted,
+              border: "none",
+              borderRadius: "6px 6px 0 0",
+              fontWeight: 600,
+              fontSize: "0.9rem",
+              cursor: "pointer",
+              fontFamily: "'Source Sans 3', sans-serif",
+            }}
+          >
+            Client Inputs
+          </button>
+          <button
+            onClick={() => setActiveTab("assumptions")}
+            style={{
+              padding: "0.6rem 1.5rem",
+              background: activeTab === "assumptions" ? C.slate : "transparent",
+              color: activeTab === "assumptions" ? "white" : C.muted,
+              border: "none",
+              borderRadius: "6px 6px 0 0",
+              fontWeight: 600,
+              fontSize: "0.9rem",
+              cursor: "pointer",
+              fontFamily: "'Source Sans 3', sans-serif",
+            }}
+          >
+            Assumptions
+          </button>
         </div>
 
-        {/* Engagement Options */}
-        <div style={{ ...sectionTitleStyle }}>Engagement Options</div>
-        <div style={{ display: "grid", gap: "0.75rem", marginBottom: "2rem" }}>
-          <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer" }}>
-            <input type="checkbox" checked={inputs.includeRecoverableFee} onChange={e => update("includeRecoverableFee", e.target.checked)} />
-            <span style={{ fontSize: "0.9rem", color: C.text }}>Include Recoverable Capital Fee</span>
-          </label>
-          <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer" }}>
-            <input type="checkbox" checked={inputs.includePhase4} onChange={e => update("includePhase4", e.target.checked)} />
-            <span style={{ fontSize: "0.9rem", color: C.text }}>Include Phase 4 Governance (Annual)</span>
-          </label>
-          <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer" }}>
-            <input type="checkbox" checked={inputs.includeAssetPanda} onChange={e => update("includeAssetPanda", e.target.checked)} />
-            <span style={{ fontSize: "0.9rem", color: C.text }}>Include Asset Panda Coordination Fee</span>
-          </label>
-          {inputs.includeAssetPanda && (
-            <label style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer", marginLeft: "1.5rem" }}>
-              <input type="checkbox" checked={inputs.waiveAssetPanda} onChange={e => update("waiveAssetPanda", e.target.checked)} />
-              <span style={{ fontSize: "0.9rem", color: C.muted, fontStyle: "italic" }}>Waive fee (1-year governance agreement)</span>
-            </label>
-          )}
-        </div>
-
-        {/* Internal Planning */}
-        <div style={{ ...sectionTitleStyle }}>Internal Planning</div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
+        {/* ─── Client Tab (rows 4-14) ──────────────────────────────────────────── */}
+        {activeTab === "client" && (
           <div>
-            <label style={labelStyle}>Estimated Project Weeks</label>
-            <input style={inputStyle} type="number" value={inputs.projectWeeks} onChange={e => update("projectWeeks", Number(e.target.value))} min={1} />
+            <div style={{ ...sectionTitleStyle }}>Client Information (Rows 4–14)</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
+              {/* Row 4: Client Name */}
+              <div>
+                <label style={labelStyle}>Client Name</label>
+                <input style={inputStyle} value={clientInputs.clientName} onChange={e => updateClient("clientName", e.target.value)} placeholder="e.g., Johnson & Johnson" />
+              </div>
+              {/* Row 5: Industry */}
+              <div>
+                <label style={labelStyle}>Industry</label>
+                <select style={selectStyle} value={clientInputs.industry} onChange={e => updateClient("industry", e.target.value)}>
+                  {INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}
+                </select>
+              </div>
+              {/* Row 6: Estimated Asset Count */}
+              <div>
+                <label style={labelStyle}>Estimated Asset Count</label>
+                <input style={inputStyle} type="number" value={clientInputs.estimatedAssetCount} onChange={e => updateClient("estimatedAssetCount", Number(e.target.value))} min={1} />
+              </div>
+              {/* Row 7: Number of Locations */}
+              <div>
+                <label style={labelStyle}>Number of Locations</label>
+                <input style={inputStyle} type="number" value={clientInputs.numberOfLocations} onChange={e => updateClient("numberOfLocations", Number(e.target.value))} min={1} />
+              </div>
+              {/* Row 8: Geographic Scope */}
+              <div>
+                <label style={labelStyle}>Geographic Scope</label>
+                <select style={selectStyle} value={clientInputs.geoScope} onChange={e => updateClient("geoScope", Number(e.target.value))}>
+                  {GEO_MULTIPLIERS.map((g, i) => <option key={g.label} value={i}>{g.label} ({g.multiplier}x)</option>)}
+                </select>
+              </div>
+              {/* Row 9: Estimated Recoverable Capital */}
+              <div>
+                <label style={labelStyle}>Estimated Recoverable Capital</label>
+                <input style={inputStyle} type="number" value={clientInputs.estimatedRecoverableCapital} onChange={e => updateClient("estimatedRecoverableCapital", Number(e.target.value))} min={0} />
+              </div>
+              {/* Row 10: Include Recoverable Capital Fee? */}
+              <div>
+                <label style={labelStyle}>Include Recoverable Capital Fee?</label>
+                <select style={selectStyle} value={clientInputs.includeRecoverableFee} onChange={e => updateClient("includeRecoverableFee", e.target.value)}>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+              {/* Row 11: Include Phase 4 Governance? */}
+              <div>
+                <label style={labelStyle}>Include Phase 4 Governance?</label>
+                <select style={selectStyle} value={clientInputs.includePhase4} onChange={e => updateClient("includePhase4", e.target.value)}>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+              {/* Row 12: Include Asset Panda Coordination Fee? */}
+              <div>
+                <label style={labelStyle}>Include Asset Panda Coordination Fee?</label>
+                <select style={selectStyle} value={clientInputs.includeAssetPanda} onChange={e => updateClient("includeAssetPanda", e.target.value)}>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+              {/* Row 13: Waive Asset Panda Fee? */}
+              <div>
+                <label style={labelStyle}>Waive Asset Panda Fee? (1-yr governance)</label>
+                <select style={selectStyle} value={clientInputs.waiveAssetPanda} onChange={e => updateClient("waiveAssetPanda", e.target.value)}>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+              {/* Row 14: Timeframe */}
+              <div>
+                <label style={labelStyle}>Timeframe (months)</label>
+                <input style={inputStyle} type="number" value={clientInputs.timeframeMonths} onChange={e => updateClient("timeframeMonths", Number(e.target.value))} min={1} />
+              </div>
+              {/* Notes (extra) */}
+              <div>
+                <label style={labelStyle}>Notes</label>
+                <input style={inputStyle} value={clientInputs.notes} onChange={e => updateClient("notes", e.target.value)} placeholder="Optional notes" />
+              </div>
+            </div>
           </div>
-          <div>
-            <label style={labelStyle}>Notes</label>
-            <input style={inputStyle} value={inputs.notes} onChange={e => update("notes", e.target.value)} placeholder="Optional notes" />
-          </div>
-        </div>
+        )}
 
-        {/* Live Preview */}
+        {/* ─── Assumptions Tab (rows 40-54 & 58) ───────────────────────────────── */}
+        {activeTab === "assumptions" && (
+          <div>
+            <div style={{ ...sectionTitleStyle }}>Cost & Staffing Assumptions (Rows 40–54, 58)</div>
+            <p style={{ fontSize: "0.8rem", color: C.muted, marginBottom: "1.5rem" }}>
+              These values drive the Internal Feasibility calculations. Adjust per engagement scenario.
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
+              {/* Row 40 */}
+              <div>
+                <label style={labelStyle}>Field Productivity (assets/person/day)</label>
+                <input style={inputStyle} type="number" value={assumptions.fieldProductivity} onChange={e => updateAssumptions("fieldProductivity", Number(e.target.value))} min={1} />
+              </div>
+              {/* Row 41 */}
+              <div>
+                <label style={labelStyle}>Field Contractor Pay ($/hr)</label>
+                <input style={inputStyle} type="number" value={assumptions.fieldContractorPay} onChange={e => updateAssumptions("fieldContractorPay", Number(e.target.value))} min={0} />
+              </div>
+              {/* Row 42 */}
+              <div>
+                <label style={labelStyle}>Reconciliation Pay ($/hr)</label>
+                <input style={inputStyle} type="number" value={assumptions.reconciliationPay} onChange={e => updateAssumptions("reconciliationPay", Number(e.target.value))} min={0} />
+              </div>
+              {/* Row 43 */}
+              <div>
+                <label style={labelStyle}>QA Pay ($/hr)</label>
+                <input style={inputStyle} type="number" value={assumptions.qaPay} onChange={e => updateAssumptions("qaPay", Number(e.target.value))} min={0} />
+              </div>
+              {/* Row 44 */}
+              <div>
+                <label style={labelStyle}>Project Management Pay ($/hr)</label>
+                <input style={inputStyle} type="number" value={assumptions.pmPay} onChange={e => updateAssumptions("pmPay", Number(e.target.value))} min={0} />
+              </div>
+              {/* Row 45 */}
+              <div>
+                <label style={labelStyle}>Workday Hours (hrs/day)</label>
+                <input style={inputStyle} type="number" value={assumptions.workdayHours} onChange={e => updateAssumptions("workdayHours", Number(e.target.value))} min={1} />
+              </div>
+              {/* Row 46 */}
+              <div>
+                <label style={labelStyle}>Reconciliation % of Field Hours</label>
+                <input style={inputStyle} type="number" step="0.01" value={assumptions.reconciliationPct} onChange={e => updateAssumptions("reconciliationPct", Number(e.target.value))} min={0} max={1} />
+                <span style={{ fontSize: "0.7rem", color: C.muted }}>e.g., 0.30 = 30%</span>
+              </div>
+              {/* Row 47 */}
+              <div>
+                <label style={labelStyle}>QA % of Field Hours</label>
+                <input style={inputStyle} type="number" step="0.01" value={assumptions.qaPct} onChange={e => updateAssumptions("qaPct", Number(e.target.value))} min={0} max={1} />
+                <span style={{ fontSize: "0.7rem", color: C.muted }}>e.g., 0.08 = 8%</span>
+              </div>
+              {/* Row 48 */}
+              <div>
+                <label style={labelStyle}>PM % of Field Hours</label>
+                <input style={inputStyle} type="number" step="0.01" value={assumptions.pmPct} onChange={e => updateAssumptions("pmPct", Number(e.target.value))} min={0} max={1} />
+                <span style={{ fontSize: "0.7rem", color: C.muted }}>e.g., 0.06 = 6%</span>
+              </div>
+              {/* Row 49 */}
+              <div>
+                <label style={labelStyle}>Traveling LAI Leaders</label>
+                <input style={inputStyle} type="number" value={assumptions.travelingLeaders} onChange={e => updateAssumptions("travelingLeaders", Number(e.target.value))} min={0} />
+              </div>
+              {/* Row 50 */}
+              <div>
+                <label style={labelStyle}>Average Project Weeks</label>
+                <input style={inputStyle} type="number" value={assumptions.averageProjectWeeks} onChange={e => updateAssumptions("averageProjectWeeks", Number(e.target.value))} min={1} />
+              </div>
+              {/* Row 51 */}
+              <div>
+                <label style={labelStyle}>Weekly Lodging / Traveler ($/wk)</label>
+                <input style={inputStyle} type="number" value={assumptions.weeklyLodgingPerTraveler} onChange={e => updateAssumptions("weeklyLodgingPerTraveler", Number(e.target.value))} min={0} />
+                <span style={{ fontSize: "0.7rem", color: C.muted }}>$150/night × 7</span>
+              </div>
+              {/* Row 52 */}
+              <div>
+                <label style={labelStyle}>Weekly Per Diem / Traveler ($/wk)</label>
+                <input style={inputStyle} type="number" value={assumptions.weeklyPerDiemPerTraveler} onChange={e => updateAssumptions("weeklyPerDiemPerTraveler", Number(e.target.value))} min={0} />
+                <span style={{ fontSize: "0.7rem", color: C.muted }}>$70/day × 7</span>
+              </div>
+              {/* Row 53 */}
+              <div>
+                <label style={labelStyle}>Weekly Transport / Traveler ($/wk)</label>
+                <input style={inputStyle} type="number" value={assumptions.weeklyTransportPerTraveler} onChange={e => updateAssumptions("weeklyTransportPerTraveler", Number(e.target.value))} min={0} />
+                <span style={{ fontSize: "0.7rem", color: C.muted }}>Flights/rental/mileage</span>
+              </div>
+              {/* Row 54 */}
+              <div>
+                <label style={labelStyle}>Overhead Allocation (% of revenue)</label>
+                <input style={inputStyle} type="number" step="0.01" value={assumptions.overheadAllocation} onChange={e => updateAssumptions("overheadAllocation", Number(e.target.value))} min={0} max={1} />
+                <span style={{ fontSize: "0.7rem", color: C.muted }}>e.g., 0.15 = 15%</span>
+              </div>
+              {/* Row 58 */}
+              <div>
+                <label style={labelStyle}>Annual Ongoing Savings (% of Recoverable)</label>
+                <input style={inputStyle} type="number" step="0.01" value={assumptions.annualOngoingSavings} onChange={e => updateAssumptions("annualOngoingSavings", Number(e.target.value))} min={0} max={1} />
+                <span style={{ fontSize: "0.7rem", color: C.muted }}>e.g., 0.10 = 10% (for 3-year ROI)</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Live Preview (always visible) */}
         <div style={{ background: C.cardBg, borderRadius: 8, padding: "1.5rem", border: `1px solid ${C.border}`, marginBottom: "2rem" }}>
           <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: C.slate, marginBottom: "1rem" }}>Live Pricing Preview</h3>
           <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
             <tbody>
               <tr style={{ borderBottom: `1px solid ${C.border}` }}>
-                <td style={{ padding: "0.4rem 0", color: C.text }}>Progressive Asset Fee</td>
+                <td style={{ padding: "0.4rem 0", color: C.text }}>Progressive Asset Fee ({fmtNum(clientInputs.estimatedAssetCount)} assets)</td>
                 <td style={{ padding: "0.4rem 0", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{fmt(assetFee.total)}</td>
               </tr>
               {geoAdjustment > 0 && (
@@ -446,23 +630,23 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
                   <td style={{ padding: "0.4rem 0", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{fmt(geoAdjustment)}</td>
                 </tr>
               )}
-              {inputs.includeRecoverableFee && recoverableFee.total > 0 && (
+              {includeRecoverableFee && recoverableFee.total > 0 && (
                 <tr style={{ borderBottom: `1px solid ${C.border}` }}>
                   <td style={{ padding: "0.4rem 0", color: C.text }}>Recoverable Capital Fee ({fmtPct(recoverableFee.effectiveRate)} effective)</td>
                   <td style={{ padding: "0.4rem 0", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{fmt(recoverableFee.total)}</td>
                 </tr>
               )}
-              {inputs.includePhase4 && (
+              {includePhase4 && (
                 <tr style={{ borderBottom: `1px solid ${C.border}` }}>
                   <td style={{ padding: "0.4rem 0", color: C.text }}>Phase 4 Governance (Annual)</td>
                   <td style={{ padding: "0.4rem 0", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600 }}>{fmt(phase4Fee)}</td>
                 </tr>
               )}
-              {inputs.includeAssetPanda && (
+              {includeAssetPanda && (
                 <tr style={{ borderBottom: `1px solid ${C.border}` }}>
                   <td style={{ padding: "0.4rem 0", color: C.text }}>Asset Panda Coordination</td>
-                  <td style={{ padding: "0.4rem 0", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, textDecoration: inputs.waiveAssetPanda ? "line-through" : "none", color: inputs.waiveAssetPanda ? C.muted : C.text }}>
-                    {inputs.waiveAssetPanda ? `${fmt(ASSET_PANDA_FEE)} (Waived)` : fmt(ASSET_PANDA_FEE)}
+                  <td style={{ padding: "0.4rem 0", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontWeight: 600, textDecoration: waiveAssetPanda ? "line-through" : "none", color: waiveAssetPanda ? C.muted : C.text }}>
+                    {waiveAssetPanda ? `${fmt(ASSET_PANDA_FEE)} (Waived)` : fmt(ASSET_PANDA_FEE)}
                   </td>
                 </tr>
               )}
@@ -499,13 +683,13 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           ← Edit Inputs
         </button>
         <button onClick={() => handlePrint("feasibility")} style={{ padding: "0.6rem 1.2rem", background: C.slate, color: "white", border: "none", borderRadius: 6, fontWeight: 600, cursor: "pointer", fontSize: "0.85rem" }}>
-          🖨️ Print Internal Feasibility
+          Print Internal Feasibility
         </button>
         <button onClick={() => handlePrint("proposal")} style={{ padding: "0.6rem 1.2rem", background: C.gold, color: "white", border: "none", borderRadius: 6, fontWeight: 600, cursor: "pointer", fontSize: "0.85rem" }}>
-          🖨️ Print Proposal Summary
+          Print Proposal Summary
         </button>
         <button onClick={() => handlePrint("both")} style={{ padding: "0.6rem 1.2rem", background: C.teal, color: "white", border: "none", borderRadius: 6, fontWeight: 600, cursor: "pointer", fontSize: "0.85rem" }}>
-          🖨️ Print Both (Separate Pages)
+          Print Both (Separate Pages)
         </button>
         <button onClick={onBack} style={{ padding: "0.6rem 1.2rem", background: C.charcoal, color: "white", border: "none", borderRadius: 6, fontWeight: 600, cursor: "pointer", fontSize: "0.85rem", marginLeft: "auto" }}>
           ← Back to Portal
@@ -518,10 +702,10 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           <div>
             <img src={LOGO_BASE64} alt="LAI" style={{ height: 40, marginBottom: "0.5rem" }} />
             <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", color: C.slate }}>Internal Feasibility Analysis</h2>
-            <p style={{ color: "#EF4444", fontWeight: 700, fontSize: "0.85rem", marginTop: "0.25rem" }}>⚠️ CONFIDENTIAL — NOT FOR CLIENT DISTRIBUTION</p>
+            <p style={{ color: "#EF4444", fontWeight: 700, fontSize: "0.85rem", marginTop: "0.25rem" }}>CONFIDENTIAL — NOT FOR CLIENT DISTRIBUTION</p>
           </div>
           <div style={{ textAlign: "right", fontSize: "0.8rem", color: C.muted }}>
-            <p>Client: {inputs.clientName || "—"}</p>
+            <p>Client: {clientInputs.clientName || "—"}</p>
             <p>Date: {new Date().toLocaleDateString()}</p>
           </div>
         </div>
@@ -539,7 +723,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           </thead>
           <tbody>
             <tr>
-              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Progressive Asset Fee ({fmtNum(inputs.estimatedAssetCount)} assets)</td>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Progressive Asset Fee ({fmtNum(clientInputs.estimatedAssetCount)} assets)</td>
               <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(assetFee.total)}</td>
               <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontSize: "0.85rem" }}>Yes</td>
               <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(assetFee.total)}</td>
@@ -553,19 +737,19 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
             <tr>
               <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Recoverable Capital Fee</td>
               <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(recoverableFee.total)}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontSize: "0.85rem" }}>{inputs.includeRecoverableFee ? "Yes" : "No"}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{inputs.includeRecoverableFee ? fmt(recoverableFee.total) : "$0"}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontSize: "0.85rem" }}>{includeRecoverableFee ? "Yes" : "No"}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{includeRecoverableFee ? fmt(recoverableFee.total) : "$0"}</td>
             </tr>
             <tr style={{ background: C.cardBg }}>
               <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Phase 4 Governance</td>
               <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(phase4Fee)}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontSize: "0.85rem" }}>{inputs.includePhase4 ? "Yes" : "No"}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{inputs.includePhase4 ? fmt(phase4Fee) : "$0"}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontSize: "0.85rem" }}>{includePhase4 ? "Yes" : "No"}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{includePhase4 ? fmt(phase4Fee) : "$0"}</td>
             </tr>
             <tr>
               <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Asset Panda Coordination</td>
               <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(ASSET_PANDA_FEE)}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontSize: "0.85rem" }}>{inputs.includeAssetPanda ? (inputs.waiveAssetPanda ? "Waived" : "Yes") : "No"}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontSize: "0.85rem" }}>{includeAssetPanda ? (waiveAssetPanda ? "Waived" : "Yes") : "No"}</td>
               <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(assetPandaFee)}</td>
             </tr>
             <tr style={{ borderTop: `2px solid ${C.slate}`, fontWeight: 700 }}>
@@ -576,7 +760,7 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           </tbody>
         </table>
 
-        {/* Cost Analysis */}
+        {/* Delivery Cost Analysis */}
         <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: C.slate, marginBottom: "0.75rem" }}>Delivery Cost Estimate</h3>
         <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "1.5rem" }}>
           <thead>
@@ -588,49 +772,130 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
           </thead>
           <tbody>
             <tr>
-              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Field Hours ({fmtNum(inputs.estimatedAssetCount)} assets ÷ {COST_ASSUMPTIONS.fieldProductivity}/day × {COST_ASSUMPTIONS.workdayHours}h)</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmtNum(Math.round(feasibility.fieldHours))} hrs</td>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Field Hours ({fmtNum(clientInputs.estimatedAssetCount)} assets ÷ {assumptions.fieldProductivity}/day × {assumptions.workdayHours}h)</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmtNum(Math.round(fieldHours))} hrs</td>
               <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem" }}>—</td>
             </tr>
             <tr style={{ background: C.cardBg }}>
-              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Field Payroll</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(feasibility.fieldPayroll)}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((feasibility.fieldPayroll / totalInvestment) * 100)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Field Payroll (@ ${assumptions.fieldContractorPay}/hr)</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(fieldPayroll)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((fieldPayroll / totalInvestment) * 100)}</td>
             </tr>
             <tr>
-              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Reconciliation Payroll</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(feasibility.reconciliationPayroll)}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((feasibility.reconciliationPayroll / totalInvestment) * 100)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Reconciliation Payroll ({fmtPct(assumptions.reconciliationPct * 100)} of field hrs @ ${assumptions.reconciliationPay}/hr)</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(reconciliationPayroll)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((reconciliationPayroll / totalInvestment) * 100)}</td>
             </tr>
             <tr style={{ background: C.cardBg }}>
-              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>QA Payroll</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(feasibility.qaPayroll)}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((feasibility.qaPayroll / totalInvestment) * 100)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>QA Payroll ({fmtPct(assumptions.qaPct * 100)} of field hrs @ ${assumptions.qaPay}/hr)</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(qaPayroll)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((qaPayroll / totalInvestment) * 100)}</td>
             </tr>
             <tr>
-              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Project Management</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(feasibility.pmPayroll)}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((feasibility.pmPayroll / totalInvestment) * 100)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Project Management ({fmtPct(assumptions.pmPct * 100)} of field hrs @ ${assumptions.pmPay}/hr)</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(pmPayroll)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((pmPayroll / totalInvestment) * 100)}</td>
             </tr>
             <tr style={{ background: C.cardBg }}>
-              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Leadership Travel ({COST_ASSUMPTIONS.travelingLeaders} leaders × {inputs.projectWeeks} wks)</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(feasibility.leadershipTravel)}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((feasibility.leadershipTravel / totalInvestment) * 100)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Leadership Travel ({assumptions.travelingLeaders} leaders × {projectWeeks} wks × ${fmtNum(weeklyTravelPerLeader)}/wk)</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(leadershipTravel)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((leadershipTravel / totalInvestment) * 100)}</td>
             </tr>
             <tr>
-              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Allocated Overhead ({fmtPct(COST_ASSUMPTIONS.overheadPct * 100)})</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(feasibility.overhead)}</td>
-              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((feasibility.overhead / totalInvestment) * 100)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Allocated Overhead ({fmtPct(assumptions.overheadAllocation * 100)} of revenue)</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(overhead)}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((overhead / totalInvestment) * 100)}</td>
             </tr>
             <tr style={{ borderTop: `2px solid ${C.border}`, fontWeight: 600 }}>
               <td style={{ padding: "0.5rem 0.5rem", fontSize: "0.85rem" }}>Total Delivery Cost</td>
-              <td style={{ padding: "0.5rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem", color: "#EF4444" }}>{fmt(feasibility.totalCost)}</td>
-              <td style={{ padding: "0.5rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((feasibility.totalCost / totalInvestment) * 100)}</td>
+              <td style={{ padding: "0.5rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem", color: "#EF4444" }}>{fmt(totalDeliveryCost)}</td>
+              <td style={{ padding: "0.5rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: "#EF4444" }}>-{fmtPct((totalDeliveryCost / totalInvestment) * 100)}</td>
             </tr>
             <tr style={{ borderTop: `2px solid ${C.gold}`, fontWeight: 700 }}>
               <td style={{ padding: "0.6rem 0.5rem", fontSize: "0.9rem", color: C.teal }}>Estimated Profit</td>
-              <td style={{ padding: "0.6rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "1rem", color: C.teal }}>{fmt(feasibility.profit)}</td>
-              <td style={{ padding: "0.6rem 0.5rem", textAlign: "right", fontSize: "0.9rem", color: C.teal, fontWeight: 700 }}>{fmtPct(feasibility.margin)} margin</td>
+              <td style={{ padding: "0.6rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "1rem", color: C.teal }}>{fmt(estimatedProfit)}</td>
+              <td style={{ padding: "0.6rem 0.5rem", textAlign: "right", fontSize: "0.9rem", color: C.teal, fontWeight: 700 }}>{fmtPct(profitMargin)} margin</td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* ─── Project Staffing Assumptions (Feasibility ONLY) ─────────────────── */}
+        <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: C.slate, marginBottom: "0.75rem" }}>Project Staffing Assumptions</h3>
+        <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "1.5rem" }}>
+          <thead>
+            <tr style={{ background: C.charcoal }}>
+              <th style={{ padding: "0.5rem", textAlign: "left", fontSize: "0.8rem", color: "white", borderBottom: `1px solid ${C.border}` }}>Position</th>
+              <th style={{ padding: "0.5rem", textAlign: "center", fontSize: "0.8rem", color: "white", borderBottom: `1px solid ${C.border}` }}># Per Position</th>
+              <th style={{ padding: "0.5rem", textAlign: "right", fontSize: "0.8rem", color: "white", borderBottom: `1px solid ${C.border}` }}>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Required Field Production Staff</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem", fontWeight: 700, background: "#FFFDE7" }}>{requiredFieldStaff}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: C.muted }}>1099</td>
+            </tr>
+            <tr style={{ background: C.cardBg }}>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Field Asset Manager</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fieldAssetManagers}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: C.muted }}>1099</td>
+            </tr>
+            <tr>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Asset Intelligence Specialist</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{assetIntelligenceSpecialists}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: C.muted }}>1099</td>
+            </tr>
+            <tr style={{ background: C.cardBg }}>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Data Reconciliation Specialist</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{dataReconciliationSpecialists}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: C.muted }}>Executive/1099</td>
+            </tr>
+            <tr>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Asset Recovery Specialist</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{assetRecoverySpecialists}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: C.muted }}>Executive/1099</td>
+            </tr>
+            <tr style={{ background: C.cardBg }}>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Quality Assurance Specialist</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{qaSpecialists}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: C.muted }}>Executive/1099</td>
+            </tr>
+            <tr>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Project Manager</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{projectManagers}</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontSize: "0.85rem", color: C.muted }}></td>
+            </tr>
+            <tr style={{ borderTop: `2px solid ${C.slate}`, fontWeight: 700 }}>
+              <td style={{ padding: "0.6rem 0.5rem", fontSize: "0.9rem" }}>Total:</td>
+              <td style={{ padding: "0.6rem 0.5rem", textAlign: "center", fontFamily: "'JetBrains Mono', monospace", fontSize: "1rem", color: C.slate, background: "#FFFDE7" }}>{totalStaff}</td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+
+        {/* Travel Breakdown */}
+        <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: C.slate, marginBottom: "0.75rem" }}>Travel Cost Breakdown</h3>
+        <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "1rem" }}>
+          <tbody>
+            <tr style={{ background: C.cardBg }}>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Weekly Lodging per Traveler</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(assumptions.weeklyLodgingPerTraveler)}</td>
+            </tr>
+            <tr>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Weekly Per Diem per Traveler</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(assumptions.weeklyPerDiemPerTraveler)}</td>
+            </tr>
+            <tr style={{ background: C.cardBg }}>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Weekly Transportation per Traveler</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(assumptions.weeklyTransportPerTraveler)}</td>
+            </tr>
+            <tr style={{ borderTop: `1px solid ${C.border}`, fontWeight: 600 }}>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Total Weekly per Traveler</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(weeklyTravelPerLeader)}</td>
+            </tr>
+            <tr style={{ fontWeight: 700 }}>
+              <td style={{ padding: "0.4rem 0.5rem", fontSize: "0.85rem" }}>Total Travel ({assumptions.travelingLeaders} travelers × {projectWeeks} weeks)</td>
+              <td style={{ padding: "0.4rem 0.5rem", textAlign: "right", fontFamily: "'JetBrains Mono', monospace", fontSize: "0.85rem" }}>{fmt(leadershipTravel)}</td>
             </tr>
           </tbody>
         </table>
@@ -650,19 +915,19 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
 
         {/* Client Details */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem", marginBottom: "2rem", padding: "1rem", background: C.cardBg, borderRadius: 6 }}>
-          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Client</span><p style={{ fontWeight: 600, color: C.text }}>{inputs.clientName || "—"}</p></div>
-          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Industry</span><p style={{ fontWeight: 600, color: C.text }}>{inputs.industry}</p></div>
-          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Estimated Assets</span><p style={{ fontWeight: 600, color: C.text }}>{fmtNum(inputs.estimatedAssetCount)}</p></div>
-          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Locations</span><p style={{ fontWeight: 600, color: C.text }}>{inputs.numberOfLocations}</p></div>
+          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Client</span><p style={{ fontWeight: 600, color: C.text }}>{clientInputs.clientName || "—"}</p></div>
+          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Industry</span><p style={{ fontWeight: 600, color: C.text }}>{clientInputs.industry}</p></div>
+          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Estimated Assets</span><p style={{ fontWeight: 600, color: C.text }}>{fmtNum(clientInputs.estimatedAssetCount)}</p></div>
+          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Locations</span><p style={{ fontWeight: 600, color: C.text }}>{clientInputs.numberOfLocations}</p></div>
           <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Geographic Scope</span><p style={{ fontWeight: 600, color: C.text }}>{geoMultiplier.label}</p></div>
-          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Estimated Recoverable Capital</span><p style={{ fontWeight: 600, color: C.text }}>{fmt(inputs.estimatedRecoverableCapital)}</p></div>
+          <div><span style={{ fontSize: "0.8rem", color: C.muted }}>Estimated Recoverable Capital</span><p style={{ fontWeight: 600, color: C.text }}>{fmt(clientInputs.estimatedRecoverableCapital)}</p></div>
         </div>
 
         {/* Investment */}
         <div style={{ textAlign: "center", padding: "1.5rem", background: `linear-gradient(135deg, ${C.slate}, ${C.charcoal})`, borderRadius: 8, marginBottom: "2rem" }}>
           <p style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", marginBottom: "0.5rem" }}>Total Engagement Investment</p>
           <p style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "2rem", fontWeight: 700, color: C.gold }}>{fmtFull(totalInvestment)}</p>
-          {inputs.includePhase4 && <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.75rem", marginTop: "0.25rem" }}>Phase 4 Governance Included</p>}
+          {includePhase4 && <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.75rem", marginTop: "0.25rem" }}>Phase 4 Governance Included</p>}
         </div>
 
         {/* ROI Analysis */}
@@ -683,9 +948,12 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
         </div>
 
         {/* 3-Year Analysis */}
-        {inputs.includePhase4 && (
+        {includePhase4 && (
           <>
             <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: C.slate, marginBottom: "0.75rem" }}>3-Year Analysis (with Governance)</h3>
+            <p style={{ fontSize: "0.8rem", color: C.muted, marginBottom: "0.75rem" }}>
+              Assumes {fmtPct(assumptions.annualOngoingSavings * 100)} annual ongoing savings from recovered capital in years 2–3.
+            </p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
               <div style={{ textAlign: "center", padding: "0.75rem", background: C.cardBg, borderRadius: 6 }}>
                 <p style={{ fontSize: "0.75rem", color: C.muted }}>3-Year ROI</p>
@@ -713,8 +981,8 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
             <li>• FAR reconciliation</li>
             <li>• Recovery analysis and executive reporting</li>
             <li>• Standard travel and project delivery expenses</li>
-            {inputs.includeAssetPanda && <li>• Asset Panda introduction/coordination{inputs.waiveAssetPanda ? " (fee waived)" : ""}</li>}
-            {inputs.includePhase4 && <li>• Recurring governance program</li>}
+            {includeAssetPanda && <li>• Asset Panda introduction/coordination{waiveAssetPanda ? " (fee waived)" : ""}</li>}
+            {includePhase4 && <li>• Recurring governance program</li>}
           </ul>
         </div>
 
@@ -729,10 +997,10 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
         </div>
 
         {/* Notes */}
-        {inputs.notes && (
+        {clientInputs.notes && (
           <div style={{ padding: "1rem", background: C.cardBg, borderRadius: 6, marginBottom: "2rem" }}>
             <p style={{ fontSize: "0.8rem", color: C.muted, fontWeight: 600, marginBottom: "0.25rem" }}>Notes</p>
-            <p style={{ fontSize: "0.85rem", color: C.text }}>{inputs.notes}</p>
+            <p style={{ fontSize: "0.85rem", color: C.text }}>{clientInputs.notes}</p>
           </div>
         )}
 
