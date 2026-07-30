@@ -471,8 +471,21 @@
 - [x] Handle "Other" category properly (create or use existing "Other" category in DB)
 
 ## Project Password Protection (July 30, 2026)
-- [ ] Add password column to asset_projects table (hashed)
-- [ ] Only Kevin and Chris can set/change project passwords (admin check by email)
-- [ ] Prompt non-admin users to enter password when selecting a project
-- [ ] Backend: verify password before granting project access
-- [ ] Frontend: password prompt modal on project selection for non-admins
+- [x] Add password column to asset_projects table (hashed)
+- [x] Only Kevin and Chris can set/change project passwords (admin check by email)
+- [x] Prompt non-admin users to enter password when selecting a project
+- [x] Backend: verify password before granting project access
+- [x] Frontend: password prompt modal on project selection for non-admins
+
+## Calculator Rebuild (July 30, 2026)
+- [x] Replace old Proposal Calculator with LAI Total Engagement Billing Calculator (from spreadsheet)
+- [x] Progressive asset pricing tiers (6 tiers)
+- [x] Geographic multiplier (Local, Regional, Multi-State, National)
+- [x] Recoverable capital fee (progressive brackets)
+- [x] Phase 4 governance fee (by asset count)
+- [x] Asset Panda coordination fee (include/waive)
+- [x] Internal Feasibility page (not client-facing, separate print page)
+- [x] Proposal Summary page (client-facing, separate print page)
+- [x] Print: Internal Feasibility and Proposal Summary on separate pages
+- [x] Build Item Depreciation Calculator (8 methods: Straight-Line, DDB, 150% DB, SYD, Units of Production, MACRS, Section 179, Bonus Depreciation)
+- [x] Build Item Salvage Value Calculator with estimated Useful Life (Years) — 6 methods: Percentage of Cost, Straight-Line Residual, Market/Appraisal, IRS Table-Based, Condition-Adjusted, Industry Benchmark
