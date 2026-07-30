@@ -76,10 +76,12 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
               .label {
                 width: 2.625in;
                 height: 1in;
-                padding: 0.05in 0.1in;
+                padding: 0.04in 0.1in;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                gap: 0.08in;
+                justify-content: center;
+                gap: 1px;
                 overflow: hidden;
                 border: none;
               }
@@ -93,20 +95,20 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
                 page-break-after: always;
                 width: 100%;
                 height: 100%;
-                padding: 4px 6px;
+                padding: 4px 8px;
                 display: flex;
+                flex-direction: column;
                 align-items: center;
-                gap: 6px;
+                justify-content: center;
+                gap: 1px;
                 overflow: hidden;
               }
               .label:last-child { page-break-after: avoid; }
               `}
-              .barcode-area { flex-shrink: 0; display: flex; align-items: center; }
-              .barcode-area img, .barcode-area svg { max-height: 100%; width: auto; }
-              .info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
-              .info .tag { font-weight: bold; font-size: 9px; letter-spacing: 0.5px; }
-              .info .name { font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-              .info .detail { font-size: 7px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+              .barcode-area { display: flex; align-items: center; justify-content: center; width: 100%; }
+              .barcode-area img, .barcode-area svg { max-height: 100%; max-width: 100%; width: auto; }
+              .tag { font-weight: bold; font-size: 10px; letter-spacing: 0.5px; text-align: center; }
+              .detail { font-size: 7px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; text-align: center; }
             }
             /* Screen preview styles */
             .sheet-grid {
@@ -119,18 +121,18 @@ export default function LabelPrinter({ assets, onClose }: LabelPrinterProps) {
               width: ${isSheet ? "2.625in" : currentSize.width + "px"};
               height: ${isSheet ? "1in" : currentSize.height + "px"};
               border: 1px dashed #ccc;
-              padding: 4px 6px;
+              padding: 4px 8px;
               display: flex;
+              flex-direction: column;
               align-items: center;
-              gap: 6px;
+              justify-content: center;
+              gap: 1px;
               overflow: hidden;
             }
-            .barcode-area { flex-shrink: 0; display: flex; align-items: center; }
-            .barcode-area img, .barcode-area svg { max-height: ${isSheet ? "0.85in" : (currentSize.height - 16) + "px"}; width: auto; }
-            .info { flex: 1; min-width: 0; }
-            .info .tag { font-weight: bold; font-size: 9px; letter-spacing: 0.5px; }
-            .info .name { font-size: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-            .info .detail { font-size: 7px; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .barcode-area { display: flex; align-items: center; justify-content: center; width: 100%; }
+            .barcode-area img, .barcode-area svg { max-height: ${isSheet ? "0.65in" : (currentSize.height - 40) + "px"}; max-width: 100%; width: auto; }
+            .tag { font-weight: bold; font-size: 10px; letter-spacing: 0.5px; text-align: center; }
+            .detail { font-size: 7px; color: #555; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
           </style>
         </head>
         <body>
@@ -340,44 +342,52 @@ function LabelPreview({ asset, size, showName, showSerial, showLocation, isSheet
 
   const isNoBarcode = barcodeType === "no_barcode" || barcodeType === "barcode_damaged" || barcodeType === "other_unknown";
 
+  // Build location/room line
+  const locationLine = [asset.location, asset.department].filter(Boolean).join(" | ");
+
   return (
     <div className="label" style={{
       width: isSheet ? "100%" : size.width,
       height: isSheet ? "1in" : size.height,
       border: "1px dashed #ccc",
-      padding: "3px 6px",
+      padding: "4px 8px",
       display: "flex",
+      flexDirection: "column",
       alignItems: "center",
-      gap: 6,
+      justifyContent: "center",
+      gap: 1,
       marginBottom: isSheet ? 0 : 4,
       overflow: "hidden",
     }}>
-      {/* Barcode Area — takes left side, never overlaps text */}
+      {/* Asset Tag — centered above barcode */}
+      <div className="tag" style={{ fontWeight: "bold", fontSize: 11, letterSpacing: "0.5px", lineHeight: 1.3, textAlign: "center" }}>
+        {asset.assetTag}
+      </div>
+
+      {/* Barcode Area — centered */}
       {!isNoBarcode && (
-        <div className="barcode-area" style={{ flexShrink: 0, display: "flex", alignItems: "center", maxWidth: "45%" }}>
+        <div className="barcode-area" style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%" }}>
           {(barcodeType === "qr" || barcodeType === "datamatrix") ? (
-            qrDataUrl ? <img src={qrDataUrl} alt="QR" style={{ height: barcodeHeight, width: barcodeHeight }} /> : null
+            qrDataUrl ? <img src={qrDataUrl} alt="QR" style={{ height: barcodeHeight - 10, width: barcodeHeight - 10 }} /> : null
           ) : (
-            <svg ref={barcodeRef} style={{ maxHeight: barcodeHeight }} />
+            <svg ref={barcodeRef} style={{ maxHeight: barcodeHeight - 16, maxWidth: "100%" }} />
           )}
         </div>
       )}
 
-      {/* Info Area — right side, never overlaps barcode */}
-      <div className="info" style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: 1 }}>
-        <div className="tag" style={{ fontWeight: "bold", fontSize: 9, letterSpacing: "0.5px", lineHeight: 1.2 }}>{asset.assetTag}</div>
-        {showName && <div className="name" style={{ fontSize: 8, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: 1.2 }}>{asset.name}</div>}
-        {showSerial && asset.serialNumber && (
-          <div className="detail" style={{ fontSize: 7, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: 1.2 }}>
-            SN: {asset.serialNumber}
-          </div>
-        )}
-        {showLocation && (asset.location || asset.department) && (
-          <div className="detail" style={{ fontSize: 7, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: 1.2 }}>
-            {[asset.department, asset.location].filter(Boolean).join(" | ")}
-          </div>
-        )}
-      </div>
+      {/* Location & Room/Bundle — directly under barcode */}
+      {showLocation && locationLine && (
+        <div className="detail" style={{ fontSize: 7, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%", lineHeight: 1.2, textAlign: "center" }}>
+          {locationLine}
+        </div>
+      )}
+
+      {/* Serial Number — below location */}
+      {showSerial && asset.serialNumber && (
+        <div className="detail" style={{ fontSize: 7, color: "#333", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%", lineHeight: 1.2, textAlign: "center" }}>
+          SN: {asset.serialNumber}
+        </div>
+      )}
     </div>
   );
 }
