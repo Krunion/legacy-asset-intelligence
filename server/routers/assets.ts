@@ -4,6 +4,7 @@ import { getDb } from "../db";
 import { assets, assetPhotos, assetDocuments, assetCategories, assetProjects, projectNotes, projectDocuments } from "../../drizzle/schema";
 import { eq, like, or, and, desc, asc, sql, count } from "drizzle-orm";
 import { storagePut, storageGetSignedUrl } from "../storage";
+import { logAudit } from "../audit";
 import bcrypt from "bcryptjs";
 
 // Admin emails that can set/change project passwords
@@ -970,7 +971,18 @@ export const assetsRouter = router({
         uploadedByName: ctx.user?.name || "Unknown",
       });
 
-      return { id: result[0].insertId, url };
+      const newId = result[0].insertId;
+      logAudit({
+        entityType: "document",
+        entityId: newId,
+        projectId: input.projectId,
+        action: "create",
+        changedBy: ctx.user?.id,
+        changedByName: ctx.user?.name,
+        newValues: { fileName: input.fileName, documentType: input.documentType, isClientVisible: input.isClientVisible },
+        description: `Uploaded document: ${input.fileName} (${input.documentType})`,
+      });
+      return { id: newId, url };
     }),
 
   deleteProjectDocument: protectedProcedure
@@ -986,10 +998,46 @@ export const assetsRouter = router({
       }
 
       await db.delete(projectDocuments).where(eq(projectDocuments.id, input.id));
+      logAudit({
+        entityType: "document",
+        entityId: input.id,
+        action: "delete",
+        changedBy: ctx.user?.id,
+        changedByName: ctx.user?.name,
+        description: `Deleted project document #${input.id}`,
+      });
       return { success: true };
     }),
 
   // Get a direct download URL for a project document (bypasses proxy completely)
+  // ─── Get signed URL for a photo (bypasses proxy for reliable display) ──────
+  getPhotoSignedUrl: protectedProcedure
+    .input(z.object({ photoId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const photos = await db
+        .select()
+        .from(assetPhotos)
+        .where(eq(assetPhotos.id, input.photoId))
+        .limit(1);
+
+      if (!photos.length) {
+        throw new Error("Photo not found");
+      }
+
+      const photo = photos[0];
+      const storageKey = photo.storageUrl.replace(/^\/manus-storage\//, "");
+      const signedUrl = await storageGetSignedUrl(storageKey);
+
+      return {
+        url: signedUrl,
+        fileName: photo.fileName,
+        mimeType: photo.mimeType,
+      };
+    }),
+
   getDocumentDownloadUrl: protectedProcedure
     .input(z.object({ documentId: z.number() }))
     .query(async ({ input }) => {

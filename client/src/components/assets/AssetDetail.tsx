@@ -185,8 +185,31 @@ export default function AssetDetail({ assetId, onBack, onEdit }: Props) {
             {asset.photos?.length ? (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))", gap: "0.75rem" }}>
                 {asset.photos.map((photo) => (
-                  <div key={photo.id} style={{ borderRadius: 8, overflow: "hidden", border: `1px solid ${C.border}`, aspectRatio: "1" }}>
-                    <img src={photo.storageUrl} alt={photo.caption || "Asset photo"} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <div key={photo.id} style={{ borderRadius: 8, overflow: "hidden", border: `1px solid ${C.border}`, aspectRatio: "1", position: "relative" }}>
+                    <img
+                      src={photo.storageUrl}
+                      alt={photo.caption || "Asset photo"}
+                      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                      onError={(e) => {
+                        // If proxy fails, try to load via signed URL
+                        const img = e.currentTarget;
+                        if (!img.dataset.retried) {
+                          img.dataset.retried = "1";
+                          // Fetch signed URL from server
+                          fetch(`/api/trpc/assets.getPhotoSignedUrl?batch=1&input=${encodeURIComponent(JSON.stringify({"0":{"photoId":photo.id}}))}`)
+                            .then(r => r.json())
+                            .then(data => {
+                              if (data?.[0]?.result?.data?.url) {
+                                img.src = data[0].result.data.url;
+                              }
+                            })
+                            .catch(() => {});
+                        }
+                      }}
+                    />
+                    {photo.isPrimary === 1 && (
+                      <span style={{ position: "absolute", top: 4, left: 4, background: C.gold, color: C.navy, fontSize: "0.6rem", fontWeight: 700, padding: "2px 5px", borderRadius: 3 }}>PRIMARY</span>
+                    )}
                   </div>
                 ))}
               </div>

@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { clientPortalAccounts, assetProjects, assets, assetCategories, projectPhases, projectKpis, financialRecovery, riskExceptions, clientActionItems, projectReports, projectMeetings, projectBilling, projectDocuments } from "../../drizzle/schema";
+import { logAudit } from "../audit";
+import { clientPortalAccounts, assetProjects, assets, assetCategories, projectPhases, projectKpis, financialRecovery, riskExceptions, clientActionItems, projectReports, projectMeetings, projectBilling, projectDocuments, auditHistory } from "../../drizzle/schema";
 import { eq, and, desc, sql, count } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -876,7 +877,18 @@ export const clientPortalRouter = router({
         nextPaymentDate: input.nextPaymentDate ? new Date(input.nextPaymentDate) : null,
         createdBy: ctx.user?.id || null,
       });
-      return { id: result[0].insertId };
+      const newId = result[0].insertId;
+      logAudit({
+        entityType: "billing",
+        entityId: newId,
+        projectId: input.projectId,
+        action: "create",
+        changedBy: ctx.user?.id,
+        changedByName: ctx.user?.name,
+        newValues: input as Record<string, unknown>,
+        description: `Created ${input.itemType}: ${input.description} ($${input.amount})`,
+      });
+      return { id: newId };
     }),
 
   // ─── Delete procedures (admin) ────────────────────────────────────────────────
@@ -887,6 +899,7 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(financialRecovery).where(eq(financialRecovery.id, input.id));
+      logAudit({ entityType: "recovery", entityId: input.id, action: "delete", changedBy: ctx.user?.id, changedByName: ctx.user?.name, description: `Deleted recovery item #${input.id}` });
       return { success: true };
     }),
 
@@ -897,6 +910,7 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(riskExceptions).where(eq(riskExceptions.id, input.id));
+      logAudit({ entityType: "risk", entityId: input.id, action: "delete", changedBy: ctx.user?.id, changedByName: ctx.user?.name, description: `Deleted risk #${input.id}` });
       return { success: true };
     }),
 
@@ -907,6 +921,7 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(clientActionItems).where(eq(clientActionItems.id, input.id));
+      logAudit({ entityType: "action_item", entityId: input.id, action: "delete", changedBy: ctx.user?.id, changedByName: ctx.user?.name, description: `Deleted action item #${input.id}` });
       return { success: true };
     }),
 
@@ -963,6 +978,7 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(projectMeetings).where(eq(projectMeetings.id, input.id));
+      logAudit({ entityType: "meeting", entityId: input.id, action: "delete", changedBy: ctx.user?.id, changedByName: ctx.user?.name, description: `Deleted meeting #${input.id}` });
       return { success: true };
     }),
 
@@ -998,6 +1014,7 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       await db.delete(projectBilling).where(eq(projectBilling.id, input.id));
+      logAudit({ entityType: "billing", entityId: input.id, action: "delete", changedBy: ctx.user?.id, changedByName: ctx.user?.name, description: `Deleted billing item #${input.id}` });
       return { success: true };
     }),
 
@@ -1098,5 +1115,25 @@ export const clientPortalRouter = router({
       const db = await getDb();
       if (!db) throw new Error("Database not available");
       return db.select().from(projectPhases).where(eq(projectPhases.projectId, input.projectId)).orderBy(projectPhases.phaseNumber);
+    }),
+
+  // ─── Audit History ────────────────────────────────────────────────────────────
+  getAuditHistory: protectedProcedure
+    .input(z.object({
+      projectId: z.number().optional(),
+      entityType: z.string().optional(),
+      limit: z.number().default(50),
+    }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const conditions = [];
+      if (input.projectId) conditions.push(eq(auditHistory.projectId, input.projectId));
+      if (input.entityType) conditions.push(eq(auditHistory.entityType, input.entityType as any));
+      const query = conditions.length > 0
+        ? db.select().from(auditHistory).where(and(...conditions)).orderBy(desc(auditHistory.createdAt)).limit(input.limit)
+        : db.select().from(auditHistory).orderBy(desc(auditHistory.createdAt)).limit(input.limit);
+      return query;
     }),
 });

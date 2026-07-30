@@ -4,7 +4,7 @@ import { COLORS } from "@shared/colors";
 
 const C = COLORS;
 
-type Tab = "access" | "progress" | "recovery" | "risks" | "tasks" | "reports" | "meetings" | "billing";
+type Tab = "access" | "progress" | "recovery" | "risks" | "tasks" | "reports" | "meetings" | "billing" | "audit";
 
 const TABS: { key: Tab; label: string; icon: string }[] = [
   { key: "access", label: "Portal Access", icon: "🔑" },
@@ -15,6 +15,7 @@ const TABS: { key: Tab; label: string; icon: string }[] = [
   { key: "reports", label: "Reports", icon: "📄" },
   { key: "meetings", label: "Meetings", icon: "📅" },
   { key: "billing", label: "Billing", icon: "💳" },
+  { key: "audit", label: "Audit History", icon: "📋" },
 ];
 
 export default function ClientDashboardManagement({ projectId, projectName }: { projectId: number; projectName: string }) {
@@ -64,6 +65,7 @@ export default function ClientDashboardManagement({ projectId, projectName }: { 
       {activeTab === "reports" && <ReportsPanel projectId={projectId} />}
       {activeTab === "meetings" && <MeetingsPanel projectId={projectId} />}
       {activeTab === "billing" && <BillingPanel projectId={projectId} />}
+      {activeTab === "audit" && <AuditPanel projectId={projectId} />}
     </div>
   );
 }
@@ -1053,6 +1055,104 @@ function BillingPanel({ projectId }: { projectId: number }) {
                   <button onClick={() => { if (confirm("Delete this billing item?")) deleteMutation.mutate({ id: item.id }); }} style={{ padding: "0.3rem 0.5rem", background: "transparent", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 4, color: "#EF4444", cursor: "pointer", fontSize: "0.75rem" }}>✕</button>
                 </div>
               </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+// ─── Audit History Panel ──────────────────────────────────────────────────────
+function AuditPanel({ projectId }: { projectId: number }) {
+  const [entityFilter, setEntityFilter] = useState<string>("");
+  const { data: auditItems, isLoading } = trpc.clientPortal.getAuditHistory.useQuery({
+    projectId,
+    entityType: entityFilter || undefined,
+    limit: 100,
+  });
+
+  const entityTypes = ["billing", "document", "risk", "recovery", "meeting", "report", "action_item", "asset", "photo", "project", "client_access", "user"];
+
+  const getActionColor = (action: string) => {
+    switch (action) {
+      case "create": return "#10B981";
+      case "update": return C.gold;
+      case "delete": return "#EF4444";
+      case "visibility_change": return "#8B5CF6";
+      case "status_change": return "#3B82F6";
+      case "access_grant": return "#10B981";
+      case "access_revoke": return "#EF4444";
+      default: return C.silver;
+    }
+  };
+
+  const getActionIcon = (action: string) => {
+    switch (action) {
+      case "create": return "+";
+      case "update": return "✎";
+      case "delete": return "✕";
+      case "visibility_change": return "👁";
+      case "status_change": return "↻";
+      case "access_grant": return "🔓";
+      case "access_revoke": return "🔒";
+      default: return "•";
+    }
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
+        <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.1rem", color: C.text, margin: 0 }}>
+          Audit History
+        </h3>
+        <select
+          value={entityFilter}
+          onChange={(e) => setEntityFilter(e.target.value)}
+          style={{ background: C.navy, border: `1px solid ${C.border}`, borderRadius: 6, padding: "0.4rem 0.6rem", color: C.silver, fontSize: "0.8rem" }}
+        >
+          <option value="">All Types</option>
+          {entityTypes.map((t) => (
+            <option key={t} value={t}>{t.replace("_", " ").replace(/\b\w/g, c => c.toUpperCase())}</option>
+          ))}
+        </select>
+      </div>
+
+      {isLoading ? (
+        <p style={{ color: C.textMuted, fontSize: "0.85rem" }}>Loading audit history...</p>
+      ) : !auditItems?.length ? (
+        <p style={{ color: C.textMuted, fontSize: "0.85rem", textAlign: "center", padding: "2rem 0" }}>
+          No audit entries yet. Changes to billing, documents, risks, and other items will be logged here.
+        </p>
+      ) : (
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          {auditItems.map((item) => (
+            <div key={item.id} style={{ background: `${C.navy}80`, border: `1px solid ${C.border}`, borderRadius: 8, padding: "0.75rem 1rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
+                <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 22, height: 22, borderRadius: "50%", background: `${getActionColor(item.action)}20`, color: getActionColor(item.action), fontSize: "0.7rem", fontWeight: 700 }}>
+                  {getActionIcon(item.action)}
+                </span>
+                <span style={{ fontSize: "0.8rem", fontWeight: 600, color: getActionColor(item.action), textTransform: "uppercase" }}>
+                  {item.action.replace("_", " ")}
+                </span>
+                <span style={{ fontSize: "0.75rem", color: C.textMuted, background: `${C.border}40`, padding: "1px 6px", borderRadius: 4 }}>
+                  {item.entityType.replace("_", " ")}
+                </span>
+                <span style={{ marginLeft: "auto", fontSize: "0.7rem", color: C.textMuted }}>
+                  {new Date(item.createdAt).toLocaleString()}
+                </span>
+              </div>
+              {item.description && (
+                <p style={{ margin: "0.25rem 0 0 1.8rem", fontSize: "0.82rem", color: C.silver }}>
+                  {item.description}
+                </p>
+              )}
+              {item.changedByName && (
+                <p style={{ margin: "0.15rem 0 0 1.8rem", fontSize: "0.72rem", color: C.textMuted }}>
+                  by {item.changedByName}
+                </p>
+              )}
             </div>
           ))}
         </div>
