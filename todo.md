@@ -504,3 +504,14 @@
 - [x] After successful scan with no duplicate: auto-create new asset with scanned tag number
 - [x] Extract all possible info from barcode data and pre-populate asset fields
 - [x] Show duplicate warning if scanned barcode already exists in system
+
+## Project Notes, Documents, Import Fix & Client Portal (July 30, 2026)
+- [x] Project Notes & Addendums: visible notes section within each project with timestamps
+- [x] Admin-Only Project Documents: secure document upload per project (only admin staff can see)
+- [x] Fix Import: accept Excel (.xlsx, .xls), PDF, and other formats beyond CSV
+- [x] Client Portal: new public tab on main website with username/password login
+- [x] Client Portal: linked to project executive dashboards
+- [x] Create Client Dashboard button in project management (auto-generates portal entry)
+- [x] Client Portal: shareable link with generic password that client can change
+- [x] Admin Override: Kevin and Chris can always view any client dashboard regardless of password
+- [x] Database schema: project_notes, project_documents, client_portal_accounts tables

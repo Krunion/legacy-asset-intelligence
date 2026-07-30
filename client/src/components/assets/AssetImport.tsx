@@ -2,6 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { COLORS } from "@shared/colors";
 import Papa from "papaparse";
+import * as XLSX from "xlsx";
 
 const C = COLORS;
 
@@ -29,10 +30,14 @@ const EXPECTED_COLUMNS = [
   "department", "quantity", "condition", "acquisitionDate", "acquisitionCost", "notes",
 ];
 
+const ACCEPTED_FORMATS = ".csv,.txt,.xlsx,.xls,.tsv,.ods";
+const FORMAT_LABELS = "CSV, Excel (.xlsx, .xls), TSV, ODS";
+
 export default function AssetImport({ projectId, onComplete }: Props) {
   const [parsedData, setParsedData] = useState<ParsedRow[]>([]);
   const [parseError, setParseError] = useState("");
   const [importing, setImporting] = useState(false);
+  const [fileInfo, setFileInfo] = useState<{ name: string; type: string } | null>(null);
   const [result, setResult] = useState<{ imported: number; errors: string[]; total: number } | null>(null);
 
   const utils = trpc.useUtils();
@@ -49,12 +54,80 @@ export default function AssetImport({ projectId, onComplete }: Props) {
     },
   });
 
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setParseError("");
-    setResult(null);
+  // Map row data to ParsedRow using flexible column name matching
+  const mapRow = (row: Record<string, string>): ParsedRow => {
+    const get = (keys: string[]) => {
+      for (const k of keys) {
+        // Try exact match
+        if (row[k] !== undefined && row[k] !== "") return row[k].toString().trim();
+        // Try case-insensitive
+        const lower = k.toLowerCase();
+        for (const rk of Object.keys(row)) {
+          if (rk.toLowerCase() === lower && row[rk] !== undefined && row[rk] !== "") {
+            return row[rk].toString().trim();
+          }
+        }
+        // Try with spaces instead of camelCase
+        const spaced = k.replace(/([A-Z])/g, " $1").trim().toLowerCase();
+        for (const rk of Object.keys(row)) {
+          if (rk.toLowerCase() === spaced && row[rk] !== undefined && row[rk] !== "") {
+            return row[rk].toString().trim();
+          }
+        }
+      }
+      return undefined;
+    };
 
+    return {
+      name: get(["name", "Name", "Asset Name", "asset_name", "Item", "item", "Asset", "Description"]) || "Unnamed Asset",
+      manufacturer: get(["manufacturer", "Manufacturer", "Make", "make", "Brand", "brand", "Vendor", "vendor"]),
+      model: get(["model", "Model", "model_number", "Model Number", "Model #"]),
+      serialNumber: get(["serialNumber", "Serial Number", "serial_number", "Serial", "serial", "SN", "S/N", "Tag", "Asset Tag"]),
+      location: get(["location", "Location", "Site", "site", "Building", "Facility"]),
+      department: get(["department", "Department", "Dept", "dept", "Division", "division"]),
+      quantity: parseInt(get(["quantity", "Quantity", "Qty", "qty", "Count", "count"]) || "1") || 1,
+      condition: get(["condition", "Condition", "Status", "Asset Status"]),
+      acquisitionDate: get(["acquisitionDate", "Acquisition Date", "Purchase Date", "purchase_date", "Date", "Date Acquired", "Install Date"]),
+      acquisitionCost: get(["acquisitionCost", "Acquisition Cost", "Cost", "cost", "Price", "price", "Purchase Price", "Value", "Original Cost"]),
+      notes: get(["notes", "Notes", "Comments", "comments", "Description", "description", "Remarks"]),
+    };
+  };
+
+  // Parse Excel files (.xlsx, .xls, .ods)
+  const parseExcelFile = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = new Uint8Array(e.target?.result as ArrayBuffer);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // Use the first sheet
+        const sheetName = workbook.SheetNames[0];
+        if (!sheetName) {
+          setParseError("Excel file has no sheets.");
+          return;
+        }
+
+        const sheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json<Record<string, string>>(sheet, { defval: "" });
+
+        if (jsonData.length === 0) {
+          setParseError("Excel file is empty or has no data rows.");
+          return;
+        }
+
+        const mapped = jsonData.map(mapRow);
+        setParsedData(mapped);
+      } catch (err: any) {
+        setParseError(`Excel parse error: ${err.message || "Unknown error"}`);
+      }
+    };
+    reader.onerror = () => setParseError("Failed to read file.");
+    reader.readAsArrayBuffer(file);
+  };
+
+  // Parse CSV/TSV files
+  const parseCsvFile = (file: File) => {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
@@ -66,38 +139,35 @@ export default function AssetImport({ projectId, onComplete }: Props) {
 
         const rows = results.data as Record<string, string>[];
         if (rows.length === 0) {
-          setParseError("CSV file is empty.");
+          setParseError("File is empty.");
           return;
         }
 
-        // Map columns (case-insensitive, flexible naming)
-        const mapped: ParsedRow[] = rows.map((row) => {
-          const get = (keys: string[]) => {
-            for (const k of keys) {
-              const val = row[k] || row[k.toLowerCase()] || row[k.replace(/([A-Z])/g, " $1").trim()];
-              if (val) return val.trim();
-            }
-            return undefined;
-          };
-
-          return {
-            name: get(["name", "Name", "Asset Name", "asset_name", "Item", "item"]) || "Unnamed Asset",
-            manufacturer: get(["manufacturer", "Manufacturer", "Make", "make", "Brand", "brand"]),
-            model: get(["model", "Model", "model_number", "Model Number"]),
-            serialNumber: get(["serialNumber", "Serial Number", "serial_number", "Serial", "serial", "SN"]),
-            location: get(["location", "Location", "Site", "site"]),
-            department: get(["department", "Department", "Dept", "dept"]),
-            quantity: parseInt(get(["quantity", "Quantity", "Qty", "qty", "Count", "count"]) || "1") || 1,
-            condition: get(["condition", "Condition", "Status"]),
-            acquisitionDate: get(["acquisitionDate", "Acquisition Date", "Purchase Date", "purchase_date", "Date"]),
-            acquisitionCost: get(["acquisitionCost", "Acquisition Cost", "Cost", "cost", "Price", "price", "Purchase Price"]),
-            notes: get(["notes", "Notes", "Comments", "comments", "Description", "description"]),
-          };
-        });
-
+        const mapped = rows.map(mapRow);
         setParsedData(mapped);
       },
+      error: (err) => {
+        setParseError(`Parse error: ${err.message}`);
+      },
     });
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setParseError("");
+    setResult(null);
+    setParsedData([]);
+
+    const ext = file.name.split(".").pop()?.toLowerCase() || "";
+    setFileInfo({ name: file.name, type: ext.toUpperCase() });
+
+    if (ext === "xlsx" || ext === "xls" || ext === "ods") {
+      parseExcelFile(file);
+    } else {
+      // CSV, TSV, TXT — all handled by PapaParse
+      parseCsvFile(file);
+    }
   };
 
   const handleImport = () => {
@@ -119,27 +189,43 @@ export default function AssetImport({ projectId, onComplete }: Props) {
     URL.revokeObjectURL(url);
   };
 
+  const handleDownloadExcelTemplate = () => {
+    const wb = XLSX.utils.book_new();
+    const wsData = [
+      EXPECTED_COLUMNS,
+      ["Dell OptiPlex 7090", "Dell", "OptiPlex 7090", "SN123456", "Main Office", "IT", "1", "good", "2024-01-15", "1200.00", "Desktop workstation"],
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+    XLSX.utils.book_append_sheet(wb, ws, "Assets");
+    XLSX.writeFile(wb, "lai-asset-import-template.xlsx");
+  };
+
   return (
     <div>
       <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", color: C.text, marginBottom: "0.5rem" }}>
         Bulk Import Assets
       </h2>
       <p style={{ color: C.textMuted, fontSize: "0.9rem", marginBottom: "1.5rem" }}>
-        Upload a CSV file to import multiple assets at once. Compatible with Asset Panda exports.
+        Upload a file to import multiple assets at once. Supports <strong style={{ color: C.silver }}>{FORMAT_LABELS}</strong>. Compatible with Asset Panda exports.
       </p>
 
       {/* Template Download */}
       <div style={{ background: C.navy, borderRadius: 10, border: `1px solid ${C.border}`, padding: "1.25rem", marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
           <div>
-            <h3 style={{ color: C.silver, fontSize: "0.9rem", fontWeight: 600, margin: "0 0 0.25rem" }}>CSV Template</h3>
+            <h3 style={{ color: C.silver, fontSize: "0.9rem", fontWeight: 600, margin: "0 0 0.25rem" }}>Import Templates</h3>
             <p style={{ color: C.textMuted, fontSize: "0.8rem", margin: 0 }}>
-              Download our template or use any CSV with columns: name, manufacturer, model, serialNumber, location, department, quantity, condition, acquisitionDate, acquisitionCost, notes
+              Download a template or use any file with columns: name, manufacturer, model, serialNumber, location, department, quantity, condition, acquisitionDate, acquisitionCost, notes
             </p>
           </div>
-          <button onClick={handleDownloadTemplate} style={{ padding: "0.5rem 1rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.silver, cursor: "pointer", fontSize: "0.85rem", whiteSpace: "nowrap" }}>
-            ↓ Download Template
-          </button>
+          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+            <button onClick={handleDownloadTemplate} style={{ padding: "0.5rem 1rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.silver, cursor: "pointer", fontSize: "0.85rem", whiteSpace: "nowrap" }}>
+              ↓ CSV Template
+            </button>
+            <button onClick={handleDownloadExcelTemplate} style={{ padding: "0.5rem 1rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.silver, cursor: "pointer", fontSize: "0.85rem", whiteSpace: "nowrap" }}>
+              ↓ Excel Template
+            </button>
+          </div>
         </div>
       </div>
 
@@ -148,9 +234,14 @@ export default function AssetImport({ projectId, onComplete }: Props) {
         <div style={{ background: C.slate, borderRadius: 10, border: `2px dashed ${C.border}`, padding: "2rem", textAlign: "center", marginBottom: "1.5rem" }}>
           <label style={{ cursor: "pointer" }}>
             <div style={{ fontSize: "2rem", marginBottom: "0.75rem" }}>📄</div>
-            <p style={{ color: C.text, fontWeight: 600, marginBottom: "0.25rem" }}>Click to select CSV file</p>
-            <p style={{ color: C.textMuted, fontSize: "0.8rem" }}>or drag and drop</p>
-            <input type="file" accept=".csv,.txt" onChange={handleFileSelect} style={{ display: "none" }} />
+            <p style={{ color: C.text, fontWeight: 600, marginBottom: "0.25rem" }}>Click to select file</p>
+            <p style={{ color: C.textMuted, fontSize: "0.8rem", marginBottom: "0.5rem" }}>Accepts: {FORMAT_LABELS}</p>
+            {fileInfo && (
+              <p style={{ color: C.gold, fontSize: "0.8rem", fontWeight: 600 }}>
+                Selected: {fileInfo.name} ({fileInfo.type})
+              </p>
+            )}
+            <input type="file" accept={ACCEPTED_FORMATS} onChange={handleFileSelect} style={{ display: "none" }} />
           </label>
         </div>
       )}

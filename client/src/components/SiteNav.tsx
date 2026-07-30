@@ -12,6 +12,7 @@ const navLinks = [
   { label: "FAQ", path: "/faq" },
   { label: "Careers", path: "/careers" },
   { label: "Employee Portal", path: "/employee-portal" },
+  { label: "Client Portal", path: "/client-portal" },
   { label: "Contact", path: "/contact" },
 ];
 

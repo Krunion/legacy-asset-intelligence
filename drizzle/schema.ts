@@ -202,3 +202,70 @@ export const assetDocuments = mysqlTable("assetDocuments", {
 
 export type AssetDocument = typeof assetDocuments.$inferSelect;
 export type InsertAssetDocument = typeof assetDocuments.$inferInsert;
+
+// ─── Project Notes & Addendums ──────────────────────────────────────────────
+
+export const projectNotes = mysqlTable("projectNotes", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  content: text("content").notNull(),
+  noteType: mysqlEnum("noteType", ["note", "addendum", "update", "issue", "resolution"]).default("note").notNull(),
+  isInternal: int("isInternal").default(0).notNull(), // 1 = internal only (not visible to client)
+  createdBy: int("createdBy").notNull(),
+  createdByName: varchar("createdByName", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectNote = typeof projectNotes.$inferSelect;
+export type InsertProjectNote = typeof projectNotes.$inferInsert;
+
+// ─── Admin-Only Project Documents ───────────────────────────────────────────
+
+export const projectDocuments = mysqlTable("projectDocuments", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  storageKey: varchar("storageKey", { length: 500 }).notNull(),
+  storageUrl: varchar("storageUrl", { length: 1000 }).notNull(),
+  fileName: varchar("fileName", { length: 255 }).notNull(),
+  mimeType: varchar("mimeType", { length: 100 }),
+  fileSize: int("fileSize"),
+  documentType: mysqlEnum("documentType", ["contract", "proposal", "report", "invoice", "correspondence", "legal", "insurance", "other"]).default("other"),
+  description: text("description"),
+  isAdminOnly: int("isAdminOnly").default(1).notNull(), // 1 = only admin can see
+  uploadedBy: int("uploadedBy").notNull(),
+  uploadedByName: varchar("uploadedByName", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type ProjectDocument = typeof projectDocuments.$inferSelect;
+export type InsertProjectDocument = typeof projectDocuments.$inferInsert;
+
+// ─── Client Portal Accounts ─────────────────────────────────────────────────
+
+export const clientPortalAccounts = mysqlTable("clientPortalAccounts", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  // Client credentials
+  username: varchar("username", { length: 255 }).notNull().unique(),
+  passwordHash: varchar("passwordHash", { length: 255 }).notNull(),
+  // Client info
+  clientName: varchar("clientName", { length: 255 }).notNull(),
+  clientEmail: varchar("clientEmail", { length: 320 }),
+  clientCompany: varchar("clientCompany", { length: 255 }),
+  // Dashboard configuration
+  dashboardTitle: varchar("dashboardTitle", { length: 500 }),
+  dashboardConfig: json("dashboardConfig"), // JSON config for what to show
+  // Access control
+  isActive: int("isActive").default(1).notNull(),
+  accessToken: varchar("accessToken", { length: 255 }), // unique link token
+  lastLogin: timestamp("lastLogin"),
+  // Metadata
+  createdBy: int("createdBy").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ClientPortalAccount = typeof clientPortalAccounts.$inferSelect;
+export type InsertClientPortalAccount = typeof clientPortalAccounts.$inferInsert;

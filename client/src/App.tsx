@@ -23,6 +23,7 @@ import Resources from "./pages/Resources";
 import InsightArticle from "./pages/InsightArticle";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import ClientPortal from "./pages/ClientPortal";
 
 function ScrollToTop() {
   const [location] = useLocation();
@@ -50,6 +51,7 @@ function Router() {
       <Route path={"/assets"} component={AssetProjects} />
       <Route path={"/assets/:projectId"} component={AssetManagement} />
       <Route path={"/contact"} component={Contact} />
+      <Route path={"/client-portal"} component={ClientPortal} />
       <Route path={"/privacy"} component={Privacy} />
       <Route path={"/terms"} component={Terms} />
       <Route path={"/404"} component={NotFound} />
@@ -62,7 +64,8 @@ function App() {
   const [location] = useLocation();
   const isAssetPage = location.startsWith("/assets");
   const isEmployeePortal = location === "/employee-portal";
-  const hideChrome = isAssetPage || isEmployeePortal;
+  const isClientPortal = location.startsWith("/client-portal");
+  const hideChrome = isAssetPage || isEmployeePortal || isClientPortal;
 
   return (
     <ErrorBoundary>

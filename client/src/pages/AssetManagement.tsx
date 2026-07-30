@@ -12,10 +12,13 @@ import AssetImport from "@/components/assets/AssetImport";
 import AssetDashboard from "@/components/assets/AssetDashboard";
 import LabelPrinter from "@/components/assets/LabelPrinter";
 import AssetExport from "@/components/assets/AssetExport";
+import ProjectNotesView from "@/components/assets/ProjectNotes";
+import ProjectDocumentsView from "@/components/assets/ProjectDocuments";
+import ClientDashboardManagement from "@/components/assets/ClientDashboardManagement";
 
 const C = COLORS;
 
-type View = "dashboard" | "list" | "detail" | "add" | "edit" | "scan" | "import" | "export" | "labels";
+type View = "dashboard" | "list" | "detail" | "add" | "edit" | "scan" | "import" | "export" | "labels" | "notes" | "documents" | "client-dashboard";
 
 function PrintLabelsView({ projectId, onPrint }: { projectId: number; onPrint: (assets: any[]) => void }) {
   const { data, isLoading } = trpc.assets.list.useQuery({ projectId, page: 1, pageSize: 100 });
@@ -198,6 +201,9 @@ export default function AssetManagement() {
           { key: "import", label: "Import", icon: "↑" },
           { key: "export", label: "Export", icon: "↓" },
           { key: "labels", label: "Print Labels", icon: "🏷" },
+          { key: "notes", label: "Notes", icon: "📝" },
+          { key: "documents", label: "Documents", icon: "📁" },
+          { key: "client-dashboard", label: "Client Dashboard", icon: "📊" },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -250,6 +256,9 @@ export default function AssetManagement() {
         {view === "import" && <AssetImport projectId={projectId} onComplete={() => setView("list")} />}
         {view === "export" && <AssetExport projectId={projectId} onClose={() => setView("list")} />}
         {view === "labels" && <PrintLabelsView projectId={projectId} onPrint={(assets) => { setLabelAssets(assets); setShowLabels(true); }} />}
+        {view === "notes" && <ProjectNotesView projectId={projectId} />}
+        {view === "documents" && <ProjectDocumentsView projectId={projectId} />}
+        {view === "client-dashboard" && <ClientDashboardManagement projectId={projectId} projectName={projectName} />}
       </main>
 
       {/* Modals */}

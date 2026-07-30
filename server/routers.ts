@@ -4,6 +4,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { sendContactNotificationEmails } from "./_core/emailNotification";
 import { chatbotRouter } from "./routers/chatbot";
 import { assetsRouter } from "./routers/assets";
+import { clientPortalRouter } from "./routers/clientPortal";
 import { COOKIE_NAME } from "@shared/const";
 import { z } from "zod";
 import { getDb } from "./db";
@@ -92,6 +93,7 @@ export const appRouter = router({
   }),
 
   chatbot: chatbotRouter,
+  clientPortal: clientPortalRouter,
 
   videos: router({
     getByPhase: publicProcedure

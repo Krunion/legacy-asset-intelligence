@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { protectedProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
-import { assets, assetPhotos, assetDocuments, assetCategories, assetProjects } from "../../drizzle/schema";
+import { assets, assetPhotos, assetDocuments, assetCategories, assetProjects, projectNotes, projectDocuments } from "../../drizzle/schema";
 import { eq, like, or, and, desc, asc, sql, count } from "drizzle-orm";
 import { storagePut } from "../storage";
 import bcrypt from "bcryptjs";
@@ -816,5 +816,182 @@ export const assetsRouter = router({
         categories: categoryResult?.total ?? 0,
         totalValue: parseFloat(costResult?.total || "0"),
       };
+    }),
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // PROJECT NOTES & ADDENDUMS
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  listProjectNotes: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db
+        .select()
+        .from(projectNotes)
+        .where(eq(projectNotes.projectId, input.projectId))
+        .orderBy(desc(projectNotes.createdAt));
+    }),
+
+  createProjectNote: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.number(),
+        title: z.string().min(1).max(500),
+        content: z.string().min(1),
+        noteType: z.enum(["note", "addendum", "update", "issue", "resolution"]).default("note"),
+        isInternal: z.boolean().default(false),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const result = await db.insert(projectNotes).values({
+        projectId: input.projectId,
+        title: input.title,
+        content: input.content,
+        noteType: input.noteType,
+        isInternal: input.isInternal ? 1 : 0,
+        createdBy: ctx.user?.id || 0,
+        createdByName: ctx.user?.name || "Unknown",
+      });
+
+      return { id: result[0].insertId };
+    }),
+
+  updateProjectNote: protectedProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        title: z.string().min(1).max(500).optional(),
+        content: z.string().min(1).optional(),
+        noteType: z.enum(["note", "addendum", "update", "issue", "resolution"]).optional(),
+        isInternal: z.boolean().optional(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const updates: any = {};
+      if (input.title !== undefined) updates.title = input.title;
+      if (input.content !== undefined) updates.content = input.content;
+      if (input.noteType !== undefined) updates.noteType = input.noteType;
+      if (input.isInternal !== undefined) updates.isInternal = input.isInternal ? 1 : 0;
+
+      if (Object.keys(updates).length > 0) {
+        await db.update(projectNotes).set(updates).where(eq(projectNotes.id, input.id));
+      }
+      return { success: true };
+    }),
+
+  deleteProjectNote: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(projectNotes).where(eq(projectNotes.id, input.id));
+      return { success: true };
+    }),
+
+  // ═══════════════════════════════════════════════════════════════════════════════
+  // ADMIN-ONLY PROJECT DOCUMENTS
+  // ═══════════════════════════════════════════════════════════════════════════════
+
+  listProjectDocuments: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const ADMIN_EMAILS = [
+        "kevin.runion@legacyassetintelligence.com",
+        "chris.haynes@legacyassetintelligence.com",
+      ];
+      const userEmail = ctx.user?.email?.toLowerCase() || "";
+      const isAdminUser = ADMIN_EMAILS.includes(userEmail);
+
+      // Non-admin users cannot see admin-only documents
+      const conditions = isAdminUser
+        ? eq(projectDocuments.projectId, input.projectId)
+        : and(eq(projectDocuments.projectId, input.projectId), eq(projectDocuments.isAdminOnly, 0));
+
+      return db
+        .select()
+        .from(projectDocuments)
+        .where(conditions)
+        .orderBy(desc(projectDocuments.createdAt));
+    }),
+
+  uploadProjectDocument: protectedProcedure
+    .input(
+      z.object({
+        projectId: z.number(),
+        fileName: z.string(),
+        mimeType: z.string(),
+        fileSize: z.number(),
+        fileData: z.string(), // base64
+        documentType: z.enum(["contract", "proposal", "report", "invoice", "correspondence", "legal", "insurance", "other"]).default("other"),
+        description: z.string().optional(),
+        isAdminOnly: z.boolean().default(true),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // If marking as admin-only, verify user is admin
+      if (input.isAdminOnly) {
+        const ADMIN_EMAILS = [
+          "kevin.runion@legacyassetintelligence.com",
+          "chris.haynes@legacyassetintelligence.com",
+        ];
+        const userEmail = ctx.user?.email?.toLowerCase() || "";
+        if (!ADMIN_EMAILS.includes(userEmail)) {
+          throw new Error("Only admin staff can upload admin-only documents");
+        }
+      }
+
+      const buffer = Buffer.from(input.fileData, "base64");
+      const fileKey = `project-docs/${input.projectId}/${Date.now()}-${input.fileName}`;
+      const { url } = await storagePut(fileKey, buffer, input.mimeType);
+
+      const result = await db.insert(projectDocuments).values({
+        projectId: input.projectId,
+        storageKey: fileKey,
+        storageUrl: url,
+        fileName: input.fileName,
+        mimeType: input.mimeType,
+        fileSize: input.fileSize,
+        documentType: input.documentType,
+        description: input.description || null,
+        isAdminOnly: input.isAdminOnly ? 1 : 0,
+        uploadedBy: ctx.user?.id || 0,
+        uploadedByName: ctx.user?.name || "Unknown",
+      });
+
+      return { id: result[0].insertId, url };
+    }),
+
+  deleteProjectDocument: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      // Only admins can delete
+      const ADMIN_EMAILS = [
+        "kevin.runion@legacyassetintelligence.com",
+        "chris.haynes@legacyassetintelligence.com",
+      ];
+      const userEmail = ctx.user?.email?.toLowerCase() || "";
+      if (!ADMIN_EMAILS.includes(userEmail)) {
+        throw new Error("Only admin staff can delete project documents");
+      }
+
+      await db.delete(projectDocuments).where(eq(projectDocuments.id, input.id));
+      return { success: true };
     }),
 });
