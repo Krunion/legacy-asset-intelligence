@@ -658,3 +658,6 @@
 - [x] Fix 3-Year ROI: always uses (RC + RC*B58*2) regardless of Phase 4 selection
 - [x] Fix Timeframe field: used in weeks for staffing denominator (not months)
 - [x] Verified test case matches Excel: 200k assets/National/15 locations/$2.5M → $1,395,062.50 total
+
+## Proposal Calculator Number Input Fix (July 31, 2026)
+- [x] Fix number inputs showing leading 0 when cleared and re-entered (e.g. "0250" instead of "250")
