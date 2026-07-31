@@ -695,3 +695,9 @@
 - [x] Add required disclaimer
 - [x] Pass acceptance test 1 (actual client data)
 - [x] Pass acceptance test 2 (benchmark mode)
+
+## Asset Management & Employee Portal Updates (July 31, 2026)
+- [x] Remove Current Value, Salvage Value, and Useful Life fields from Asset Management create/edit form
+- [x] Add photo delete functionality to uploaded asset photos
+- [x] Remove Executive Assessment Form, Depreciation Calculator, and Salvage Calculator from Employee Portal
+- [x] Reorder Employee Portal tools: Asset Intelligence Assessment, Preliminary Capital Opportunity Assessment, Proposal Calculator, Corporate Finance Calculator, Client Interview Questionnaire, Asset Management System

@@ -84,6 +84,10 @@ export default function AssetForm({ projectId, assetId, onSuccess, onCancel }: P
     },
   });
 
+  const deleteExistingPhotoMutation = trpc.assets.deletePhoto.useMutation({
+    onSuccess: () => { utils.assets.getById.invalidate(); },
+  });
+
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -914,8 +918,28 @@ export default function AssetForm({ projectId, assetId, onSuccess, onCancel }: P
               <p style={{ color: C.textMuted, fontSize: "0.8rem", marginBottom: "0.5rem" }}>Existing Photos:</p>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: "0.5rem" }}>
                 {existingAsset.photos.map((photo: any) => (
-                  <div key={photo.id} style={{ borderRadius: 6, overflow: "hidden", border: `1px solid ${C.border}`, aspectRatio: "1" }}>
+                  <div key={photo.id} style={{ position: "relative", borderRadius: 6, overflow: "hidden", border: `1px solid ${C.border}`, aspectRatio: "1" }}>
                     <img src={photo.storageUrl} alt={photo.fileName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (window.confirm("Delete this photo? This cannot be undone.")) {
+                          deleteExistingPhotoMutation.mutate({ photoId: photo.id });
+                        }
+                      }}
+                      style={{
+                        position: "absolute", top: 4, right: 4,
+                        width: 22, height: 22,
+                        background: "rgba(239,68,68,0.9)",
+                        border: "none", borderRadius: "50%",
+                        color: "white", cursor: "pointer",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: "0.7rem", fontWeight: 700,
+                      }}
+                      title="Delete photo"
+                    >
+                      ✕
+                    </button>
                   </div>
                 ))}
               </div>
@@ -935,18 +959,7 @@ export default function AssetForm({ projectId, assetId, onSuccess, onCancel }: P
               <label style={labelStyle}>Acquisition Cost ($)</label>
               <input type="number" step="0.01" value={form.acquisitionCost} onChange={(e) => setForm({ ...form, acquisitionCost: e.target.value })} style={inputStyle} placeholder="0.00" />
             </div>
-            <div>
-              <label style={labelStyle}>Current Value ($)</label>
-              <input type="number" step="0.01" value={form.currentValue} onChange={(e) => setForm({ ...form, currentValue: e.target.value })} style={inputStyle} placeholder="0.00" />
-            </div>
-            <div>
-              <label style={labelStyle}>Salvage Value ($)</label>
-              <input type="number" step="0.01" value={form.salvageValue} onChange={(e) => setForm({ ...form, salvageValue: e.target.value })} style={inputStyle} placeholder="0.00" />
-            </div>
-            <div>
-              <label style={labelStyle}>Useful Life (Years)</label>
-              <input type="number" value={form.usefulLifeYears} onChange={(e) => setForm({ ...form, usefulLifeYears: e.target.value })} style={inputStyle} />
-            </div>
+
             <div>
               <label style={labelStyle}>Warranty Expiration</label>
               <input type="date" value={form.warrantyExpiration} onChange={(e) => setForm({ ...form, warrantyExpiration: e.target.value })} style={inputStyle} />

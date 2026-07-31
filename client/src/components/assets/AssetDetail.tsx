@@ -28,6 +28,16 @@ export default function AssetDetail({ assetId, onBack, onEdit }: Props) {
     onSuccess: () => { utils.assets.getById.invalidate({ id: assetId }); setPhotoUploading(false); },
   });
 
+  const deletePhotoMutation = trpc.assets.deletePhoto.useMutation({
+    onSuccess: () => { utils.assets.getById.invalidate({ id: assetId }); },
+  });
+
+  const handleDeletePhoto = (photoId: number) => {
+    if (window.confirm("Delete this photo? This cannot be undone.")) {
+      deletePhotoMutation.mutate({ photoId });
+    }
+  };
+
   // Generate barcode
   useEffect(() => {
     if (asset && barcodeRef.current && asset.barcodeType !== "qr") {
@@ -210,6 +220,22 @@ export default function AssetDetail({ assetId, onBack, onEdit }: Props) {
                     {photo.isPrimary === 1 && (
                       <span style={{ position: "absolute", top: 4, left: 4, background: C.gold, color: C.navy, fontSize: "0.6rem", fontWeight: 700, padding: "2px 5px", borderRadius: 3 }}>PRIMARY</span>
                     )}
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePhoto(photo.id)}
+                      style={{
+                        position: "absolute", top: 4, right: 4,
+                        width: 22, height: 22,
+                        background: "rgba(239,68,68,0.9)",
+                        border: "none", borderRadius: "50%",
+                        color: "white", cursor: "pointer",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: "0.7rem", fontWeight: 700,
+                      }}
+                      title="Delete photo"
+                    >
+                      ✕
+                    </button>
                   </div>
                 ))}
               </div>

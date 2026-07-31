@@ -7,15 +7,12 @@ import ProposalCalculator from "@/components/portal/ProposalCalculator";
 import InvestigativeQuestionnaire from "@/components/portal/InvestigativeQuestionnaire";
 import AssetIntelligenceAssessment from "@/components/portal/AssetIntelligenceAssessment";
 import RecoverableCapitalAssessment from "@/components/portal/RecoverableCapitalAssessment";
-import ExecutiveAssessmentForm from "@/components/portal/ExecutiveAssessmentForm";
 import CorporateFinanceCalculator from "@/components/portal/CorporateFinanceCalculator";
-import DepreciationCalculator from "@/components/portal/DepreciationCalculator";
-import SalvageValueCalculator from "@/components/portal/SalvageValueCalculator";
 
 const C = COLORS;
 const HERO_IMG = "https://d2xsxph8kpxj0f.cloudfront.net/310519663776896878/TfZTrDNPnnG2dF7hgZeTPt/lai-hero-2oLJZvt3jJ23DVAW3Npj4G.webp";
 
-type ActiveTool = null | "proposal-calculator" | "asset-intelligence" | "recoverable-capital" | "investigative-questionnaire" | "executive-assessment" | "corporate-finance-calculator" | "depreciation-calculator" | "salvage-value-calculator";
+type ActiveTool = null | "proposal-calculator" | "asset-intelligence" | "recoverable-capital" | "investigative-questionnaire" | "corporate-finance-calculator";
 
 export default function EmployeePortal() {
   const { user, loading, isAuthenticated, logout } = useAuth();
@@ -111,24 +108,13 @@ export default function EmployeePortal() {
         {activeTool === "asset-intelligence" && <AssetIntelligenceAssessment onBack={() => setActiveTool(null)} />}
         {activeTool === "recoverable-capital" && <RecoverableCapitalAssessment onBack={() => setActiveTool(null)} />}
         {activeTool === "investigative-questionnaire" && <InvestigativeQuestionnaire onBack={() => setActiveTool(null)} />}
-        {activeTool === "executive-assessment" && <ExecutiveAssessmentForm onBack={() => setActiveTool(null)} />}
         {activeTool === "corporate-finance-calculator" && <CorporateFinanceCalculator onBack={() => setActiveTool(null)} />}
-        {activeTool === "depreciation-calculator" && <DepreciationCalculator onBack={() => setActiveTool(null)} />}
-        {activeTool === "salvage-value-calculator" && <SalvageValueCalculator onBack={() => setActiveTool(null)} />}
       </div>
     );
   }
 
-  // Resources
+  // Resources - ordered: Asset Intelligence, Preliminary Capital, Proposal Calculator, Corporate Finance, Client Interview, Asset Management
   const resources = [
-    {
-      id: "proposal-calculator" as ActiveTool,
-      title: "Proposal Calculator",
-      description: "Generate professional branded proposals with phase-by-phase pricing, ROI projections, and client signature lines",
-      icon: "📊",
-      type: "Interactive Tool",
-      action: "Open Calculator",
-    },
     {
       id: "asset-intelligence" as ActiveTool,
       title: "Asset Intelligence Assessment",
@@ -146,20 +132,12 @@ export default function EmployeePortal() {
       action: "Run Assessment",
     },
     {
-      id: "investigative-questionnaire" as ActiveTool,
-      title: "Client Interview Questionnaire",
-      description: "8-section structured interview covering Executive Priorities, Asset Lifecycle, FAR Accuracy, Exceptions, Inventory, Systems/Governance, Outcomes, and Scope",
-      icon: "📝",
+      id: "proposal-calculator" as ActiveTool,
+      title: "Proposal Calculator",
+      description: "Generate professional branded proposals with phase-by-phase pricing, ROI projections, and client signature lines",
+      icon: "📊",
       type: "Interactive Tool",
-      action: "Open Questionnaire",
-    },
-    {
-      id: "executive-assessment" as ActiveTool,
-      title: "Executive Assessment Form",
-      description: "Phase 1 discovery form capturing client asset management state, financial exposure, technology maturity, and engagement readiness",
-      icon: "🎯",
-      type: "Interactive Tool",
-      action: "Start Assessment",
+      action: "Open Calculator",
     },
     {
       id: "corporate-finance-calculator" as ActiveTool,
@@ -170,20 +148,12 @@ export default function EmployeePortal() {
       action: "Open Calculator",
     },
     {
-      id: "depreciation-calculator" as ActiveTool,
-      title: "Depreciation Calculator",
-      description: "Full item depreciation calculator with 8 methods: Straight-Line, DDB, 150% DB, SYD, Units of Production, MACRS, Section 179, and Bonus Depreciation",
-      icon: "📉",
+      id: "investigative-questionnaire" as ActiveTool,
+      title: "Client Interview Questionnaire",
+      description: "8-section structured interview covering Executive Priorities, Asset Lifecycle, FAR Accuracy, Exceptions, Inventory, Systems/Governance, Outcomes, and Scope",
+      icon: "📝",
       type: "Interactive Tool",
-      action: "Open Calculator",
-    },
-    {
-      id: "salvage-value-calculator" as ActiveTool,
-      title: "Salvage Value Calculator",
-      description: "Multi-method salvage value estimation with condition analysis, industry benchmarks, IRS tables, and useful life projections",
-      icon: "🏷️",
-      type: "Interactive Tool",
-      action: "Open Calculator",
+      action: "Open Questionnaire",
     },
     {
       id: "asset-management" as ActiveTool,
@@ -195,7 +165,6 @@ export default function EmployeePortal() {
       comingSoon: false,
       link: "/assets",
     },
-
   ];
 
   return (
