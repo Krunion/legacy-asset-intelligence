@@ -15,7 +15,7 @@
  *   - Assumptions Tab: rows 40-54 & 58
  */
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { LOGO_BASE64 } from "./logoBase64";
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -163,6 +163,62 @@ function fmtNum(n: number): string {
 }
 function fmtPct(n: number): string {
   return (n * 100).toFixed(1) + "%";
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// FORMATTED NUMBER INPUT COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function formatWithCommas(value: number, decimals: number = 0): string {
+  if (value === 0) return "";
+  return value.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+}
+
+function parseFormattedNumber(raw: string): number {
+  const cleaned = raw.replace(/[^0-9.\-]/g, "");
+  if (cleaned === "" || cleaned === ".") return 0;
+  return Number(cleaned);
+}
+
+function NumInput({ value, onChange, decimals = 0, style, ...rest }: {
+  value: number;
+  onChange: (v: number) => void;
+  decimals?: number;
+  style?: React.CSSProperties;
+  [key: string]: any;
+}) {
+  const [focused, setFocused] = useState(false);
+  const [rawText, setRawText] = useState("");
+
+  const handleFocus = useCallback(() => {
+    setFocused(true);
+    setRawText(value === 0 ? "" : (decimals > 0 ? value.toString() : value.toString()));
+  }, [value, decimals]);
+
+  const handleBlur = useCallback(() => {
+    setFocused(false);
+    const parsed = parseFormattedNumber(rawText);
+    onChange(parsed);
+  }, [rawText, onChange]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setRawText(e.target.value);
+    const parsed = parseFormattedNumber(e.target.value);
+    onChange(parsed);
+  }, [onChange]);
+
+  return (
+    <input
+      {...rest}
+      type="text"
+      inputMode="decimal"
+      style={style}
+      value={focused ? rawText : formatWithCommas(value, decimals)}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onChange={handleChange}
+    />
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -398,15 +454,15 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
               <div><label style={labelStyle}>Client Name</label><input style={inputStyle} value={clientName} onChange={e => setClientName(e.target.value)} placeholder="e.g., Johnson & Johnson" /></div>
               <div><label style={labelStyle}>Industry</label><select style={selectStyle} value={industry} onChange={e => setIndustry(e.target.value)}>{INDUSTRIES.map(i => <option key={i} value={i}>{i}</option>)}</select></div>
-              <div><label style={labelStyle}>Estimated Asset Count</label><input style={inputStyle} type="number" value={assetCount || ""} onChange={e => setAssetCount(e.target.value === "" ? 0 : Number(e.target.value))} min={1} /></div>
-              <div><label style={labelStyle}>Number of Locations</label><input style={inputStyle} type="number" value={locations || ""} onChange={e => setLocations(e.target.value === "" ? 0 : Number(e.target.value))} min={1} /></div>
+              <div><label style={labelStyle}>Estimated Asset Count</label><NumInput style={inputStyle} value={assetCount} onChange={setAssetCount} /></div>
+              <div><label style={labelStyle}>Number of Locations</label><NumInput style={inputStyle} value={locations} onChange={setLocations} /></div>
               <div><label style={labelStyle}>Geographic Scope</label><select style={selectStyle} value={geoScope} onChange={e => setGeoScope(e.target.value)}>{GEO_OPTIONS.map(g => <option key={g.label} value={g.label}>{g.label} ({g.multiplier}x)</option>)}</select></div>
-              <div><label style={labelStyle}>Estimated Recoverable Capital ($)</label><input style={inputStyle} type="number" value={recoverableCapital || ""} onChange={e => setRecoverableCapital(e.target.value === "" ? 0 : Number(e.target.value))} min={0} /></div>
+              <div><label style={labelStyle}>Estimated Recoverable Capital ($)</label><NumInput style={inputStyle} value={recoverableCapital} onChange={setRecoverableCapital} decimals={2} /></div>
               <div><label style={labelStyle}>Include Recoverable Capital Fee?</label><select style={selectStyle} value={includeRecoverableFee} onChange={e => setIncludeRecoverableFee(e.target.value)}><option value="Yes">Yes</option><option value="No">No</option></select></div>
               <div><label style={labelStyle}>Include Phase 4 Governance?</label><select style={selectStyle} value={includePhase4} onChange={e => setIncludePhase4(e.target.value)}><option value="Yes">Yes</option><option value="No">No</option></select></div>
               <div><label style={labelStyle}>Include Asset Panda Coordination Fee?</label><select style={selectStyle} value={includeAssetPanda} onChange={e => setIncludeAssetPanda(e.target.value)}><option value="Yes">Yes</option><option value="No">No</option></select></div>
               <div><label style={labelStyle}>Waive Asset Panda Fee? (1-yr governance)</label><select style={selectStyle} value={waiveAssetPanda} onChange={e => setWaiveAssetPanda(e.target.value)}><option value="Yes">Yes</option><option value="No">No</option></select></div>
-              <div><label style={labelStyle}>Timeframe (weeks)</label><input style={inputStyle} type="number" value={timeframe || ""} onChange={e => setTimeframe(e.target.value === "" ? 0 : Number(e.target.value))} min={1} /></div>
+              <div><label style={labelStyle}>Timeframe (weeks)</label><NumInput style={inputStyle} value={timeframe} onChange={setTimeframe} /></div>
               <div><label style={labelStyle}>Notes</label><input style={inputStyle} value={notes} onChange={e => setNotes(e.target.value)} placeholder="Optional notes" /></div>
             </div>
           </div>
@@ -418,22 +474,22 @@ export default function ProposalCalculator({ onBack }: { onBack: () => void }) {
             <div style={sectionTitle}>Cost & Staffing Assumptions (Rows 40–54, 58)</div>
             <p style={{ fontSize: "0.8rem", color: C.muted, marginBottom: "1.5rem" }}>These values drive the Internal Feasibility calculations. Adjust per engagement scenario.</p>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
-              <div><label style={labelStyle}>Row 40: Field Productivity (assets/person/day)</label><input style={inputStyle} type="number" value={fieldProductivity || ""} onChange={e => setFieldProductivity(e.target.value === "" ? 0 : Number(e.target.value))} min={1} /></div>
-              <div><label style={labelStyle}>Row 41: Field Contractor Pay ($/hr)</label><input style={inputStyle} type="number" value={fieldContractorPay || ""} onChange={e => setFieldContractorPay(e.target.value === "" ? 0 : Number(e.target.value))} min={0} /></div>
-              <div><label style={labelStyle}>Row 42: Reconciliation Pay ($/hr)</label><input style={inputStyle} type="number" value={reconciliationPay || ""} onChange={e => setReconciliationPay(e.target.value === "" ? 0 : Number(e.target.value))} min={0} /></div>
-              <div><label style={labelStyle}>Row 43: QA Pay ($/hr)</label><input style={inputStyle} type="number" value={qaPay || ""} onChange={e => setQaPay(e.target.value === "" ? 0 : Number(e.target.value))} min={0} /></div>
-              <div><label style={labelStyle}>Row 44: PM Pay ($/hr)</label><input style={inputStyle} type="number" value={pmPay || ""} onChange={e => setPmPay(e.target.value === "" ? 0 : Number(e.target.value))} min={0} /></div>
-              <div><label style={labelStyle}>Row 45: Workday Hours (hrs/day)</label><input style={inputStyle} type="number" value={workdayHours || ""} onChange={e => setWorkdayHours(e.target.value === "" ? 0 : Number(e.target.value))} min={1} /></div>
-              <div><label style={labelStyle}>Row 46: Reconciliation % of Field Hrs</label><input style={inputStyle} type="number" step="0.01" value={reconciliationPct || ""} onChange={e => setReconciliationPct(e.target.value === "" ? 0 : Number(e.target.value))} min={0} max={1} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.30 = 30%</span></div>
-              <div><label style={labelStyle}>Row 47: QA % of Field Hrs</label><input style={inputStyle} type="number" step="0.01" value={qaPct || ""} onChange={e => setQaPct(e.target.value === "" ? 0 : Number(e.target.value))} min={0} max={1} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.08 = 8%</span></div>
-              <div><label style={labelStyle}>Row 48: PM % of Field Hrs</label><input style={inputStyle} type="number" step="0.01" value={pmPct || ""} onChange={e => setPmPct(e.target.value === "" ? 0 : Number(e.target.value))} min={0} max={1} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.06 = 6%</span></div>
-              <div><label style={labelStyle}>Row 49: Traveling LAI Leaders</label><input style={inputStyle} type="number" value={travelingLeaders || ""} onChange={e => setTravelingLeaders(e.target.value === "" ? 0 : Number(e.target.value))} min={0} /></div>
-              <div><label style={labelStyle}>Row 50: Average Project Weeks</label><input style={inputStyle} type="number" value={avgProjectWeeks || ""} onChange={e => setAvgProjectWeeks(e.target.value === "" ? 0 : Number(e.target.value))} min={1} /></div>
-              <div><label style={labelStyle}>Row 51: Weekly Lodging/Traveler ($/wk)</label><input style={inputStyle} type="number" value={weeklyLodging || ""} onChange={e => setWeeklyLodging(e.target.value === "" ? 0 : Number(e.target.value))} min={0} /><span style={{ fontSize: "0.7rem", color: C.muted }}>$150/night × 7</span></div>
-              <div><label style={labelStyle}>Row 52: Weekly Per Diem/Traveler ($/wk)</label><input style={inputStyle} type="number" value={weeklyPerDiem || ""} onChange={e => setWeeklyPerDiem(e.target.value === "" ? 0 : Number(e.target.value))} min={0} /><span style={{ fontSize: "0.7rem", color: C.muted }}>$70/day × 7</span></div>
-              <div><label style={labelStyle}>Row 53: Weekly Transport/Traveler ($/wk)</label><input style={inputStyle} type="number" value={weeklyTransport || ""} onChange={e => setWeeklyTransport(e.target.value === "" ? 0 : Number(e.target.value))} min={0} /><span style={{ fontSize: "0.7rem", color: C.muted }}>Flights/rental/mileage</span></div>
-              <div><label style={labelStyle}>Row 54: Overhead Allocation (% of revenue)</label><input style={inputStyle} type="number" step="0.01" value={overheadAllocation || ""} onChange={e => setOverheadAllocation(e.target.value === "" ? 0 : Number(e.target.value))} min={0} max={1} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.15 = 15%</span></div>
-              <div><label style={labelStyle}>Row 58: Annual Ongoing Savings (%)</label><input style={inputStyle} type="number" step="0.01" value={annualOngoingSavings || ""} onChange={e => setAnnualOngoingSavings(e.target.value === "" ? 0 : Number(e.target.value))} min={0} max={1} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.10 = 10% (for 3-yr ROI)</span></div>
+              <div><label style={labelStyle}>Row 40: Field Productivity (assets/person/day)</label><NumInput style={inputStyle} value={fieldProductivity} onChange={setFieldProductivity} /></div>
+              <div><label style={labelStyle}>Row 41: Field Contractor Pay ($/hr)</label><NumInput style={inputStyle} value={fieldContractorPay} onChange={setFieldContractorPay} /></div>
+              <div><label style={labelStyle}>Row 42: Reconciliation Pay ($/hr)</label><NumInput style={inputStyle} value={reconciliationPay} onChange={setReconciliationPay} /></div>
+              <div><label style={labelStyle}>Row 43: QA Pay ($/hr)</label><NumInput style={inputStyle} value={qaPay} onChange={setQaPay} /></div>
+              <div><label style={labelStyle}>Row 44: PM Pay ($/hr)</label><NumInput style={inputStyle} value={pmPay} onChange={setPmPay} /></div>
+              <div><label style={labelStyle}>Row 45: Workday Hours (hrs/day)</label><NumInput style={inputStyle} value={workdayHours} onChange={setWorkdayHours} /></div>
+              <div><label style={labelStyle}>Row 46: Reconciliation % of Field Hrs</label><NumInput style={inputStyle} value={reconciliationPct} onChange={setReconciliationPct} decimals={2} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.30 = 30%</span></div>
+              <div><label style={labelStyle}>Row 47: QA % of Field Hrs</label><NumInput style={inputStyle} value={qaPct} onChange={setQaPct} decimals={2} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.08 = 8%</span></div>
+              <div><label style={labelStyle}>Row 48: PM % of Field Hrs</label><NumInput style={inputStyle} value={pmPct} onChange={setPmPct} decimals={2} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.06 = 6%</span></div>
+              <div><label style={labelStyle}>Row 49: Traveling LAI Leaders</label><NumInput style={inputStyle} value={travelingLeaders} onChange={setTravelingLeaders} /></div>
+              <div><label style={labelStyle}>Row 50: Average Project Weeks</label><NumInput style={inputStyle} value={avgProjectWeeks} onChange={setAvgProjectWeeks} /></div>
+              <div><label style={labelStyle}>Row 51: Weekly Lodging/Traveler ($/wk)</label><NumInput style={inputStyle} value={weeklyLodging} onChange={setWeeklyLodging} decimals={2} /><span style={{ fontSize: "0.7rem", color: C.muted }}>$150/night × 7</span></div>
+              <div><label style={labelStyle}>Row 52: Weekly Per Diem/Traveler ($/wk)</label><NumInput style={inputStyle} value={weeklyPerDiem} onChange={setWeeklyPerDiem} decimals={2} /><span style={{ fontSize: "0.7rem", color: C.muted }}>$70/day × 7</span></div>
+              <div><label style={labelStyle}>Row 53: Weekly Transport/Traveler ($/wk)</label><NumInput style={inputStyle} value={weeklyTransport} onChange={setWeeklyTransport} decimals={2} /><span style={{ fontSize: "0.7rem", color: C.muted }}>Flights/rental/mileage</span></div>
+              <div><label style={labelStyle}>Row 54: Overhead Allocation (% of revenue)</label><NumInput style={inputStyle} value={overheadAllocation} onChange={setOverheadAllocation} decimals={2} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.15 = 15%</span></div>
+              <div><label style={labelStyle}>Row 58: Annual Ongoing Savings (%)</label><NumInput style={inputStyle} value={annualOngoingSavings} onChange={setAnnualOngoingSavings} decimals={2} /><span style={{ fontSize: "0.7rem", color: C.muted }}>0.10 = 10% (for 3-yr ROI)</span></div>
             </div>
           </div>
         )}

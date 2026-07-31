@@ -661,3 +661,6 @@
 
 ## Proposal Calculator Number Input Fix (July 31, 2026)
 - [x] Fix number inputs showing leading 0 when cleared and re-entered (e.g. "0250" instead of "250")
+
+## Proposal Calculator Number Formatting (July 31, 2026)
+- [x] Add commas and decimal formatting to all numeric input fields (e.g. 1,000,000.00)
