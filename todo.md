@@ -680,3 +680,18 @@
 - [x] Ensure number formatting consistency
 - [x] Pass acceptance test 1 (Year 1 realization)
 - [x] Pass acceptance test 2 (Immediate realization)
+
+## Preliminary Capital Opportunity Assessment Rewrite (July 31, 2026)
+- [x] Rename from "Recoverable Capital Assessment" to "Preliminary Capital Opportunity Assessment"
+- [x] Revise asset-information inputs (Gross Value, NBV, Annual Spend, Insurance, Maintenance, Property Tax)
+- [x] Add actual-data vs benchmark mode toggle for insurance/maintenance/property-tax
+- [x] Correct all calculations per spec (ghost exposure from NBV, duplicates from purchasing spend, savings from actual or benchmark)
+- [x] Separate financial categories (Accounting Exposure / Avoided Costs / Recurring Savings)
+- [x] Add projection-period output (1/3/5 years) with undiscounted opportunity
+- [x] Add "Use Results in Corporate Finance Calculator" transfer button
+- [x] Replace headline with three separate cards
+- [x] Add estimate-basis and confidence information
+- [x] Revise generated report with all required sections
+- [x] Add required disclaimer
+- [x] Pass acceptance test 1 (actual client data)
+- [x] Pass acceptance test 2 (benchmark mode)

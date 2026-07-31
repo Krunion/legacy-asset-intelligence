@@ -139,8 +139,8 @@ export default function EmployeePortal() {
     },
     {
       id: "recoverable-capital" as ActiveTool,
-      title: "Recoverable Capital Assessment",
-      description: "Estimate recoverable capital based on asset value, ghost assets, insurance, maintenance, and tax overpayment",
+      title: "Preliminary Capital Opportunity Assessment",
+      description: "Identify potential accounting exposure, avoided costs, and operating savings before LAI Phase 1 validation",
       icon: "💰",
       type: "Interactive Tool",
       action: "Run Assessment",
