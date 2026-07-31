@@ -667,3 +667,16 @@
 
 ## Client Interview Questionnaire Update (July 31, 2026)
 - [x] Replace current Client Interview Questionnaire in Employee Portal with updated version from LAI_Client_Interview_Questionnaire_Updated.docx
+
+## Corporate Finance Calculator Fixes (July 31, 2026)
+- [x] Fix terminology: "Total One-Time Capital Recovery" → "Total Identified One-Time Capital Value"
+- [x] Add benefit-realization timing dropdown (Immediate/Year 1/Year 2/Year 3)
+- [x] Correct IRR to use true iterative IRR from cash-flow array
+- [x] Fix NPV to use same cash-flow schedule as IRR
+- [x] Rename payback to "Payback from Recurring Savings Only" and fix formula
+- [x] Add missing executive metrics (Projection-Period Savings, Total Gross Benefit, Net Benefit, ROI, Benefit-Cost Ratio, Net Return Multiple)
+- [x] Add per-asset supporting metrics using asset counts
+- [x] Improve proposal-copy section with full professional summary
+- [x] Ensure number formatting consistency
+- [x] Pass acceptance test 1 (Year 1 realization)
+- [x] Pass acceptance test 2 (Immediate realization)
