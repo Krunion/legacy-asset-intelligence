@@ -1,11 +1,11 @@
 /**
- * LAI Investigative Questionnaire - Interactive Employee Portal Form
- * Replicates the Word document questionnaire with printable results
+ * LAI Client Interview Questionnaire - Interactive Employee Portal Form
+ * Updated version matching LAI_Client_Interview_Questionnaire_Updated.docx
+ * 8 sections, each with: Interview Notes, Key Details to Capture, Supporting Documents/Evidence
  */
 
 import { useState, useRef } from "react";
 import { LOGO_BASE64 } from "./logoBase64";
-
 
 const C = {
   slate: "#1E3A5F",
@@ -14,6 +14,7 @@ const C = {
   border: "#E2E8F0",
   text: "#1E293B",
   muted: "#64748B",
+  cardBg: "#F8FAFC",
 };
 
 const labelStyle: React.CSSProperties = {
@@ -39,7 +40,7 @@ const inputStyle: React.CSSProperties = {
 
 const textareaStyle: React.CSSProperties = {
   ...inputStyle,
-  minHeight: "4rem",
+  minHeight: "6rem",
   resize: "vertical" as const,
 };
 
@@ -53,98 +54,268 @@ const sectionTitleStyle: React.CSSProperties = {
   borderBottom: `2px solid ${C.gold}`,
 };
 
-interface QuestionnaireData {
-  // Client Info
-  clientName: string;
-  contactName: string;
-  contactTitle: string;
+const subheadingStyle: React.CSSProperties = {
+  fontFamily: "'Source Sans 3', sans-serif",
+  fontSize: "0.9rem",
+  fontWeight: 700,
+  color: C.teal,
+  marginTop: "1.25rem",
+  marginBottom: "0.75rem",
+};
+
+// ─── Section Definitions ──────────────────────────────────────────────────────
+
+interface DocRequest {
+  label: string;
+  requested: string;
+  received: string;
   date: string;
-  // CFO Questions
-  cfoAssetValue: string;
-  cfoConfidence: string;
-  cfoFinancialImpact: string;
-  cfoLastAudit: string;
-  // COO Questions
-  cooLocations: string;
-  cooDepartments: string;
-  cooTotalAssets: string;
-  cooFrequentlyMoved: string;
-  cooDifficultToLocate: string;
-  // Facilities Questions
-  facilitiesTagged: string;
-  facilitiesTagPercentage: string;
-  facilitiesRecordCondition: string;
-  facilitiesLocationsAccurate: string;
-  // IT Questions
-  itCurrentSystem: string;
-  itSystemMaintained: string;
-  itRealTimeAccess: string;
-  // Governance Questions
-  govPoliciesInPlace: string;
-  govCustodiansAssigned: string;
-  govRoutineAudits: string;
-  // Recovery Questions
-  recoveryMissingAssets: string;
-  recoveryUnneededAssets: string;
-  // Final Questions
-  finalLeadershipSupport: string;
-  finalTimeline: string;
-  finalBudget: string;
-  finalApprover: string;
 }
 
-export default function InvestigativeQuestionnaire({ onBack }: { onBack: () => void }) {
-  const [data, setData] = useState<QuestionnaireData>({
-    clientName: "",
-    contactName: "",
-    contactTitle: "",
-    date: new Date().toISOString().split("T")[0],
-    cfoAssetValue: "",
-    cfoConfidence: "",
-    cfoFinancialImpact: "",
-    cfoLastAudit: "",
-    cooLocations: "",
-    cooDepartments: "",
-    cooTotalAssets: "",
-    cooFrequentlyMoved: "",
-    cooDifficultToLocate: "",
-    facilitiesTagged: "",
-    facilitiesTagPercentage: "",
-    facilitiesRecordCondition: "",
-    facilitiesLocationsAccurate: "",
-    itCurrentSystem: "",
-    itSystemMaintained: "",
-    itRealTimeAccess: "",
-    govPoliciesInPlace: "",
-    govCustodiansAssigned: "",
-    govRoutineAudits: "",
-    recoveryMissingAssets: "",
-    recoveryUnneededAssets: "",
-    finalLeadershipSupport: "",
-    finalTimeline: "",
-    finalBudget: "",
-    finalApprover: "",
-  });
+interface Section {
+  number: number;
+  category: string;
+  question: string;
+  keyDetails: string[];
+  documents: string[];
+}
 
+const SECTIONS: Section[] = [
+  {
+    number: 1,
+    category: "Executive Priorities",
+    question: "What are the organization's biggest challenges involving asset visibility, accountability, utilization, or financial accuracy?",
+    keyDetails: [
+      "Primary asset-related challenge",
+      "Departments, locations, or services affected",
+      "Specific example discussed",
+      "Operational or service-delivery impact",
+      "Known or suspected financial impact",
+      "Audit, compliance, safety, or reputational impact",
+      "Event or leadership priority creating urgency",
+      "Executive owner or sponsor",
+    ],
+    documents: [
+      "Recent asset-related audit findings or corrective-action plans",
+      "Incident, loss, exception, or operational issue reports",
+      "Existing executive reports or performance dashboards",
+    ],
+  },
+  {
+    number: 2,
+    category: "Current Asset Lifecycle",
+    question: "How are assets currently purchased, received, recorded, tagged, assigned, transferred, maintained, and disposed of?",
+    keyDetails: [
+      "Purchasing and approval owner",
+      "Receiving and initial-recording process",
+      "Current tagging point and responsible party",
+      "Assignment and custodian process",
+      "Transfer or relocation process",
+      "Maintenance and condition-tracking process",
+      "Inventory check before new purchases",
+      "Disposition, retirement, and write-off process",
+    ],
+    documents: [
+      "Asset lifecycle policies, procedures, or workflow diagrams",
+      "Receiving, assignment, transfer, and disposal forms",
+      "Relevant procurement, maintenance, and disposition records",
+    ],
+  },
+  {
+    number: 3,
+    category: "Fixed Asset Register Accuracy",
+    question: "How confident are you that the Fixed Asset Register accurately reflects the assets the organization currently owns and uses?",
+    keyDetails: [
+      "FAR owner and responsible department",
+      "Financial or ERP system of record",
+      "Approximate FAR record count",
+      "Approximate gross and net book value",
+      "Date of last FAR update or reconciliation",
+      "Confidence rating (1–5) and reason",
+      "Known missing, incomplete, or unreliable fields",
+      "Primary identifiers used to match records to assets",
+    ],
+    documents: [
+      "Current FAR in native Excel or CSV format",
+      "Fixed-asset general-ledger detail and depreciation schedule",
+      "Most recent FAR reconciliation or related audit results",
+    ],
+  },
+  {
+    number: 4,
+    category: "Known Exceptions / Recovery Opportunities",
+    question: "What problems have you experienced with missing assets, ghost assets, duplicate purchases, inaccurate locations, obsolete equipment, or incomplete records?",
+    keyDetails: [
+      "Missing or unlocated assets",
+      "Ghost assets remaining on the books",
+      "Unrecorded or newly discovered assets",
+      "Duplicate or emergency purchases",
+      "Idle or underutilized assets",
+      "Obsolete, damaged, or cannibalized assets",
+      "Known or suspected financial exposure",
+      "Recent write-offs, losses, or unresolved exceptions",
+    ],
+    documents: [
+      "Known asset exception, loss, or discrepancy lists",
+      "Recent write-off, disposal, and impairment records",
+      "Duplicate, emergency, or replacement purchase reports",
+    ],
+  },
+  {
+    number: 5,
+    category: "Physical Inventory / FAR Reconciliation",
+    question: "How are physical inventories and FAR reconciliations currently performed, and what typically prevents discrepancies from being resolved?",
+    keyDetails: [
+      "Date and scope of last physical inventory",
+      "Inventory method, tools, and personnel used",
+      "FAR reconciliation owner",
+      "Common exception types",
+      "Approximate unresolved exception volume",
+      "Investigation and resolution process",
+      "Evidence and approvals required for FAR changes",
+      "Main obstacles to timely resolution",
+    ],
+    documents: [
+      "Most recent physical-inventory results",
+      "Reconciliation workbook, matching rules, or methodology",
+      "Open exception, adjustment, and approval logs",
+    ],
+  },
+  {
+    number: 6,
+    category: "Systems / Roles / Governance",
+    question: "What systems, departments, and individuals currently share responsibility for managing asset information?",
+    keyDetails: [
+      "Systems containing relevant asset information",
+      "Authoritative system of record after reconciliation",
+      "Departments responsible for asset data",
+      "FAR owner, data steward, and system administrator",
+      "Asset custodians and local department owners",
+      "Required user roles and access permissions",
+      "Available exports, integrations, APIs, or data dictionaries",
+      "Cybersecurity, privacy, retention, or regulatory requirements",
+    ],
+    documents: [
+      "Asset-management policies and responsibility assignments",
+      "Relevant system exports, field lists, and data dictionaries",
+      "User-role, access-control, and security requirements",
+    ],
+  },
+  {
+    number: 7,
+    category: "Desired Outcomes / Success Measures",
+    question: "What operational, financial, audit, compliance, or governance improvements would leadership expect from this engagement?",
+    keyDetails: [
+      "Highest-priority engagement outcome",
+      "Desired FAR accuracy or asset-visibility target",
+      "Expected recovery or cost-avoidance outcome",
+      "Required operational improvement",
+      "Audit, compliance, or governance objective",
+      "Required dashboards and executive reports",
+      "Success measures or key performance indicators",
+      "Decision-maker who will accept the results",
+    ],
+    documents: [
+      "Relevant strategic goals, audit commitments, or improvement plans",
+      "Current KPI definitions, dashboards, or reporting templates",
+      "Required deliverable, acceptance, or reporting standards",
+    ],
+  },
+  {
+    number: 8,
+    category: "Engagement Scope / Tagging / Delivery",
+    question: "What locations, asset categories, access limitations, technology requirements, and completion deadlines should LAI consider when defining the engagement?",
+    keyDetails: [
+      "Estimated asset count and primary asset classes",
+      "Locations, departments, and geographic scope",
+      "Included and excluded assets or ownership types",
+      "Requested start date, completion date, and blackout periods",
+      "Percentage currently tagged and existing tag type",
+      "Required new, replacement, secondary, or virtual tags",
+      "Tag environment, surface, durability, and placement requirements",
+      "Site access, escorts, safety, PPE, and operating restrictions",
+      "LAI asset-management users, permissions, and security needs",
+    ],
+    documents: [
+      "Location lists, floor plans, room lists, and site contacts",
+      "Existing tag specifications, numbering standards, and photographs",
+      "Operating calendars, safety rules, and access requirements",
+      "Source-system exports needed for Phase 2 implementation",
+    ],
+  },
+];
+
+// ─── State Type ───────────────────────────────────────────────────────────────
+
+interface SectionState {
+  interviewNotes: string;
+  keyDetails: Record<string, string>;
+  documents: DocRequest[];
+}
+
+function createInitialState(): Record<number, SectionState> {
+  const state: Record<number, SectionState> = {};
+  for (const section of SECTIONS) {
+    const keyDetails: Record<string, string> = {};
+    for (const detail of section.keyDetails) {
+      keyDetails[detail] = "";
+    }
+    const documents: DocRequest[] = section.documents.map(label => ({
+      label,
+      requested: "",
+      received: "",
+      date: "",
+    }));
+    state[section.number] = { interviewNotes: "", keyDetails, documents };
+  }
+  return state;
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
+
+export default function InvestigativeQuestionnaire({ onBack }: { onBack: () => void }) {
+  const [clientName, setClientName] = useState("");
+  const [interviewerName, setInterviewerName] = useState("");
+  const [interviewDate, setInterviewDate] = useState(new Date().toISOString().split("T")[0]);
+  const [sections, setSections] = useState<Record<number, SectionState>>(createInitialState);
+  const [activeSection, setActiveSection] = useState(1);
   const [showResults, setShowResults] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  const update = (key: keyof QuestionnaireData, value: string) => {
-    setData(prev => ({ ...prev, [key]: value }));
+  const updateNotes = (sectionNum: number, value: string) => {
+    setSections(prev => ({
+      ...prev,
+      [sectionNum]: { ...prev[sectionNum], interviewNotes: value },
+    }));
+  };
+
+  const updateDetail = (sectionNum: number, key: string, value: string) => {
+    setSections(prev => ({
+      ...prev,
+      [sectionNum]: {
+        ...prev[sectionNum],
+        keyDetails: { ...prev[sectionNum].keyDetails, [key]: value },
+      },
+    }));
+  };
+
+  const updateDoc = (sectionNum: number, docIndex: number, field: keyof DocRequest, value: string) => {
+    setSections(prev => {
+      const newDocs = [...prev[sectionNum].documents];
+      newDocs[docIndex] = { ...newDocs[docIndex], [field]: value };
+      return { ...prev, [sectionNum]: { ...prev[sectionNum], documents: newDocs } };
+    });
   };
 
   const handlePrint = () => {
     if (!resultsRef.current) return;
-
-    // Logo is already embedded as base64 data URL in the img src - no replacement needed
     const htmlContent = resultsRef.current.innerHTML;
-
     const printWindow = window.open("", "_blank");
     if (printWindow) {
       printWindow.document.write(`
         <html>
           <head>
-            <title>LAI Investigative Questionnaire - ${data.clientName}</title>
+            <title>LAI Client Interview Questionnaire - ${clientName}</title>
             <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
             <style>
               * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -157,11 +328,11 @@ export default function InvestigativeQuestionnaire({ onBack }: { onBack: () => v
         </html>
       `);
       printWindow.document.close();
-      // Base64 images don't need loading - just wait for fonts
       setTimeout(() => printWindow.print(), 800);
     }
   };
 
+  // ─── Results View ───────────────────────────────────────────────────────────
   if (showResults) {
     return (
       <div style={{ padding: "1.5rem" }}>
@@ -177,7 +348,7 @@ export default function InvestigativeQuestionnaire({ onBack }: { onBack: () => v
           </button>
         </div>
 
-        <div ref={resultsRef} style={{ background: "white", color: "#1E293B", padding: "2.5rem", borderRadius: 8, border: `1px solid ${C.border}`, maxWidth: 850, margin: "0 auto" }}>
+        <div ref={resultsRef} style={{ background: "white", color: "#1E293B", padding: "2.5rem", borderRadius: 8, border: `1px solid ${C.border}`, maxWidth: 900, margin: "0 auto" }}>
           {/* Header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "2rem", paddingBottom: "1.5rem", borderBottom: `3px solid ${C.gold}` }}>
             <div>
@@ -185,70 +356,80 @@ export default function InvestigativeQuestionnaire({ onBack }: { onBack: () => v
               <p style={{ fontSize: "0.8rem", color: C.muted }}>Asset Intelligence & Capital Recovery</p>
             </div>
             <div style={{ textAlign: "right" }}>
-              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", color: C.slate, marginBottom: "0.25rem" }}>Investigative Questionnaire</h1>
-              <p style={{ fontSize: "0.85rem", color: C.muted }}>Date: {data.date}</p>
+              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.4rem", color: C.slate, marginBottom: "0.25rem" }}>Client Interview Questionnaire</h1>
+              <p style={{ fontSize: "0.85rem", color: C.muted }}>Date: {interviewDate}</p>
               <p style={{ fontSize: "0.85rem", color: C.muted }}>CONFIDENTIAL</p>
             </div>
           </div>
 
           {/* Client Info */}
-          <div style={{ marginBottom: "1.5rem", padding: "1rem", background: "#F8FAFC", borderRadius: 8 }}>
-            <p><strong>Client:</strong> {data.clientName || "—"}</p>
-            <p><strong>Contact:</strong> {data.contactName || "—"} {data.contactTitle ? `(${data.contactTitle})` : ""}</p>
+          <div style={{ marginBottom: "1.5rem", padding: "1rem", background: C.cardBg, borderRadius: 8 }}>
+            <p><strong>Client:</strong> {clientName || "—"}</p>
+            <p><strong>Interviewer:</strong> {interviewerName || "—"}</p>
+            <p><strong>Date:</strong> {interviewDate}</p>
           </div>
 
-          {/* Sections */}
-          {[
-            { title: "CFO / Finance Questions", items: [
-              { q: "What is the estimated total value of physical assets?", a: data.cfoAssetValue },
-              { q: "How confident are you in the accuracy of asset records?", a: data.cfoConfidence },
-              { q: "What financial impact have asset discrepancies caused?", a: data.cfoFinancialImpact },
-              { q: "When was the last comprehensive asset audit?", a: data.cfoLastAudit },
-            ]},
-            { title: "COO / Operations Questions", items: [
-              { q: "How many total physical locations does the organization operate?", a: data.cooLocations },
-              { q: "How many departments manage assets independently?", a: data.cooDepartments },
-              { q: "How many physical assets exist within the organization?", a: data.cooTotalAssets },
-              { q: "Are assets frequently moved between locations or departments?", a: data.cooFrequentlyMoved },
-              { q: "How difficult is it to locate equipment when needed?", a: data.cooDifficultToLocate },
-            ]},
-            { title: "Facilities / Asset Owner Questions", items: [
-              { q: "Are assets currently tagged?", a: data.facilitiesTagged },
-              { q: "What percentage of assets currently have tags?", a: data.facilitiesTagPercentage },
-              { q: "What condition are most asset records in?", a: data.facilitiesRecordCondition },
-              { q: "Are asset locations maintained accurately in your system?", a: data.facilitiesLocationsAccurate },
-            ]},
-            { title: "IT Questions", items: [
-              { q: "What system currently tracks assets?", a: data.itCurrentSystem },
-              { q: "Is the asset management system actively maintained?", a: data.itSystemMaintained },
-              { q: "Can asset information be accessed in real time?", a: data.itRealTimeAccess },
-            ]},
-            { title: "Governance Questions", items: [
-              { q: "Are documented asset management policies currently in place?", a: data.govPoliciesInPlace },
-              { q: "Are asset custodians assigned?", a: data.govCustodiansAssigned },
-              { q: "Are routine audits conducted?", a: data.govRoutineAudits },
-            ]},
-            { title: "Recovery Opportunity Questions", items: [
-              { q: "Do you believe assets are currently missing?", a: data.recoveryMissingAssets },
-              { q: "Are there assets no longer needed but remain on the books?", a: data.recoveryUnneededAssets },
-            ]},
-            { title: "Final Qualification Questions", items: [
-              { q: "Would leadership support corrective action if significant recoverable capital is identified?", a: data.finalLeadershipSupport },
-              { q: "What timeline would you prefer for beginning this initiative?", a: data.finalTimeline },
-              { q: "What budget range has been considered?", a: data.finalBudget },
-              { q: "Who ultimately approves projects of this type?", a: data.finalApprover },
-            ]},
-          ].map((section, si) => (
-            <div key={si} style={{ marginBottom: "1.5rem" }}>
-              <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: C.slate, marginBottom: "0.75rem", paddingBottom: "0.25rem", borderBottom: `1px solid ${C.border}` }}>{section.title}</h3>
-              {section.items.map((item, qi) => (
-                <div key={qi} style={{ marginBottom: "0.75rem" }}>
-                  <p style={{ fontSize: "0.85rem", fontWeight: 600, marginBottom: "0.15rem" }}>{item.q}</p>
-                  <p style={{ fontSize: "0.9rem", color: item.a ? C.text : C.muted, paddingLeft: "1rem", borderLeft: `2px solid ${item.a ? C.teal : C.border}` }}>{item.a || "No response provided"}</p>
+          {/* Each Section */}
+          {SECTIONS.map(section => {
+            const state = sections[section.number];
+            return (
+              <div key={section.number} style={{ marginBottom: "2rem", pageBreakInside: "avoid" }}>
+                <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1rem", color: C.slate, marginBottom: "0.5rem", paddingBottom: "0.25rem", borderBottom: `1px solid ${C.border}` }}>
+                  {section.number}. {section.category}
+                </h3>
+                <p style={{ fontSize: "0.85rem", fontWeight: 600, fontStyle: "italic", color: C.muted, marginBottom: "0.75rem" }}>
+                  {section.question}
+                </p>
+
+                {/* Interview Notes */}
+                {state.interviewNotes && (
+                  <div style={{ marginBottom: "0.75rem" }}>
+                    <p style={{ fontSize: "0.8rem", fontWeight: 700, color: C.teal, marginBottom: "0.25rem" }}>Interview Notes:</p>
+                    <p style={{ fontSize: "0.85rem", whiteSpace: "pre-wrap", paddingLeft: "0.75rem", borderLeft: `2px solid ${C.teal}` }}>{state.interviewNotes}</p>
+                  </div>
+                )}
+
+                {/* Key Details */}
+                <div style={{ marginBottom: "0.75rem" }}>
+                  <p style={{ fontSize: "0.8rem", fontWeight: 700, color: C.teal, marginBottom: "0.25rem" }}>Key Details:</p>
+                  {section.keyDetails.map((detail, i) => {
+                    const val = state.keyDetails[detail];
+                    return (
+                      <div key={i} style={{ display: "flex", gap: "0.5rem", marginBottom: "0.2rem", fontSize: "0.85rem" }}>
+                        <span style={{ fontWeight: 600, minWidth: "40%" }}>{detail}:</span>
+                        <span style={{ color: val ? C.text : C.muted }}>{val || "—"}</span>
+                      </div>
+                    );
+                  })}
                 </div>
-              ))}
-            </div>
-          ))}
+
+                {/* Supporting Documents */}
+                <div>
+                  <p style={{ fontSize: "0.8rem", fontWeight: 700, color: C.teal, marginBottom: "0.25rem" }}>Supporting Documents / Evidence:</p>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.8rem" }}>
+                    <thead>
+                      <tr style={{ background: C.cardBg }}>
+                        <th style={{ textAlign: "left", padding: "0.3rem 0.5rem", borderBottom: `1px solid ${C.border}` }}>Document</th>
+                        <th style={{ textAlign: "center", padding: "0.3rem 0.5rem", borderBottom: `1px solid ${C.border}`, width: 70 }}>Requested</th>
+                        <th style={{ textAlign: "center", padding: "0.3rem 0.5rem", borderBottom: `1px solid ${C.border}`, width: 70 }}>Received</th>
+                        <th style={{ textAlign: "center", padding: "0.3rem 0.5rem", borderBottom: `1px solid ${C.border}`, width: 90 }}>Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {state.documents.map((doc, di) => (
+                        <tr key={di}>
+                          <td style={{ padding: "0.3rem 0.5rem", borderBottom: `1px solid ${C.border}` }}>{doc.label}</td>
+                          <td style={{ textAlign: "center", padding: "0.3rem 0.5rem", borderBottom: `1px solid ${C.border}` }}>{doc.requested || "—"}</td>
+                          <td style={{ textAlign: "center", padding: "0.3rem 0.5rem", borderBottom: `1px solid ${C.border}` }}>{doc.received || "—"}</td>
+                          <td style={{ textAlign: "center", padding: "0.3rem 0.5rem", borderBottom: `1px solid ${C.border}` }}>{doc.date || "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })}
 
           {/* Footer */}
           <div style={{ marginTop: "2rem", paddingTop: "1rem", borderTop: `1px solid ${C.border}`, textAlign: "center" }}>
@@ -260,119 +441,194 @@ export default function InvestigativeQuestionnaire({ onBack }: { onBack: () => v
     );
   }
 
-  // ─── Input Form ───
+  // ─── Input Form ─────────────────────────────────────────────────────────────
+  const currentSection = SECTIONS.find(s => s.number === activeSection)!;
+  const currentState = sections[activeSection];
+
   return (
-    <div style={{ padding: "1.5rem", maxWidth: 900, margin: "0 auto" }}>
+    <div style={{ padding: "1.5rem", maxWidth: 950, margin: "0 auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", color: C.slate }}>Investigative Questionnaire</h2>
+        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: "1.5rem", color: C.slate }}>Client Interview Questionnaire</h2>
         <button onClick={onBack} style={{ padding: "0.5rem 1rem", background: "#E2E8F0", color: C.text, border: "none", borderRadius: 6, fontWeight: 600, cursor: "pointer", fontSize: "0.85rem" }}>
           ← Back to Portal
         </button>
       </div>
 
-      {/* Client Info */}
-      <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>Client Information</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "1rem" }}>
-          <div><label style={labelStyle}>Client / Organization Name</label><input style={inputStyle} value={data.clientName} onChange={e => update("clientName", e.target.value)} placeholder="Enter client name" /></div>
-          <div><label style={labelStyle}>Contact Name</label><input style={inputStyle} value={data.contactName} onChange={e => update("contactName", e.target.value)} placeholder="Primary contact" /></div>
-          <div><label style={labelStyle}>Contact Title</label><input style={inputStyle} value={data.contactTitle} onChange={e => update("contactTitle", e.target.value)} placeholder="Title / Role" /></div>
-          <div><label style={labelStyle}>Date</label><input style={inputStyle} type="date" value={data.date} onChange={e => update("date", e.target.value)} /></div>
+      {/* Client Info Header */}
+      <div style={{ marginBottom: "1.5rem", padding: "1rem", background: C.cardBg, borderRadius: 8, border: `1px solid ${C.border}` }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1rem" }}>
+          <div><label style={labelStyle}>Client / Organization</label><input style={inputStyle} value={clientName} onChange={e => setClientName(e.target.value)} placeholder="Enter client name" /></div>
+          <div><label style={labelStyle}>Interviewer Name</label><input style={inputStyle} value={interviewerName} onChange={e => setInterviewerName(e.target.value)} placeholder="LAI interviewer" /></div>
+          <div><label style={labelStyle}>Date</label><input style={inputStyle} type="date" value={interviewDate} onChange={e => setInterviewDate(e.target.value)} /></div>
         </div>
       </div>
 
-      {/* CFO Questions */}
-      <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>CFO / Finance Questions</h3>
-        <div style={{ display: "grid", gap: "1rem" }}>
-          <div><label style={labelStyle}>What is the estimated total value of physical assets?</label><input style={inputStyle} value={data.cfoAssetValue} onChange={e => update("cfoAssetValue", e.target.value)} placeholder="e.g., $5M - $10M" /></div>
-          <div><label style={labelStyle}>How confident are you in the accuracy of asset records?</label><input style={inputStyle} value={data.cfoConfidence} onChange={e => update("cfoConfidence", e.target.value)} placeholder="e.g., Low / Moderate / High" /></div>
-          <div><label style={labelStyle}>What financial impact have asset discrepancies caused?</label><textarea style={textareaStyle} value={data.cfoFinancialImpact} onChange={e => update("cfoFinancialImpact", e.target.value)} placeholder="Describe any known impacts..." /></div>
-          <div><label style={labelStyle}>When was the last comprehensive asset audit?</label><input style={inputStyle} value={data.cfoLastAudit} onChange={e => update("cfoLastAudit", e.target.value)} placeholder="e.g., 3 years ago / Never" /></div>
+      {/* Section Navigation */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "0.4rem", marginBottom: "1.5rem" }}>
+        {SECTIONS.map(s => (
+          <button
+            key={s.number}
+            onClick={() => setActiveSection(s.number)}
+            style={{
+              padding: "0.4rem 0.75rem",
+              background: activeSection === s.number ? C.slate : "white",
+              color: activeSection === s.number ? "white" : C.text,
+              border: `1px solid ${activeSection === s.number ? C.slate : C.border}`,
+              borderRadius: 6,
+              fontSize: "0.75rem",
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: "'Source Sans 3', sans-serif",
+            }}
+          >
+            {s.number}. {s.category}
+          </button>
+        ))}
+      </div>
+
+      {/* Active Section */}
+      <div style={{ background: "white", border: `1px solid ${C.border}`, borderRadius: 8, padding: "1.5rem" }}>
+        <h3 style={sectionTitleStyle}>{currentSection.number}. {currentSection.category}</h3>
+        <p style={{ fontSize: "0.9rem", fontWeight: 600, color: C.slate, marginBottom: "1.5rem", fontStyle: "italic" }}>
+          {currentSection.question}
+        </p>
+
+        {/* Interview Notes */}
+        <div style={{ marginBottom: "1.5rem" }}>
+          <p style={subheadingStyle}>Interview Notes</p>
+          <textarea
+            style={{ ...textareaStyle, minHeight: "8rem" }}
+            value={currentState.interviewNotes}
+            onChange={e => updateNotes(activeSection, e.target.value)}
+            placeholder="Capture free-form interview notes here..."
+          />
+        </div>
+
+        {/* Key Details to Capture */}
+        <div style={{ marginBottom: "1.5rem" }}>
+          <p style={subheadingStyle}>Key Details to Capture</p>
+          <div style={{ display: "grid", gap: "0.75rem" }}>
+            {currentSection.keyDetails.map((detail, i) => (
+              <div key={i}>
+                <label style={labelStyle}>{detail}</label>
+                <input
+                  style={inputStyle}
+                  value={currentState.keyDetails[detail]}
+                  onChange={e => updateDetail(activeSection, detail, e.target.value)}
+                  placeholder={`Enter ${detail.toLowerCase()}...`}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Supporting Documents / Evidence to Request */}
+        <div>
+          <p style={subheadingStyle}>Supporting Documents / Evidence to Request</p>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+            <thead>
+              <tr style={{ background: C.cardBg }}>
+                <th style={{ textAlign: "left", padding: "0.5rem", borderBottom: `1px solid ${C.border}` }}>Document</th>
+                <th style={{ textAlign: "center", padding: "0.5rem", borderBottom: `1px solid ${C.border}`, width: 90 }}>Requested</th>
+                <th style={{ textAlign: "center", padding: "0.5rem", borderBottom: `1px solid ${C.border}`, width: 90 }}>Received</th>
+                <th style={{ textAlign: "center", padding: "0.5rem", borderBottom: `1px solid ${C.border}`, width: 110 }}>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentState.documents.map((doc, di) => (
+                <tr key={di}>
+                  <td style={{ padding: "0.5rem", borderBottom: `1px solid ${C.border}`, fontSize: "0.85rem" }}>{doc.label}</td>
+                  <td style={{ padding: "0.25rem", borderBottom: `1px solid ${C.border}` }}>
+                    <select
+                      style={{ ...inputStyle, padding: "0.25rem", fontSize: "0.8rem", textAlign: "center" }}
+                      value={doc.requested}
+                      onChange={e => updateDoc(activeSection, di, "requested", e.target.value)}
+                    >
+                      <option value="">—</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </td>
+                  <td style={{ padding: "0.25rem", borderBottom: `1px solid ${C.border}` }}>
+                    <select
+                      style={{ ...inputStyle, padding: "0.25rem", fontSize: "0.8rem", textAlign: "center" }}
+                      value={doc.received}
+                      onChange={e => updateDoc(activeSection, di, "received", e.target.value)}
+                    >
+                      <option value="">—</option>
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </td>
+                  <td style={{ padding: "0.25rem", borderBottom: `1px solid ${C.border}` }}>
+                    <input
+                      type="date"
+                      style={{ ...inputStyle, padding: "0.25rem", fontSize: "0.8rem" }}
+                      value={doc.date}
+                      onChange={e => updateDoc(activeSection, di, "date", e.target.value)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* COO Questions */}
-      <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>COO / Operations Questions</h3>
-        <div style={{ display: "grid", gap: "1rem" }}>
-          <div><label style={labelStyle}>How many total physical locations?</label><input style={inputStyle} value={data.cooLocations} onChange={e => update("cooLocations", e.target.value)} placeholder="Number of locations" /></div>
-          <div><label style={labelStyle}>How many departments manage assets independently?</label><input style={inputStyle} value={data.cooDepartments} onChange={e => update("cooDepartments", e.target.value)} placeholder="Number of departments" /></div>
-          <div><label style={labelStyle}>Approximately how many physical assets exist?</label><input style={inputStyle} value={data.cooTotalAssets} onChange={e => update("cooTotalAssets", e.target.value)} placeholder="Estimated asset count" /></div>
-          <div><label style={labelStyle}>Are assets frequently moved between locations or departments?</label><input style={inputStyle} value={data.cooFrequentlyMoved} onChange={e => update("cooFrequentlyMoved", e.target.value)} placeholder="Yes / No / Sometimes" /></div>
-          <div><label style={labelStyle}>How difficult is it to locate equipment when needed?</label><input style={inputStyle} value={data.cooDifficultToLocate} onChange={e => update("cooDifficultToLocate", e.target.value)} placeholder="Easy / Moderate / Very Difficult" /></div>
-        </div>
-      </div>
+      {/* Navigation & Generate */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1.5rem" }}>
+        <button
+          onClick={() => setActiveSection(Math.max(1, activeSection - 1))}
+          disabled={activeSection === 1}
+          style={{
+            padding: "0.6rem 1.2rem",
+            background: activeSection === 1 ? "#E2E8F0" : C.slate,
+            color: activeSection === 1 ? C.muted : "white",
+            border: "none",
+            borderRadius: 6,
+            fontWeight: 600,
+            cursor: activeSection === 1 ? "default" : "pointer",
+            fontSize: "0.85rem",
+            opacity: activeSection === 1 ? 0.5 : 1,
+          }}
+        >
+          ← Previous Section
+        </button>
 
-      {/* Facilities Questions */}
-      <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>Facilities / Asset Owner Questions</h3>
-        <div style={{ display: "grid", gap: "1rem" }}>
-          <div><label style={labelStyle}>Are assets currently tagged?</label><input style={inputStyle} value={data.facilitiesTagged} onChange={e => update("facilitiesTagged", e.target.value)} placeholder="Yes / No / Partially" /></div>
-          <div><label style={labelStyle}>What percentage of assets currently have tags?</label><input style={inputStyle} value={data.facilitiesTagPercentage} onChange={e => update("facilitiesTagPercentage", e.target.value)} placeholder="e.g., ~40%" /></div>
-          <div><label style={labelStyle}>What condition are most asset records in?</label><input style={inputStyle} value={data.facilitiesRecordCondition} onChange={e => update("facilitiesRecordCondition", e.target.value)} placeholder="Excellent / Good / Fair / Poor" /></div>
-          <div><label style={labelStyle}>Are asset locations maintained accurately in your system?</label><input style={inputStyle} value={data.facilitiesLocationsAccurate} onChange={e => update("facilitiesLocationsAccurate", e.target.value)} placeholder="Yes / No / Partially" /></div>
-        </div>
+        {activeSection === 8 ? (
+          <button
+            onClick={() => setShowResults(true)}
+            style={{
+              padding: "0.6rem 1.5rem",
+              background: C.gold,
+              color: "white",
+              border: "none",
+              borderRadius: 6,
+              fontWeight: 700,
+              cursor: "pointer",
+              fontSize: "0.9rem",
+            }}
+          >
+            Generate Printable Document
+          </button>
+        ) : (
+          <button
+            onClick={() => setActiveSection(Math.min(8, activeSection + 1))}
+            style={{
+              padding: "0.6rem 1.2rem",
+              background: C.teal,
+              color: "white",
+              border: "none",
+              borderRadius: 6,
+              fontWeight: 600,
+              cursor: "pointer",
+              fontSize: "0.85rem",
+            }}
+          >
+            Next Section →
+          </button>
+        )}
       </div>
-
-      {/* IT Questions */}
-      <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>IT Questions</h3>
-        <div style={{ display: "grid", gap: "1rem" }}>
-          <div><label style={labelStyle}>What system currently tracks assets?</label><input style={inputStyle} value={data.itCurrentSystem} onChange={e => update("itCurrentSystem", e.target.value)} placeholder="e.g., Spreadsheets, ERP, CMMS" /></div>
-          <div><label style={labelStyle}>Is the asset management system actively maintained?</label><input style={inputStyle} value={data.itSystemMaintained} onChange={e => update("itSystemMaintained", e.target.value)} placeholder="Yes / No / Partially" /></div>
-          <div><label style={labelStyle}>Can asset information be accessed in real time?</label><input style={inputStyle} value={data.itRealTimeAccess} onChange={e => update("itRealTimeAccess", e.target.value)} placeholder="Yes / No" /></div>
-        </div>
-      </div>
-
-      {/* Governance Questions */}
-      <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>Governance Questions</h3>
-        <div style={{ display: "grid", gap: "1rem" }}>
-          <div><label style={labelStyle}>Are documented asset management policies currently in place?</label><input style={inputStyle} value={data.govPoliciesInPlace} onChange={e => update("govPoliciesInPlace", e.target.value)} placeholder="Yes / No / Partially" /></div>
-          <div><label style={labelStyle}>Are asset custodians assigned?</label><input style={inputStyle} value={data.govCustodiansAssigned} onChange={e => update("govCustodiansAssigned", e.target.value)} placeholder="Yes / No / Some departments" /></div>
-          <div><label style={labelStyle}>Are routine audits conducted?</label><input style={inputStyle} value={data.govRoutineAudits} onChange={e => update("govRoutineAudits", e.target.value)} placeholder="Yes / No / Irregularly" /></div>
-        </div>
-      </div>
-
-      {/* Recovery Questions */}
-      <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>Recovery Opportunity Questions</h3>
-        <div style={{ display: "grid", gap: "1rem" }}>
-          <div><label style={labelStyle}>Do you believe assets are currently missing?</label><textarea style={textareaStyle} value={data.recoveryMissingAssets} onChange={e => update("recoveryMissingAssets", e.target.value)} placeholder="Describe any known missing assets..." /></div>
-          <div><label style={labelStyle}>Are there assets no longer needed but remain on the books?</label><textarea style={textareaStyle} value={data.recoveryUnneededAssets} onChange={e => update("recoveryUnneededAssets", e.target.value)} placeholder="Describe any known surplus assets..." /></div>
-        </div>
-      </div>
-
-      {/* Final Questions */}
-      <div style={{ marginBottom: "2rem" }}>
-        <h3 style={sectionTitleStyle}>Final Qualification Questions</h3>
-        <div style={{ display: "grid", gap: "1rem" }}>
-          <div><label style={labelStyle}>Would leadership support corrective action if significant recoverable capital is identified?</label><input style={inputStyle} value={data.finalLeadershipSupport} onChange={e => update("finalLeadershipSupport", e.target.value)} placeholder="Yes / Likely / Uncertain" /></div>
-          <div><label style={labelStyle}>What timeline would you prefer?</label><input style={inputStyle} value={data.finalTimeline} onChange={e => update("finalTimeline", e.target.value)} placeholder="e.g., Within 30 days, Next quarter" /></div>
-          <div><label style={labelStyle}>What budget range has been considered?</label><input style={inputStyle} value={data.finalBudget} onChange={e => update("finalBudget", e.target.value)} placeholder="e.g., $25K - $50K" /></div>
-          <div><label style={labelStyle}>Who ultimately approves projects of this type?</label><input style={inputStyle} value={data.finalApprover} onChange={e => update("finalApprover", e.target.value)} placeholder="Name and title" /></div>
-        </div>
-      </div>
-
-      {/* Generate Button */}
-      <button
-        onClick={() => setShowResults(true)}
-        style={{
-          width: "100%",
-          padding: "1rem",
-          background: C.gold,
-          color: "white",
-          border: "none",
-          borderRadius: 8,
-          fontFamily: "'Source Sans 3', sans-serif",
-          fontWeight: 700,
-          fontSize: "1rem",
-          cursor: "pointer",
-        }}
-      >
-        Generate Printable Document
-      </button>
     </div>
   );
 }

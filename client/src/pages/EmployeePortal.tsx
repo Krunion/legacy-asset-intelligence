@@ -147,8 +147,8 @@ export default function EmployeePortal() {
     },
     {
       id: "investigative-questionnaire" as ActiveTool,
-      title: "Investigative Questionnaire",
-      description: "Structured client discovery document covering CFO, COO, Facilities, IT, and Governance questions",
+      title: "Client Interview Questionnaire",
+      description: "8-section structured interview covering Executive Priorities, Asset Lifecycle, FAR Accuracy, Exceptions, Inventory, Systems/Governance, Outcomes, and Scope",
       icon: "📝",
       type: "Interactive Tool",
       action: "Open Questionnaire",

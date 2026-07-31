@@ -664,3 +664,6 @@
 
 ## Proposal Calculator Number Formatting (July 31, 2026)
 - [x] Add commas and decimal formatting to all numeric input fields (e.g. 1,000,000.00)
+
+## Client Interview Questionnaire Update (July 31, 2026)
+- [x] Replace current Client Interview Questionnaire in Employee Portal with updated version from LAI_Client_Interview_Questionnaire_Updated.docx
