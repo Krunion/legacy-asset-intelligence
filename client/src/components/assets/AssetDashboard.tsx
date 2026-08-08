@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { COLORS } from "@shared/colors";
 
@@ -10,6 +11,30 @@ interface Props {
 
 export default function AssetDashboard({ projectId, onNavigate }: Props) {
   const { data: stats, isLoading } = trpc.assets.stats.useQuery({ projectId });
+  const [isDownloading, setIsDownloading] = useState(false);
+
+  const handleDownloadAll = async () => {
+    setIsDownloading(true);
+    try {
+      const response = await fetch(`/api/export/project/${projectId}`);
+      if (!response.ok) throw new Error("Export failed");
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      const disposition = response.headers.get("Content-Disposition");
+      a.download = disposition?.match(/filename="(.+)"/)?.[1] || `LAI_Export_Project_${projectId}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      alert("Failed to download project data. Please try again.");
+      console.error(err);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   const statCards = [
     { label: "Total Assets", value: stats?.totalAssets ?? 0, icon: "▦", color: C.gold },
@@ -23,6 +48,7 @@ export default function AssetDashboard({ projectId, onNavigate }: Props) {
     { label: "Scan Barcode", icon: "⊞", action: () => onNavigate("scan"), desc: "Scan to find or add" },
     { label: "Import CSV", icon: "↑", action: () => onNavigate("import"), desc: "Bulk import assets" },
     { label: "View All Assets", icon: "▦", action: () => onNavigate("list"), desc: "Browse asset register" },
+    { label: isDownloading ? "Downloading..." : "Download All Data", icon: "📦", action: handleDownloadAll, desc: "ZIP export of entire project" },
   ];
 
   return (

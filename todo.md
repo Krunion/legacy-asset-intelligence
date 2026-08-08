@@ -701,3 +701,12 @@
 - [x] Add photo delete functionality to uploaded asset photos
 - [x] Remove Executive Assessment Form, Depreciation Calculator, and Salvage Calculator from Employee Portal
 - [x] Reorder Employee Portal tools: Asset Intelligence Assessment, Preliminary Capital Opportunity Assessment, Proposal Calculator, Corporate Finance Calculator, Client Interview Questionnaire, Asset Management System
+
+## Download All Project Data Export (August 8, 2026)
+- [x] Create server-side export endpoint that generates ZIP with project CSVs
+- [x] Include assets CSV with all fields per project
+- [x] Include project info/metadata CSV
+- [x] Include photo URLs and document URLs in export
+- [x] Include billing, risks, recovery, meetings data if present
+- [x] Add Download All Data button to Asset Management project view
+- [x] Handle large exports without timeout
