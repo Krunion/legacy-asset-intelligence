@@ -38,6 +38,7 @@ const industries = [
     id: "healthcare",
     name: "Healthcare",
     headline: "Strengthening Financial Accountability in Healthcare Asset Management",
+    video: "https://www.youtube.com/embed/GPa46Nd9CPA",
     challenge: "Healthcare organizations manage thousands of high-value clinical, diagnostic, and support assets across multiple facilities. Equipment moves between departments, gets retired without proper documentation, and accumulates on financial records long after it has been disposed of. The result is inflated insurance premiums, inaccurate depreciation schedules, compliance exposure, and potential capital recovery opportunities that remain unidentified.",
     impacts: ["Ghost assets inflating property tax and insurance costs", "Untracked equipment creating compliance and audit exposure", "Capital budget decisions based on inaccurate asset data", "Duplicate purchases due to poor visibility into existing inventory", "Maintenance contracts on equipment no longer in service"],
     approach: "Our healthcare engagements are designed around the unique operational requirements of clinical environments — working around patient care schedules, maintaining infection control protocols, and coordinating with department leadership to minimize disruption while delivering comprehensive asset intelligence.",
@@ -47,6 +48,7 @@ const industries = [
     id: "manufacturing",
     name: "Manufacturing",
     headline: "Operational Intelligence for Complex Manufacturing Environments",
+    video: "https://www.youtube.com/embed/KL5eq33j7Hw",
     challenge: "Manufacturing facilities contain dense concentrations of production equipment, tooling, support systems, and infrastructure assets that change constantly through upgrades, replacements, and retooling. Financial records often lag behind physical reality by years, creating significant discrepancies between what the organization believes it owns and what actually exists on the production floor.",
     impacts: ["Production equipment on books that was scrapped or replaced years ago", "Tooling and fixtures never properly capitalized or tracked", "Insurance coverage based on inaccurate asset valuations", "Capital expenditure decisions without accurate baseline data", "Maintenance spending on equipment that no longer exists"],
     approach: "Manufacturing engagements require deep understanding of production environments, equipment classifications, and the relationship between asset condition and operational capability. Our field teams are experienced in navigating complex production floors while maintaining safety protocols and minimizing operational disruption.",
@@ -56,6 +58,7 @@ const industries = [
     id: "education",
     name: "Education",
     headline: "Asset Accountability Across Multi-Campus Educational Institutions",
+    video: "https://www.youtube.com/embed/r4J11-vCrpI",
     challenge: "Educational institutions — from K-12 districts to major universities — manage vast portfolios of technology, furniture, laboratory equipment, athletic facilities, and infrastructure assets across multiple buildings and campuses. Decentralized purchasing, high staff turnover, and limited tracking systems create environments where assets disappear, duplicate purchases occur, and financial records become increasingly unreliable over time.",
     impacts: ["Technology assets purchased but never properly tracked or inventoried", "Furniture and equipment moved between buildings without documentation", "Grant-funded assets requiring specific tracking and reporting", "Bond-funded capital improvements with inadequate accountability", "Insurance premiums based on outdated or inflated asset schedules"],
     approach: "Educational engagements are structured around academic calendars, working during breaks and low-activity periods to minimize disruption to learning environments. We understand the unique challenges of grant compliance, bond accountability, and the decentralized nature of educational asset management.",
@@ -65,6 +68,7 @@ const industries = [
     id: "utilities",
     name: "Utilities & Energy",
     headline: "Critical Infrastructure Asset Intelligence for Utility Organizations",
+    video: "https://www.youtube.com/embed/JjiNL-EKKAo",
     challenge: "Utility companies manage extensive networks of generation, transmission, distribution, and support assets that span geographic regions. The combination of long asset lifecycles, regulatory reporting requirements, and the critical nature of infrastructure creates environments where accurate asset information is essential for both financial performance and operational reliability.",
     impacts: ["Financial reporting based on inaccurate asset records", "Infrastructure assets retired but never removed from financial records", "Capital planning without accurate condition assessment data", "Maintenance programs based on incomplete asset inventories", "Documentation gaps that complicate regulatory and compliance reviews"],
     approach: "Utility engagements require understanding of regulatory frameworks, rate case implications, and the critical nature of infrastructure assets. Our methodology addresses both the financial reporting requirements and the operational intelligence needs of utility organizations.",
@@ -74,6 +78,7 @@ const industries = [
     id: "logistics",
     name: "Logistics & Distribution",
     headline: "Asset Visibility Across Complex Distribution Networks",
+    video: "https://www.youtube.com/embed/JR8fMR7C_xo",
     challenge: "Logistics and distribution organizations manage fleets, warehouse equipment, material handling systems, and technology assets across multiple facilities and geographic regions. The high-velocity nature of distribution operations means assets are constantly moving, being replaced, and changing condition — creating significant challenges for maintaining accurate financial records.",
     impacts: ["Fleet and equipment assets on books after disposal or trade-in", "Warehouse equipment replaced without proper financial documentation", "Technology assets deployed across facilities without centralized tracking", "Insurance coverage based on inaccurate fleet and equipment valuations", "Capital planning without accurate condition and utilization data"],
     approach: "Distribution engagements are designed to work within the 24/7 operational demands of logistics environments, coordinating with facility management to conduct verification during optimal windows while maintaining complete coverage across all asset categories.",
@@ -83,6 +88,7 @@ const industries = [
     id: "construction",
     name: "Construction",
     headline: "Equipment Accountability for Construction and Heavy Industry",
+    video: "",
     challenge: "Construction companies manage expensive heavy equipment, vehicles, tools, and technology assets that move between job sites, get transferred between divisions, and are subject to harsh operating conditions. The mobile nature of construction assets creates unique tracking challenges that traditional inventory methods cannot address effectively.",
     impacts: ["Equipment moving between job sites without documentation", "Tools and small equipment lost or unaccounted for across projects", "Insurance premiums based on inaccurate equipment valuations", "Equipment purchases duplicated due to poor visibility", "Maintenance costs on equipment that has been disposed of"],
     approach: "Construction engagements address the unique challenges of mobile assets, multi-site operations, and the harsh environments that accelerate equipment degradation. Our methodology includes both yard-based verification and job-site coordination to ensure complete coverage.",
@@ -92,6 +98,7 @@ const industries = [
     id: "government",
     name: "Government & Public Sector",
     headline: "Public Accountability Through Comprehensive Asset Intelligence",
+    video: "https://www.youtube.com/embed/Y_mrc8JnoQc",
     challenge: "Government agencies and public sector organizations face unique accountability requirements — managing taxpayer-funded assets with transparency, compliance, and fiduciary responsibility. The combination of complex procurement processes, multiple funding sources, and public reporting requirements creates environments where accurate asset information is both a financial necessity and a public trust obligation.",
     impacts: ["Taxpayer-funded assets unaccounted for or improperly tracked", "GASB compliance challenges due to incomplete asset records", "Grant-funded assets requiring specific tracking and reporting", "Capital improvement bonds with inadequate asset accountability", "Public reporting based on inaccurate or outdated information"],
     approach: "Government engagements are structured around the unique requirements of public sector accountability — GASB compliance, grant reporting, bond accountability, and the transparency expectations of public stewardship. Our methodology addresses both the financial requirements and the public trust obligations of government asset management.",
@@ -167,6 +174,21 @@ export default function Industries() {
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.75rem", fontWeight: 600, color: C.gold, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.4rem" }}>Our Approach</p>
               <p style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.9rem", color: C.text, margin: 0, lineHeight: 1.75 }}>{ind.approach}</p>
             </div>
+
+            {ind.video && (
+              <div style={{ marginTop: "2rem" }}>
+                <h3 style={{ fontFamily: "'Source Sans 3', sans-serif", fontSize: "0.8rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: C.silver, marginBottom: "1rem" }}>Industry Overview</h3>
+                <div style={{ position: "relative", paddingBottom: "56.25%", height: 0, overflow: "hidden", borderRadius: 8, border: `1px solid ${C.glassBorder}` }}>
+                  <iframe
+                    src={ind.video}
+                    title={`${ind.name} - Industry Overview`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </Section>
       ))}

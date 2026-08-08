@@ -37,12 +37,10 @@ const team: TeamMember[] = [
   },
   {
     name: "Darryl Fedric",
-    title: "Chief Experience Officer",
+    title: "Chief Strategy Officer",
     photo: "/manus-storage/Darryl_dbe48163.png",
     bio: [
-      "Darryl Fedric brings more than 14 years of experience in emergency services, safety compliance, project management, operational risk assessment, and investigations. His career includes service as a firefighter and paramedic lieutenant, flight paramedic, critical care paramedic, and emergency room technician. These demanding roles required sound judgment, effective communication, attention to detail, and the ability to make critical decisions in highly regulated and rapidly changing environments.",
-      "Darryl later served as a Chief Safety Officer and Project Manager, providing safety and operational oversight for more than 400 personnel across multiple worksites. His responsibilities included conducting safety inspections and job hazard analyses, leading safety briefings, enforcing OSHA- and CDC-aligned standards, supporting workforce accountability, and identifying risks before they disrupted operations. He holds an OSHA 30 certification, a Construction Project Management Certificate from Columbia University, and multiple advanced emergency medical credentials.",
-      "His background as a private investigator further strengthens his ability to evaluate information, identify inconsistencies, document findings, and handle sensitive matters with professionalism and discretion. As Chief Experience Officer for Legacy Asset Intelligence, Darryl applies his investigative mindset, operational leadership, and commitment to accountability to strengthen client relationships, maintain service quality, and ensure clients receive a professional and consistent experience throughout every phase of engagement.",
+      "Darryl Fedric serves as Chief Strategy Officer of Legacy Asset Intelligence, where he helps guide enterprise strategy, growth priorities, market positioning, and long-term execution. Working across the leadership team, he translates LAI's vision into practical initiatives that strengthen client value, strategic partnerships, operational alignment, and sustainable growth. Darryl evaluates new opportunities, supports executive decision-making, and helps ensure major initiatives remain aligned with LAI's mission to recover hidden capital, eliminate waste, and improve asset visibility and governance.",
     ],
   },
   {
