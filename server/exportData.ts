@@ -1,5 +1,6 @@
 import { Request, Response, Express } from "express";
 import { ZipArchive } from "archiver";
+// ZipArchive from archiver v8 extends Node Readable stream
 import { getDb } from "./db";
 import { storageGetSignedUrl } from "./storage";
 import {
@@ -51,8 +52,8 @@ export function registerExportRoutes(app: Express) {
       res.setHeader("Content-Disposition", `attachment; filename="LAI_Export_${safeName}_${new Date().toISOString().split("T")[0]}.zip"`);
 
       // Create ZIP archive (streaming)
-      const archive = new ZipArchive({ zlib: { level: 6 } });
-      archive.pipe(res);
+      const archive = new ZipArchive({ zlib: { level: 6 } }) as any;
+      (archive as any).pipe(res);
 
       // 1. Project Info CSV
       let projectCsv = toCsvRow(["Field", "Value"]);
