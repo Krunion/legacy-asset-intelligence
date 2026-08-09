@@ -2,7 +2,7 @@ import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { logAudit } from "../audit";
-import { clientPortalAccounts, assetProjects, assets, assetCategories, projectPhases, projectKpis, financialRecovery, riskExceptions, clientActionItems, projectReports, projectMeetings, projectBilling, projectDocuments, auditHistory } from "../../drizzle/schema";
+import { clientPortalAccounts, assetProjects, assets, assetCategories, projectPhases, projectKpis, financialRecovery, riskExceptions, clientActionItems, projectReports, projectMeetings, projectBilling, projectDocuments, auditHistory, projectVerificationMetrics, projectLocations, projectDepartments, farBaselineVersions, phase2Milestones } from "../../drizzle/schema";
 import { eq, and, desc, sql, count } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
@@ -425,14 +425,37 @@ export const clientPortalRouter = router({
         .orderBy(desc(assets.createdAt))
         .limit(20);
 
-      // Get project phases
-      const phases = await db
+      // Get Phase 2 verification metrics
+      const [verificationMetrics] = await db
         .select()
-        .from(projectPhases)
-        .where(eq(projectPhases.projectId, input.projectId))
-        .orderBy(projectPhases.phaseNumber);
+        .from(projectVerificationMetrics)
+        .where(eq(projectVerificationMetrics.projectId, input.projectId))
+        .limit(1);
 
-      // Get KPIs
+      // Get Phase 2 milestones
+      const milestones = await db
+        .select()
+        .from(phase2Milestones)
+        .where(eq(phase2Milestones.projectId, input.projectId))
+        .orderBy(phase2Milestones.milestoneNumber);
+
+      // Get project locations (client-visible only for client access)
+      const allLocations = await db
+        .select()
+        .from(projectLocations)
+        .where(eq(projectLocations.projectId, input.projectId))
+        .orderBy(projectLocations.locationName);
+      const locations = isAdminAccess ? allLocations : allLocations.filter(l => l.isClientVisible === 1);
+
+      // Get project departments (client-visible only for client access)
+      const allDepartments = await db
+        .select()
+        .from(projectDepartments)
+        .where(eq(projectDepartments.projectId, input.projectId))
+        .orderBy(projectDepartments.departmentName);
+      const departments = isAdminAccess ? allDepartments : allDepartments.filter(d => d.isClientVisible === 1);
+
+      // Get KPIs (legacy support)
       const [kpis] = await db
         .select()
         .from(projectKpis)
@@ -497,6 +520,32 @@ export const clientPortalRouter = router({
       const realizedRecovery = recoveryItems.filter(i => i.status === "realized").reduce((sum, item) => sum + parseFloat(item.amount || "0"), 0);
       const pendingRecovery = recoveryItems.filter(i => ["identified", "under_investigation", "awaiting_validation", "approved", "in_progress"].includes(i.status)).reduce((sum, item) => sum + parseFloat(item.amount || "0"), 0);
 
+      // Calculate Phase 2 verification metrics
+      const vm = verificationMetrics;
+      const farBaseline = vm?.farBaselineCount || 0;
+      const verified = vm?.verifiedFarAssets || 0;
+      const notFound = vm?.notFoundAssets || 0;
+      const additional = vm?.additionalAssetsFound || 0;
+      const remaining = Math.max(farBaseline - verified - notFound, 0);
+      const totalPhysicallyVerified = verified + additional;
+      const farRecordsProcessed = verified + notFound;
+      const verificationCoverage = farBaseline > 0 ? ((verified + notFound + additional) / farBaseline) * 100 : 0;
+
+      // Calculate Phase 2 completion from milestones
+      const phase2Completion = milestones.length > 0
+        ? Math.round(milestones.reduce((sum, m) => sum + (m.completionPercent || 0), 0) / milestones.length)
+        : 0;
+
+      // Calculate pending client actions
+      const pendingClientActions = actionItems.filter(a => ["pending", "in_review"].includes(a.status)).length;
+
+      // Calculate open risks count
+      const openRisks = risks.filter(r => ["open", "under_review", "mitigation_in_progress", "in_progress"].includes(r.status)).length;
+
+      // Calculate estimated ROI
+      const costBasis = parseFloat(vm?.phase2CostBasis || "0");
+      const estimatedRoi = costBasis > 0 ? ((totalRecovery - costBasis) / costBasis) * 100 : 0;
+
       return {
         project: {
           name: project.name,
@@ -514,21 +563,59 @@ export const clientPortalRouter = router({
           activeAssets: activeResult?.total ?? 0,
           totalValue: parseFloat(valueResult?.total || "0"),
         },
+        // Phase 2 Verification & Reconciliation
+        verification: {
+          farBaseline,
+          verified,
+          notFound,
+          additional,
+          remaining,
+          totalPhysicallyVerified,
+          farRecordsProcessed,
+          verificationCoverage: Math.round(verificationCoverage * 100) / 100,
+          ghostAssets: vm?.ghostAssetCount || 0,
+          ghostAssetValue: parseFloat(vm?.ghostAssetValue || "0"),
+          zombieAssets: vm?.zombieAssetCount || 0,
+          zombieAssetValue: parseFloat(vm?.zombieAssetValue || "0"),
+          vampireAssets: vm?.vampireAssetCount || 0,
+          vampireAssetValue: parseFloat(vm?.vampireAssetValue || "0"),
+          duplicateAssets: vm?.duplicateAssetCount || 0,
+          duplicateAssetValue: parseFloat(vm?.duplicateAssetValue || "0"),
+          assetsInRepair: vm?.assetsInRepair || 0,
+          activeAssets: vm?.activeAssets || 0,
+          conditionDistribution: vm?.conditionDistribution || null,
+          phase2Status: vm?.phase2Status || "not_started",
+          phase2StartDate: vm?.phase2StartDate || null,
+          phase2TargetDate: vm?.phase2TargetDate || null,
+          phase2Completion,
+          clientFacingSummary: vm?.clientFacingSummary || null,
+          lastUpdated: vm?.updatedAt || null,
+        },
+        milestones: milestones.map(m => ({
+          ...m,
+          internalNote: isAdminAccess ? m.internalNote : null,
+        })),
+        locations,
+        departments,
         categoryBreakdown,
         statusBreakdown,
         conditionBreakdown,
         locationBreakdown,
         departmentBreakdown,
         recentAssets,
-        phases,
         kpis: kpis || null,
         financialRecovery: {
           items: recoveryItems,
           totalRecovery,
           realizedRecovery,
           pendingRecovery,
+          estimatedRoi: costBasis > 0 ? Math.round(estimatedRoi * 100) / 100 : null,
+          numberOfOpportunities: recoveryItems.length,
+          pendingValidation: recoveryItems.filter(i => ["identified", "under_review"].includes(i.status)).length,
         },
         risks,
+        openRisks,
+        pendingClientActions,
         actionItems,
         reports,
         meetings,
@@ -1204,6 +1291,319 @@ export const clientPortalRouter = router({
     }),
 
   // ─── Audit History ────────────────────────────────────────────────────────────
+
+  // ─── Verification Metrics (Phase 2) ──────────────────────────────────────────
+  getVerificationMetrics: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const [metrics] = await db.select().from(projectVerificationMetrics).where(eq(projectVerificationMetrics.projectId, input.projectId)).limit(1);
+      return metrics || null;
+    }),
+
+  upsertVerificationMetrics: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      farBaselineCount: z.number().optional(),
+      farBaselineValue: z.string().optional(),
+      verifiedFarAssets: z.number().optional(),
+      notFoundAssets: z.number().optional(),
+      additionalAssetsFound: z.number().optional(),
+      ghostAssetCount: z.number().optional(),
+      ghostAssetValue: z.string().optional(),
+      zombieAssetCount: z.number().optional(),
+      zombieAssetValue: z.string().optional(),
+      vampireAssetCount: z.number().optional(),
+      vampireAssetValue: z.string().optional(),
+      duplicateAssetCount: z.number().optional(),
+      duplicateAssetValue: z.string().optional(),
+      assetsInRepair: z.number().optional(),
+      activeAssets: z.number().optional(),
+      conditionDistribution: z.any().optional(),
+      ghostNotes: z.string().optional(),
+      zombieNotes: z.string().optional(),
+      vampireNotes: z.string().optional(),
+      duplicateNotes: z.string().optional(),
+      generalNotes: z.string().optional(),
+      phase2Status: z.enum(["not_started", "on_track", "at_risk", "delayed", "complete"]).optional(),
+      phase2StartDate: z.string().optional(),
+      phase2TargetDate: z.string().optional(),
+      phase2CostBasis: z.string().optional(),
+      clientFacingSummary: z.string().optional(),
+      internalNotes: z.string().optional(),
+      lastUpdateNotes: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const { projectId, phase2StartDate, phase2TargetDate, ...rest } = input;
+      const data: any = {
+        ...rest,
+        projectId,
+        phase2StartDate: phase2StartDate ? new Date(phase2StartDate) : undefined,
+        phase2TargetDate: phase2TargetDate ? new Date(phase2TargetDate) : undefined,
+        updatedBy: ctx.user?.id || null,
+        updatedByName: ctx.user?.name || null,
+      };
+      // Remove undefined values
+      Object.keys(data).forEach(k => { if (data[k] === undefined) delete data[k]; });
+
+      const [existing] = await db.select().from(projectVerificationMetrics).where(eq(projectVerificationMetrics.projectId, projectId)).limit(1);
+
+      if (existing) {
+        await db.update(projectVerificationMetrics).set(data).where(eq(projectVerificationMetrics.id, existing.id));
+        logAudit({ entityType: "project", entityId: existing.id, projectId, action: "update", changedBy: ctx.user?.id, changedByName: ctx.user?.name, description: "Updated verification metrics" });
+        return { id: existing.id };
+      } else {
+        const result = await db.insert(projectVerificationMetrics).values(data);
+        logAudit({ entityType: "project", entityId: result[0].insertId, projectId, action: "create", changedBy: ctx.user?.id, changedByName: ctx.user?.name, description: "Created verification metrics" });
+        return { id: result[0].insertId };
+      }
+    }),
+
+  // ─── FAR Baseline Versioning ─────────────────────────────────────────────────
+  createFarBaselineVersion: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      previousCount: z.number(),
+      newCount: z.number(),
+      previousValue: z.string().optional(),
+      newValue: z.string().optional(),
+      reason: z.string(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const result = await db.insert(farBaselineVersions).values({
+        ...input,
+        changedBy: ctx.user?.id || 0,
+        changedByName: ctx.user?.name || null,
+      });
+      logAudit({ entityType: "project", entityId: result[0].insertId, projectId: input.projectId, action: "update", changedBy: ctx.user?.id, changedByName: ctx.user?.name, description: `FAR baseline changed from ${input.previousCount} to ${input.newCount}: ${input.reason}` });
+      return { id: result[0].insertId };
+    }),
+
+  listFarBaselineVersions: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(farBaselineVersions).where(eq(farBaselineVersions.projectId, input.projectId)).orderBy(desc(farBaselineVersions.createdAt));
+    }),
+
+  // ─── Phase 2 Milestones ──────────────────────────────────────────────────────
+  listPhase2Milestones: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(phase2Milestones).where(eq(phase2Milestones.projectId, input.projectId)).orderBy(phase2Milestones.milestoneNumber);
+    }),
+
+  upsertPhase2Milestone: protectedProcedure
+    .input(z.object({
+      id: z.number().optional(),
+      projectId: z.number(),
+      milestoneNumber: z.number().min(1).max(5),
+      milestoneName: z.string(),
+      status: z.enum(["not_started", "in_progress", "completed", "on_hold"]).default("not_started"),
+      completionPercent: z.number().min(0).max(100).default(0),
+      startDate: z.string().optional(),
+      targetDate: z.string().optional(),
+      completionDate: z.string().optional(),
+      clientUpdate: z.string().optional(),
+      internalNote: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+
+      const data: any = {
+        projectId: input.projectId,
+        milestoneNumber: input.milestoneNumber,
+        milestoneName: input.milestoneName,
+        status: input.status,
+        completionPercent: input.completionPercent,
+        startDate: input.startDate ? new Date(input.startDate) : null,
+        targetDate: input.targetDate ? new Date(input.targetDate) : null,
+        completionDate: input.completionDate ? new Date(input.completionDate) : null,
+        clientUpdate: input.clientUpdate || null,
+        internalNote: input.internalNote || null,
+      };
+
+      if (input.id) {
+        await db.update(phase2Milestones).set(data).where(eq(phase2Milestones.id, input.id));
+        return { id: input.id };
+      } else {
+        const result = await db.insert(phase2Milestones).values(data);
+        return { id: result[0].insertId };
+      }
+    }),
+
+  deletePhase2Milestone: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(phase2Milestones).where(eq(phase2Milestones.id, input.id));
+      return { success: true };
+    }),
+
+  // ─── Project Locations ───────────────────────────────────────────────────────
+  listLocations: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(projectLocations).where(eq(projectLocations.projectId, input.projectId)).orderBy(projectLocations.locationName);
+    }),
+
+  createLocation: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      locationName: z.string(),
+      address: z.string().optional(),
+      siteCode: z.string().optional(),
+      contact: z.string().optional(),
+      verificationStatus: z.enum(["not_started", "in_progress", "completed", "partial"]).default("not_started"),
+      scheduledDate: z.string().optional(),
+      completedDate: z.string().optional(),
+      clientNotes: z.string().optional(),
+      internalNotes: z.string().optional(),
+      isClientVisible: z.number().default(1),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const result = await db.insert(projectLocations).values({
+        ...input,
+        scheduledDate: input.scheduledDate ? new Date(input.scheduledDate) : null,
+        completedDate: input.completedDate ? new Date(input.completedDate) : null,
+        createdBy: ctx.user?.id || null,
+      });
+      return { id: result[0].insertId };
+    }),
+
+  updateLocation: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      locationName: z.string().optional(),
+      address: z.string().optional(),
+      siteCode: z.string().optional(),
+      contact: z.string().optional(),
+      verificationStatus: z.enum(["not_started", "in_progress", "completed", "partial"]).optional(),
+      scheduledDate: z.string().optional(),
+      completedDate: z.string().optional(),
+      clientNotes: z.string().optional(),
+      internalNotes: z.string().optional(),
+      assetCount: z.number().optional(),
+      isClientVisible: z.number().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, scheduledDate, completedDate, ...data } = input;
+      const updateData: any = { ...data };
+      if (scheduledDate !== undefined) updateData.scheduledDate = scheduledDate ? new Date(scheduledDate) : null;
+      if (completedDate !== undefined) updateData.completedDate = completedDate ? new Date(completedDate) : null;
+      await db.update(projectLocations).set(updateData).where(eq(projectLocations.id, id));
+      return { success: true };
+    }),
+
+  deleteLocation: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(projectLocations).where(eq(projectLocations.id, input.id));
+      return { success: true };
+    }),
+
+  // ─── Project Departments ─────────────────────────────────────────────────────
+  listDepartments: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(projectDepartments).where(eq(projectDepartments.projectId, input.projectId)).orderBy(projectDepartments.departmentName);
+    }),
+
+  createDepartment: protectedProcedure
+    .input(z.object({
+      projectId: z.number(),
+      departmentName: z.string(),
+      departmentCode: z.string().optional(),
+      contact: z.string().optional(),
+      verificationStatus: z.enum(["not_started", "in_progress", "completed", "partial"]).default("not_started"),
+      scheduledDate: z.string().optional(),
+      completedDate: z.string().optional(),
+      clientNotes: z.string().optional(),
+      internalNotes: z.string().optional(),
+      isClientVisible: z.number().default(1),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const result = await db.insert(projectDepartments).values({
+        ...input,
+        scheduledDate: input.scheduledDate ? new Date(input.scheduledDate) : null,
+        completedDate: input.completedDate ? new Date(input.completedDate) : null,
+        createdBy: ctx.user?.id || null,
+      });
+      return { id: result[0].insertId };
+    }),
+
+  updateDepartment: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      departmentName: z.string().optional(),
+      departmentCode: z.string().optional(),
+      contact: z.string().optional(),
+      verificationStatus: z.enum(["not_started", "in_progress", "completed", "partial"]).optional(),
+      scheduledDate: z.string().optional(),
+      completedDate: z.string().optional(),
+      clientNotes: z.string().optional(),
+      internalNotes: z.string().optional(),
+      assetCount: z.number().optional(),
+      isClientVisible: z.number().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const { id, scheduledDate, completedDate, ...data } = input;
+      const updateData: any = { ...data };
+      if (scheduledDate !== undefined) updateData.scheduledDate = scheduledDate ? new Date(scheduledDate) : null;
+      if (completedDate !== undefined) updateData.completedDate = completedDate ? new Date(completedDate) : null;
+      await db.update(projectDepartments).set(updateData).where(eq(projectDepartments.id, id));
+      return { success: true };
+    }),
+
+  deleteDepartment: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.delete(projectDepartments).where(eq(projectDepartments.id, input.id));
+      return { success: true };
+    }),
+
   getAuditHistory: protectedProcedure
     .input(z.object({
       projectId: z.number().optional(),

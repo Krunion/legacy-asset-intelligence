@@ -525,3 +525,139 @@ export const auditHistory = mysqlTable("auditHistory", {
 
 export type AuditHistory = typeof auditHistory.$inferSelect;
 export type InsertAuditHistory = typeof auditHistory.$inferInsert;
+
+// ─── Project Verification Metrics (Phase 2 specific) ────────────────────────
+
+export const projectVerificationMetrics = mysqlTable("projectVerificationMetrics", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  // FAR Baseline
+  farBaselineCount: int("farBaselineCount").default(0).notNull(),
+  farBaselineValue: decimal("farBaselineValue", { precision: 14, scale: 2 }).default("0"),
+  // Verification counts
+  verifiedFarAssets: int("verifiedFarAssets").default(0).notNull(),
+  notFoundAssets: int("notFoundAssets").default(0).notNull(),
+  additionalAssetsFound: int("additionalAssetsFound").default(0).notNull(), // Zombie
+  // Classification counts
+  ghostAssetCount: int("ghostAssetCount").default(0).notNull(),
+  ghostAssetValue: decimal("ghostAssetValue", { precision: 14, scale: 2 }).default("0"),
+  zombieAssetCount: int("zombieAssetCount").default(0).notNull(),
+  zombieAssetValue: decimal("zombieAssetValue", { precision: 14, scale: 2 }).default("0"),
+  vampireAssetCount: int("vampireAssetCount").default(0).notNull(),
+  vampireAssetValue: decimal("vampireAssetValue", { precision: 14, scale: 2 }).default("0"),
+  duplicateAssetCount: int("duplicateAssetCount").default(0).notNull(),
+  duplicateAssetValue: decimal("duplicateAssetValue", { precision: 14, scale: 2 }).default("0"),
+  // Additional status counts
+  assetsInRepair: int("assetsInRepair").default(0).notNull(),
+  activeAssets: int("activeAssets").default(0).notNull(),
+  // Condition distribution (JSON)
+  conditionDistribution: json("conditionDistribution"), // { new: 5, excellent: 10, good: 50, ... }
+  // Classification notes
+  ghostNotes: text("ghostNotes"),
+  zombieNotes: text("zombieNotes"),
+  vampireNotes: text("vampireNotes"),
+  duplicateNotes: text("duplicateNotes"),
+  generalNotes: text("generalNotes"),
+  // Phase 2 project info
+  phase2Status: mysqlEnum("phase2Status", ["not_started", "on_track", "at_risk", "delayed", "complete"]).default("not_started").notNull(),
+  phase2StartDate: timestamp("phase2StartDate"),
+  phase2TargetDate: timestamp("phase2TargetDate"),
+  phase2CostBasis: decimal("phase2CostBasis", { precision: 14, scale: 2 }),
+  clientFacingSummary: text("clientFacingSummary"),
+  internalNotes: text("internalNotes"),
+  lastUpdateNotes: text("lastUpdateNotes"),
+  // Metadata
+  updatedBy: int("updatedBy"),
+  updatedByName: varchar("updatedByName", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectVerificationMetrics = typeof projectVerificationMetrics.$inferSelect;
+export type InsertProjectVerificationMetrics = typeof projectVerificationMetrics.$inferInsert;
+
+// ─── Project Locations ──────────────────────────────────────────────────────
+
+export const projectLocations = mysqlTable("projectLocations", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  locationName: varchar("locationName", { length: 500 }).notNull(),
+  address: text("address"),
+  siteCode: varchar("siteCode", { length: 100 }),
+  contact: varchar("contact", { length: 255 }),
+  verificationStatus: mysqlEnum("verificationStatus", ["not_started", "in_progress", "completed", "partial"]).default("not_started").notNull(),
+  scheduledDate: timestamp("scheduledDate"),
+  completedDate: timestamp("completedDate"),
+  clientNotes: text("clientNotes"),
+  internalNotes: text("internalNotes"),
+  assetCount: int("assetCount").default(0),
+  isClientVisible: int("isClientVisible").default(1).notNull(),
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectLocation = typeof projectLocations.$inferSelect;
+export type InsertProjectLocation = typeof projectLocations.$inferInsert;
+
+// ─── Project Departments ────────────────────────────────────────────────────
+
+export const projectDepartments = mysqlTable("projectDepartments", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  departmentName: varchar("departmentName", { length: 500 }).notNull(),
+  departmentCode: varchar("departmentCode", { length: 100 }),
+  contact: varchar("contact", { length: 255 }),
+  verificationStatus: mysqlEnum("verificationStatus", ["not_started", "in_progress", "completed", "partial"]).default("not_started").notNull(),
+  scheduledDate: timestamp("scheduledDate"),
+  completedDate: timestamp("completedDate"),
+  clientNotes: text("clientNotes"),
+  internalNotes: text("internalNotes"),
+  assetCount: int("assetCount").default(0),
+  isClientVisible: int("isClientVisible").default(1).notNull(),
+  createdBy: int("createdBy"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProjectDepartment = typeof projectDepartments.$inferSelect;
+export type InsertProjectDepartment = typeof projectDepartments.$inferInsert;
+
+// ─── FAR Baseline Versions ──────────────────────────────────────────────────
+
+export const farBaselineVersions = mysqlTable("farBaselineVersions", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  previousCount: int("previousCount").notNull(),
+  newCount: int("newCount").notNull(),
+  previousValue: decimal("previousValue", { precision: 14, scale: 2 }),
+  newValue: decimal("newValue", { precision: 14, scale: 2 }),
+  reason: text("reason").notNull(),
+  changedBy: int("changedBy").notNull(),
+  changedByName: varchar("changedByName", { length: 255 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type FarBaselineVersion = typeof farBaselineVersions.$inferSelect;
+export type InsertFarBaselineVersion = typeof farBaselineVersions.$inferInsert;
+
+// ─── Phase 2 Milestones ─────────────────────────────────────────────────────
+
+export const phase2Milestones = mysqlTable("phase2Milestones", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  milestoneNumber: int("milestoneNumber").notNull(), // 1-5
+  milestoneName: varchar("milestoneName", { length: 500 }).notNull(),
+  status: mysqlEnum("status", ["not_started", "in_progress", "completed", "on_hold"]).default("not_started").notNull(),
+  completionPercent: int("completionPercent").default(0).notNull(),
+  startDate: timestamp("startDate"),
+  targetDate: timestamp("targetDate"),
+  completionDate: timestamp("completionDate"),
+  clientUpdate: text("clientUpdate"),
+  internalNote: text("internalNote"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Phase2Milestone = typeof phase2Milestones.$inferSelect;
+export type InsertPhase2Milestone = typeof phase2Milestones.$inferInsert;
