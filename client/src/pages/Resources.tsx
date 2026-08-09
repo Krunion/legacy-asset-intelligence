@@ -56,11 +56,19 @@ export default function Resources() {
   ];
 
   const videos = [
+    { title: "What is Asset Management?", id: "z569rEDGU1s", duration: "2:37", desc: "Animated explainer covering the fundamentals of asset management — what it is, why it matters, and how organizations use it to maximize value from physical infrastructure." },
     { title: "Introduction to Ghost Assets", id: "1rpOJFl52nQ", duration: "2:05", desc: "Overview of what ghost assets are, why they matter, and how organizations can begin addressing them." },
+    { title: "Rebuilding an Accurate Fixed Asset Register", id: "0butchRXvAQ", duration: "6:52", desc: "How to rebuild your asset register with an explanation of ghost assets and zombie assets — the key challenges in maintaining FAR accuracy." },
     { title: "Fixed Assets Audit Made Simple", id: "KfFMzLuUz6g", duration: "15:42", desc: "Step-by-step guide through the entire fixed asset lifecycle from acquisition and capitalization to depreciation, revaluation, and disposal." },
     { title: "The Fixed Asset Register Explained", id: "f4BBYjivdNg", duration: "12:18", desc: "Learn the basics of the fixed asset register, including templates and best practices for maintaining accuracy." },
     { title: "Streamlining Fixed Asset Verification", id: "AeP2DfVOjp4", duration: "8:34", desc: "Explore the challenges in physical verification of fixed assets and how technology-based solutions can overcome them." },
+    { title: "RFID vs Barcode for Asset Tracking", id: "igpbW4yrtp4", duration: "3:48", desc: "Comparison of RFID reader and barcode scanner technologies — basic differences, use cases, and which approach works best for enterprise asset tracking." },
+    { title: "How to Use Barcodes for Asset Tracking", id: "m7qfD38GdY4", duration: "8:12", desc: "Practical guide to implementing barcode-based asset tracking systems for managing IT equipment, tools, and operational assets across multiple locations." },
+    { title: "Complete Guide to RFID Asset Tracking", id: "DjmTAiHdlYE", duration: "10:15", desc: "In-depth guide on RFID asset tracking — a transformative technology for real-time visibility, automated inventory counts, and reduced manual effort." },
     { title: "Enterprise Asset Management Overview", id: "MRKGsyxx_n0", duration: "11:26", desc: "A comprehensive guide to enterprise asset management and EAM software, covering key concepts and best practices." },
+    { title: "What is Enterprise Asset Management?", id: "2s9P7jbhP7I", duration: "24:21", desc: "Introduction to EAM software — how enterprise asset management systems work, key features, and how they integrate with broader organizational strategy." },
+    { title: "ISO 55000 Asset Management Framework", id: "eFHq7HjU-Ew", duration: "5:30", desc: "Explanation of the ISO 55000 international standard for asset management — principles, requirements, and how organizations achieve certification." },
+    { title: "Developing the Asset Register", id: "2-r5RzvFyvQ", duration: "9:49", desc: "Practical guidance on developing and maintaining an accurate asset register, including data collection methods and organizational best practices." },
   ];
 
   return (
