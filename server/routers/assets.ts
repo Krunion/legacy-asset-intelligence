@@ -1068,4 +1068,23 @@ export const assetsRouter = router({
         mimeType: doc.mimeType,
       };
     }),
+
+  updateProjectDocument: protectedProcedure
+    .input(z.object({
+      id: z.number(),
+      isClientVisible: z.number().optional(),
+      description: z.string().optional(),
+      documentType: z.enum(["contract", "proposal", "report", "invoice", "correspondence", "legal", "insurance", "assessment", "meeting_document", "project_deliverable", "supporting_document", "other"]).optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const updates: any = {};
+      if (input.isClientVisible !== undefined) updates.isClientVisible = input.isClientVisible;
+      if (input.description !== undefined) updates.description = input.description;
+      if (input.documentType !== undefined) updates.documentType = input.documentType;
+      if (Object.keys(updates).length === 0) return { success: true };
+      await db.update(projectDocuments).set(updates).where(eq(projectDocuments.id, input.id));
+      return { success: true };
+    }),
 });

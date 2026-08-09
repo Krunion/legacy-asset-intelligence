@@ -18,7 +18,7 @@ import ClientDashboardManagement from "@/components/assets/ClientDashboardManage
 
 const C = COLORS;
 
-type View = "dashboard" | "list" | "detail" | "add" | "edit" | "scan" | "import" | "export" | "labels" | "notes" | "documents" | "client-dashboard";
+type View = "dashboard" | "list" | "detail" | "add" | "edit" | "scan" | "import" | "export" | "labels" | "notes" | "documents" | "billing" | "client-dashboard";
 
 function PrintLabelsView({ projectId, onPrint }: { projectId: number; onPrint: (assets: any[]) => void }) {
   const { data, isLoading } = trpc.assets.list.useQuery({ projectId, page: 1, pageSize: 100 });
@@ -203,6 +203,7 @@ export default function AssetManagement() {
           { key: "labels", label: "Print Labels", icon: "🏷" },
           { key: "notes", label: "Notes", icon: "📝" },
           { key: "documents", label: "Documents", icon: "📁" },
+          { key: "billing", label: "Billing", icon: "💰" },
           { key: "client-dashboard", label: "Client Dashboard", icon: "📊" },
         ].map((tab) => (
           <button
@@ -258,6 +259,7 @@ export default function AssetManagement() {
         {view === "labels" && <PrintLabelsView projectId={projectId} onPrint={(assets) => { setLabelAssets(assets); setShowLabels(true); }} />}
         {view === "notes" && <ProjectNotesView projectId={projectId} />}
         {view === "documents" && <ProjectDocumentsView projectId={projectId} />}
+        {view === "billing" && <ProjectBillingTab projectId={projectId} />}
         {view === "client-dashboard" && <ClientDashboardManagement projectId={projectId} projectName={projectName} />}
       </main>
 
@@ -268,3 +270,4 @@ export default function AssetManagement() {
     </div>
   );
 }
+import ProjectBillingTab from "@/components/assets/ProjectBillingTab";

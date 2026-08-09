@@ -411,12 +411,38 @@ export const clientActionItems = mysqlTable("clientActionItems", {
   dueDate: timestamp("dueDate"),
   completedAt: timestamp("completedAt"),
   response: text("response"),
+  responseDecision: varchar("responseDecision", { length: 50 }),
+  respondedBy: varchar("respondedBy", { length: 255 }),
+  respondedAt: timestamp("respondedAt"),
+  responseComments: text("responseComments"),
+  notificationSent: int("notificationSent").default(0),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type ClientActionItem = typeof clientActionItems.$inferSelect;
 export type InsertClientActionItem = typeof clientActionItems.$inferInsert;
+
+// ─── PM Notifications ─────────────────────────────────────────────────────────
+export const pmNotifications = mysqlTable("pmNotifications", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  recipientEmail: varchar("recipientEmail", { length: 320 }).notNull(),
+  recipientName: varchar("recipientName", { length: 255 }),
+  notificationType: mysqlEnum("notificationType", ["task_response", "document_uploaded", "billing_update", "milestone_update", "risk_escalation", "general"]).default("general").notNull(),
+  title: varchar("title", { length: 500 }).notNull(),
+  message: text("message").notNull(),
+  relatedEntityType: varchar("relatedEntityType", { length: 100 }),
+  relatedEntityId: int("relatedEntityId"),
+  isRead: int("isRead").default(0).notNull(),
+  isAcknowledged: int("isAcknowledged").default(0).notNull(),
+  emailSent: int("emailSent").default(0).notNull(),
+  emailSentAt: timestamp("emailSentAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type PmNotification = typeof pmNotifications.$inferSelect;
+export type InsertPmNotification = typeof pmNotifications.$inferInsert;
 
 export const projectReports = mysqlTable("projectReports", {
   id: int("id").autoincrement().primaryKey(),

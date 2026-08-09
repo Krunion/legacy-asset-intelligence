@@ -372,6 +372,19 @@ function LocationsSection({ locations, departments }: any) {
 // ═══ ACTIONS ════════════════════════════════════════════════════════════════════
 function ActionsSection({ items, accessToken, onRespond }: { items: any[]; accessToken: string; onRespond?: (id: number, response: string, status: string) => void }) {
   const [responseText, setResponseText] = useState<Record<number, string>>({});
+  const [selectedDecision, setSelectedDecision] = useState<Record<number, string>>({});
+  const [submitError, setSubmitError] = useState<Record<number, string>>({});
+
+  const handleSubmit = (itemId: number) => {
+    const decision = selectedDecision[itemId];
+    const comments = responseText[itemId] || "";
+    if (!decision) { setSubmitError({ ...submitError, [itemId]: "Please select a decision." }); return; }
+    if (decision !== "approved" && !comments.trim()) { setSubmitError({ ...submitError, [itemId]: "Written explanation required for this decision." }); return; }
+    setSubmitError({ ...submitError, [itemId]: "" });
+    onRespond?.(itemId, comments, decision);
+    setResponseText({ ...responseText, [itemId]: "" });
+    setSelectedDecision({ ...selectedDecision, [itemId]: "" });
+  };
 
   return (
     <div style={{ maxWidth: 1000 }}>
@@ -384,11 +397,25 @@ function ActionsSection({ items, accessToken, onRespond }: { items: any[]; acces
           </div>
           {item.description && <p style={{ color: C.textMuted, fontSize: "0.8rem", margin: "0 0 0.5rem" }}>{item.description}</p>}
           {item.dueDate && <p style={{ color: C.textMuted, fontSize: "0.7rem", margin: "0 0 0.5rem" }}>Due: {new Date(item.dueDate).toLocaleDateString()}</p>}
+          {item.responseDecision && (
+            <div style={{ marginTop: "0.5rem", padding: "0.5rem 0.75rem", background: `${C.slate}50`, borderRadius: 6, borderLeft: `3px solid ${item.responseDecision === "approved" ? "#10B981" : "#EF4444"}` }}>
+              <p style={{ color: C.silver, fontSize: "0.75rem", margin: "0 0 0.25rem" }}>Response: <strong style={{ color: item.responseDecision === "approved" ? "#10B981" : "#EF4444" }}>{item.responseDecision.replace(/_/g, " ").toUpperCase()}</strong></p>
+              {item.responseComments && <p style={{ color: C.textMuted, fontSize: "0.75rem", margin: 0 }}>{item.responseComments}</p>}
+              {item.respondedBy && <p style={{ color: C.textMuted, fontSize: "0.65rem", margin: "0.25rem 0 0" }}>— {item.respondedBy}, {item.respondedAt ? new Date(item.respondedAt).toLocaleString() : ""}</p>}
+            </div>
+          )}
           {item.status === "pending" && onRespond && (
-            <div style={{ marginTop: "0.75rem", display: "flex", gap: "0.5rem", alignItems: "center" }}>
-              <input style={{ flex: 1, padding: "0.4rem 0.6rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.8rem" }} placeholder="Your response..." value={responseText[item.id] || ""} onChange={e => setResponseText({ ...responseText, [item.id]: e.target.value })} />
-              <button onClick={() => { onRespond(item.id, responseText[item.id] || "", "approved"); setResponseText({ ...responseText, [item.id]: "" }); }} style={{ padding: "0.4rem 0.75rem", background: "#10B981", border: "none", borderRadius: 6, color: "white", fontSize: "0.75rem", cursor: "pointer" }}>Approve</button>
-              <button onClick={() => { onRespond(item.id, responseText[item.id] || "", "completed"); setResponseText({ ...responseText, [item.id]: "" }); }} style={{ padding: "0.4rem 0.75rem", background: C.gold, border: "none", borderRadius: 6, color: "#0B0F13", fontSize: "0.75rem", cursor: "pointer" }}>Complete</button>
+            <div style={{ marginTop: "0.75rem" }}>
+              <div style={{ display: "flex", gap: "0.4rem", marginBottom: "0.5rem", flexWrap: "wrap" }}>
+                {["approved", "rejected", "changes_requested", "clarification_requested"].map(d => (
+                  <button key={d} onClick={() => setSelectedDecision({ ...selectedDecision, [item.id]: d })} style={{ padding: "0.35rem 0.6rem", background: selectedDecision[item.id] === d ? (d === "approved" ? "#10B981" : "#EF4444") : C.slate, border: `1px solid ${selectedDecision[item.id] === d ? "transparent" : C.border}`, borderRadius: 6, color: selectedDecision[item.id] === d ? "white" : C.silver, fontSize: "0.7rem", cursor: "pointer", fontWeight: selectedDecision[item.id] === d ? 600 : 400 }}>
+                    {d.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())}
+                  </button>
+                ))}
+              </div>
+              <textarea style={{ width: "100%", padding: "0.5rem 0.6rem", background: C.slate, border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.8rem", minHeight: 50, resize: "vertical", boxSizing: "border-box" }} placeholder={selectedDecision[item.id] && selectedDecision[item.id] !== "approved" ? "Written explanation required..." : "Comments (optional for Approved)..."} value={responseText[item.id] || ""} onChange={e => setResponseText({ ...responseText, [item.id]: e.target.value })} />
+              {submitError[item.id] && <p style={{ color: "#EF4444", fontSize: "0.75rem", margin: "0.25rem 0" }}>{submitError[item.id]}</p>}
+              <button onClick={() => handleSubmit(item.id)} style={{ marginTop: "0.5rem", padding: "0.4rem 1rem", background: C.gold, border: "none", borderRadius: 6, color: "#0B0F13", fontSize: "0.8rem", fontWeight: 600, cursor: "pointer" }}>Submit Response</button>
             </div>
           )}
         </div>

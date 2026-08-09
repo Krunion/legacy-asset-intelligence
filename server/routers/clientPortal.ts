@@ -2,10 +2,12 @@ import { z } from "zod";
 import { protectedProcedure, publicProcedure, router } from "../_core/trpc";
 import { getDb } from "../db";
 import { logAudit } from "../audit";
-import { clientPortalAccounts, assetProjects, assets, assetCategories, projectPhases, projectKpis, financialRecovery, riskExceptions, clientActionItems, projectReports, projectMeetings, projectBilling, projectDocuments, auditHistory, projectVerificationMetrics, projectLocations, projectDepartments, farBaselineVersions, phase2Milestones } from "../../drizzle/schema";
+import { clientPortalAccounts, assetProjects, assets, assetCategories, projectPhases, projectKpis, financialRecovery, riskExceptions, clientActionItems, projectReports, projectMeetings, projectBilling, projectDocuments, auditHistory, projectVerificationMetrics, projectLocations, projectDepartments, farBaselineVersions, phase2Milestones, pmNotifications } from "../../drizzle/schema";
 import { eq, and, desc, sql, count } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import { ENV } from "../_core/env";
+import { sendEmailViaSendGrid } from "../_core/sendgridEmailService";
 
 // Admin emails that can always view client dashboards
 const ADMIN_EMAILS = [
@@ -40,6 +42,87 @@ function generateAccessToken(): string {
 
 export const clientPortalRouter = router({
   // ─── Create Client Dashboard (admin only) ──────────────────────────────────
+  // ─── PM Notifications ──────────────────────────────────────────────────────────
+  listNotifications: protectedProcedure
+    .input(z.object({ limit: z.number().default(50) }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      return db.select().from(pmNotifications)
+        .orderBy(desc(pmNotifications.createdAt))
+        .limit(input.limit);
+    }),
+
+  markNotificationRead: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.update(pmNotifications).set({ isRead: 1 }).where(eq(pmNotifications.id, input.id));
+      return { success: true };
+    }),
+
+  acknowledgeNotification: protectedProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      await db.update(pmNotifications).set({ isAcknowledged: 1, isRead: 1 }).where(eq(pmNotifications.id, input.id));
+      return { success: true };
+    }),
+
+  unreadNotificationCount: protectedProcedure
+    .query(async ({ ctx }) => {
+      if (!isAdminUser(ctx.user)) return { count: 0 };
+      const db = await getDb();
+      if (!db) return { count: 0 };
+      const [result] = await db.select({ count: count() }).from(pmNotifications).where(eq(pmNotifications.isRead, 0));
+      return { count: result?.count || 0 };
+    }),
+
+  // ─── Project Billing (full CRUD with invoices/payments) ────────────────────────
+  getBillingSummary: protectedProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input, ctx }) => {
+      if (!isAdminUser(ctx.user)) throw new Error("Admin access required");
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const items = await db.select().from(projectBilling)
+        .where(eq(projectBilling.projectId, input.projectId))
+        .orderBy(desc(projectBilling.createdAt));
+
+      // Calculate summary
+      const invoices = items.filter(i => i.itemType === "invoice" && i.status !== "cancelled");
+      const payments = items.filter(i => i.itemType === "payment");
+      const totalInvoiced = invoices.filter(i => i.status !== "draft").reduce((sum, i) => sum + parseFloat(i.amount || "0"), 0);
+      const totalPaid = payments.reduce((sum, p) => sum + parseFloat(p.amount || "0"), 0);
+      const outstandingBalance = Math.max(0, totalInvoiced - totalPaid);
+      const now = new Date();
+      const pastDue = invoices.filter(i => i.dueDate && new Date(i.dueDate) < now && !["paid", "cancelled"].includes(i.status))
+        .reduce((sum, i) => sum + Math.max(0, parseFloat(i.amount || "0") - parseFloat(i.amountPaid || "0")), 0);
+      const currentDue = invoices.filter(i => !["paid", "cancelled", "draft"].includes(i.status))
+        .reduce((sum, i) => sum + Math.max(0, parseFloat(i.amount || "0") - parseFloat(i.amountPaid || "0")), 0);
+      const nextPayment = invoices.filter(i => i.dueDate && new Date(i.dueDate) >= now && !["paid", "cancelled"].includes(i.status))
+        .sort((a, b) => new Date(a.dueDate!).getTime() - new Date(b.dueDate!).getTime())[0];
+
+      return {
+        items,
+        summary: {
+          totalInvoiced,
+          totalPaid,
+          currentDue,
+          outstandingBalance,
+          pastDue,
+          nextPaymentAmount: nextPayment ? parseFloat(nextPayment.amount || "0") - parseFloat(nextPayment.amountPaid || "0") : 0,
+          nextPaymentDueDate: nextPayment?.dueDate || null,
+          billingStatus: pastDue > 0 ? "Past Due" : outstandingBalance > 0 ? "Active" : totalInvoiced > 0 ? "Paid in Full" : "No Invoices",
+        },
+      };
+    }),
+
   createDashboard: protectedProcedure
     .input(
       z.object({
@@ -876,8 +959,9 @@ export const clientPortalRouter = router({
     .input(z.object({
       actionId: z.number(),
       accessToken: z.string(),
-      response: z.string(),
-      status: z.enum(["approved", "rejected", "completed"]),
+      response: z.string().optional(),
+      decision: z.enum(["approved", "rejected", "changes_requested", "clarification_requested"]),
+      comments: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -887,18 +971,112 @@ export const clientPortalRouter = router({
       const [action] = await db.select().from(clientActionItems).where(eq(clientActionItems.id, input.actionId)).limit(1);
       if (!action) throw new Error("Action item not found");
 
+      // Prevent duplicate responses - if already responded, reject
+      if (action.responseDecision && action.notificationSent === 1) {
+        return { success: true, alreadyResponded: true };
+      }
+
       const [account] = await db.select().from(clientPortalAccounts)
         .where(and(eq(clientPortalAccounts.projectId, action.projectId), eq(clientPortalAccounts.accessToken, input.accessToken), eq(clientPortalAccounts.isActive, 1)))
         .limit(1);
       if (!account) throw new Error("Access denied");
 
+      // Map decision to status
+      const statusMap: Record<string, string> = {
+        approved: "approved",
+        rejected: "rejected",
+        changes_requested: "in_review",
+        clarification_requested: "in_review",
+      };
+
+      // 1. Save the response permanently
       await db.update(clientActionItems).set({
-        response: input.response,
-        status: input.status,
+        response: input.comments || input.response || "",
+        responseDecision: input.decision,
+        respondedBy: account.clientName,
+        respondedAt: new Date(),
+        responseComments: input.comments || null,
+        status: statusMap[input.decision] as any,
         completedAt: new Date(),
+        notificationSent: 1,
       }).where(eq(clientActionItems.id, input.actionId));
 
-      return { success: true };
+      // 2. Get project info for notification
+      const [project] = await db.select().from(assetProjects).where(eq(assetProjects.id, action.projectId)).limit(1);
+      const pmEmail = project?.projectManager || "";
+      const projectName = project?.name || "Unknown Project";
+      const clientOrg = project?.clientName || account.clientCompany || account.clientName;
+
+      // 3. Determine PM recipient (fallback to super admins)
+      const SUPER_ADMINS = [
+        { email: "kevin.runion@legacyassetintelligence.com", name: "Kevin Runion" },
+        { email: "chris.haynes@legacyassetintelligence.com", name: "Chris Haynes" },
+      ];
+      const recipientEmail = pmEmail || SUPER_ADMINS[0].email;
+      const recipientName = pmEmail ? pmEmail.split("@")[0] : SUPER_ADMINS[0].name;
+
+      // 4. Create in-app notification
+      const notifTitle = `Client Task Response – ${projectName} – ${action.title}`;
+      const notifMessage = `Client: ${clientOrg}\nProject: ${projectName}\nTask: ${action.title}\nDecision: ${input.decision.replace(/_/g, " ")}\nComments: ${input.comments || "(none)"}\nResponded by: ${account.clientName}\nDate: ${new Date().toLocaleString()}`;
+
+      await db.insert(pmNotifications).values({
+        projectId: action.projectId,
+        recipientEmail,
+        recipientName,
+        notificationType: "task_response",
+        title: notifTitle,
+        message: notifMessage,
+        relatedEntityType: "clientActionItem",
+        relatedEntityId: action.id,
+        emailSent: 0,
+      });
+
+      // 5. Send email notification (production only — dev mode skips actual send)
+      const isProduction = process.env.NODE_ENV === "production";
+      if (isProduction && ENV.sendgridApiKey) {
+        try {
+          const emailBody = `
+            <h2>Client Task Response</h2>
+            <table style="border-collapse:collapse;width:100%;max-width:600px;">
+              <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Client Organization</td><td style="padding:8px;border:1px solid #ddd;">${clientOrg}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Project</td><td style="padding:8px;border:1px solid #ddd;">${projectName}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Task</td><td style="padding:8px;border:1px solid #ddd;">${action.title}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Decision</td><td style="padding:8px;border:1px solid #ddd;font-weight:bold;color:${input.decision === "approved" ? "#27AE60" : "#E74C3C"};">${input.decision.replace(/_/g, " ").toUpperCase()}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Comments</td><td style="padding:8px;border:1px solid #ddd;">${input.comments || "(none)"}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Responded By</td><td style="padding:8px;border:1px solid #ddd;">${account.clientName}</td></tr>
+              <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Date & Time</td><td style="padding:8px;border:1px solid #ddd;">${new Date().toLocaleString()}</td></tr>
+            </table>
+            <p style="margin-top:16px;"><a href="https://legacyassetintelligence.com/employee-portal">View in Employee Portal</a></p>
+          `;
+          await sendEmailViaSendGrid({
+            subject: `Client Task Response – ${projectName} – ${action.title}`,
+            body: emailBody,
+            recipients: [{ email: recipientEmail, name: recipientName }],
+            fromEmail: "noreply@legacyassetintelligence.com",
+            fromName: "LAI Notifications",
+          });
+          // Mark email as sent
+          await db.update(pmNotifications).set({ emailSent: 1, emailSentAt: new Date() })
+            .where(and(eq(pmNotifications.relatedEntityType, "clientActionItem"), eq(pmNotifications.relatedEntityId, action.id)));
+        } catch (e) {
+          console.error("[PM Notification] Email send failed:", e);
+        }
+      } else {
+        console.log(`[PM Notification] DEV MODE - Would send email to ${recipientEmail}: ${notifTitle}`);
+      }
+
+      // 6. Log to audit history
+      logAudit({
+        entityType: "action_item",
+        entityId: action.id,
+        action: "status_change",
+        description: `Client ${account.clientName} responded: ${input.decision.replace(/_/g, " ")} on "${action.title}"`,
+        changedBy: account.id,
+        changedByName: account.clientName,
+        projectId: action.projectId,
+      });
+
+      return { success: true, alreadyResponded: false };
     }),
 
   // ─── Manage Reports (admin) ───────────────────────────────────────────────────
@@ -1621,5 +1799,24 @@ export const clientPortalRouter = router({
         ? db.select().from(auditHistory).where(and(...conditions)).orderBy(desc(auditHistory.createdAt)).limit(input.limit)
         : db.select().from(auditHistory).orderBy(desc(auditHistory.createdAt)).limit(input.limit);
       return query;
+    }),
+
+  // Client Document Download (public, token-verified)
+  getClientDocumentUrl: publicProcedure
+    .input(z.object({ documentId: z.number(), accessToken: z.string() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) throw new Error("Database not available");
+      const [doc] = await db.select().from(projectDocuments).where(eq(projectDocuments.id, input.documentId)).limit(1);
+      if (!doc) throw new Error("Document not found");
+      if (doc.isClientVisible !== 1) throw new Error("Access denied");
+      const [account] = await db.select().from(clientPortalAccounts)
+        .where(and(eq(clientPortalAccounts.projectId, doc.projectId), eq(clientPortalAccounts.accessToken, input.accessToken), eq(clientPortalAccounts.isActive, 1)))
+        .limit(1);
+      if (!account) throw new Error("Access denied");
+      const storageKey = doc.storageUrl.replace(/^\/manus-storage\//, "");
+      const { storageGetSignedUrl } = await import("../storage");
+      const signedUrl = await storageGetSignedUrl(storageKey);
+      return { url: signedUrl, fileName: doc.fileName, mimeType: doc.mimeType };
     }),
 });

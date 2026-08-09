@@ -287,8 +287,8 @@ function ClientDashboardContent({ projectId, accessToken, clientName, dashboardT
     },
   });
 
-  const handleRespondToAction = (actionId: number, response: string, status: string) => {
-    respondMutation.mutate({ actionId, accessToken, response, status: status as "approved" | "rejected" | "completed" });
+  const handleRespondToAction = (actionId: number, response: string, decision: string) => {
+    respondMutation.mutate({ actionId, accessToken, comments: response, decision: decision as "approved" | "rejected" | "changes_requested" | "clarification_requested" });
   };
 
   if (isLoading) {
