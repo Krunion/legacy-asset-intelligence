@@ -955,6 +955,12 @@ function AccessPanel({ projectId, projectName }: { projectId: number; projectNam
           <button style={{ ...btnStyle, marginTop: "1rem" }} onClick={() => resetPw.mutate({ id: account.id })}>
             Reset Password
           </button>{resetPw.isPending && <span style={{ color: C.textMuted, fontSize: "0.75rem", marginLeft: "0.5rem" }}>Resetting...</span>}
+          <button
+            style={{ ...btnStyle, marginTop: "1rem", marginLeft: "0.75rem", background: "#2563EB" }}
+            onClick={() => window.open(`${window.location.origin}/client-portal?token=${account.accessToken}`, "_blank")}
+          >
+            Preview Client Portal
+          </button>
         </div>
       </div>
     );
