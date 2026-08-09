@@ -793,7 +793,7 @@ export const clientPortalRouter = router({
   createRisk: protectedProcedure
     .input(z.object({
       projectId: z.number(),
-      riskType: z.enum(["high_value_missing", "no_custodian", "uninsured", "no_documentation", "unauthorized_location", "duplicate_purchase", "obsolete_equipment", "cybersecurity", "compliance", "pending_decision", "other"]),
+      riskType: z.enum(["high_value_missing", "no_custodian", "uninsured", "no_documentation", "unauthorized_location", "duplicate_purchase", "obsolete_equipment", "cybersecurity", "compliance", "pending_decision", "risk", "exception", "assessment", "finding", "other"]),
       riskLevel: z.enum(["critical", "high", "medium", "low"]).default("medium"),
       title: z.string().optional(),
       severity: z.enum(["critical", "high", "moderate", "low"]).optional(),

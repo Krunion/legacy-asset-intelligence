@@ -520,3 +520,9 @@
 .portal-calculator-container .text-muted-foreground {
   color: #64748B !important;
 }
+
+/* Force dropdown options to have dark background and white text */
+select option {
+  background-color: #0B0F13 !important;
+  color: #FFFFFF !important;
+}

@@ -23,6 +23,7 @@ const TABS: { key: Tab; label: string }[] = [
 // Shared styles
 const inputStyle: React.CSSProperties = { width: "100%", padding: "0.5rem 0.75rem", background: "rgba(255,255,255,0.03)", border: `1px solid ${C.border}`, borderRadius: 6, color: C.text, fontSize: "0.85rem" };
 const labelStyle: React.CSSProperties = { display: "block", fontSize: "0.75rem", color: C.silver, marginBottom: "0.3rem", fontWeight: 500 };
+const selectStyle: React.CSSProperties = { width: "100%", padding: "0.5rem 0.75rem", background: "#0B0F13", border: `1px solid ${C.border}`, borderRadius: 6, color: "#FFFFFF", fontSize: "0.85rem" };
 const btnStyle: React.CSSProperties = { padding: "0.5rem 1rem", background: C.gold, color: "#0B0F13", border: "none", borderRadius: 6, fontSize: "0.8rem", fontWeight: 600, cursor: "pointer" };
 const cardStyle: React.CSSProperties = { background: "rgba(255,255,255,0.02)", border: `1px solid ${C.border}`, borderRadius: 8, padding: "1.25rem", marginBottom: "1rem" };
 
@@ -158,7 +159,7 @@ function SetupPanel({ projectId }: { projectId: number }) {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
           <div>
             <label style={labelStyle}>Phase 2 Status</label>
-            <select style={inputStyle} value={form.phase2Status || "not_started"} onChange={e => setForm({ ...form, phase2Status: e.target.value })}>
+            <select style={selectStyle} value={form.phase2Status || "not_started"} onChange={e => setForm({ ...form, phase2Status: e.target.value })}>
               <option value="not_started">Not Started</option>
               <option value="on_track">On Track</option>
               <option value="at_risk">At Risk</option>
@@ -453,7 +454,7 @@ function MilestonesPanel({ projectId }: { projectId: number }) {
                 </div>
                 <div>
                   <label style={labelStyle}>Status</label>
-                  <select style={inputStyle} value={editing.status} onChange={e => setEditing({ ...editing, status: e.target.value })}>
+                  <select style={selectStyle} value={editing.status} onChange={e => setEditing({ ...editing, status: e.target.value })}>
                     <option value="not_started">Not Started</option>
                     <option value="in_progress">In Progress</option>
                     <option value="completed">Completed</option>
@@ -549,12 +550,12 @@ function RecoveryPanel({ projectId }: { projectId: number }) {
         <div style={{ ...cardStyle, border: `1px solid ${C.gold}40` }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <div><label style={labelStyle}>Title</label><input style={inputStyle} value={form.title || ""} onChange={e => setForm({ ...form, title: e.target.value })} /></div>
-            <div><label style={labelStyle}>Category</label><select style={inputStyle} value={form.category || ""} onChange={e => setForm({ ...form, category: e.target.value })}><option value="">Select...</option>{CATEGORIES.map(c => <option key={c} value={c}>{c.replace(/_/g, " ")}</option>)}</select></div>
+            <div><label style={labelStyle}>Category</label><select style={selectStyle} value={form.category || ""} onChange={e => setForm({ ...form, category: e.target.value })}><option value="">Select...</option>{CATEGORIES.map(c => <option key={c} value={c}>{c.replace(/_/g, " ")}</option>)}</select></div>
             <div><label style={labelStyle}>Amount ($)</label><input style={inputStyle} type="text" value={form.amount || ""} onChange={e => setForm({ ...form, amount: e.target.value })} /></div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
-            <div><label style={labelStyle}>Status</label><select style={inputStyle} value={form.status || "identified"} onChange={e => setForm({ ...form, status: e.target.value })}>{STATUSES.map(s => <option key={s} value={s}>{s.replace(/_/g, " ")}</option>)}</select></div>
-            <div><label style={labelStyle}>Client Visible</label><select style={inputStyle} value={form.isClientVisible ?? 1} onChange={e => setForm({ ...form, isClientVisible: parseInt(e.target.value) })}><option value={1}>Yes</option><option value={0}>No</option></select></div>
+            <div><label style={labelStyle}>Status</label><select style={selectStyle} value={form.status || "identified"} onChange={e => setForm({ ...form, status: e.target.value })}>{STATUSES.map(s => <option key={s} value={s}>{s.replace(/_/g, " ")}</option>)}</select></div>
+            <div><label style={labelStyle}>Client Visible</label><select style={selectStyle} value={form.isClientVisible ?? 1} onChange={e => setForm({ ...form, isClientVisible: parseInt(e.target.value) })}><option value={1}>Yes</option><option value={0}>No</option></select></div>
           </div>
           <div style={{ marginBottom: "0.75rem" }}><label style={labelStyle}>Description</label><textarea style={{ ...inputStyle, minHeight: 50 }} value={form.description || ""} onChange={e => setForm({ ...form, description: e.target.value })} /></div>
           <button style={btnStyle} onClick={handleCreate}>Save Opportunity</button>
@@ -610,13 +611,13 @@ function RisksPanel({ projectId }: { projectId: number }) {
         <div style={{ ...cardStyle, border: `1px solid ${C.gold}40` }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <div><label style={labelStyle}>Title</label><input style={inputStyle} value={form.title || ""} onChange={e => setForm({ ...form, title: e.target.value })} /></div>
-            <div><label style={labelStyle}>Type</label><select style={inputStyle} value={form.riskType || ""} onChange={e => setForm({ ...form, riskType: e.target.value })}><option value="">Select...</option>{TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, " ")}</option>)}</select></div>
-            <div><label style={labelStyle}>Severity</label><select style={inputStyle} value={form.riskLevel || "medium"} onChange={e => setForm({ ...form, riskLevel: e.target.value })}><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div>
+            <div><label style={labelStyle}>Type</label><select style={selectStyle} value={form.riskType || ""} onChange={e => setForm({ ...form, riskType: e.target.value })}><option value="">Select...</option>{TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, " ")}</option>)}</select></div>
+            <div><label style={labelStyle}>Severity</label><select style={selectStyle} value={form.riskLevel || "medium"} onChange={e => setForm({ ...form, riskLevel: e.target.value })}><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select></div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <div><label style={labelStyle}>Owner</label><input style={inputStyle} value={form.owner || ""} onChange={e => setForm({ ...form, owner: e.target.value })} /></div>
             <div><label style={labelStyle}>Location</label><input style={inputStyle} value={form.location || ""} onChange={e => setForm({ ...form, location: e.target.value })} /></div>
-            <div><label style={labelStyle}>Client Visible</label><select style={inputStyle} value={form.isClientVisible ?? 1} onChange={e => setForm({ ...form, isClientVisible: parseInt(e.target.value) })}><option value={1}>Yes</option><option value={0}>No</option></select></div>
+            <div><label style={labelStyle}>Client Visible</label><select style={selectStyle} value={form.isClientVisible ?? 1} onChange={e => setForm({ ...form, isClientVisible: parseInt(e.target.value) })}><option value={1}>Yes</option><option value={0}>No</option></select></div>
           </div>
           <div style={{ marginBottom: "0.75rem" }}><label style={labelStyle}>Description</label><textarea style={{ ...inputStyle, minHeight: 50 }} value={form.description || ""} onChange={e => setForm({ ...form, description: e.target.value })} /></div>
           <button style={btnStyle} onClick={handleCreate}>Save Risk</button>
@@ -737,8 +738,8 @@ function TasksPanel({ projectId }: { projectId: number }) {
         <div style={{ ...cardStyle, border: `1px solid ${C.gold}40` }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <div><label style={labelStyle}>Title *</label><input style={inputStyle} value={form.title || ""} onChange={e => setForm({ ...form, title: e.target.value })} /></div>
-            <div><label style={labelStyle}>Type</label><select style={inputStyle} value={form.actionType || ""} onChange={e => setForm({ ...form, actionType: e.target.value })}><option value="">Select...</option>{TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, " ")}</option>)}</select></div>
-            <div><label style={labelStyle}>Priority</label><select style={inputStyle} value={form.priority || "normal"} onChange={e => setForm({ ...form, priority: e.target.value })}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
+            <div><label style={labelStyle}>Type</label><select style={selectStyle} value={form.actionType || ""} onChange={e => setForm({ ...form, actionType: e.target.value })}><option value="">Select...</option>{TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, " ")}</option>)}</select></div>
+            <div><label style={labelStyle}>Priority</label><select style={selectStyle} value={form.priority || "normal"} onChange={e => setForm({ ...form, priority: e.target.value })}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
           </div>
           <div style={{ marginBottom: "0.75rem" }}><label style={labelStyle}>Description</label><textarea style={{ ...inputStyle, minHeight: 50 }} value={form.description || ""} onChange={e => setForm({ ...form, description: e.target.value })} /></div>
           <button style={btnStyle} onClick={() => { createItem.mutate({ projectId, title: form.title || "Untitled", actionType: form.actionType || "other", priority: form.priority || "normal", description: form.description }); setForm({}); }}>Save Task</button>
@@ -764,24 +765,96 @@ function TasksPanel({ projectId }: { projectId: number }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 function ReportsPanel({ projectId }: { projectId: number }) {
   const { data: items, refetch } = trpc.clientPortal.listReports.useQuery({ projectId });
+  const { data: docs, refetch: refetchDocs } = trpc.assets.listProjectDocuments.useQuery({ projectId });
   const createItem = trpc.clientPortal.createReport.useMutation({ onSuccess: () => { refetch(); setShowAdd(false); } });
   const deleteItem = trpc.clientPortal.deleteReport.useMutation({ onSuccess: () => refetch() });
+  const uploadDoc = trpc.assets.uploadProjectDocument.useMutation({ onSuccess: () => { refetchDocs(); setUploadFile(null); } });
+  const deleteDoc = trpc.assets.deleteProjectDocument.useMutation({ onSuccess: () => refetchDocs() });
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState<any>({});
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [docType, setDocType] = useState("project_deliverable");
+  const [docClientVisible, setDocClientVisible] = useState(1);
+
+  const handleUpload = async () => {
+    if (!uploadFile) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64 = (reader.result as string).split(",")[1];
+      uploadDoc.mutate({
+        projectId,
+        fileName: uploadFile.name,
+        mimeType: uploadFile.type || "application/octet-stream",
+        fileSize: uploadFile.size,
+        fileData: base64,
+        documentType: docType as any,
+        isAdminOnly: false,
+        isClientVisible: docClientVisible,
+      });
+    };
+    reader.readAsDataURL(uploadFile);
+  };
 
   const TYPES = ["executive_assessment", "verification_analysis", "reconciled_far", "discrepancy_matrix", "inventory_master_log", "recovery_register", "governance_scorecard", "risk_exception_report", "location_report", "asset_photographs", "meeting_summary", "final_presentation", "technology_plan", "quarterly_report", "other"];
+  const DOC_TYPES = ["contract", "proposal", "report", "invoice", "correspondence", "legal", "insurance", "assessment", "meeting_document", "project_deliverable", "supporting_document", "other"];
 
   return (
     <div>
       <h3 style={{ color: C.text, fontSize: "1rem", marginBottom: "1rem" }}>Reports & Documents</h3>
-      <button style={{ ...btnStyle, marginBottom: "1rem" }} onClick={() => setShowAdd(!showAdd)}>+ Add Report</button>
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+        <button style={btnStyle} onClick={() => setShowAdd(!showAdd)}>+ Add Report</button>
+      </div>
+
+      {/* Document Upload Section */}
+      <div style={{ ...cardStyle, marginBottom: "1.5rem" }}>
+        <h4 style={{ color: C.silver, fontSize: "0.85rem", marginBottom: "0.75rem" }}>Upload Document</h4>
+        <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr auto", gap: "0.75rem", alignItems: "end" }}>
+          <div>
+            <label style={labelStyle}>File</label>
+            <input type="file" onChange={e => setUploadFile(e.target.files?.[0] || null)} style={{ ...inputStyle, padding: "0.35rem 0.5rem" }} />
+          </div>
+          <div>
+            <label style={labelStyle}>Type</label>
+            <select style={selectStyle} value={docType} onChange={e => setDocType(e.target.value)}>
+              {DOC_TYPES.map(t => <option key={t} value={t} style={{ background: "#0B0F13", color: "#FFFFFF" }}>{t.replace(/_/g, " ")}</option>)}
+            </select>
+          </div>
+          <div>
+            <label style={labelStyle}>Client Visible</label>
+            <select style={selectStyle} value={docClientVisible} onChange={e => setDocClientVisible(parseInt(e.target.value))}>
+              <option value={1} style={{ background: "#0B0F13", color: "#FFFFFF" }}>Yes</option>
+              <option value={0} style={{ background: "#0B0F13", color: "#FFFFFF" }}>No</option>
+            </select>
+          </div>
+          <button style={btnStyle} onClick={handleUpload} disabled={!uploadFile || uploadDoc.isPending}>
+            {uploadDoc.isPending ? "Uploading..." : "Upload"}
+          </button>
+        </div>
+      </div>
+
+      {/* Uploaded Documents List */}
+      {docs && docs.length > 0 && (
+        <div style={{ marginBottom: "1.5rem" }}>
+          <h4 style={{ color: C.silver, fontSize: "0.85rem", marginBottom: "0.75rem" }}>Uploaded Documents ({docs.length})</h4>
+          {docs.map((doc: any) => (
+            <div key={doc.id} style={{ ...cardStyle, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem 1rem" }}>
+              <div>
+                <span style={{ color: C.text, fontSize: "0.85rem" }}>{doc.fileName}</span>
+                <span style={{ color: C.textMuted, fontSize: "0.7rem", marginLeft: "0.75rem" }}>{doc.documentType?.replace(/_/g, " ")}</span>
+                {doc.isClientVisible === 1 && <span style={{ color: "#27AE60", fontSize: "0.65rem", marginLeft: "0.5rem" }}>● Client Visible</span>}
+              </div>
+              <button style={{ ...btnStyle, background: "transparent", color: C.silver, border: `1px solid ${C.border}`, fontSize: "0.7rem", padding: "0.3rem 0.6rem" }} onClick={() => deleteDoc.mutate({ id: doc.id })}>Delete</button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {showAdd && (
         <div style={{ ...cardStyle, border: `1px solid ${C.gold}40` }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <div><label style={labelStyle}>Title *</label><input style={inputStyle} value={form.title || ""} onChange={e => setForm({ ...form, title: e.target.value })} /></div>
-            <div><label style={labelStyle}>Type</label><select style={inputStyle} value={form.reportType || ""} onChange={e => setForm({ ...form, reportType: e.target.value })}><option value="">Select...</option>{TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, " ")}</option>)}</select></div>
-            <div><label style={labelStyle}>Status</label><select style={inputStyle} value={form.status || "draft"} onChange={e => setForm({ ...form, status: e.target.value })}><option value="draft">Draft</option><option value="in_review">In Review</option><option value="final">Published</option><option value="superseded">Superseded</option></select></div>
+            <div><label style={labelStyle}>Type</label><select style={selectStyle} value={form.reportType || ""} onChange={e => setForm({ ...form, reportType: e.target.value })}><option value="">Select...</option>{TYPES.map(t => <option key={t} value={t}>{t.replace(/_/g, " ")}</option>)}</select></div>
+            <div><label style={labelStyle}>Status</label><select style={selectStyle} value={form.status || "draft"} onChange={e => setForm({ ...form, status: e.target.value })}><option value="draft">Draft</option><option value="in_review">In Review</option><option value="final">Published</option><option value="superseded">Superseded</option></select></div>
           </div>
           <button style={btnStyle} onClick={() => { createItem.mutate({ projectId, title: form.title || "Untitled", reportType: form.reportType || "other", status: form.status || "draft" }); setForm({}); }}>Save Report</button>
         </div>
@@ -819,12 +892,12 @@ function MeetingsPanel({ projectId }: { projectId: number }) {
         <div style={{ ...cardStyle, border: `1px solid ${C.gold}40` }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <div><label style={labelStyle}>Title *</label><input style={inputStyle} value={form.title || ""} onChange={e => setForm({ ...form, title: e.target.value })} /></div>
-            <div><label style={labelStyle}>Type</label><select style={inputStyle} value={form.meetingType || "status_update"} onChange={e => setForm({ ...form, meetingType: e.target.value })}><option value="kickoff">Kickoff</option><option value="status_update">Status Update</option><option value="review">Review</option><option value="qbr">QBR</option><option value="ad_hoc">Ad Hoc</option><option value="final">Final</option></select></div>
+            <div><label style={labelStyle}>Type</label><select style={selectStyle} value={form.meetingType || "status_update"} onChange={e => setForm({ ...form, meetingType: e.target.value })}><option value="kickoff">Kickoff</option><option value="status_update">Status Update</option><option value="review">Review</option><option value="qbr">QBR</option><option value="ad_hoc">Ad Hoc</option><option value="final">Final</option></select></div>
             <div><label style={labelStyle}>Date</label><input style={inputStyle} type="datetime-local" value={form.scheduledDate || ""} onChange={e => setForm({ ...form, scheduledDate: e.target.value })} /></div>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "0.75rem" }}>
             <div><label style={labelStyle}>Summary</label><textarea style={{ ...inputStyle, minHeight: 50 }} value={form.summary || ""} onChange={e => setForm({ ...form, summary: e.target.value })} /></div>
-            <div><label style={labelStyle}>Client Visible</label><select style={inputStyle} value={form.isClientVisible ?? 1} onChange={e => setForm({ ...form, isClientVisible: parseInt(e.target.value) })}><option value={1}>Yes</option><option value={0}>No</option></select></div>
+            <div><label style={labelStyle}>Client Visible</label><select style={selectStyle} value={form.isClientVisible ?? 1} onChange={e => setForm({ ...form, isClientVisible: parseInt(e.target.value) })}><option value={1}>Yes</option><option value={0}>No</option></select></div>
           </div>
           <button style={btnStyle} onClick={() => { createItem.mutate({ projectId, title: form.title || "Untitled", meetingType: form.meetingType || "status_update", scheduledDate: form.scheduledDate || undefined, summary: form.summary, isClientVisible: form.isClientVisible ?? 1 }); setForm({}); }}>Save</button>
         </div>
@@ -850,13 +923,25 @@ function MeetingsPanel({ projectId }: { projectId: number }) {
 // ═══════════════════════════════════════════════════════════════════════════════
 function AccessPanel({ projectId, projectName }: { projectId: number; projectName: string }) {
   const { data: account, refetch } = trpc.clientPortal.adminViewDashboard.useQuery({ projectId });
-  const createDashboard = trpc.clientPortal.createDashboard.useMutation({ onSuccess: () => refetch() });
+  const createDashboard = trpc.clientPortal.createDashboard.useMutation({ onSuccess: (data) => { setCreatedCreds(data); refetch(); } });
+  const resetPw = trpc.clientPortal.resetPassword.useMutation({ onSuccess: (data: any) => { setCreatedCreds({ username: account?.username || "", password: data.newPassword, portalLink: "" }); } });
   const [form, setForm] = useState({ clientName: "", username: "", clientEmail: "", clientCompany: "", dashboardTitle: "" });
+  const [createdCreds, setCreatedCreds] = useState<{ username: string; password: string; portalLink: string } | null>(null);
 
   if (account) {
     return (
       <div>
         <h3 style={{ color: C.text, fontSize: "1rem", marginBottom: "1rem" }}>Portal Access</h3>
+        {createdCreds && (
+          <div style={{ ...cardStyle, border: `1px solid ${C.gold}`, marginBottom: "1rem" }}>
+            <p style={{ color: C.gold, fontSize: "0.85rem", fontWeight: 600, marginBottom: "0.5rem" }}>Client Credentials (share with client)</p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
+              <div><span style={labelStyle}>Username</span><span style={{ color: C.text, fontSize: "0.9rem", fontWeight: 600 }}>{createdCreds.username}</span></div>
+              <div><span style={labelStyle}>Password</span><span style={{ color: C.text, fontSize: "0.9rem", fontWeight: 600, fontFamily: "monospace" }}>{createdCreds.password}</span></div>
+            </div>
+            <p style={{ color: C.textMuted, fontSize: "0.75rem", marginTop: "0.5rem" }}>Portal URL: {window.location.origin}/client-portal</p>
+          </div>
+        )}
         <div style={cardStyle}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
             <div><span style={{ ...labelStyle, display: "block" }}>Client Name</span><span style={{ color: C.text, fontSize: "0.85rem" }}>{account.clientName}</span></div>
@@ -867,6 +952,9 @@ function AccessPanel({ projectId, projectName }: { projectId: number; projectNam
           <p style={{ color: C.textMuted, fontSize: "0.75rem", marginTop: "1rem" }}>
             Portal URL: {window.location.origin}/client-portal
           </p>
+          <button style={{ ...btnStyle, marginTop: "1rem" }} onClick={() => resetPw.mutate({ id: account.id })}>
+            Reset Password
+          </button>{resetPw.isPending && <span style={{ color: C.textMuted, fontSize: "0.75rem", marginLeft: "0.5rem" }}>Resetting...</span>}
         </div>
       </div>
     );
